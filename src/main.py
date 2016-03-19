@@ -30,14 +30,15 @@ localip = socket.gethostbyname(socket.gethostname())
 
 listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
-print (listofcc)
+if len(listofcc) != 0:
+    print (listofcc)
+    # For the moments it casts to the first device in the list
+    cast = pychromecast.get_chromecast(listofcc[0])
+    # Wait for cast device to be ready
+    cast.wait()
+    print(cast.device)
 
-cast = pychromecast.get_chromecast(friendly_name="Harman Kardon")
-# Wait for cast device to be ready
-cast.wait()
-print(cast.device)
-
-print(cast.status)
+    print(cast.status)
 
 
 #soxcommand = ['sox', '-t', 'coreaudio', 'Soundflower (2ch)', '-q', '/tmp/stream.mp3']
