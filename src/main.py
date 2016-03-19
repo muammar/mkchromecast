@@ -1,14 +1,28 @@
 #!/usr/bin/env python
 
+# This file is part of mkchromecast.
+
+# mkchromecast is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# mkchromecast is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with pulseaudio-dlna.  If not, see <http://www.gnu.org/licenses/>.
+
 from __future__ import print_function
 import time
 import pychromecast
 
-import subprocess
+#import subprocess
 import socket
+
 localip = socket.gethostbyname(socket.gethostname())
-
-
 
 #
 #icetakestream = ['./nodejs/bin/streammachine-util-cmd', 'source', '--port', '8002', '--stream', 'test', '--password', 'testing', '/tmp/stream.mp3']
@@ -32,7 +46,7 @@ print(cast.status)
 #mp3server = ['node', './mp3.js']
 #subprocess.Popen(mp3server)
 mc = cast.media_controller
-mc.play_media('http://192.168.1.27:3000/stream.mp3', 'audio/mpeg')
+mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
 print(mc.status)
 #mc.pause()
 #time.sleep(5)
