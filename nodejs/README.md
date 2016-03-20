@@ -11,4 +11,4 @@ cd node-v0.10.38
 make -j8
 
 
-bin/node /tmp/node/node-v0.10.38/deps/npm/bin/npm-cli.js install webcast-osx-audio
+bin/node node-v0.10.38/deps/npm/bin/npm-cli.js install webcast-osx-audio
