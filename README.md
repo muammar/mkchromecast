@@ -12,7 +12,14 @@ In order to use mkchromecast you need the following:
 * Python (already shipped in OS X).
 * pychromecast.
 * psutil.
-* Soundflower.
+* [Soundflower](https://github.com/mattingalls/Soundflower/).
+
+To install the python requirements use the `requirements.txt` file shipped in
+this repository:
+
+```
+pip install -r requirements.txt
+```
 
 ## How to install it
 
