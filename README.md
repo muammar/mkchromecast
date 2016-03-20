@@ -52,13 +52,13 @@ cask](https://caskroom.github.io/) to install it as follows:
 brew cask install soundflower
 ```
 
-Or just download the latest [dmg
+Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases)
 
 
 ## How to execute it
 
-Just get into the cloned `mkchromecast` directory and execute:
+Get into the cloned `mkchromecast` directory and execute:
 
 ```
 python mkchromecast.py
@@ -68,6 +68,12 @@ To kill the application just `Ctrl-c`.
 
 ## Contribute
 
+If you want to contribute, [report
+issues](https://github.com/muammar/mkchromecast/issues), [create pull
+requests](https://github.com/muammar/mkchromecast/pulls), or buy me some
+pizza:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
 
 #### Notes
 
