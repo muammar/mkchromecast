@@ -19,6 +19,8 @@ from __future__ import print_function
 import time
 import pychromecast
 import socket
+from terminate import *
+from audiodevices import *
 
 def cast():
 
@@ -36,6 +38,9 @@ def cast():
         print(cast.status)
     else:
         print('No devices found!')
+        inputint()
+        outputint()
+        terminate()
         exit()
 
     mc = cast.media_controller
