@@ -33,6 +33,7 @@ def terminateapp():
     inputint()
     outputint()
     terminate()
+    return
 
 try:
     raw_input()

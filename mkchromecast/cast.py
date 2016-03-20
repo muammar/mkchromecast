@@ -41,3 +41,4 @@ def cast():
     mc = cast.media_controller
     mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
     print(mc.status)
+    return
