@@ -19,33 +19,24 @@ from __future__ import print_function
 import time
 import pychromecast
 
-#import subprocess
 import socket
 
 localip = socket.gethostbyname(socket.gethostname())
 
-#
-#icetakestream = ['./nodejs/bin/streammachine-util-cmd', 'source', '--port', '8002', '--stream', 'test', '--password', 'testing', '/tmp/stream.mp3']
-#subprocess.Popen(icetakestream)
-
 listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
 if len(listofcc) != 0:
-    print (listofcc)
+    print(listofcc)
     # For the moments it casts to the first device in the list
     cast = pychromecast.get_chromecast(listofcc[0])
     # Wait for cast device to be ready
     cast.wait()
     print(cast.device)
-
     print(cast.status)
+else:
+    print('No devices found!')
+    exit()
 
-
-#soxcommand = ['sox', '-t', 'coreaudio', 'Soundflower (2ch)', '-q', '/tmp/stream.mp3']
-#subprocess.Popen(soxcommand)
-#
-#mp3server = ['node', './mp3.js']
-#subprocess.Popen(mp3server)
 mc = cast.media_controller
 mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
 print(mc.status)
