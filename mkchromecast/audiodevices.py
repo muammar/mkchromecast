@@ -38,10 +38,10 @@ def outputdev():
 
 def inputint():
     inputinttosf2 = ['./bin/audiodevice input internal']
-    subprocess.Popen(inputinttosf2, shell=True)
+    subprocess.call(inputinttosf2, shell=True)
     return
 
 def outputint():
     outputinttosf2 = ['./bin/audiodevice output internal']
-    subprocess.Popen(outputinttosf2, shell=True)
+    subprocess.call(outputinttosf2, shell=True)
     return

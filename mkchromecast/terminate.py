@@ -15,17 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with mkchromecast.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
+from os import getpid
+import psutil
 
 """
-These functions are used to get up the streaming server.
+These functions are used to kill main processes and child.
 
 To call them:
-    from mkchromecast.audiodevices import *
+    from mkchromecast.terminate import *
     name()
 """
 
-def stream():
-    webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
-    subprocess.Popen(webcast)
-    return
+def terminate():
+    parent_pid = getpid()
+    parent = psutil.Process(parent_pid)
+    for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+        child.kill()
+    parent.kill()

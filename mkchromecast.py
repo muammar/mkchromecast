@@ -18,6 +18,7 @@
 from mkchromecast.audiodevices import *
 from mkchromecast.streaming import *
 from mkchromecast.cast import *
+from mkchromecast.terminate import *
 
 print('Switching to soundflower')
 inputdev()
@@ -26,3 +27,8 @@ outputdev()
 stream()
 
 cast()
+
+def terminateapp():
+    inputint()
+    outputint()
+    terminate()
