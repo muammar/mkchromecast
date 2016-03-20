@@ -25,7 +25,7 @@ Clone this repository:
 git clone https://github.com/muammar/mkchromecast.git
 ```
 
-### Python
+#### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
@@ -41,7 +41,7 @@ _Note_: if this step fails, maybe you will need to run the installation with
 sudo pip install -r requirements.txt
 ```
 
-### Soundflower
+#### Soundflower
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
@@ -69,6 +69,6 @@ To kill the application just `Ctrl-c`.
 ## Contribute
 
 
-### Notes
+#### Notes
 
 This will cast to the first chromecast found in the list.
