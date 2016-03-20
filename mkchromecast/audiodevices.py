@@ -27,21 +27,21 @@ To call them:
 """
 
 def inputdev():
-    inputdevtosf2 = ['../bin/audiodevice','input','"Soundflower (2ch)"']
+    inputdevtosf2 = ['./bin/audiodevice input "Soundflower (2ch)"']
     subprocess.Popen(inputdevtosf2, shell=True)
     return
 
 def outputdev():
-    outputdevtosf2 = ['../bin/audiodevice','output','"Soundflower (2ch)"']
+    outputdevtosf2 = ['./bin/audiodevice output "Soundflower (2ch)"']
     subprocess.Popen(outputdevtosf2, shell=True)
     return
 
 def inputint():
-    inputinttosf2 = ['../bin/audiodevice','input','internal']
+    inputinttosf2 = ['./bin/audiodevice input internal']
     subprocess.Popen(inputinttosf2, shell=True)
     return
 
 def outputint():
-    outputinttosf2 = ['../bin/audiodevice','output','internal']
+    outputinttosf2 = ['./bin/audiodevice output internal']
     subprocess.Popen(outputinttosf2, shell=True)
     return

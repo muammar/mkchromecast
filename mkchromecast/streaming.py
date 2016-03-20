@@ -15,31 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with mkchromecast.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-import time
-import pychromecast
+import subprocess
 
-import socket
+"""
+These functions are used to switch input/out to Soundflower back and forth.
 
-localip = socket.gethostbyname(socket.gethostname())
+To call them:
+    from mkchromecast.audiodevices import *
+    name()
+"""
 
-listofcc = pychromecast.get_chromecasts_as_dict().keys()
-
-if len(listofcc) != 0:
-    print(listofcc)
-    # For the moments it casts to the first device in the list
-    cast = pychromecast.get_chromecast(listofcc[0])
-    # Wait for cast device to be ready
-    cast.wait()
-    print(cast.device)
-    print(cast.status)
-else:
-    print('No devices found!')
-    exit()
-
-mc = cast.media_controller
-mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-print(mc.status)
-#mc.pause()
-#time.sleep(5)
-#mc.play()
+def stream():
+    webcast = ['./bin/node ./nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
+    subprocess.Popen(webcast, shell=True)
+    return
