@@ -1,7 +1,7 @@
 mkchromecast
 ============
 
-This is a tiny program to cast your **Mac OSX** audio to your chromecast. It is
+This is a tiny program to cast your **Mac OS X** audio to your chromecast. It is
 written in Python, and it streams using node.js for the moments. For linux you
 have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
@@ -9,7 +9,7 @@ beautifully.
 
 ## Requirements:
 
-In order to use mkchromecast you need the following:
+In order to use **mkchromecast** you need the following:
 
 * Python (already shipped in OS X).
 * pychromecast.
@@ -53,12 +53,11 @@ brew cask install soundflower
 ```
 
 Or just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases)
-
+file](https://github.com/mattingalls/Soundflower/releases).
 
 ## How to execute it
 
-Get into the cloned `mkchromecast` directory and execute:
+Get into the cloned **mkchromecast** directory and execute:
 
 ```
 python mkchromecast.py
