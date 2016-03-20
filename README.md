@@ -52,7 +52,7 @@ cask](https://caskroom.github.io/) to install it as follows:
 brew cask install soundflower
 ```
 
-Or just download the latest dmg
+Or just download the latest [dmg
 file](https://github.com/mattingalls/Soundflower/releases)
 
 
