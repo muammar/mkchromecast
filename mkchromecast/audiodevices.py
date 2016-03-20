@@ -16,23 +16,32 @@
 # along with mkchromecast.  If not, see <http://www.gnu.org/licenses/>.
 
 import socket
+import subprocess
 
 """
 These functions are used to switch input/out to Soundflower back and forth.
+
+To call them:
+    from mkchromecast.audiodevices import *
+    name()
 """
 
 def inputdev():
     inputdevtosf2 = ['../bin/audiodevice','input','"Soundflower (2ch)"']
-    subprocess.Popen(inputdevtosf2)
+    subprocess.Popen(inputdevtosf2, shell=True)
+    return
 
 def outputdev():
     outputdevtosf2 = ['../bin/audiodevice','output','"Soundflower (2ch)"']
-    subprocess.Popen(outputdevtosf2)
+    subprocess.Popen(outputdevtosf2, shell=True)
+    return
 
 def inputint():
-    inputdevtosf2 = ['../bin/audiodevice','input','internal']
-    subprocess.Popen(inputdevtosf2)
+    inputinttosf2 = ['../bin/audiodevice','input','internal']
+    subprocess.Popen(inputinttosf2, shell=True)
+    return
 
 def outputint():
-    outputdevtosf2 = ['../bin/audiodevice','output','internal']
-    subprocess.Popen(outputdevtosf2)
+    outputinttosf2 = ['../bin/audiodevice','output','internal']
+    subprocess.Popen(outputinttosf2, shell=True)
+    return
