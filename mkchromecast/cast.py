@@ -18,7 +18,6 @@
 from __future__ import print_function
 import time
 import pychromecast
-
 import socket
 
 def cast():
@@ -42,6 +41,3 @@ def cast():
     mc = cast.media_controller
     mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
     print(mc.status)
-    #mc.pause()
-    #time.sleep(5)
-    #mc.play()

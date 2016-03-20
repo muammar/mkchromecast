@@ -21,18 +21,19 @@ from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import atexit
 
-def terminateapp():
-    inputint()
-    outputint()
-    terminate()
-
 print('Switching to soundflower')
 inputdev()
 outputdev()
 stream()
 cast()
 
-print ('Ctrl-c to kill the application')
+print('Ctrl-c to kill the application')
+
+def terminateapp():
+    inputint()
+    outputint()
+    terminate()
+
 try:
     raw_input()
 except KeyboardInterrupt:

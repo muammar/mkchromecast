@@ -29,3 +29,10 @@ python mkchromecast.py
 ```
 
 To kill the application just `Ctrl-c`.
+
+## Contribute
+
+
+### Notes
+
+This will cast to the first chromecast found in the list.
