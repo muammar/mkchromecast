@@ -1,9 +1,11 @@
 mkchromecast
 ============
 
-This is a tiny program to cast your *Mac OSX* audio to your chromecast. It is
+This is a tiny program to cast your **Mac OSX** audio to your chromecast. It is
 written in Python, and it streams using node.js for the moments. For linux you
-have a very good program called pulseaudio-dnla to do this.
+have a program called
+[pulseaudio-dnla](https://github.com/masmu/pulseaudio-dlna) that does this
+beautifully.
 
 ## Requirements:
 
@@ -14,6 +16,17 @@ In order to use mkchromecast you need the following:
 * psutil.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
 
+
+## Installation
+
+Clone this repository:
+
+```
+git clone https://github.com/muammar/mkchromecast.git
+```
+
+### Python
+
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
 
@@ -21,11 +34,27 @@ this repository:
 pip install -r requirements.txt
 ```
 
-## How to install it
+_Note_: if this step fails, maybe you will need to run the installation with
+`sudo`:
 
 ```
-git clone https://github.com/muammar/mkchromecast.git
+sudo pip install -r requirements.txt
 ```
+
+### Soundflower
+
+For Soundflower you can check
+[https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
+or if you have [Homebrew](http://brew.sh/) you can use [brew
+cask](https://caskroom.github.io/) to install it as follows:
+
+```
+brew cask install soundflower
+```
+
+Or just download the latest dmg
+file](https://github.com/mattingalls/Soundflower/releases)
+
 
 ## How to execute it
 
