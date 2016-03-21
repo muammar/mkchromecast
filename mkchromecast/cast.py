@@ -22,28 +22,32 @@ import socket
 from terminate import *
 from audiodevices import *
 
-def cast():
+class cast(object):
+    def cast(self):
 
-    localip = socket.gethostbyname(socket.gethostname())
+        localip = socket.gethostbyname(socket.gethostname())
 
-    listofcc = pychromecast.get_chromecasts_as_dict().keys()
+        listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
-    if len(listofcc) != 0:
-        print(listofcc)
-        # For the moments it casts to the first device in the list
-        cast = pychromecast.get_chromecast(listofcc[0])
-        # Wait for cast device to be ready
-        cast.wait()
-        print(cast.device)
-        print(cast.status)
-    else:
-        print('No devices found!')
-        inputint()
-        outputint()
-        terminate()
-        exit()
+        if len(listofcc) != 0:
+            print(listofcc)
+            # For the moments it casts to the first device in the list
+            self.cast = pychromecast.get_chromecast(listofcc[0])
+            # Wait for cast device to be ready
+            self.cast.wait()
+            print(self.cast.device)
+            print(self.cast.status)
+        else:
+            print('No devices found!')
+            inputint()
+            outputint()
+            terminate()
+            exit()
 
-    mc = cast.media_controller
-    mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-    print(mc.status)
-    return
+        mc = self.cast.media_controller
+        mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print(mc.status)
+
+    def stop_cast(self):
+        ncast = self.cast
+        ncast.quit_app()

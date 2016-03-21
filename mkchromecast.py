@@ -25,11 +25,13 @@ print('Switching to soundflower')
 inputdev()
 outputdev()
 stream()
-cast()
+cc = cast()
+cc.cast()
 
 print('Ctrl-c to kill the application')
 
 def terminateapp():
+    cc.stop_cast()
     inputint()
     outputint()
     terminate()
