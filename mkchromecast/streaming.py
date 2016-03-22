@@ -16,6 +16,9 @@
 # along with mkchromecast.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
+import threading
+import time
+import sys
 
 """
 These functions are used to get up the streaming server.
@@ -26,6 +29,18 @@ To call them:
 """
 
 def stream():
-    webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
-    subprocess.Popen(webcast)
+    def launch_server():
+        webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
+        p = subprocess.Popen(webcast)
+        while p.poll() is None:
+            try:
+                time.sleep(0.5)
+            except KeyboardInterrupt:
+                print ("Ctrl-c was requested")
+                sys.exit(0)
+
+        else:
+                launch_server()
+    thread = threading.Thread(target=launch_server)
+    thread.start()
     return
