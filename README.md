@@ -19,7 +19,7 @@ In order to use **mkchromecast** you need the following:
 
 ## Installation and updating
 
-To install `mkchromecast`, clone this repository:
+To install **mkchromecast**, clone this repository:
 
 ```
 git clone https://github.com/muammar/mkchromecast.git
@@ -57,7 +57,7 @@ file](https://github.com/mattingalls/Soundflower/releases).
 
 #### Updating
 
-To update `mkchromecast`, just get into the cloned directory and:
+To update **mkchromecast**, just get into the cloned directory and:
 
 ```
 git pull
