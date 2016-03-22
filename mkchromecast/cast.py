@@ -24,6 +24,7 @@ from audiodevices import *
 
 class cast(object):
     def cast(self):
+        from pychromecast import socket_client
 
         localip = socket.gethostbyname(socket.gethostname())
 
