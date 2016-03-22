@@ -21,7 +21,7 @@ import subprocess
 These functions are used to get up the streaming server.
 
 To call them:
-    from mkchromecast.audiodevices import *
+    from mkchromecast.streaming import *
     name()
 """
 

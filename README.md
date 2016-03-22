@@ -17,9 +17,9 @@ In order to use **mkchromecast** you need the following:
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
 
 
-## Installation
+## Installation and updating
 
-Clone this repository:
+To install `mkchromecast`, clone this repository:
 
 ```
 git clone https://github.com/muammar/mkchromecast.git
@@ -54,6 +54,14 @@ brew cask install soundflower
 
 Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
+
+#### Updating
+
+To update `mkchromecast`, just get into the cloned directory and:
+
+```
+git pull
+```
 
 ## How to execute it
 
