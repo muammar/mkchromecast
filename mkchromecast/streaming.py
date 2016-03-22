@@ -42,5 +42,6 @@ def stream():
         else:
                 launch_server()
     thread = threading.Thread(target=launch_server)
+    thread.daemon = True
     thread.start()
     return
