@@ -25,8 +25,8 @@ print('Switching to soundflower')
 inputdev()
 outputdev()
 stream()
-cc = cast()
-cc.cast()
+cc = casting()
+cc.initialize_cast()
 
 print('Ctrl-c to kill the application')
 

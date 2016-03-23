@@ -22,12 +22,12 @@ import socket
 from terminate import *
 from audiodevices import *
 
-class cast(object):
-    def cast(self):
+class casting(object):
+    def __init__(self): ## __init__ to call the self.ip
+        self.ip = socket.gethostbyname(socket.gethostname())
+
+    def initialize_cast(self):
         from pychromecast import socket_client
-
-        localip = socket.gethostbyname(socket.gethostname())
-
         listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
         if len(listofcc) != 0:
@@ -45,7 +45,14 @@ class cast(object):
             terminate()
             exit()
 
-        mc = self.cast.media_controller
+        self.mc = self.cast.media_controller
+        self.play_cast()
+
+    def play_cast(self):
+        start = casting()
+        localip = start.ip
+        print (localip)
+        mc = self.mc
         mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
         print(mc.status)
 
