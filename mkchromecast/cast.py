@@ -27,7 +27,6 @@ class casting(object):
         self.ip = socket.gethostbyname(socket.gethostname())
 
     def initialize_cast(self):
-        from pychromecast import socket_client
         listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
         if len(listofcc) != 0:
@@ -49,6 +48,7 @@ class casting(object):
         self.play_cast()
 
     def play_cast(self):
+        from pychromecast import socket_client
         start = casting()
         localip = start.ip
         print (localip)

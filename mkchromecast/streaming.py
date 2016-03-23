@@ -19,6 +19,7 @@ import subprocess
 import threading
 import time
 import sys
+from cast import *
 
 """
 These functions are used to get up the streaming server.
@@ -41,6 +42,7 @@ def stream():
 
         else:
                 launch_server()
+
     thread = threading.Thread(target=launch_server)
     thread.daemon = True
     thread.start()
