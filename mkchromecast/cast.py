@@ -23,16 +23,18 @@ from terminate import *
 from audiodevices import *
 
 class casting(object):
+
     def __init__(self): ## __init__ to call the self.ip
         self.ip = socket.gethostbyname(socket.gethostname())
 
     def initialize_cast(self):
-        listofcc = pychromecast.get_chromecasts_as_dict().keys()
+        from pychromecast import socket_client
+        self.listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
-        if len(listofcc) != 0:
-            print(listofcc)
+        if len(self.listofcc) != 0:
+            print(self.listofcc)
             # For the moments it casts to the first device in the list
-            self.cast = pychromecast.get_chromecast(listofcc[0])
+            self.cast = pychromecast.get_chromecast(self.listofcc[0])
             # Wait for cast device to be ready
             self.cast.wait()
             print(self.cast.device)
@@ -44,17 +46,15 @@ class casting(object):
             terminate()
             exit()
 
-        self.mc = self.cast.media_controller
         self.play_cast()
 
     def play_cast(self):
-        from pychromecast import socket_client
         start = casting()
         localip = start.ip
         print (localip)
-        mc = self.mc
-        mc.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-        print(mc.status)
+        ncast = self.cast
+        ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print(ncast.status)
 
     def stop_cast(self):
         ncast = self.cast

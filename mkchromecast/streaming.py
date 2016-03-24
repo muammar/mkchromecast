@@ -39,11 +39,20 @@ def stream():
             except KeyboardInterrupt:
                 print ("Ctrl-c was requested")
                 sys.exit(0)
-
         else:
-                launch_server()
+                relaunch(stream,recasting)
 
     thread = threading.Thread(target=launch_server)
     thread.daemon = True
     thread.start()
+    return
+
+def relaunch(func,func1):
+    func()
+    func1()
+    return
+
+def recasting():
+    start = casting()
+    start.play_cast()
     return
