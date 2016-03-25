@@ -44,7 +44,6 @@ def streaming():
     else:
         print ('Reconnecting streaming...')
         relaunch(stream,recasting,kill)
-
     return
 
 class multi_proc(object):
@@ -63,7 +62,6 @@ def relaunch(func1,func2,func3):
     func1()
     func2()
     func3()
-
     return
 
 def recasting():
