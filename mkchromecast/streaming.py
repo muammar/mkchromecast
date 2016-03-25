@@ -16,7 +16,7 @@
 # along with mkchromecast.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
-import threading
+import multiprocessing
 import time
 import sys
 from cast import *
@@ -41,10 +41,14 @@ def stream():
                 sys.exit(0)
         else:
             print ('Reconnecting streaming...')
+
             relaunch(stream,recasting)
 
-    thread = threading.Thread(target=launch_server)
-    thread.daemon = True
+    #thread = threading.Thread(target=launch_server)
+    #thread.daemon = True
+    #thread.start()
+    thread = multiprocessing.Process(target=launch_server)
+    thread.daemon = False
     thread.start()
     return
 
