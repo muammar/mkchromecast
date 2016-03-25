@@ -40,7 +40,8 @@ def stream():
                 print ("Ctrl-c was requested")
                 sys.exit(0)
         else:
-                relaunch(stream,recasting)
+            print ('Reconnecting streaming...')
+            relaunch(stream,recasting)
 
     thread = threading.Thread(target=launch_server)
     thread.daemon = True
@@ -54,5 +55,7 @@ def relaunch(func,func1):
 
 def recasting():
     start = casting()
+    start.initialize_cast()
+    start.get_cc()
     start.play_cast()
     return

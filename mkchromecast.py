@@ -27,6 +27,8 @@ outputdev()
 stream()
 cc = casting()
 cc.initialize_cast()
+cc.get_cc()
+cc.play_cast()
 
 print('Ctrl-c to kill the application')
 

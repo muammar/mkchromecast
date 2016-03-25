@@ -32,13 +32,8 @@ class casting(object):
         self.listofcc = pychromecast.get_chromecasts_as_dict().keys()
 
         if len(self.listofcc) != 0:
+            print('List of CC in your network')
             print(self.listofcc)
-            # For the moments it casts to the first device in the list
-            self.cast = pychromecast.get_chromecast(self.listofcc[0])
-            # Wait for cast device to be ready
-            self.cast.wait()
-            print(self.cast.device)
-            print(self.cast.status)
         else:
             print('No devices found!')
             inputint()
@@ -46,7 +41,13 @@ class casting(object):
             terminate()
             exit()
 
-        self.play_cast()
+    def get_cc(self):
+            # For the moments it casts to the first device in the list
+            self.cast = pychromecast.get_chromecast(self.listofcc[0])
+            # Wait for cast device to be ready
+            self.cast.wait()
+            print(self.cast.device)
+            print(self.cast.status)
 
     def play_cast(self):
         start = casting()
