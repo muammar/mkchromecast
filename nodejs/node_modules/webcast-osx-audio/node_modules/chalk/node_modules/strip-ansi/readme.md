@@ -1,11 +1,11 @@
-# strip-ansi [![Build Status](https://travis-ci.org/sindresorhus/strip-ansi.svg?branch=master)](https://travis-ci.org/sindresorhus/strip-ansi)
+# strip-ansi [![Build Status](https://travis-ci.org/chalk/strip-ansi.svg?branch=master)](https://travis-ci.org/chalk/strip-ansi)
 
 > Strip [ANSI escape codes](http://en.wikipedia.org/wiki/ANSI_escape_code)
 
 
 ## Install
 
-```sh
+```
 $ npm install --save strip-ansi
 ```
 
@@ -15,27 +15,17 @@ $ npm install --save strip-ansi
 ```js
 var stripAnsi = require('strip-ansi');
 
-stripAnsi('\x1b[4mcake\x1b[0m');
+stripAnsi('\u001b[4mcake\u001b[0m');
 //=> 'cake'
 ```
 
 
-## CLI
+## Related
 
-```sh
-$ npm install --global strip-ansi
-```
-
-```sh
-$ strip-ansi --help
-
-Usage
-  $ strip-ansi <input-file> > <output-file>
-  $ cat <input-file> | strip-ansi > <output-file>
-
-Example
-  $ strip-ansi unicorn.txt > unicorn-stripped.txt
-```
+- [strip-ansi-cli](https://github.com/chalk/strip-ansi-cli) - CLI for this module
+- [has-ansi](https://github.com/chalk/has-ansi) - Check if a string has ANSI escape codes
+- [ansi-regex](https://github.com/chalk/ansi-regex) - Regular expression for matching ANSI escape codes
+- [chalk](https://github.com/chalk/chalk) - Terminal string styling done right
 
 
 ## License
