@@ -1,14 +1,14 @@
 Building bin/node
 =================
 
-wget https://nodejs.org/dist/v0.10.38/node-v0.10.38.tar.gz
+This directory contains all related to nodejs. `webcast-osx-audio` only works
+for node 0.10.38. So, the version shipped with `mkchromecast` is that one to
+operate correctly.
 
-tar zxvf node-v0.10.38.tar.gz
+To build node, just execute;
 
-cd node-v0.10.38
+```
+./recompile_node.sh
+```
 
-./configure
-make -j8
-
-
-bin/node node-v0.10.38/deps/npm/bin/npm-cli.js install webcast-osx-audio
+This will install everything in `mkchromecast/nodejs/node-0.10.38`.
