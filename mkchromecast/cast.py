@@ -29,7 +29,7 @@ class casting(object):
 
     def initialize_cast(self):
         from pychromecast import socket_client
-        self.listofcc = pychromecast.get_chromecasts_as_dict().keys()
+        self.listofcc = list(pychromecast.get_chromecasts_as_dict().keys())
 
         if len(self.listofcc) != 0:
             print('List of CC in your network')

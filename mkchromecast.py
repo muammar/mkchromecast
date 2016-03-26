@@ -40,6 +40,6 @@ def terminateapp():
     return
 
 try:
-    raw_input()
+    input()
 except KeyboardInterrupt:
     atexit.register(terminateapp)
