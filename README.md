@@ -11,7 +11,7 @@ beautifully.
 
 In order to use **mkchromecast** you need the following:
 
-* Python (already shipped in OS X).
+* Python2 (already shipped in OS X), or Python3.
 * pychromecast.
 * psutil.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
