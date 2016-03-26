@@ -19,8 +19,8 @@ from __future__ import print_function
 import time
 import pychromecast
 import socket
-from terminate import *
-from audiodevices import *
+from .terminate import *
+from .audiodevices import *
 
 class casting(object):
 

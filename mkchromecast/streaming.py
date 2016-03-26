@@ -19,7 +19,7 @@ import subprocess
 import multiprocessing
 import time
 import sys
-from cast import *
+from .cast import *
 import psutil
 import os
 import signal
