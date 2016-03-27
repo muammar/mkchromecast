@@ -71,7 +71,13 @@ Get into the cloned **mkchromecast** directory and execute:
 python mkchromecast.py
 ```
 
-To kill the application just `Ctrl-c`.
+To get help:
+
+```
+python mkchromecast.py -h
+```
+
+To kill the application just press `Ctrl-c`.
 
 ## Contribute
 
