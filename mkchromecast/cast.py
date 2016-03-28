@@ -27,7 +27,7 @@ class casting(object):
             for index,device in enumerate(self.cclist):
                 print(str(index)+': ', str(device))
             print(' ')
-            print('We will cast to first device in this list:')
+            print('We will cast to first device in the list above!')
             print(' ')
             self.castto = self.cclist[0]
             print(self.castto)
