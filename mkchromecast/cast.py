@@ -9,10 +9,11 @@ import pychromecast
 import socket
 from .terminate import *
 from .audiodevices import *
+import os.path
+import pickle
 
 
 class casting(object):
-
     def __init__(self): ## __init__ to call the self.ip
         self.ip = socket.gethostbyname(socket.gethostname())
 
@@ -29,18 +30,29 @@ class casting(object):
             print(' ')
 
         elif len(self.cclist) != 0 and args.select_cc == True:
-            print('List of Google cast devices available in your network:')
-            print(' ')
-            for index,device in enumerate(self.cclist):
-                print(str(index)+': ', str(device))
+            if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
+                tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+                print('List of Google cast devices available in your network:')
+                print(' ')
+                for index,device in enumerate(self.cclist):
+                    print(str(index)+': ', str(device))
 
-            print(' ')
-            print('Please, select the number of the Google cast device that you want to use:')
-            index = input()
-            self.castto = self.cclist[int(index)]
-            print(' ')
-            print('Casting to: ', self.castto)
-            print(' ')
+                print(' ')
+                print('Please, select the number of the Google cast device that you want to use:')
+                index = input()
+                pickle.dump(index, tf)
+                tf.close()
+                self.castto = self.cclist[int(index)]
+                print(' ')
+                print('Casting to: ', self.castto)
+                print(' ')
+            else:
+                tf = open('/tmp/mkcrhomecast.tmp', 'rb')
+                index=pickle.load(tf)
+                self.castto = self.cclist[int(index)]
+                print(' ')
+                print('Casting to: ', self.castto)
+                print(' ')
 
         else:
             print('No devices found!')
