@@ -2,7 +2,6 @@
 
 # This file is part of mkchromecast.
 
-from mkchromecast.arguments import *
 from mkchromecast.audiodevices import *
 from mkchromecast.streaming import *
 from mkchromecast.cast import *

@@ -1,9 +1,9 @@
 mkchromecast
 ============
 
-This is a tiny program to cast your **Mac OS X** audio to your chromecast. It is
-written in Python, and it streams using node.js for the moments. For linux you
-have a program called
+This is a tiny program to cast your **Mac OS X** audio to your google cast
+devices. It is written in Python, and it streams using node.js for the moments.
+For Linux you have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
 beautifully.
 
