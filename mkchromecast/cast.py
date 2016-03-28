@@ -22,16 +22,21 @@ class casting(object):
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
 
         if len(self.cclist) != 0 and args.select_cc == False:
-            print('List of Google cast devices available in your network.')
-            print('We will cast to first device in this list.')
             print(' ')
-            print(self.cclist)
+            print('List of Google cast devices available in your network.')
+            for index,device in enumerate(self.cclist):
+                print(str(index)+': ', str(device))
+            print(' ')
+            print('We will cast to first device in this list:')
+            print(' ')
             self.castto = self.cclist[0]
+            print(self.castto)
             print(' ')
 
         elif len(self.cclist) != 0 and args.select_cc == True:
             if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
                 tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+                print(' ')
                 print('List of Google cast devices available in your network:')
                 print(' ')
                 for index,device in enumerate(self.cclist):
