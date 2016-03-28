@@ -26,6 +26,9 @@ To install **mkchromecast**, clone this repository:
 git clone https://github.com/muammar/mkchromecast.git
 ```
 
+Or you may download one of the [stable Releases
+here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
+
 #### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
