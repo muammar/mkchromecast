@@ -1,25 +1,89 @@
 #!/usr/bin/env python
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-import signal
+# This file is part of mkchromecast.
+from rumps import *
+import urllib
+
+def sayhello(sender):
+    print 'hello {}'.format(sender)
+
+def e(_):
+    print 'EEEEEEE'
+
+def adjust_f(sender):
+    if adjust_f.huh:
+        sender.add('$')
+        sender.add('%')
+        sender['zzz'] = 'zzz'
+        sender['separator'] = separator
+        sender['ppp'] = MenuItem('ppp')
+    else:
+        del sender['$']
+        del sender['%']
+        del sender['separator']
+        del sender['ppp']
+    adjust_f.huh = not adjust_f.huh
+adjust_f.huh = True
+
+def print_f(_):
+    print f
+
+f = MenuItem('F', callback=adjust_f)
+
+def search_gc(_):
+    print 'search'
+
+def stop_gc(_):
+    print 'search'
+#urllib.urlretrieve('http://upload.wikimedia.org/wikipedia/commons/thumb/c/'
+                   #'c4/Kiss_Logo.svg/200px-Kiss_Logo.svg.png', 'kiss.png')
+app = App('mkchromecast', icon='google.png')
+app.menu = [
+    MenuItem('Search for Google Cast devices', callback=search_gc),
+    MenuItem('Stop casting', callback=stop_gc),
+    None,
+    #MenuItem('A', callback=print_f, key='F'),
+    #('B', ['1', 2, '3', [4, [5, (6, range(7, 14))]]]),
+    #'C',
+    #[MenuItem('D', callback=sayhello), (1, 11, 111)],
+    #MenuItem('E', callback=e, key='e'),
+    #f,
+    None,
+    #{
+    #    'x': {'hello', 'hey'},
+    #    'y': ['what is up']
+    #},
+    #[1, [2]],
+    #('update method', ['walking', 'back', 'to', 'you']),
+    #'stuff',
+    None
+]
+
+@clicked('update method')
+def dict_update(menu):
+    print menu
+    print menu.setdefault('boo', MenuItem('boo',
+                                          callback=lambda _: add_separator(menu)))  # lambda gets THIS menu not submenu
 
 
-def main():
+def add_separator(menu):
+    menu.add(separator)
 
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
+@clicked('C')
+def change_main_menu(_):
+    print app.menu
+    print 'goodbye C'
+    del app.menu['C']  # DELETE SELF!!!1
 
-    app = QtWidgets.QApplication([])
+@clicked('stuff')
+def stuff(sender):
+    print sender
+    if len(sender):
+        sender.insert_after('lets', 'go?')
+        sender['the'].insert_before('band', 'not')
+        sender['the'].insert_before('band', 'a')
+    else:
+        sender.update(['hey', ['ho', MenuItem('HOOOO')], 'lets', 'teenage'], the=['who', 'is', 'band'])
+        sender.add('waste land')
 
-    icon = QtGui.QIcon('google.ico')
-    tray = QtWidgets.QSystemTrayIcon(icon)
-    menu = QtWidgets.QMenu()
-    exitAction = menu.addAction("Exit")
-    tray.setContextMenu(menu)
-    tray.show()
-
-
-    app.exec_()
-
-
-if __name__ == '__main__':
-    main()
+app.run()
