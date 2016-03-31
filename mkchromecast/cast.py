@@ -35,25 +35,21 @@ class casting(object):
 
         elif len(self.cclist) != 0 and args.select_cc == True:
             if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
-                tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+                self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
                 print(' ')
                 print('List of Google cast devices available in your network:')
                 print(' ')
+                self.availablecc=[]
                 for index,device in enumerate(self.cclist):
                     print(str(index)+': ', str(device))
+                    toappend = [index,device]
+                    self.availablecc.append(toappend)
+                #print ('Array')
+                #print (availablecc)
 
-                print(' ')
-                print('Please, select the number of the Google cast device that you want to use:')
-                index = input()
-                pickle.dump(index, tf)
-                tf.close()
-                self.castto = self.cclist[int(index)]
-                print(' ')
-                print('Casting to: ', self.castto)
-                print(' ')
             else:
-                tf = open('/tmp/mkcrhomecast.tmp', 'rb')
-                index=pickle.load(tf)
+                self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
+                index=pickle.load(self.tf)
                 self.castto = self.cclist[int(index)]
                 print(' ')
                 print('Casting to: ', self.castto)
@@ -65,6 +61,17 @@ class casting(object):
             outputint()
             terminate()
             exit()
+
+    def sel_cc(self):
+            print(' ')
+            print('Please, select the number of the Google cast device that you want to use:')
+            index = input()
+            pickle.dump(index, self.tf)
+            self.tf.close()
+            self.castto = self.cclist[int(index)]
+            print(' ')
+            print('Casting to: ', self.castto)
+            print(' ')
 
     def get_cc(self):
             self.cast = pychromecast.get_chromecast(self.castto)

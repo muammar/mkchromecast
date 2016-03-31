@@ -15,8 +15,9 @@ class AwesomeStatusBarApp(rumps.App):
                     None,
                     None,
                     None,
+                    "Reset audio",
                     "Preferences",
-                    "Say hi"]
+                    "About"]
 
     @rumps.clicked("Search for Google Cast devices")
     def search_cast(self, _):
@@ -25,16 +26,24 @@ class AwesomeStatusBarApp(rumps.App):
         self.cc.get_cc()
 
     @rumps.clicked("Stop casting")
-    def onoff(self, sender):
-        sender.state = not sender.state
+    def stop_cast(self, _):
+        print('Print algo')
 
-    @rumps.clicked("Say hi")
-    def sayhi(self, _):
-        rumps.notification("Awesome title", "amazing subtitle", "hi!!1")
+   # @rumps.clicked("Select casting")
+   # def onoff(self, sender):
+   #     sender.state = not sender.state
+
+    @rumps.clicked("Reset audio")
+    def reset(self, _):
+        rumps.alert("jk! no preferences available!")
 
     @rumps.clicked("Preferences")
     def prefs(self, _):
         rumps.alert("jk! no preferences available!")
+
+    @rumps.clicked("About")
+    def about(self, _):
+        rumps.alert("mkchromecast <Muammar El Khatib 2006>")
 
 if __name__ == "__main__":
 
