@@ -22,8 +22,13 @@ class menubar(object):
         self.StopCastAction = menu.addAction("Stop casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
 
+        menu.addSeparator()
+        self.StopCastAction = menu.addAction("List of CC")
+        menu.addSeparator()
         self.ResetAudioAction = menu.addAction("Reset audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
+
+        self.ResetAudioAction = menu.addAction("About")
 
         exitAction = menu.addAction("Exit")
         exitAction.triggered.connect(app.quit)
