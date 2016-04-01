@@ -85,7 +85,7 @@ To kill the application just press `Ctrl-c`.
 
 ## Contribute
 
-If you want to contribute, [report
+If you want to contribute, you may [report
 issues](https://github.com/muammar/mkchromecast/issues), [create pull
 requests](https://github.com/muammar/mkchromecast/pulls), or buy me some
 pizza:
