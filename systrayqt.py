@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# This file is part of mkchromecast.
+
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -36,10 +38,20 @@ class menubar(object):
         tray.show()
         app.exec_()
 
+
+
+
     def search_cast(self):
         args.select_cc = True
         cc.initialize_cast()
-        print (cc.availablecc)
+        self.cast_list()
+
+    def cast_list(self):
+        if len(cc.availablecc) == 0:
+            print ('No devices found!')
+        else:
+            for i in cc.availablecc:
+                print i
 
     def stop_cast(self):
         cc.stop_cast()
