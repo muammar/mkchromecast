@@ -17,24 +17,27 @@ class menubar(object):
 
         icon = QtGui.QIcon('images/google.ico')
         tray = QtWidgets.QSystemTrayIcon(icon)
-        menu = QtWidgets.QMenu()
-        self.SearchAction = menu.addAction("Search for Google cast devices")
+        self.menu = QtWidgets.QMenu()
+        self.SearchAction = self.menu.addAction("Search for Google cast devices")
         self.SearchAction.triggered.connect(self.search_cast)
 
-        self.StopCastAction = menu.addAction("Stop casting")
+        self.StopCastAction = self.menu.addAction("Stop casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
 
-        menu.addSeparator()
-        self.StopCastAction = menu.addAction("List of CC")
-        menu.addSeparator()
-        self.ResetAudioAction = menu.addAction("Reset audio")
+        self.menu.addSeparator()
+        self.StopCastAction = self.menu.addAction("Available Google cast devices")
+        if self.StopCastAction.triggered.connect == True:
+            self.cast_list()
+
+        self.menu.addSeparator()
+        self.ResetAudioAction = self.menu.addAction("Reset audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
-        self.ResetAudioAction = menu.addAction("About")
+        self.ResetAudioAction = self.menu.addAction("About")
 
-        exitAction = menu.addAction("Exit")
+        exitAction = self.menu.addAction("Exit")
         exitAction.triggered.connect(app.quit)
-        tray.setContextMenu(menu)
+        tray.setContextMenu(self.menu)
         tray.show()
         app.exec_()
 
@@ -50,8 +53,10 @@ class menubar(object):
         if len(cc.availablecc) == 0:
             print ('No devices found!')
         else:
-            for i in cc.availablecc:
-                print i
+            for menuentry in cc.availablecc:
+                print ('Lo hizo!')
+                print menuentry[0]
+                self.entry = self.menu.addAction(str(menuentry[0]))
 
     def stop_cast(self):
         cc.stop_cast()
