@@ -1,51 +1,96 @@
 #!/usr/bin/env python
 
 # This file is part of mkchromecast.
-from rumps import *
-import urllib
+
+from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from PyQt5 import QtCore, QtGui, QtWidgets
+import signal
 
 
-class AwesomeStatusBarApp(rumps.App):
+cc = casting()
+class menubar(object):
     def __init__(self):
-        self.cc = casting()
-        super(AwesomeStatusBarApp, self).__init__("mkchromecast", icon='images/google.ico')
-        self.menu = ["Search for Google Cast devices",
-                    "Stop casting",
-                    None,
-                    None,
-                    None,
-                    "Reset audio",
-                    "Preferences",
-                    "About"]
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    @rumps.clicked("Search for Google Cast devices")
-    def search_cast(self, _):
+        self.app = QtWidgets.QApplication([])
+
+        icon = QtGui.QIcon('images/google.ico')
+        tray = QtWidgets.QSystemTrayIcon(icon)
+        self.menu = QtWidgets.QMenu()
+        self.search_menu()
+        self.stop_menu()
+        self.separator_menu()
+        self.populating_menu()
+        self.separator_menu()
+        self.resetaudio_menu()
+        self.about_menu()
+        self.exit_menu()
+
+        tray.setContextMenu(self.menu)
+        tray.show()
+        self.app.exec_()
+
+    def search_menu(self):
+        self.SearchAction = self.menu.addAction("Search for Google cast devices")
+        self.SearchAction.triggered.connect(self.search_cast)
+
+    def stop_menu(self):
+        self.StopCastAction = self.menu.addAction("Stop casting")
+        self.StopCastAction.triggered.connect(self.stop_cast)
+
+    def separator_menu(self):
+        self.menu.addSeparator()
+
+    def populating_menu(self):
+        self.PopulationCastAction = self.menu.addAction("List of Google Cast devices:")
+        if self.SearchAction.triggered.connect == True:
+            self.cast_list()
+
+    def resetaudio_menu(self):
+        self.ResetAudioAction = self.menu.addAction("Reset audio")
+        self.ResetAudioAction.triggered.connect(self.reset_audio)
+
+    def about_menu(self):
+        self.AboutAction = self.menu.addAction("About")
+
+    def exit_menu(self):
+        exitAction = self.menu.addAction("Exit")
+        exitAction.triggered.connect(self.app.quit)
+
+    """
+    These are methods for interacting with the mkchromecast objects
+    """
+
+    def search_cast(self):
         args.select_cc = True
-        self.cc.initialize_cast()
-        self.cc.get_cc()
+        cc.initialize_cast()
+        self.cast_list()
 
-    @rumps.clicked("Stop casting")
-    def stop_cast(self, _):
-        print('Print algo')
+    def cast_list(self):
+        if len(cc.availablecc) == 0:
+            print ('No devices found!')
+        else:
+            self.menu.clear()
+            self.search_menu()
+            self.stop_menu()
+            self.separator_menu()
+            self.PopulationCastAction = self.menu.addAction("List of Google Cast devices:")
+            for menuentry in cc.availablecc:
+                print ('Lo hizo!')
+                print menuentry[0]
+                self.entry = self.menu.addAction(str(menuentry[1]))
+            self.separator_menu()
+            self.resetaudio_menu()
+            self.about_menu()
+            self.exit_menu()
 
-   # @rumps.clicked("Select casting")
-   # def onoff(self, sender):
-   #     sender.state = not sender.state
+    def stop_cast(self):
+        cc.stop_cast()
 
-    @rumps.clicked("Reset audio")
-    def reset(self, _):
-        rumps.alert("jk! no preferences available!")
+    def reset_audio(self):
+        inputint()
+        outputint()
 
-    @rumps.clicked("Preferences")
-    def prefs(self, _):
-        rumps.alert("jk! no preferences available!")
-
-    @rumps.clicked("About")
-    def about(self, _):
-        rumps.alert("mkchromecast <Muammar El Khatib 2006>")
-
-if __name__ == "__main__":
-
-    #App('lovegun', icon='kiss.png')
-    AwesomeStatusBarApp().run()
+if __name__ == '__main__':
+    menubar()
