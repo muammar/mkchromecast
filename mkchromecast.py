@@ -8,6 +8,8 @@ from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import atexit
 
+global  systray
+systray = False
 
 cc = casting()
 

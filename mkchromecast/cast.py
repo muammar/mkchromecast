@@ -13,6 +13,7 @@ import os.path
 import pickle
 
 
+
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
         self.ip = socket.gethostbyname(socket.gethostname())
@@ -55,7 +56,7 @@ class casting(object):
                 print('Casting to: ', self.castto)
                 print(' ')
 
-        else:
+        elif len(self.cclist) == 0 and self.systray == False:
             print('No devices found!')
             inputint()
             outputint()

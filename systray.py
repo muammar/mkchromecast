@@ -14,6 +14,7 @@ cc = casting()
 class menubar(object):
     def __init__(self):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
+        self.systray=True
 
         self.app = QtWidgets.QApplication([])
 
@@ -71,7 +72,15 @@ class menubar(object):
 
     def cast_list(self):
         if len(cc.availablecc) == 0:
-            print ('No devices found!')
+            self.menu.clear()
+            self.search_menu()
+            self.separator_menu()
+            self.NodevAction = self.menu.addAction("No devices found!")
+            self.separator_menu()
+            self.stop_menu()
+            self.resetaudio_menu()
+            self.about_menu()
+            self.exit_menu()
         else:
             self.menu.clear()
             self.search_menu()
