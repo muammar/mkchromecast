@@ -19,10 +19,10 @@ class menubar(object):
         tray = QtWidgets.QSystemTrayIcon(icon)
         self.menu = QtWidgets.QMenu()
         self.search_menu()
-        self.stop_menu()
         self.separator_menu()
         self.populating_menu()
         self.separator_menu()
+        self.stop_menu()
         self.resetaudio_menu()
         self.about_menu()
         self.exit_menu()
@@ -43,7 +43,7 @@ class menubar(object):
         self.menu.addSeparator()
 
     def populating_menu(self):
-        self.PopulationCastAction = self.menu.addAction("List of Google Cast devices:")
+        #self.PopulationCastAction = self.menu.addAction("")
         if self.SearchAction.triggered.connect == True:
             self.cast_list()
 
@@ -73,14 +73,14 @@ class menubar(object):
         else:
             self.menu.clear()
             self.search_menu()
-            self.stop_menu()
+            #self.PopulationCastAction = self.menu.addAction("")
             self.separator_menu()
-            self.PopulationCastAction = self.menu.addAction("List of Google Cast devices:")
             for menuentry in cc.availablecc:
                 print ('Lo hizo!')
                 print menuentry[0]
                 self.entry = self.menu.addAction(str(menuentry[1]))
             self.separator_menu()
+            self.stop_menu()
             self.resetaudio_menu()
             self.about_menu()
             self.exit_menu()
