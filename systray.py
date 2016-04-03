@@ -3,9 +3,11 @@
 # This file is part of mkchromecast.
 
 from mkchromecast.audiodevices import *
+from mkchromecast.streaming import *
 from mkchromecast.cast import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
+import os.path
 
 
 cc = casting()
@@ -17,6 +19,7 @@ class menubar(object):
 
         icon = QtGui.QIcon('images/google.ico')
         tray = QtWidgets.QSystemTrayIcon(icon)
+
         self.menu = QtWidgets.QMenu()
         self.search_menu()
         self.separator_menu()
@@ -43,7 +46,6 @@ class menubar(object):
         self.menu.addSeparator()
 
     def populating_menu(self):
-        #self.PopulationCastAction = self.menu.addAction("")
         if self.SearchAction.triggered.connect == True:
             self.cast_list()
 
@@ -73,24 +75,39 @@ class menubar(object):
         else:
             self.menu.clear()
             self.search_menu()
-            #self.PopulationCastAction = self.menu.addAction("")
             self.separator_menu()
-            for menuentry in cc.availablecc:
+            for index,menuentry in enumerate(cc.availablecc):
                 print ('Lo hizo!')
                 print menuentry[0]
-                self.entry = self.menu.addAction(str(menuentry[1]))
+                self.index = index
+                self.index = self.menu.addAction(str(menuentry[1]))
+                self.index.triggered.connect(self.play_cast)
+                if self.index.triggered.connect == True:
+                    self.play_cast()
             self.separator_menu()
             self.stop_menu()
             self.resetaudio_menu()
             self.about_menu()
             self.exit_menu()
 
+    def play_cast(self):
+        cc.inp_cc()
+        inputdev()
+        outputdev()
+        stream()
+        cc.get_cc()
+        cc.play_cast()
+
     def stop_cast(self):
+        ncast = cc.cast
         cc.stop_cast()
+        self.reset_audio()
 
     def reset_audio(self):
         inputint()
         outputint()
 
 if __name__ == '__main__':
+    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkcrhomecast.tmp')
     menubar()

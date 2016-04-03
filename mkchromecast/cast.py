@@ -24,8 +24,8 @@ class casting(object):
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
             print('List of Google cast devices available in your network.')
-            for index,device in enumerate(self.cclist):
-                print(str(index)+': ', str(device))
+            for self.index,device in enumerate(self.cclist):
+                print(str(self.index)+': ', str(device))
             print(' ')
             print('We will cast to first device in the list above!')
             print(' ')
@@ -40,17 +40,17 @@ class casting(object):
                 print('List of Google cast devices available in your network:')
                 print(' ')
                 self.availablecc=[]
-                for index,device in enumerate(self.cclist):
-                    print(str(index)+': ', str(device))
-                    toappend = [index,device]
+                for self.index,device in enumerate(self.cclist):
+                    print(str(self.index)+': ', str(device))
+                    toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 #print ('Array')
                 #print (availablecc)
 
             else:
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
-                index=pickle.load(self.tf)
-                self.castto = self.cclist[int(index)]
+                self.index=pickle.load(self.tf)
+                self.castto = self.cclist[int(self.index)]
                 print(' ')
                 print('Casting to: ', self.castto)
                 print(' ')
@@ -65,10 +65,12 @@ class casting(object):
     def sel_cc(self):
             print(' ')
             print('Please, select the number of the Google cast device that you want to use:')
-            index = input()
-            pickle.dump(index, self.tf)
+            self.index = input()
+
+    def inp_cc(self):
+            pickle.dump(self.index, self.tf)
             self.tf.close()
-            self.castto = self.cclist[int(index)]
+            self.castto = self.cclist[int(self.index)]
             print(' ')
             print('Casting to: ', self.castto)
             print(' ')
