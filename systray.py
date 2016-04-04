@@ -17,7 +17,9 @@ class menubar(object):
     def __init__(self):
         self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
-        self.systray=True
+        self.cc.cast = None
+        self.systray = True
+        self.stopped = False
 
         self.app = QtWidgets.QApplication([])
 
@@ -72,12 +74,11 @@ class menubar(object):
     These are methods for interacting with the mkchromecast objects
     """
 
-    def exit_all(self):
-        self.stop_cast()
-        self.app.quit()
 
     def search_cast(self):
         args.select_cc = True
+        if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+            os.remove('/tmp/mkcrhomecast.tmp')
         self.cc.initialize_cast()
         self.cast_list()
 
@@ -100,7 +101,9 @@ class menubar(object):
                 self.index = index
                 self.index = self.menu.addAction(str(menuentry[1]))
                 self.index.triggered.connect(self.play_cast)
+                self.index.setCheckable(True)
                 if self.index.triggered.connect == True:
+                    self.index.setChecked(True)
                     self.play_cast()
             self.separator_menu()
             self.stop_menu()
@@ -117,20 +120,26 @@ class menubar(object):
         self.cc.play_cast()
 
     def stop_cast(self):
-        ncast = self.cc.cast
-        self.cc.stop_cast()
         self.reset_audio()
         parent_pid = getpid()
         parent = psutil.Process(parent_pid)
         for child in parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
-        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            os.remove('/tmp/mkcrhomecast.tmp')
-        self.search_cast()
+        if self.cc.cast != None:
+            ncast = self.cc.cast
+            self.cc.stop_cast()
+            if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+                os.remove('/tmp/mkcrhomecast.tmp')
+            self.search_cast()
+            self.stopped = True
 
     def reset_audio(self):
         inputint()
         outputint()
+
+    def exit_all(self):
+        self.stop_cast()
+        self.app.quit()
 
 if __name__ == '__main__':
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
