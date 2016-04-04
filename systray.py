@@ -67,7 +67,7 @@ class menubar(object):
         self.AboutAction = self.menu.addAction("About")
 
     def exit_menu(self):
-        exitAction = self.menu.addAction("Exit")
+        exitAction = self.menu.addAction("Quit")
         exitAction.triggered.connect(self.exit_all)
 
     """
