@@ -138,7 +138,8 @@ class menubar(object):
         outputint()
 
     def exit_all(self):
-        self.stop_cast()
+        if self.stopped == False:
+            self.stop_cast()
         self.app.quit()
 
 if __name__ == '__main__':
