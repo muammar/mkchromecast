@@ -21,7 +21,11 @@ class menubar(object):
 
         self.app = QtWidgets.QApplication([])
 
-        icon = QtGui.QIcon('images/google.icns')
+        if os.path.exists('images/google.icns') == True:
+            icon = QtGui.QIcon('images/google.icns')
+        else:
+            icon = QtGui.QIcon('google.icns')
+
         tray = QtWidgets.QSystemTrayIcon(icon)
 
         self.menu = QtWidgets.QMenu()
@@ -93,8 +97,6 @@ class menubar(object):
             self.search_menu()
             self.separator_menu()
             for index,menuentry in enumerate(self.cc.availablecc):
-                print ('Lo hizo!')
-                print menuentry[0]
                 self.index = index
                 self.index = self.menu.addAction(str(menuentry[1]))
                 self.index.triggered.connect(self.play_cast)
