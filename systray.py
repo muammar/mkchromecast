@@ -121,9 +121,9 @@ class menubar(object):
 
     def stop_cast(self):
         self.reset_audio()
-        parent_pid = getpid()
-        parent = psutil.Process(parent_pid)
-        for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+        self.parent_pid = getpid()
+        self.parent = psutil.Process(self.parent_pid)
+        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
         if self.cc.cast != None:
             ncast = self.cc.cast
@@ -140,6 +140,8 @@ class menubar(object):
     def exit_all(self):
         if self.stopped == False:
             self.stop_cast()
+        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
+            child.kill()
         self.app.quit()
 
 if __name__ == '__main__':
