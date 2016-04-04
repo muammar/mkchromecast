@@ -21,7 +21,7 @@ class menubar(object):
 
         self.app = QtWidgets.QApplication([])
 
-        icon = QtGui.QIcon('images/google.ico')
+        icon = QtGui.QIcon('images/google.icns')
         tray = QtWidgets.QSystemTrayIcon(icon)
 
         self.menu = QtWidgets.QMenu()

@@ -2,7 +2,7 @@
 py2app build script for MyApplication
 
 Usage:
-    python setup.py py2app -A --packages=PyQt5
+    python setup.py py2app -A --packages=PyQt5 --iconfile images/google.icns
 """
 from setuptools import setup
 setup(
