@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # This file is part of mkchromecast.
+# brew install pyqt5 --with-python --without-python3
 
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *

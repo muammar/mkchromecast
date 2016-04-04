@@ -3,6 +3,7 @@ py2app build script for MyApplication
 
 Usage:
 	python setup.py py2app -A --packages=PyQt5
+        python setup.py py2app --packages=PyQt5 --excludes="PyQt5.uic.port_v3"
 """
 from setuptools import setup
 
