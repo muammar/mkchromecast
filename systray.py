@@ -13,9 +13,9 @@ from os import getpid
 import psutil
 
 
-cc = casting()
 class menubar(object):
     def __init__(self):
+        self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.systray=True
 
@@ -62,19 +62,23 @@ class menubar(object):
 
     def exit_menu(self):
         exitAction = self.menu.addAction("Exit")
-        exitAction.triggered.connect(self.app.quit)
+        exitAction.triggered.connect(self.exit_all)
 
     """
     These are methods for interacting with the mkchromecast objects
     """
 
+    def exit_all(self):
+        self.stop_cast()
+        self.app.quit()
+
     def search_cast(self):
         args.select_cc = True
-        cc.initialize_cast()
+        self.cc.initialize_cast()
         self.cast_list()
 
     def cast_list(self):
-        if len(cc.availablecc) == 0:
+        if len(self.cc.availablecc) == 0:
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -88,7 +92,7 @@ class menubar(object):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            for index,menuentry in enumerate(cc.availablecc):
+            for index,menuentry in enumerate(self.cc.availablecc):
                 print ('Lo hizo!')
                 print menuentry[0]
                 self.index = index
@@ -103,21 +107,24 @@ class menubar(object):
             self.exit_menu()
 
     def play_cast(self):
-        cc.inp_cc()
+        self.cc.inp_cc()
         inputdev()
         outputdev()
         stream()
-        cc.get_cc()
-        cc.play_cast()
+        self.cc.get_cc()
+        self.cc.play_cast()
 
     def stop_cast(self):
-        ncast = cc.cast
-        cc.stop_cast()
+        ncast = self.cc.cast
+        self.cc.stop_cast()
         self.reset_audio()
         parent_pid = getpid()
         parent = psutil.Process(parent_pid)
         for child in parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
+        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+            os.remove('/tmp/mkcrhomecast.tmp')
+        self.search_cast()
 
     def reset_audio(self):
         inputint()
