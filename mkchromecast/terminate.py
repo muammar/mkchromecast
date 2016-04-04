@@ -23,3 +23,4 @@ def terminate():
     for child in parent.children(recursive=True):  # or parent.children() for recursive=False
         child.kill()
     parent.kill()
+    return

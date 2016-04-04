@@ -3,11 +3,14 @@
 # This file is part of mkchromecast.
 
 from mkchromecast.audiodevices import *
-from mkchromecast.streaming import *
 from mkchromecast.cast import *
+from mkchromecast.streaming import *
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
 import os.path
+from os import getpid
+import psutil
 
 
 cc = casting()
@@ -111,6 +114,10 @@ class menubar(object):
         ncast = cc.cast
         cc.stop_cast()
         self.reset_audio()
+        parent_pid = getpid()
+        parent = psutil.Process(parent_pid)
+        for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+            child.kill()
 
     def reset_audio(self):
         inputint()
