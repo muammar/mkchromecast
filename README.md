@@ -93,6 +93,11 @@ A **beta** system tray menu is now provided. It requires you to install
 python systray.py
 ```
 
+It looks like:
+
+![alt text](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png
+"Working example")
+
 ### TODO
 
 * Implement multithreading in the system tray menu.
