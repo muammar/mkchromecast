@@ -95,7 +95,8 @@ python systray.py
 
 It looks like:
 
-![Working example](http://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png){:height="300px" width="205px"}
+![Image of
+working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
 ### TODO
 
