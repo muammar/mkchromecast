@@ -8,17 +8,17 @@ For Linux you have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
 beautifully.
 
-## Requirements:
+### Requirements:
 
 In order to use **mkchromecast** you need the following:
 
 * Python2 (already shipped in OS X), or Python3.
 * pychromecast.
 * psutil.
+* mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
 
-
-## Installation and updating
+### Installation and updating
 
 To install **mkchromecast**, clone this repository:
 
@@ -68,7 +68,7 @@ To update **mkchromecast**, just get into the cloned directory and:
 git pull
 ```
 
-## How to execute it
+### How to execute it
 
 Get into the cloned **mkchromecast** directory and execute:
 
@@ -103,9 +103,9 @@ working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/imag
 * Implement multithreading in the system tray menu.
 * Generate a standalone Mac OS X application.
 
-## Contribute
+### Contribute
 
-If you want to contribute, help improving this application by reporting [report
+If you want to contribute, help me improving this application by [reporting
 issues](https://github.com/muammar/mkchromecast/issues), [creating pull
 requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
