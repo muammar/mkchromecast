@@ -8,6 +8,8 @@ from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import atexit
 
+global  systray
+systray = False
 
 cc = casting()
 
@@ -21,8 +23,15 @@ inputdev()
 outputdev()
 stream()
 cc.initialize_cast()
-cc.get_cc()
-cc.play_cast()
+
+if args.select_cc == True: # This is done for the case that -s is passed
+    cc.sel_cc()
+    cc.inp_cc()
+    cc.get_cc()
+    cc.play_cast()
+else:
+    cc.get_cc()
+    cc.play_cast()
 
 print('Ctrl-c to kill the application')
 

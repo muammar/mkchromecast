@@ -39,7 +39,8 @@ pip install -r requirements.txt
 ```
 
 _Note_: if this step fails, maybe you will need to run the installation with
-`sudo`:
+`sudo` as shown below. However, before installing using this method verify why
+a regular user cannot install the requirements.
 
 ```
 sudo pip install -r requirements.txt
