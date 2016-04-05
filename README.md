@@ -95,8 +95,7 @@ python systray.py
 
 It looks like:
 
-![alt text](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png
-"Working example")
+<img align="middle" src="//raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png" width="300">
 
 ### TODO
 
