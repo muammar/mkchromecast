@@ -84,15 +84,25 @@ python mkchromecast.py -h
 
 To kill the application just press `Ctrl-c`.
 
+### Notes
+
+A **beta** system tray menu is now provided. It requires you to install
+`PyQt5`. To launch it:
+
+```
+python systray.py
+```
+
+### TODO
+
+* Implement multithreading in the system tray menu.
+* Generate a standalone Mac OS X application.
+
 ## Contribute
 
-If you want to contribute, you may [report
-issues](https://github.com/muammar/mkchromecast/issues), [create pull
-requests](https://github.com/muammar/mkchromecast/pulls), or buy me some
-pizza:
+If you want to contribute, help improving this application by reporting [report
+issues](https://github.com/muammar/mkchromecast/issues), [creating pull
+requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
+me some pizza :).
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
-
-#### Notes
-
-A system tray is ongoing.
