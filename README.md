@@ -95,7 +95,7 @@ python systray.py
 
 It looks like:
 
-<img src="http://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png" width="300" align="middle">
+![Working example](http://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png){:height="300px" width="205px"}
 
 ### TODO
 
