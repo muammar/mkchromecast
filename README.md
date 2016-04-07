@@ -90,7 +90,7 @@ A **beta** system tray menu is now provided. It requires you to install
 `PyQt5`. To launch it:
 
 ```
-python systray.py
+python mkchromecast.py -t
 ```
 
 It looks like:

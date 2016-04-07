@@ -12,6 +12,7 @@ parser.add_argument('-d', '--discover', action="store_true", help='Use this opti
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
 parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one google cast device use this option')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio, use this option to reset')
+parser.add_argument('-t', '--tray', action="store_true", help='This option let you launch mkchromecast as a systray menu (still experimental)')
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
 parser.add_argument('-y', '--youtube', action="store_true", help='Stream a youtube URL')
 args = parser.parse_args()
