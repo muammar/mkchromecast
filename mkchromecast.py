@@ -6,7 +6,8 @@ from mkchromecast.audiodevices import *
 from mkchromecast.streaming import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
-import atexit, subprocess
+import systray
+import atexit
 
 if args.tray == False:
     global  systray
@@ -48,5 +49,4 @@ if args.tray == False:
     except KeyboardInterrupt:
         atexit.register(terminateapp)
 else:
-    systray = ['python', './systray.py']
-    subprocess.Popen(systray, shell=False)
+    systray.main()
