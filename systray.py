@@ -37,9 +37,11 @@ class menubar(object):
         self.app = QtWidgets.QApplication(sys.argv)
 
         if os.path.exists('images/google.icns') == True:
-            icon = QtGui.QIcon('images/google.icns')
+            icon = QtGui.QIcon()
+            icon.addFile('images/google.icns', QtCore.QSize(48,48))
         else:
-            icon = QtGui.QIcon('google.icns')
+            icon = QtGui.QIcon()
+            icon.addFile('google.icns', QtCore.QSize(48,48))
 
         self.tray = QtWidgets.QSystemTrayIcon(icon)
 
@@ -163,14 +165,17 @@ class menubar(object):
         print(self.ncast.status)
 
     def stop_cast(self):
-        self.menuentry.setChecked(False)
-        self.reset_audio()
-        self.parent_pid = getpid()
-        self.parent = psutil.Process(self.parent_pid)
-        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-            child.kill()
-        if self.cc.cast != None:
+        if self.stopped == False:
+            pass
+
+        if self.cc.cast != None or self.stopped == True:
             self.ncast.quit_app()
+            self.menuentry.setChecked(False)
+            self.reset_audio()
+            self.parent_pid = getpid()
+            self.parent = psutil.Process(self.parent_pid)
+            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
+                child.kill()
             if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
                 os.remove('/tmp/mkcrhomecast.tmp')
             self.search_cast()
@@ -182,12 +187,16 @@ class menubar(object):
         outputint()
 
     def exit_all(self):
-        if self.stopped == False:
+        if self.cc.cast == None:
+            self.app.quit()
+        elif self.stopped == True:
             self.stop_cast()
-        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-            child.kill()
-        self.stop_cast()
-        self.app.quit()
+            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
+                child.kill()
+            self.stop_cast()
+            self.app.quit()
+        else:
+            self.app.quit()
 
 def main():
     menubar()
