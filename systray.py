@@ -159,6 +159,7 @@ class menubar(object):
         #print (localip)
         self.ncast = self.cast
         self.ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        self.cc.cast = self.cast
         print(self.ncast.status)
 
     def stop_cast(self):
