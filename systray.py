@@ -186,6 +186,7 @@ class menubar(object):
             self.stop_cast()
         for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
+        self.stop_cast()
         self.app.quit()
 
 def main():
