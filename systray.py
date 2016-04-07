@@ -147,6 +147,7 @@ class menubar(object):
         print(' ')
         print('Casting to: ', self.castto)
         print(' ')
+        stream()
         self.cast = pychromecast.get_chromecast(self.castto)
         ## Wait for cast device to be ready
         self.cast.wait()
@@ -154,7 +155,6 @@ class menubar(object):
         #print(self.cast.status)
         inputdev()
         outputdev()
-        stream()
         localip = self.cc.ip
         #print (localip)
         self.ncast = self.cast
@@ -169,7 +169,6 @@ class menubar(object):
         for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
         if self.cc.cast != None:
-            self.ncast = self.cc.cast
             self.ncast.quit_app()
             if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
                 os.remove('/tmp/mkcrhomecast.tmp')
