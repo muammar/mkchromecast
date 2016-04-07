@@ -6,12 +6,16 @@
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.streaming import *
+import mkchromecast.worker
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
 import os.path
 from os import getpid
 import psutil
+
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+
 
 
 class menubar(object):
@@ -22,6 +26,12 @@ class menubar(object):
         self.systray = True
         self.stopped = False
 
+        self.obj = mkchromecast.worker.Worker()  # no parent!
+        self.thread = QThread()  # no parent!
+        self.obj.intReady.connect(self.onIntReady)
+        self.obj.moveToThread(self.thread)
+        self.obj.finished.connect(self.thread.quit)
+        self.thread.started.connect(self.obj._search_cast_)
 
 
     def search_menu(self):
@@ -55,12 +65,24 @@ class menubar(object):
     """
 
 
+#   def _search_cast_(self):
+#       args.select_cc = True
+#       if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+#           os.remove('/tmp/mkcrhomecast.tmp')
+#       self.cc.initialize_cast()
+#       self.cast_list()
+
+    def onIntReady(self, availablecc):
+        print ('availablecc')
+        print (availablecc)
+        self.cc.availablecc = availablecc
+        self.cast_list()
+
     def search_cast(self):
         args.select_cc = True
         if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
             os.remove('/tmp/mkcrhomecast.tmp')
-        self.cc.initialize_cast()
-        self.cast_list()
+        self.thread.start()
 
     def cast_list(self):
         if len(self.cc.availablecc) == 0:
