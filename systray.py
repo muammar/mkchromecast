@@ -7,12 +7,13 @@ from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.streaming import *
 import mkchromecast.worker
+import pychromecast
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
 import os.path
 from os import getpid
-import psutil
+import psutil, pickle
 
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
@@ -33,31 +34,53 @@ class menubar(object):
         self.obj.finished.connect(self.thread.quit)
         self.thread.started.connect(self.obj._search_cast_)
 
+        self.app = QtWidgets.QApplication(sys.argv)
+
+        if os.path.exists('images/google.icns') == True:
+            icon = QtGui.QIcon('images/google.icns')
+        else:
+            icon = QtGui.QIcon('google.icns')
+
+        self.tray = QtWidgets.QSystemTrayIcon(icon)
+
+        self.menu = QtWidgets.QMenu()
+        self.search_menu()
+        self.separator_menu()
+        self.populating_menu()
+        self.separator_menu()
+        self.stop_menu()
+        self.resetaudio_menu()
+        self.about_menu()
+        self.exit_menu()
+
+        self.tray.setContextMenu(self.menu)
+        self.tray.show()
+        self.app.exec_()
 
     def search_menu(self):
-        self.SearchAction = menu.addAction("Search for Google cast devices")
+        self.SearchAction = self.menu.addAction("Search for Google cast devices")
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
-        self.StopCastAction = menu.addAction("Stop casting")
+        self.StopCastAction = self.menu.addAction("Stop casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
 
     def separator_menu(self):
-        menu.addSeparator()
+        self.menu.addSeparator()
 
     def populating_menu(self):
         if self.SearchAction.triggered.connect == True:
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = menu.addAction("Reset audio")
+        self.ResetAudioAction = self.menu.addAction("Reset audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def about_menu(self):
-        self.AboutAction = menu.addAction("About")
+        self.AboutAction = self.menu.addAction("About")
 
     def exit_menu(self):
-        exitAction = menu.addAction("Quit")
+        exitAction = self.menu.addAction("Quit")
         exitAction.triggered.connect(self.exit_all)
 
     """
@@ -74,8 +97,7 @@ class menubar(object):
 
     def onIntReady(self, availablecc):
         print ('availablecc')
-        print (availablecc)
-        self.cc.availablecc = availablecc
+        self.availablecc = availablecc
         self.cast_list()
 
     def search_cast(self):
@@ -85,8 +107,8 @@ class menubar(object):
         self.thread.start()
 
     def cast_list(self):
-        if len(self.cc.availablecc) == 0:
-            menu.clear()
+        if len(self.availablecc) == 0:
+            self.menu.clear()
             self.search_menu()
             self.separator_menu()
             self.NodevAction = self.menu.addAction("No devices found!")
@@ -96,43 +118,63 @@ class menubar(object):
             self.about_menu()
             self.exit_menu()
         else:
-            menu.clear()
+            self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            for index,menuentry in enumerate(self.cc.availablecc):
-                self.index = index
-                self.index = menu.addAction(str(menuentry[1]))
-                self.index.triggered.connect(self.play_cast)
-                self.index.setCheckable(True)
-                if self.index.triggered.connect == True:
-                    self.index.setChecked(True)
-                    self.play_cast()
+            print ('again', self.availablecc)
+            for index, menuentry in enumerate(self.availablecc):
+                self.entries = menuentry
+                self.menuentry = self.menu.addAction(str(menuentry[1]))
+                self.menuentry.triggered.connect(self.play_cast)
+                self.menuentry.setCheckable(True)
             self.separator_menu()
             self.stop_menu()
             self.resetaudio_menu()
             self.about_menu()
             self.exit_menu()
 
+
     def play_cast(self):
-        self.cc.inp_cc()
+        self.menuentry.setChecked(True)
+        print ('yes')
+        print self.entries[0], self.entries[1]
+        self.index = self.entries[0]
+        self.castto = self.entries[1]
+        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+            self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+        pickle.dump(self.index, self.tf)
+        self.tf.close()
+        print(' ')
+        print('Casting to: ', self.castto)
+        print(' ')
+        self.cast = pychromecast.get_chromecast(self.castto)
+        ## Wait for cast device to be ready
+        self.cast.wait()
+        #print(self.cast.device)
+        #print(self.cast.status)
         inputdev()
         outputdev()
         stream()
-        self.cc.get_cc()
-        self.cc.play_cast()
+        localip = self.cc.ip
+        #print (localip)
+        self.ncast = self.cast
+        self.ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print(self.ncast.status)
 
     def stop_cast(self):
+        self.menuentry.setChecked(False)
         self.reset_audio()
         self.parent_pid = getpid()
         self.parent = psutil.Process(self.parent_pid)
         for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
         if self.cc.cast != None:
-            ncast = self.cc.cast
-            self.cc.stop_cast()
+            self.ncast = self.cc.cast
+            self.ncast.quit_app()
             if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
                 os.remove('/tmp/mkcrhomecast.tmp')
             self.search_cast()
+            self.ncast.quit_app()
             self.stopped = True
 
     def reset_audio(self):
@@ -144,36 +186,10 @@ class menubar(object):
             self.stop_cast()
         for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
             child.kill()
-        app.quit()
-
+        self.app.quit()
 
 def main():
-    global menu
-    global app
-
     menubar()
-    app = QtWidgets.QApplication(sys.argv)
-    if os.path.exists('images/google.icns') == True:
-        icon = QtGui.QIcon('images/google.icns')
-    else:
-        icon = QtGui.QIcon('google.icns')
-
-    tray = QtWidgets.QSystemTrayIcon(icon)
-
-    menu = QtWidgets.QMenu()
-    start = menubar()
-    start.search_menu()
-    start.separator_menu()
-    start.populating_menu()
-    start.separator_menu()
-    start.stop_menu()
-    start.resetaudio_menu()
-    start.about_menu()
-    start.exit_menu()
-
-    tray.setContextMenu(menu)
-    tray.show()
-    app.exec_()
 
 if __name__ == '__main__':
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
