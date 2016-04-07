@@ -103,6 +103,8 @@ I am still working in improving it.
 ### TODO
 
 * Implement multithreading in the system tray menu.
+* Check that the index of the cast selected is correctly passed in the
+system tray.
 * Generate a standalone Mac OS X application.
 
 ### Contribute
