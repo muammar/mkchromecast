@@ -98,6 +98,8 @@ It looks like:
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
+I am still working in improving it.
+
 ### TODO
 
 * Implement multithreading in the system tray menu.
