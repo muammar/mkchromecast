@@ -49,4 +49,9 @@ if args.tray == False:
     except KeyboardInterrupt:
         atexit.register(terminateapp)
 else:
+    import pickle
+    import os.path
+    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkcrhomecast.tmp')
+
     systray.main()
