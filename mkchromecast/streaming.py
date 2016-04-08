@@ -28,6 +28,9 @@ def streaming():
         except KeyboardInterrupt:
             print ("Ctrl-c was requested")
             sys.exit(0)
+        except IOError:
+            print ("I/O Error")
+            sys.exit(0)
     else:
         print ('Reconnecting streaming...')
         relaunch(stream,recasting,kill)
