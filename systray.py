@@ -187,9 +187,9 @@ class menubar(object):
         outputint()
 
     def exit_all(self):
-        if self.cc.cast == None:
+        if self.cc.cast == None and self.stopped == False:
             self.app.quit()
-        elif self.stopped == True:
+        elif self.stopped == True or self.cc.cast != None:
             self.stop_cast()
             for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
                 child.kill()
