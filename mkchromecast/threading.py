@@ -12,6 +12,11 @@ class Worker(QObject):
     def _search_cast_(self):
         self.cc = casting()
         self.cc.initialize_cast()
-        availablecc = self.cc.availablecc
-        self.intReady.emit(availablecc)
-        self.finished.emit()
+        if len(self.cc.availablecc) == 0 and args.tray == True:
+            availablecc = []
+            self.intReady.emit(availablecc)
+            self.finished.emit()
+        else:
+            availablecc = self.cc.availablecc
+            self.intReady.emit(availablecc)
+            self.finished.emit()

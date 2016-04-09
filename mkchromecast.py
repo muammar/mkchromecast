@@ -10,8 +10,6 @@ import systray
 import atexit
 
 if args.tray == False:
-    global  systray
-    systray = False
 
     cc = casting()
 

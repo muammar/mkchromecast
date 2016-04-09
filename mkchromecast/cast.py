@@ -56,12 +56,16 @@ class casting(object):
                 print('Casting to: ', self.castto)
                 print(' ')
 
-        elif len(self.cclist) == 0 and self.systray == False:
+        elif len(self.cclist) == 0 and args.tray == False:
             print('No devices found!')
             inputint()
             outputint()
             terminate()
             exit()
+
+        elif len(self.cclist) == 0 and args.tray == True:
+            print('No devices found!')
+            self.availablecc = []
 
     def sel_cc(self):
             print(' ')

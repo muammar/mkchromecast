@@ -6,7 +6,7 @@
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.streaming import *
-import mkchromecast.worker
+import mkchromecast.threading
 import pychromecast
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -24,10 +24,9 @@ class menubar(object):
         self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cc.cast = None
-        self.systray = True
         self.stopped = False
 
-        self.obj = mkchromecast.worker.Worker()  # no parent!
+        self.obj = mkchromecast.threading.Worker()  # no parent!
         self.thread = QThread()  # no parent!
         self.obj.intReady.connect(self.onIntReady)
         self.obj.moveToThread(self.thread)
@@ -113,7 +112,7 @@ class menubar(object):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            self.NodevAction = self.menu.addAction("No devices found!")
+            self.NodevAction = self.menu.addAction("No Cast devices found.")
             self.separator_menu()
             self.stop_menu()
             self.resetaudio_menu()
