@@ -56,6 +56,13 @@ class casting(object):
                 print('Casting to: ', self.castto)
                 print(' ')
 
+        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True :
+                self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
+                self.index=pickle.load(self.tf)
+                self.castto = self.cclist[int(self.index)]
+                print(' ')
+                print('Casting to: ', self.castto)
+
         elif len(self.cclist) == 0 and args.tray == False:
             print('No devices found!')
             inputint()

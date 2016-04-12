@@ -18,31 +18,41 @@ import psutil, pickle
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
 
+global entries
 
 class menubar(object):
     def __init__(self):
         self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
-        self.cc.cast = None
+        self.cast = None
         self.stopped = False
 
         self.obj = mkchromecast.threading.Worker()  # no parent!
         self.thread = QThread()  # no parent!
+
         self.obj.intReady.connect(self.onIntReady)
         self.obj.moveToThread(self.thread)
         self.obj.finished.connect(self.thread.quit)
         self.thread.started.connect(self.obj._search_cast_)
 
+        self.objp = mkchromecast.threading.Player()  # no parent!
+        self.threadplay = QThread()  # no parent!
+
+        self.objp.moveToThread(self.threadplay)
+        self.objp.pcastready.connect(self.pcastready)
+        self.objp.pcastfinished.connect(self.threadplay.quit)
+        self.threadplay.started.connect(self.objp._play_cast_)
+
         self.app = QtWidgets.QApplication(sys.argv)
 
         if os.path.exists('images/google.icns') == True:
-            icon = QtGui.QIcon()
-            icon.addFile('images/google.icns', QtCore.QSize(48,48))
+            self.icon = QtGui.QIcon()
+            self.icon.addFile('images/google.icns')#, QtCore.QSize(48,48))
         else:
-            icon = QtGui.QIcon()
-            icon.addFile('google.icns', QtCore.QSize(48,48))
+            self.icon = QtGui.QIcon()
+            self.icon.addFile('google.icns')#, QtCore.QSize(48,48))
 
-        self.tray = QtWidgets.QSystemTrayIcon(icon)
+        self.tray = QtWidgets.QSystemTrayIcon(self.icon)
 
         self.menu = QtWidgets.QMenu()
         self.search_menu()
@@ -88,26 +98,29 @@ class menubar(object):
     These are methods for interacting with the mkchromecast objects
     """
 
-
-#   def _search_cast_(self):
-#       args.select_cc = True
-#       if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-#           os.remove('/tmp/mkcrhomecast.tmp')
-#       self.cc.initialize_cast()
-#       self.cast_list()
-
     def onIntReady(self, availablecc):
         print ('availablecc')
         self.availablecc = availablecc
         self.cast_list()
 
     def search_cast(self):
+        if os.path.exists('images/google_working.icns') == True:
+            self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+        else:
+            self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+
         args.select_cc = True
         if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
             os.remove('/tmp/mkcrhomecast.tmp')
+
         self.thread.start()
 
+
     def cast_list(self):
+        if os.path.exists('images/google.icns') == True:
+            self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+        else:
+            self.tray.setIcon(QtGui.QIcon('google.icns'))
         if len(self.availablecc) == 0:
             self.menu.clear()
             self.search_menu()
@@ -134,9 +147,23 @@ class menubar(object):
             self.about_menu()
             self.exit_menu()
 
+    def pcastready(self, done):
+        print ('done', done)
+        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+            self.cast = mkchromecast.threading.cast
+            self.ncast = self.cast
+        if os.path.exists('images/google.icns') == True:
+            self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+        else:
+            self.tray.setIcon(QtGui.QIcon('google.icns'))
 
     def play_cast(self):
         self.menuentry.setChecked(True)
+        if os.path.exists('images/google_working.icns') == True:
+            self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+        else:
+            self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+
         print ('yes')
         print self.entries[0], self.entries[1]
         self.index = self.entries[0]
@@ -145,29 +172,13 @@ class menubar(object):
             self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
         pickle.dump(self.index, self.tf)
         self.tf.close()
-        print(' ')
-        print('Casting to: ', self.castto)
-        print(' ')
-        stream()
-        self.cast = pychromecast.get_chromecast(self.castto)
-        ## Wait for cast device to be ready
-        self.cast.wait()
-        #print(self.cast.device)
-        #print(self.cast.status)
-        inputdev()
-        outputdev()
-        localip = self.cc.ip
-        #print (localip)
-        self.ncast = self.cast
-        self.ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-        self.cc.cast = self.cast
-        print(self.ncast.status)
+        self.threadplay.start()
 
     def stop_cast(self):
         if self.stopped == False:
             pass
 
-        if self.cc.cast != None or self.stopped == True:
+        if self.cast != None or self.stopped == True:
             self.ncast.quit_app()
             self.menuentry.setChecked(False)
             self.reset_audio()
@@ -186,9 +197,9 @@ class menubar(object):
         outputint()
 
     def exit_all(self):
-        if self.cc.cast == None and self.stopped == False:
+        if self.cast == None and self.stopped == False:
             self.app.quit()
-        elif self.stopped == True or self.cc.cast != None:
+        elif self.stopped == True or self.cast != None:
             self.stop_cast()
             for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
                 child.kill()

@@ -98,11 +98,11 @@ It looks like:
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
-I am still working in improving it.
+I am still working on improving it.
 
 ### TODO
 
-* Implement multithreading in the system tray menu.
+* Verify all exceptions when menubar fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
 * Generate a standalone Mac OS X application.

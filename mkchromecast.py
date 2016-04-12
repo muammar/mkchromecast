@@ -6,7 +6,8 @@ from mkchromecast.audiodevices import *
 from mkchromecast.streaming import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
-import systray
+import mkchromecast.systray
+
 import atexit
 
 if args.tray == False:
@@ -52,4 +53,4 @@ else:
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
        os.remove('/tmp/mkcrhomecast.tmp')
 
-    systray.main()
+    mkchromecast.systray.main()
