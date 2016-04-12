@@ -9,7 +9,7 @@ from setuptools import setup
 
 APP = ['systray.py']
 APP_NAME = "mkchromecast"
-DATA_FILES = ['images/google.icns']
+DATA_FILES = ['images/google.icns', 'images/google_working.icns']
 
 OPTIONS = {
     'argv_emulation': True,
