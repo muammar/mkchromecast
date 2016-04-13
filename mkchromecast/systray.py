@@ -186,8 +186,7 @@ class menubar(object):
             self.parent = psutil.Process(self.parent_pid)
             for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
                 child.kill()
-            if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-                os.remove('/tmp/mkcrhomecast.tmp')
+            checkmktmp()
             self.search_cast()
             self.ncast.quit_app()
             self.stopped = True
@@ -212,6 +211,5 @@ def main():
     menubar()
 
 if __name__ == '__main__':
-    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.tmp')
+    checkmktmp()
     main()

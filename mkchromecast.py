@@ -7,12 +7,15 @@ from mkchromecast.streaming import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import mkchromecast.systray
+import os.path
 
 import atexit
 
 if args.tray == False:
 
     cc = casting()
+    checkmktmp()
+    writePidFile()
 
     if cc.ip == '127.0.0.1' or None:        # We verify the local IP.
         print ('Your computer is not connected to any network')
@@ -48,9 +51,7 @@ if args.tray == False:
     except KeyboardInterrupt:
         atexit.register(terminateapp)
 else:
-    import pickle
-    import os.path
-    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.tmp')
-
+    checkmktmp()
+    writePidFile()
     mkchromecast.systray.main()
+

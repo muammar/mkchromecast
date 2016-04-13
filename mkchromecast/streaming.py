@@ -4,12 +4,10 @@
 
 import subprocess
 import multiprocessing
-import time
-import sys
+import time, sys, os, signal
+from .audiodevices import *
 from .cast import *
-import psutil
-import os
-import signal
+import psutil, pickle
 
 """
 These functions are used to get up the streaming server.
@@ -22,14 +20,31 @@ To call them:
 def streaming():
     webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
     p = subprocess.Popen(webcast)
+
+    f = open('/tmp/mkcrhomecast.pid', 'rb')
+    pidnumber=int(pickle.load(f))
+    print (pidnumber)
+
+    localpid=getpid()
+
     while p.poll() is None:
         try:
             time.sleep(0.5)
+            if psutil.pid_exists(pidnumber) == False:   # With this if I ensure that if main app fails, everything
+                inputint()                              # will get back to normal
+                outputint()
+                parent = psutil.Process(localpid)
+                for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+                    child.kill()
+                parent.kill()
         except KeyboardInterrupt:
             print ("Ctrl-c was requested")
             sys.exit(0)
         except IOError:
             print ("I/O Error")
+            sys.exit(0)
+        except OSError:
+            print ("OSError")
             sys.exit(0)
     else:
         print ('Reconnecting streaming...')

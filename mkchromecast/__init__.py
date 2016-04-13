@@ -5,6 +5,9 @@
 import argparse
 from .audiodevices import *
 from .terminate import *
+import os.path
+import pickle
+
 
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.')
 parser.add_argument('-c', '--config', action="store_true", help='Use this option to connect from configuration file')
@@ -25,3 +28,23 @@ if args.reset == True:
 if args.config == True or args.discover == True or args.name == True or args.version == True or args.youtube == True:
     print ('This option is not implemented yet.')
     terminate()
+
+
+
+"""
+This is to write a PID file
+"""
+def writePidFile():
+    if os.path.exists('/tmp/mkcrhomecast.pid') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkcrhomecast.pid')
+    pid = str(os.getpid())
+    f = open('/tmp/mkcrhomecast.pid', 'wb')
+    pickle.dump(pid, f)
+    f.close()
+    return
+
+
+def checkmktmp():
+    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkcrhomecast.tmp')
+    return
