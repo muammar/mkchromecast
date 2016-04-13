@@ -165,7 +165,7 @@ class menubar(object):
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         print ('yes')
-        print self.entries[0], self.entries[1]
+        print (self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
         if os.path.exists('/tmp/mkcrhomecast.tmp') == True:

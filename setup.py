@@ -14,7 +14,7 @@ DATA_FILES = ['images/google.icns', 'images/google_working.icns']
 OPTIONS = {
     'argv_emulation': True,
     'iconfile': 'images/google.icns',
-    'includes': ['sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets'],
+    'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
