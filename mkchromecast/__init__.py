@@ -8,7 +8,7 @@ from .terminate import *
 import os.path, sys
 import pickle
 from argparse import RawTextHelpFormatter
-
+from .version import __version__
 
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('--encoder-backend', type=str, default='node', help=
@@ -44,11 +44,9 @@ if args.reset == True:
     outputint()
     terminate()
 
-if args.config == True or args.discover == True or args.name == True or args.version == True or args.youtube == True:
+if args.config == True or args.discover == True or args.name == True or args.youtube == True:
     print ('This option is not implemented yet.')
-    terminate()
-
-
+    sys.exit(0)
 
 """
 Check that encoders exist in the list
@@ -82,6 +80,13 @@ else:
 
 
 """
+Version
+"""
+if args.version is True:
+    print ('mkchromecast ', __version__)
+    sys.exit(0)
+
+"""
 This is to write a PID file
 """
 def writePidFile():
@@ -92,7 +97,6 @@ def writePidFile():
     pickle.dump(pid, f)
     f.close()
     return
-
 
 def checkmktmp():
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists

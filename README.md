@@ -2,7 +2,7 @@ mkchromecast
 ============
 
 This is a tiny program to cast your **Mac OS X** audio to your google cast
-devices. It is written in Python, and it streams using node.js for the moments.
+devices. It is written in Python, and it streams using node.js, or ffmpeg.
 
 For Linux you have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
@@ -14,6 +14,7 @@ In order to use **mkchromecast** you need the following:
 
 * Python2 (already shipped in OS X), or Python3.
 * pychromecast.
+* flask.
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
@@ -28,7 +29,7 @@ To install **mkchromecast**, clone this repository:
 git clone https://github.com/muammar/mkchromecast.git
 ```
 
-Or you may download one of the [stable Releases
+Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 #### Python
@@ -80,7 +81,7 @@ Once homebrew is ready, you can install ffmpeg as follows:
 brew install ffmpeg
 ```
 
-As stated in [ffmpeg
+As stated in the [ffmpeg
 website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), it is better to
 install some additional ffmpeg's options:
 
@@ -153,15 +154,17 @@ It looks like:
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
-You can pass the options when using ffmpeg as backend. I am still working on
-improving the menu.
+**Note**:You can pass the options when using ffmpeg as backend and adding `-t`
+to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
+* Check all codecs used with ffmpeg, quality, and stability.
 * Verify all exceptions when menubar fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
 * Generate a standalone Mac OS X application.
+* Video?.
 
 ### Contribute
 
