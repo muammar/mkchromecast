@@ -11,14 +11,14 @@ beautifully.
 ### Requirements:
 
 In order to use **mkchromecast** you need the following software to stream with
-node.js.
+node.js:
 
 * Python2 (already shipped in OS X), or Python3.
 * pychromecast.
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
-* PyQt5 for the systemtray (optional if you want to use the system tray menu).
+* PyQt5 for the system tray (optional if you want to use the system tray menu).
 
 If you want more control, you may want to use ffmpeg as backend. In that case
 you need the following:
@@ -73,14 +73,14 @@ file](https://github.com/mattingalls/Soundflower/releases).
 The easiest way of installing ffmpeg is using a package manager, *e.g.* brew,
 macports or fink.
 
-I will briefly describe the case of homebrew here. First, you will need to
-install homebrew:
+I will briefly describe the case of Homebrew here. First, you will need to
+install Homebrew:
 
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-Once homebrew is ready, you can install ffmpeg as follows:
+Once Homebrew is ready, you can install ffmpeg as follows:
 
 ```
 brew install ffmpeg
@@ -111,7 +111,7 @@ python mkchromecast.py --encoder-backend ffmpeg -c wav
 #### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu.  As
-previously said, I also suggest you to install it using homebrew:
+previously said, I also suggest you to install it using Homebrew:
 
 ```
 brew install pyqt5 --with-python
@@ -165,7 +165,7 @@ to launch the system tray. I am still working on improving all of this.
 ### TODO
 
 * Check all codecs used with ffmpeg, quality, and stability.
-* Verify all exceptions when menubar fails.
+* Verify all exceptions when menu bar fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
 * Generate a standalone Mac OS X application.
