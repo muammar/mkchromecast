@@ -10,16 +10,21 @@ beautifully.
 
 ### Requirements:
 
-In order to use **mkchromecast** you need the following:
+In order to use **mkchromecast** you need the following software to stream with
+node.js.
 
 * Python2 (already shipped in OS X), or Python3.
 * pychromecast.
-* flask.
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
+* PyQt5 for the systemtray (optional if you want to use the system tray menu).
+
+If you want more control, you may want to use ffmpeg as backend. In that case
+you need the following:
+
+* flask (optional).
 * ffmpeg (optional).
-* PyQt5 for the systemtray (optional).
 
 ### Installation and updating
 
