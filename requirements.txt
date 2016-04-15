@@ -1,4 +1,5 @@
+Flask == 0.10.1
 mutagen == 1.31
 psutil == 4.1.0
 PyChromecast == 0.7.2
-setuptools == 20.3.1
+setuptools == 20.7.0

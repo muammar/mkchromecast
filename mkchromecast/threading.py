@@ -2,13 +2,17 @@
 
 # This file is part of mkchromecast.
 
+import mkchromecast.__init__
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+import mkchromecast.ffmpeg
 from mkchromecast.streaming import *
 from mkchromecast.systray import *
 import os.path, pickle, pychromecast
 
+
+backend = mkchromecast.__init__.backend
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -40,7 +44,10 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         global cast
-        stream()
+        if backend == 'node':
+            stream()
+        else:
+            mkchromecast.ffmpeg.main()
         inputdev()
         outputdev()
         start = casting()

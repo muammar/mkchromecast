@@ -17,6 +17,8 @@ In order to use **mkchromecast** you need the following:
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
+* ffmpeg (optional).
+* PyQt5 for the systemtray (optional).
 
 ### Installation and updating
 
@@ -60,6 +62,57 @@ brew cask install soundflower
 Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
 
+#### ffmpeg
+
+The easiest way of installing ffmpeg is using a package manager, *e.g.* brew,
+macports or fink.
+
+I will briefly describe the case of homebrew here. First, you will need to
+install homebrew:
+
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Once homebrew is ready, you can install ffmpeg as follows:
+
+```
+brew install ffmpeg
+```
+
+As stated in [ffmpeg
+website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), it is better to
+install some additional ffmpeg's options:
+
+```
+brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+```
+
+When using ffmpeg, the following codecs are available:
+
+- mp3  [192k]           MPEG Audio Layer III (default)
+- ogg  [192k]           Ogg Vorbis
+- aac  [128k]           Advanced Audio Coding (AAC)
+- wav  [24-Bit, HQ]     Waveform Audio File Format
+- flac [24-Bit, HQ]     Free Lossless Audio Codec
+
+Example using wav:
+
+```
+python mkchromecast.py --encoder-backend ffmpeg -c wav
+```
+
+#### PyQt5
+
+These Python bindings are needed if you intend to use the system tray menu.  As
+previously said, I also suggest you to install it using homebrew:
+
+```
+brew install pyqt5 --with-python
+```
+
+or if you desire it you can do it yourself from the sources.
+
 #### Updating
 
 To update **mkchromecast**, just get into the cloned directory and:
@@ -82,7 +135,9 @@ To get help:
 python mkchromecast.py -h
 ```
 
-To kill the application just press `Ctrl-c`.
+### Killing the application
+
+To kill **mkchromecast** when you run it from console, just press `Ctrl-c`.
 
 ### Notes
 
@@ -98,7 +153,8 @@ It looks like:
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
-I am still working on improving it.
+You can pass the options when using ffmpeg as backend. I am still working on
+improving the menu.
 
 ### TODO
 

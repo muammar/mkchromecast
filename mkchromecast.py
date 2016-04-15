@@ -3,8 +3,9 @@
 # This file is part of mkchromecast.
 
 from mkchromecast.audiodevices import *
-from mkchromecast.streaming import *
 from mkchromecast.cast import *
+from mkchromecast.ffmpeg import *
+from mkchromecast.streaming import *
 from mkchromecast.terminate import *
 import mkchromecast.systray
 import os.path
@@ -25,7 +26,13 @@ if args.tray == False:
 
     inputdev()
     outputdev()
-    stream()
+
+    if args.encoder_backend == 'node':
+        stream()
+
+    if args.encoder_backend == 'ffmpeg':
+        mkchromecast.ffmpeg.main()
+
     cc.initialize_cast()
 
     if args.select_cc == True: # This is done for the case that -s is passed
@@ -54,4 +61,3 @@ else:
     checkmktmp()
     writePidFile()
     mkchromecast.systray.main()
-

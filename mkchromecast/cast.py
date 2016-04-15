@@ -99,7 +99,12 @@ class casting(object):
         localip = start.ip
         print (localip)
         ncast = self.cast
-        ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        codec = args.codec
+        mtype = 'audio/'+codec
+        if args.encoder_backend == 'ffmpeg':
+            ncast.play_media('http://'+localip+':5000/stream', mtype)
+        else:
+            ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
         print(ncast.status)
 
     def stop_cast(self):
