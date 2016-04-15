@@ -165,7 +165,7 @@ to launch the system tray. I am still working on improving all of this.
 ### TODO
 
 * Check all codecs used with ffmpeg, quality, and stability.
-* Verify all exceptions when menu bar fails.
+* Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
 * Generate a standalone Mac OS X application.
