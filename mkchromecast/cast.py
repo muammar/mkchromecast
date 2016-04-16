@@ -49,7 +49,7 @@ class casting(object):
                 print('=====   ============= ')
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'        ', str(device))
+                    print(str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 #print ('Array')
