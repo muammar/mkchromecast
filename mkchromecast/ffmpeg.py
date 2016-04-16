@@ -16,6 +16,7 @@ import multiprocessing
 mp3file = 'stream'
 
 codec = mkchromecast.__init__.codec
+bitrate = str(mkchromecast.__init__.bitrate)+'k'
 
 if  codec == 'mp3':
     appendmtype = 'mpeg'
@@ -30,19 +31,19 @@ mtype = 'audio/'+appendmtype
 MP3 192k
 """
 if  codec == 'mp3':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libmp3lame', '-f', 'mp3', '-b:a', '192k','pipe:1']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libmp3lame', '-f', 'mp3', '-b:a', bitrate,'pipe:1']
 
 """
 OGG 192k
 """
 if  codec == 'ogg':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libvorbis', '-f', 'ogg', '-b:a', '192k','pipe:1']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libvorbis', '-f', 'ogg', '-b:a', bitrate,'pipe:1']
 
 """
-AAC 128k for Stereo
+AAC > 128k for Stereo
 """
 if  codec == 'aac':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libfdk_aac', '-f', 'adts', '-b:a', '128k','pipe:1']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libfdk_aac', '-f', 'adts', '-b:a', bitrate,'pipe:1']
 
 """
 WAV 24-Bit
@@ -51,10 +52,12 @@ if  codec == 'wav':
     command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2','pipe:1']
 
 """
-FLAC 24-Bit
+FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
 """
 if  codec == 'flac':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'flac', '-f', 'flac', 'pipe:1']
+    #command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'flac', '-f', 'flac', 'pipe:1']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'flac', '-f', 'flac', '-q:a', '330', '-cutoff', '15000', 'pipe:1']
+
 app = Flask(__name__)
 
 @app.route('/')

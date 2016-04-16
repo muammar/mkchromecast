@@ -10,7 +10,28 @@ import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
 
+global backend, codec, bitrate
+
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
+parser.add_argument('-b', '--bit-rate', type=int, default='192', help=
+'''
+Set the audio encoder's bitrate. The default is set to be 192k. This option
+only works when using ffmpeg encoder. For instance, if you desire 128k you
+need to pass -b 128.
+''')
+parser.add_argument('-c', '--codec', type=str, default='mp3', help=
+'''
+Set the audio codec.
+
+Possible codecs:
+- mp3  [192k]           MPEG Audio Layer III (default)
+- ogg  [192k]           Ogg Vorbis
+- aac  [192k]           Advanced Audio Coding (AAC)
+- wav  [24-Bit, HQ]     Waveform Audio File Format
+- flac [24-Bit, HQ]     Free Lossless Audio Codec
+''')
+parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
+parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
 parser.add_argument('--encoder-backend', type=str, default='node', help=
 '''
 Set the backend for all encoders.
@@ -19,21 +40,9 @@ Possible backends:
 - ffmpeg
 - avconv (not yet implemented)
 ''')
-parser.add_argument('-c', '--codec', type=str, default='mp3', help=
-'''
-Set the audio codec.
-Possible codecs:
-- mp3  [192k]           MPEG Audio Layer III (default)
-- ogg  [192k]           Ogg Vorbis
-- aac  [128k]           Advanced Audio Coding (AAC)
-- wav  [24-Bit, HQ]     Waveform Audio File Format
-- flac [24-Bit, HQ]     Free Lossless Audio Codec
-''')
-parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
-parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
-parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one google cast device use this option')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your laptop, use this option to reset')
+parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one google cast device use this option')
 parser.add_argument('-t', '--tray', action="store_true", help='This option let you launch mkchromecast as a systray menu (still experimental)')
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
 parser.add_argument('-y', '--youtube', action="store_true", help='Stream a youtube URL')
@@ -55,7 +64,6 @@ backends = ['node', 'ffmpeg']
 
 if args.encoder_backend in backends:
     print ('Selected backend: ', args.encoder_backend)
-    global backend
     backend = args.encoder_backend
 else:
     print ('Supported backends are: ')
@@ -70,7 +78,6 @@ codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
 
 if args.codec in codecs:
     print ('Selected audio codec: ', args.codec)
-    global codec
     codec = args.codec
 else:
     print ('Supported audio codecs are: ')
@@ -78,6 +85,23 @@ else:
         print ('-',codec)
     sys.exit(0)
 
+"""
+Bitrate
+"""
+codecs_br = ['mp3', 'ogg', 'aac']
+if args.codec in codecs_br:
+    if args.bit_rate != 0:
+        bitrate = abs(args.bit_rate)
+        print ('Selected bitrate: ', bitrate)
+    elif args.bit_rate == 0:
+        bitrate = 192
+        print ('Using default bitrate: ', bitrate)
+    else:
+        bitrate = args.bit_rate
+        print ('Default bitrate: ', bitrate)
+else:
+    print ('The '+args.codec+' codec does not require the bitrate argument')
+    bitrate = None
 
 """
 Version
