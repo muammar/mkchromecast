@@ -63,7 +63,6 @@ Check that encoders exist in the list
 backends = ['node', 'ffmpeg']
 
 if args.encoder_backend in backends:
-    print ('Selected backend: ', args.encoder_backend)
     backend = args.encoder_backend
 else:
     print ('Supported backends are: ')
@@ -77,9 +76,9 @@ Codecs
 codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
 
 if args.codec in codecs:
-    print ('Selected audio codec: ', args.codec)
     codec = args.codec
 else:
+    print ('Selected audio codec: ', args.codec)
     print ('Supported audio codecs are: ')
     for codec in codecs:
         print ('-',codec)
@@ -92,13 +91,10 @@ codecs_br = ['mp3', 'ogg', 'aac']
 if args.codec in codecs_br:
     if args.bit_rate != 0:
         bitrate = abs(args.bit_rate)
-        print ('Selected bitrate: ', bitrate)
     elif args.bit_rate == 0:
         bitrate = 192
-        print ('Using default bitrate: ', bitrate)
     else:
         bitrate = args.bit_rate
-        print ('Default bitrate: ', bitrate)
 else:
     print ('The '+args.codec+' codec does not require the bitrate argument')
     bitrate = None

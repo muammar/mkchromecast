@@ -91,13 +91,20 @@ class casting(object):
             self.cast = pychromecast.get_chromecast(self.castto)
             # Wait for cast device to be ready
             self.cast.wait()
+            print(' ')
+            print('Information about ', self.castto)
+            print(' ')
             print(self.cast.device)
+            print(' ')
+            print('Status of device ', self.castto)
+            print(' ')
             print(self.cast.status)
+            print(' ')
 
     def play_cast(self):
         start = casting()
         localip = start.ip
-        print (localip)
+        print ('Your local IP is: ', localip)
         ncast = self.cast
         codec = args.codec
         mtype = 'audio/'+codec
@@ -105,6 +112,7 @@ class casting(object):
             ncast.play_media('http://'+localip+':5000/stream', mtype)
         else:
             ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print('Play media status')
         print(ncast.status)
 
     def stop_cast(self):

@@ -23,7 +23,7 @@ def streaming():
 
     f = open('/tmp/mkcrhomecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print (pidnumber)
+    print ('PID of streaming process: ', pidnumber)
 
     localpid=getpid()
 

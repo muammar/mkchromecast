@@ -15,6 +15,7 @@ import multiprocessing
 
 mp3file = 'stream'
 
+backend = mkchromecast.__init__.backend
 codec = mkchromecast.__init__.codec
 bitrate = str(mkchromecast.__init__.bitrate)+'k'
 
@@ -26,6 +27,15 @@ else:
     appendmtype = codec
 
 mtype = 'audio/'+appendmtype
+
+print ('Selected backend: ', backend)
+print ('Selected audio codec: ', codec)
+
+if backend != 'node':
+    if bitrate == '192k':
+        print ('Default bitrate: ', bitrate)
+    else:
+        print ('Selected bitrate: ', bitrate)
 
 """
 MP3 192k
