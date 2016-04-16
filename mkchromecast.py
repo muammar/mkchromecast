@@ -22,11 +22,14 @@ if args.tray == False:
         print ('Your computer is not connected to any network')
         terminate()
 
-    print('Switching to soundflower')
+    print('Switching to soundflower...')
 
     inputdev()
     outputdev()
 
+    print('Done!')
+
+    print('Starting local streaming server')
     if args.encoder_backend == 'node':
         stream()
 
@@ -44,7 +47,8 @@ if args.tray == False:
         cc.get_cc()
         cc.play_cast()
 
-    print('Ctrl-c to kill the application')
+    print('Ctrl-C to kill the application at any time')
+    print('')
 
     def terminateapp():
         cc.stop_cast()

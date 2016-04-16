@@ -24,9 +24,13 @@ class casting(object):
 
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
-            print('List of Google cast devices available in your network.')
+            print('List of Google cast devices available in your network:')
+            print('------------------------------------------------------')
+            print(' ')
+            print('Index   Friendly name')
+            print('=====   ============= ')
             for self.index,device in enumerate(self.cclist):
-                print(str(self.index)+': ', str(device))
+                print(str(self.index)+'      ', str(device))
             print(' ')
             print('We will cast to first device in the list above!')
             print(' ')
@@ -39,10 +43,13 @@ class casting(object):
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
                 print(' ')
                 print('List of Google cast devices available in your network:')
+                print('------------------------------------------------------')
                 print(' ')
+                print('Index   Friendly name')
+                print('=====   ============= ')
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+': ', str(device))
+                    print(str(self.index)+'        ', str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 #print ('Array')
@@ -76,7 +83,7 @@ class casting(object):
 
     def sel_cc(self):
             print(' ')
-            print('Please, select the number of the Google cast device that you want to use:')
+            print('Please, select the index of the Google cast device that you want to use:')
             self.index = input()
 
     def inp_cc(self):
@@ -112,8 +119,11 @@ class casting(object):
             ncast.play_media('http://'+localip+':5000/stream', mtype)
         else:
             ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-        print('Play media status')
+        print(' ')
+        print('Cast media cotroller status')
+        print(' ')
         print(ncast.status)
+        print(' ')
 
     def stop_cast(self):
         ncast = self.cast
