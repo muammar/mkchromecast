@@ -1,7 +1,10 @@
-* mkchromecast (0.1.6) **unreleased**
+* mkchromecast (0.1.6) **released**: 2016/04/16
 
-    - ffmpeg is now a supported backend.
-    - We support mp3, ogg codecs.
+    - ffmpeg is now a supported backend. You can check how to use this backend
+      by consulting `python mkchromecast.py -h`.
+    - The following codecs are supported:'mp3', 'ogg', 'aac', 'wav', 'flac'.
+    - Improved screen messages.
+    - Date format in changelog has been changed.
 
 * mkchromecast (0.1.5) **released**: Wed Apr 13 18:08:44 2016 +0200
 

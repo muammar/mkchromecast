@@ -98,7 +98,7 @@ When using ffmpeg, the following codecs are available:
 
 - mp3  [192k]           MPEG Audio Layer III (default)
 - ogg  [192k]           Ogg Vorbis
-- aac  [128k]           Advanced Audio Coding (AAC)
+- aac  [192k]           Advanced Audio Coding (AAC)
 - wav  [24-Bit, HQ]     Waveform Audio File Format
 - flac [24-Bit, HQ]     Free Lossless Audio Codec
 
@@ -106,6 +106,12 @@ Example using wav:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c wav
+```
+
+There is also an option to change the `bitrate`. See example below:
+
+```
+python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
 ```
 
 #### PyQt5
