@@ -33,8 +33,10 @@ print ('Selected backend: ', backend)
 print ('Selected audio codec: ', codec)
 
 if backend != 'node':
-    if bitrate == '192k':
+    if bitrate == '192':
         print ('Default bitrate used: ', bitrate)
+    elif bitrate == 'Nonek':
+        print ('The '+codec+' codec does not require the bitrate argument')
     else:
         print ('Selected bitrate: ', bitrate)
 

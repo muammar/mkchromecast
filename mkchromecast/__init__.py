@@ -10,8 +10,6 @@ import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
 
-global backend, codec, bitrate, samplerate
-
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
@@ -20,9 +18,13 @@ bitrate.
 
 Example:
 
+ffmpeg:
     python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
 
-This option only works when using ffmpeg encoder.  The example above sets the
+node:
+    python mkchromecast.py  -b 128
+
+This option works with both backends. The example above sets the
 average bitrate to 128k.
 
 ''')
@@ -40,6 +42,8 @@ Possible codecs:
     - aac  [192k]   Advanced Audio Coding (AAC)
     - wav  [HQ]     Waveform Audio File Format
     - flac [HQ]     Free Lossless Audio Codec
+
+This option only works for the ffmpeg backend.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
@@ -65,10 +69,15 @@ an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
 
 Example:
 
+ffmpeg:
     python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 32000
 
-This option only works when using ffmpeg encoder. The example above sets the
-sample rate to 32000Hz.
+node:
+    python mkchromecast.py -b 128 --sample-rate 32000
+
+
+This option works for both backends. The example above sets the sample rate to
+32000Hz, and the bitrate to 128k.
 
 Which sample rate to use?
 
@@ -111,20 +120,26 @@ Codecs
 """
 codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
 
-if args.codec in codecs:
-    codec = args.codec
+if backend == 'node' and args.codec != 'mp3':
+    rcodec = args.codec
+    codec = 'mp3'
+
 else:
-    print ('Selected audio codec: ', args.codec)
-    print ('Supported audio codecs are: ')
-    for codec in codecs:
-        print ('-',codec)
-    sys.exit(0)
+    rcodec = None
+    if backend != 'node' and args.codec in codecs:
+        codec = args.codec
+    else:
+        print ('Selected audio codec: ', args.codec)
+        print ('Supported audio codecs are: ')
+        for codec in codecs:
+            print ('-',codec)
+        sys.exit(0)
 
 """
 Bitrate
 """
 codecs_br = ['mp3', 'ogg', 'aac']
-if args.codec in codecs_br:
+if codec in codecs_br:
     if args.bitrate != 0:
         bitrate = abs(args.bitrate)
     elif args.bitrate == 0:
@@ -132,8 +147,7 @@ if args.codec in codecs_br:
     else:
         bitrate = args.bit_rate
 else:
-    print ('The '+args.codec+' codec does not require the bitrate argument')
-    bitrate = None
+    bitrate = None      #When the codec does not require bitrate I set it to None
 
 """
 Sample rate

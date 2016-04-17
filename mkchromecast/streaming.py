@@ -2,6 +2,7 @@
 
 # This file is part of mkchromecast.
 
+import mkchromecast.__init__
 import subprocess
 import multiprocessing
 import time, sys, os, signal
@@ -17,8 +18,29 @@ To call them:
     name()
 """
 
+backend = mkchromecast.__init__.backend
+rcodec = mkchromecast.__init__.rcodec
+codec = mkchromecast.__init__.codec
+bitrate = str(mkchromecast.__init__.bitrate)
+samplerate = str(mkchromecast.__init__.samplerate)
+
+if backend == 'node' and rcodec != 'mp3':
+    print ('Codec '+rcodec+' is not supported by the node server!')
+    print ('Using '+codec+' as default.')
+
+if backend == 'node':
+    if bitrate == '192k':
+        print ('Default bitrate used: ', bitrate+'k')
+    else:
+        print ('Selected bitrate: ', bitrate+'k')
+
+    if samplerate == '44100':
+        print ('Default sample rate used: ', samplerate+'Hz')
+    else:
+        print ('Selected sample rate: ', samplerate+'Hz')
+
 def streaming():
-    webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js']
+    webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
 
     f = open('/tmp/mkcrhomecast.pid', 'rb')
