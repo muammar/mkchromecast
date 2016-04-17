@@ -41,32 +41,37 @@ if backend != 'node':
 MP3 192k
 """
 if  codec == 'mp3':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libmp3lame', '-f', 'mp3', '-b:a', bitrate,'pipe:']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', '44100', '-b:a', bitrate,'pipe:']
 
 """
 OGG 192k
 """
 if  codec == 'ogg':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libvorbis', '-f', 'ogg', '-b:a', bitrate,'pipe:']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', '44100','-b:a', bitrate,'pipe:']
 
 """
 AAC > 128k for Stereo
 """
 if  codec == 'aac':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'libfdk_aac', '-f', 'adts', '-b:a', bitrate,'pipe:']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', '44100','-b:a', bitrate,'pipe:']
 
 """
 WAV 24-Bit
 """
 if  codec == 'wav':
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2','pipe:']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', '44100', 'pipe:']
 
 """
 FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
 """
 if  codec == 'flac':
     #command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'flac', '-f', 'flac', 'pipe:']
-    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', '-acodec', 'flac', '-f', 'flac', '-q:a', '330', '-cutoff', '15000', 'pipe:']
+    command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', '44100', '-q:a', '330', '-cutoff', '15000', 'pipe:']
 
 app = Flask(__name__)
 
