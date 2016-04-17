@@ -170,6 +170,7 @@ to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
+* Add option to change sample rate when using ffmpeg.
 * Check all codecs used with ffmpeg, quality, and stability.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the

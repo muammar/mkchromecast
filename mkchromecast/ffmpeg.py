@@ -52,7 +52,7 @@ if  codec == 'ogg':
                 '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', '44100','-b:a', bitrate,'pipe:']
 
 """
-AAC > 128k for Stereo
+AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
     command = ['ffmpeg', '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \

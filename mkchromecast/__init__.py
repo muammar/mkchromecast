@@ -15,20 +15,20 @@ global backend, codec, bitrate
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bit-rate', type=int, default='192', help=
 '''
-Set the audio encoder's bitrate. The default is set to be 192k. This option
-only works when using ffmpeg encoder. For instance, if you desire 128k you
-need to pass -b 128.
+Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
+This option only works when using ffmpeg encoder. For instance, if you desire
+128k you need to pass -b 128.
 ''')
 parser.add_argument('-c', '--codec', type=str, default='mp3', help=
 '''
 Set the audio codec.
 
 Possible codecs:
-- mp3  [192k]           MPEG Audio Layer III (default)
-- ogg  [192k]           Ogg Vorbis
-- aac  [192k]           Advanced Audio Coding (AAC)
-- wav  [24-Bit, HQ]     Waveform Audio File Format
-- flac [24-Bit, HQ]     Free Lossless Audio Codec
+- mp3  [192k]   MPEG Audio Layer III (default)
+- ogg  [192k]   Ogg Vorbis
+- aac  [192k]   Advanced Audio Coding (AAC)
+- wav  [HQ]     Waveform Audio File Format
+- flac [HQ]     Free Lossless Audio Codec
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
