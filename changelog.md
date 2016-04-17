@@ -1,8 +1,14 @@
+* mkchromecast (0.1.7) **unreleased**:
+
+    - The bitrate and sample rates can be modified. These options are useful
+      when you router is not very powerful.
+    - node_modules have been updated.
+
 * mkchromecast (0.1.6) **released**: 2016/04/16
 
     - ffmpeg is now a supported backend. You can check how to use this backend
       by consulting `python mkchromecast.py -h`.
-    - The following codecs are supported:'mp3', 'ogg', 'aac', 'wav', 'flac'.
+    - The following codecs are supported: 'mp3', 'ogg', 'aac', 'wav', 'flac'.
     - Improved screen messages.
     - Date format in changelog has been changed.
 
