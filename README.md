@@ -94,13 +94,15 @@ install some additional `ffmpeg`'s options:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
-When using `ffmpeg`, the following codecs are available:
+When using `ffmpeg`, the following audio coding formats are available:
 
-- `mp3`  [192k]   MPEG Audio Layer III (default)
-- `ogg`  [192k]   Ogg Vorbis
-- `aac`  [192k]   Advanced Audio Coding (AAC)
-- `wav`  [HQ]     Waveform Audio File Format
-- `flac` [HQ]     Free Lossless Audio Codec
+**Audio coding format** | **Description**                   | **Notes**
+------------------------| ----------------------------------|------------------
+  `mp3`                 | MPEG Audio Layer III (default)    | Lossy compression format (default bitrate: 192k)
+  `ogg`                 | Ogg Vorbis                        | Lossy compression format (default bitrate: 192k)
+  `aac`                 | Advanced Audio Coding (AAC)       | Lossy compression format (default bitrate: 192k)
+  `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
+  `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
 
 Example using wav:
 
