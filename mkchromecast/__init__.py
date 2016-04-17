@@ -15,13 +15,22 @@ global backend, codec, bitrate
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bit-rate', type=int, default='192', help=
 '''
-Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
-This option only works when using ffmpeg encoder. For instance, if you desire
-128k you need to pass -b 128.
+Set the audio encoder's bitrate.  The default is set to be 192k average
+bitrate.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
+
+This option only works when using ffmpeg encoder.  The example above sets 128k
+as the average bitrate.
+
 ''')
 parser.add_argument('-c', '--codec', type=str, default='mp3', help=
 '''
 Set the audio codec.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg
 
 Possible codecs:
 - mp3  [192k]   MPEG Audio Layer III (default)
@@ -30,8 +39,6 @@ Possible codecs:
 - wav  [HQ]     Waveform Audio File Format
 - flac [HQ]     Free Lossless Audio Codec
 
-Example:
-    python mkchromecast.py --encoder-backend ffmpeg -c ogg
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
@@ -42,6 +49,7 @@ Possible backends:
 - node (default)
 - ffmpeg
 - avconv (not yet implemented)
+
 ''')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your laptop, use this option to reset')
