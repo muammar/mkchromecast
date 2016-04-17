@@ -10,19 +10,20 @@ import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
 
-global backend, codec, bitrate
+global backend, codec, bitrate, samplerate
 
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
-parser.add_argument('-b', '--bit-rate', type=int, default='192', help=
+parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate.  The default is set to be 192k average
 bitrate.
 
 Example:
+
     python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
 
-This option only works when using ffmpeg encoder.  The example above sets 128k
-as the average bitrate.
+This option only works when using ffmpeg encoder.  The example above sets the
+average bitrate to 128k.
 
 ''')
 parser.add_argument('-c', '--codec', type=str, default='mp3', help=
@@ -30,14 +31,15 @@ parser.add_argument('-c', '--codec', type=str, default='mp3', help=
 Set the audio codec.
 
 Example:
+
     python mkchromecast.py --encoder-backend ffmpeg -c ogg
 
 Possible codecs:
-- mp3  [192k]   MPEG Audio Layer III (default)
-- ogg  [192k]   Ogg Vorbis
-- aac  [192k]   Advanced Audio Coding (AAC)
-- wav  [HQ]     Waveform Audio File Format
-- flac [HQ]     Free Lossless Audio Codec
+    - mp3  [192k]   MPEG Audio Layer III (default)
+    - ogg  [192k]   Ogg Vorbis
+    - aac  [192k]   Advanced Audio Coding (AAC)
+    - wav  [HQ]     Waveform Audio File Format
+    - flac [HQ]     Free Lossless Audio Codec
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
@@ -46,14 +48,38 @@ parser.add_argument('--encoder-backend', type=str, default='node', help=
 '''
 Set the backend for all encoders.
 Possible backends:
-- node (default)
-- ffmpeg
-- avconv (not yet implemented)
+    - node (default)
+    - ffmpeg
 
 ''')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your laptop, use this option to reset')
 parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one google cast device use this option')
+parser.add_argument('--sample-rate', type=int, default='44100', help=
+'''
+Set the sample rate. The default sample rate obtained from avfoundation audio
+device input in ffmpeg is 44100Hz.
+
+Note that resampling to higher sample rates is not a good idea. It was indeed
+an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
+
+Example:
+
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 32000
+
+This option only works when using ffmpeg encoder. The example above sets the
+sample rate to 32000Hz.
+
+Which sample rate to use?
+
+    - 44100Hz: sampling rate of audio CDs giving a 20 kHz maximum frequency.
+    - 32000Hz: sampling rate of audio quality a little below FM radio bandwidth
+      quality.
+    - 22050Hz: sampling rate of audio quality of AM radio.
+
+For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+
+''')
 parser.add_argument('-t', '--tray', action="store_true", help='This option let you launch mkchromecast as a systray menu (still experimental)')
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
 parser.add_argument('-y', '--youtube', action="store_true", help='Stream a youtube URL')
@@ -100,15 +126,27 @@ Bitrate
 """
 codecs_br = ['mp3', 'ogg', 'aac']
 if args.codec in codecs_br:
-    if args.bit_rate != 0:
-        bitrate = abs(args.bit_rate)
-    elif args.bit_rate == 0:
+    if args.bitrate != 0:
+        bitrate = abs(args.bitrate)
+    elif args.bitrate == 0:
         bitrate = 192
     else:
         bitrate = args.bit_rate
 else:
     print ('The '+args.codec+' codec does not require the bitrate argument')
     bitrate = None
+
+"""
+Sample rate
+"""
+if args.sample_rate != 0:
+    if args.sample_rate < 22050:
+        print ('The sample rate has to be greater than 22049.')
+        sys.exit(0)
+    else:
+        samplerate = abs(args.sample_rate)
+elif args.sample_rate == 0:
+    samplerate = 44100
 
 """
 Version
