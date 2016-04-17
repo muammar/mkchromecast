@@ -32,7 +32,7 @@ you need the following:
 * flask (optional).
 * ffmpeg (optional).
 
-### Installation and updating
+### Installing and updating
 
 To install **mkchromecast**, clone this repository:
 
