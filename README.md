@@ -4,12 +4,12 @@ mkchromecast
 This is a program to cast your **Mac OS X** audio to your Google cast devices.
 
 It is written in Python, and it streams using `node.js`, or `ffmpeg`.  By
-default, **mkchromecast** streams using the `mp3` audio coding format at
-a sample rate of `44100Hz` and average bitrate of `192k`. These defaults can be
-changed using the `ffmpeg` backend.
+default, **mkchromecast** streams with `node.js` together with `mp3` audio
+coding format at a sample rate of `44100Hz` and average bitrate of `192k`.
+These defaults can be changed using the `ffmpeg` backend.
 
-**mkchromecast** is capable of using lossy and lossless audio formats. A system
-tray menu is also available.
+**mkchromecast** is capable of using lossy and lossless audio formats provided
+that `ffmpeg` is available. Moreover, a system tray menu is also available.
 
 For Linux, you have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
