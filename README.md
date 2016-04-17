@@ -144,10 +144,11 @@ python mkchromecast.py
 ```
 
 This will launch **mkchromecast** using `node.js` for doing the streaming part
-using a `mp3` codec.  This works decently, however I would like to point out that
-the node version used is ancient. Moreover, the `node.js` server tends to fail,
-and some disconnections are expected. In such a case, **mkchromecast** is able
-to restart the streaming/casting process automatically. So, some hiccups are
+together with the `mp3` audio coding format.  This works decently, **however**
+I would like to point out that the node version of this implementation is
+ancient. Moreover, the `node.js` server tends to _fail_, and some
+disconnections are expected. In such a case, **mkchromecast** is able to
+restart the streaming/casting process automatically. So, some hiccups are
 expected.
 
 Below an example using `mp3` with `ffmpeg`:
