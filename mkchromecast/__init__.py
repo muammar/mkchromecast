@@ -29,6 +29,9 @@ Possible codecs:
 - aac  [192k]   Advanced Audio Coding (AAC)
 - wav  [HQ]     Waveform Audio File Format
 - flac [HQ]     Free Lossless Audio Codec
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
