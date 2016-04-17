@@ -103,6 +103,13 @@ if args.config == True or args.discover == True or args.name == True or args.you
     sys.exit(0)
 
 """
+Version
+"""
+if args.version is True:
+    print ('mkchromecast ', __version__)
+    sys.exit(0)
+
+"""
 Check that encoders exist in the list
 """
 backends = ['node', 'ffmpeg']
@@ -161,12 +168,6 @@ if args.sample_rate != 0:
 elif args.sample_rate == 0:
     samplerate = 44100
 
-"""
-Version
-"""
-if args.version is True:
-    print ('mkchromecast ', __version__)
-    sys.exit(0)
 
 """
 This is to write a PID file
