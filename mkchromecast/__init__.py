@@ -55,6 +55,9 @@ Possible backends:
     - node (default)
     - ffmpeg
 
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg
+
 ''')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your laptop, use this option to reset')
@@ -77,7 +80,6 @@ ffmpeg:
 
 node:
     python mkchromecast.py -b 128 --sample-rate 32000
-
 
 This option works for both backends. The example above sets the sample rate to
 32000Hz, and the bitrate to 128k.
