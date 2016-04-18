@@ -130,7 +130,9 @@ codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
 if backend == 'node' and args.codec != 'mp3':
     rcodec = args.codec
     codec = 'mp3'
-
+elif backend == 'node' and args.codec == 'mp3':
+    rcodec = args.codec
+    codec = 'mp3'
 else:
     rcodec = None
     if backend != 'node' and args.codec in codecs:
