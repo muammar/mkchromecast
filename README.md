@@ -87,12 +87,11 @@ See the picture below to have an example when the sample rate is changed from
 
 `41000Hz`
 
-<img src="https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate1.png" alt="Default in soundflower" style="width:640;height:480">
-
+![Default in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate1.png)
 
 `48000Hz`
 
-<img src="https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate2.png" alt="Changed to 48000Hz in soundflower" style="width:640;height:480">
+![Changed to 48000Hz in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate2.png)
 
 #### ffmpeg
 
