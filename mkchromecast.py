@@ -7,7 +7,6 @@ from mkchromecast.cast import *
 from mkchromecast.ffmpeg import *
 from mkchromecast.streaming import *
 from mkchromecast.terminate import *
-import mkchromecast.systray
 import os.path
 
 import atexit
@@ -62,6 +61,7 @@ if args.tray == False:
     except KeyboardInterrupt:
         atexit.register(terminateapp)
 else:
+    import mkchromecast.systray
     checkmktmp()
     writePidFile()
     mkchromecast.systray.main()
