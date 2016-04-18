@@ -7,7 +7,7 @@ Usage:
 """
 from setuptools import setup
 
-APP = ['systray.py']
+APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
 DATA_FILES = ['images/google.icns', 'images/google_working.icns']
 
@@ -20,8 +20,8 @@ OPTIONS = {
         'CFBundleDisplayName': APP_NAME,
         'CFBundleGetInfoString': "Cast mac os x audio to your google cast devices",
         'CFBundleIdentifier': "com.mkchromecast.osx",
-        'CFBundleVersion': "0.1.5",
-        'CFBundleShortVersionString': "0.1.5",
+        'CFBundleVersion': "0.1.7",
+        'CFBundleShortVersionString': "0.1.7",
         'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved"
     }
 }
