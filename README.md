@@ -11,7 +11,7 @@ By default, **mkchromecast** streams with `node.js` together with `mp3` audio
 coding format at a sample rate of `44100Hz` and average bitrate of `192k`.
 These defaults can be changed using the `--sample-rate` and `-b` flags. It is
 useful to modify these parameters when your wireless router is not very
-powerful.
+powerful like mine.
 
 For Linux, you have a program called
 [pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
