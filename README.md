@@ -77,6 +77,20 @@ brew cask install soundflower
 Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
 
+By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
+to stream at higher sample rates you need to open the `Audio MIDI setup`
+application that comes in Mac OS X. Then, select the audio device `Soundflower
+(2ch)`, and modify in `input` the sample rate to the desired value.
+Note that the Google cast devices audio do  not support more than `96000Hz`.
+See the picture below to have an example when the sample rate is changed from
+`41000Hz` to `48000Hz`:
+
+`41000Hz`
+![Default in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate1.png)
+
+`48000Hz`
+![Changed to 48000Hz in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate2.png)
+
 #### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
@@ -112,6 +126,7 @@ When using `ffmpeg`, the following audio coding formats are available:
   `aac`                 | Advanced Audio Coding (AAC)       | Lossy compression format (default bitrate: 192k)
   `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
   `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
+
 
 Example using wav:
 

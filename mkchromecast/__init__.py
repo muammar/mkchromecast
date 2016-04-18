@@ -62,7 +62,10 @@ parser.add_argument('-s', '--select-cc', action="store_true", help='If you have 
 parser.add_argument('--sample-rate', type=int, default='44100', help=
 '''
 Set the sample rate. The default sample rate obtained from avfoundation audio
-device input in ffmpeg is 44100Hz.
+device input in ffmpeg using soundflower is 44100Hz. You can change this in the
+Audio MIDI Setup in the "Soundflower (2ch)" audio device. You need to change
+the "Format" in both input/output from 44100Hz to maximum 96000Hz. I think that
+more than 48000Hz is not necessary, but this is up to the users' preferences.
 
 Note that resampling to higher sample rates is not a good idea. It was indeed
 an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
