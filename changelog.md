@@ -1,8 +1,11 @@
-* mkchromecast (0.1.7) **unreleased**:
+* mkchromecast (0.1.7) **released**: 2016/04/18
 
     - The bitrate and sample rates can be modified in both node and ffmpeg.
       These options are useful when you router is not very powerful.
     - node_modules have been updated.
+    - An error preventing launching without options has been fixed.
+    - If PyQt5 is not present in the system, mkchromecast does not try to load
+      it.
 
 * mkchromecast (0.1.6) **released**: 2016/04/16
 
