@@ -80,15 +80,17 @@ file](https://github.com/mattingalls/Soundflower/releases).
 By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
 to stream at higher sample rates you need to open the `Audio MIDI setup`
 application that comes in Mac OS X. Then, select the audio device `Soundflower
-(2ch)`, and modify in `input` the sample rate to the desired value.
+(2ch)`, and modify in both `Input/Output` the sample rate to the desired value.
 Note that the Google cast devices audio do  not support more than `96000Hz`.
 See the picture below to have an example when the sample rate is changed from
 `41000Hz` to `48000Hz`:
 
 `41000Hz`
+
 ![Default in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate1.png)
 
 `48000Hz`
+
 ![Changed to 48000Hz in soundflower](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/change_samplerate2.png)
 
 #### ffmpeg
