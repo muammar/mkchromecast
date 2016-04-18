@@ -78,7 +78,8 @@ FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityA
 """
 if  codec == 'flac':
     command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
+                '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+                #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
 
 app = Flask(__name__)
 
