@@ -126,6 +126,10 @@ class menubar(object):
             self.search_menu()
             self.separator_menu()
             self.NodevAction = self.menu.addAction("No Cast devices found.")
+            if os.path.exists('images/google_nodev.icns') == True:
+                self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+            else:
+                self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.separator_menu()
             self.stop_menu()
             self.resetaudio_menu()
@@ -135,7 +139,7 @@ class menubar(object):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print ('again', self.availablecc)
+            print ('Available Google cast devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 self.entries = menuentry
                 self.menuentry = self.menu.addAction(str(menuentry[1]))
