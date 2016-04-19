@@ -5,7 +5,7 @@
 
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
-from mkchromecast.streaming import *
+from mkchromecast.node import *
 import mkchromecast.threading
 import pychromecast
 

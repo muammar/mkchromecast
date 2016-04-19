@@ -5,7 +5,7 @@
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.ffmpeg import *
-from mkchromecast.streaming import *
+from mkchromecast.node import *
 from mkchromecast.terminate import *
 import os.path
 

@@ -7,7 +7,7 @@ from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 import mkchromecast.ffmpeg
-from mkchromecast.streaming import *
+from mkchromecast.node import *
 from mkchromecast.systray import *
 import os.path, pickle, pychromecast
 

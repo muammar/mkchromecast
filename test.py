@@ -5,7 +5,7 @@
 from __future__ import print_function
 import pychromecast
 from mkchromecast.audiodevices import *
-from mkchromecast.streaming import *
+from mkchromecast.node import *
 from mkchromecast.terminate import *
 import atexit
 

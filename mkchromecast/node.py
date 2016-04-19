@@ -11,10 +11,10 @@ from .cast import *
 import psutil, pickle
 
 """
-These functions are used to get up the streaming server.
+These functions are used to get up the streaming server using node.
 
 To call them:
-    from mkchromecast.streaming import *
+    from mkchromecast.node import *
     name()
 """
 
@@ -29,8 +29,12 @@ if backend == 'node' and rcodec != 'mp3':
     print ('Using '+codec+' as default.')
 
 if backend == 'node':
-    if bitrate == '192k':
+    if int(bitrate) == 192:
         print ('Default bitrate used: ', bitrate+'k')
+    elif int(bitrate) > 320:
+            print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
+            bitrate = '320'
+            print ('Bitrate has been set to maximum!')
     else:
         print ('Selected bitrate: ', bitrate+'k')
 
