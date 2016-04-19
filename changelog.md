@@ -1,7 +1,8 @@
 * mkchromecast (0.1.8) **unreleased**
 
-    - Set maximum bitrates values.
+    - Set maximum bitrates values for both backends.
     - New icon when no google cast devices are found.
+    - `streaming.py` was renamed to `node.py`.
 
 * mkchromecast (0.1.7) **released**: 2016/04/18
 
