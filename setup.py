@@ -6,6 +6,9 @@ Usage:
         python setup.py py2app --packages=PyQt5 --excludes="PyQt5.uic.port_v3"
 """
 from setuptools import setup
+from mkchromecast.version import __version__
+
+version = __version__
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
@@ -20,8 +23,8 @@ OPTIONS = {
         'CFBundleDisplayName': APP_NAME,
         'CFBundleGetInfoString': "Cast mac os x audio to your google cast devices",
         'CFBundleIdentifier': "com.mkchromecast.osx",
-        'CFBundleVersion': "0.1.7",
-        'CFBundleShortVersionString': "0.1.7",
+        'CFBundleVersion': version,
+        'CFBundleShortVersionString': version,
         'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved"
     }
 }

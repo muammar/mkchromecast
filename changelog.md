@@ -1,3 +1,8 @@
+* mkchromecast (0.1.8) **unreleased**
+
+    - Set maximum bitrates values.
+    - New icon when no google cast devices are found.
+
 * mkchromecast (0.1.7) **released**: 2016/04/18
 
     - The bitrate and sample rates can be modified in both node and ffmpeg.
