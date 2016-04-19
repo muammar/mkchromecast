@@ -17,7 +17,7 @@ mp3file = 'stream'
 
 backend = mkchromecast.__init__.backend
 codec = mkchromecast.__init__.codec
-bitrate = str(mkchromecast.__init__.bitrate)+'k'
+bitrate = str(mkchromecast.__init__.bitrate)
 samplerate = str(mkchromecast.__init__.samplerate)
 
 if  codec == 'mp3':
@@ -34,10 +34,28 @@ print ('Selected audio codec: ', codec)
 
 if backend != 'node':
     if bitrate == '192':
+        bitrate = bitrate+'k'
         print ('Default bitrate used: ', bitrate)
-    elif bitrate == 'Nonek':
+    elif bitrate == 'None':
         print ('The '+codec+' codec does not require the bitrate argument')
     else:
+        if codec == 'mp3' and int(bitrate) > 320:
+            print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
+            bitrate = '320'
+            print ('Bitrate has been set to maximum!')
+
+        if codec == 'ogg' and int(bitrate) > 500:
+            print ('Maximum bitrate supported by '+codec+' is: '+str(500)+'k')
+            bitrate = '500'
+            print ('Bitrate has been set to maximum!')
+
+        if codec == 'aac' and int(bitrate) > 500:
+            print ('Maximum bitrate supported by '+codec+' is: '+str(500)+'k')
+            print ('Note that about 128-256k is considered "transparent" for '+codec)
+            bitrate = '500'
+            print ('Bitrate has been set to maximum!')
+
+        bitrate = bitrate+'k'
         print ('Selected bitrate: ', bitrate)
 
     if samplerate == '44100':
