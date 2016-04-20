@@ -86,6 +86,7 @@ This option works for both backends. The example above sets the sample rate to
 
 Which sample rate to use?
 
+    - 48000Hz: sampling rate of audio in DVDs.
     - 44100Hz: sampling rate of audio CDs giving a 20 kHz maximum frequency.
     - 32000Hz: sampling rate of audio quality a little below FM radio bandwidth.
     - 22050Hz: sampling rate of audio quality of AM radio.
