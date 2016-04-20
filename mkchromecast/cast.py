@@ -113,11 +113,13 @@ class casting(object):
         localip = start.ip
         print ('Your local IP is: ', localip)
         ncast = self.cast
-        codec = args.codec
-        mtype = 'audio/'+codec
         if args.encoder_backend == 'ffmpeg':
+            import mkchromecast.ffmpeg
+            mtype = mkchromecast.ffmpeg.mtype
+            print (' The media type string used is: ',mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)
         else:
+            print (' The media type string used is: audio/mpeg')
             ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
         print(' ')
         print('Cast media cotroller status')
