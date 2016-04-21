@@ -1,3 +1,7 @@
+* mkchromecast (0.1.8.1) **released**: 2016/04/21
+
+    - Set maximum bitrates and sample rates values for `node`.
+
 * mkchromecast (0.1.8) **released**: 2016/04/21
 
     - Set maximum bitrates and sample rates values for both backends.
