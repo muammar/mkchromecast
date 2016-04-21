@@ -6,9 +6,9 @@ Usage:
         python setup.py py2app --packages=PyQt5 --excludes="PyQt5.uic.port_v3"
 """
 from setuptools import setup
-from mkchromecast.version import __version__
+import mkchromecast.version
 
-version = __version__
+version = mkchromecast.version.__version__
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
