@@ -1,6 +1,6 @@
 * mkchromecast (0.1.8) **released**: 2016/04/21
 
-    - Set maximum bitrates values for both backends.
+    - Set maximum bitrates and sample rates values for both backends.
     - New icon when no google cast devices are found.
     - `streaming.py` was renamed to `node.py`.
     - Tested stability: 3hrs streaming at 320k with the `ffmpeg` backend.
