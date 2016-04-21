@@ -213,8 +213,8 @@ to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
-* Check all codecs used with `ffmpeg`, quality, and stability.
-* Volume `up` and `down`.
+* Control the Google cast volume `up` and `down`.
+* Youtube URLs.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
