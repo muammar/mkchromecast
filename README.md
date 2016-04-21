@@ -118,7 +118,6 @@ When using `ffmpeg`, the following audio coding formats are available:
   `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
   `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
 
-
 Example using wav:
 
 ```
