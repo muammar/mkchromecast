@@ -1,4 +1,4 @@
-* mkchromecast (0.1.8) **unreleased**
+* mkchromecast (0.1.8) **released**: 2016/04/21
 
     - Set maximum bitrates values for both backends.
     - New icon when no google cast devices are found.
