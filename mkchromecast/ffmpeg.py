@@ -62,17 +62,17 @@ if backend != 'node':
         print ('Default sample rate used: ', samplerate+'Hz')
     else:
         codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
-        if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 35000:
+        if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '44100'
             print ('Sample rate has been set to default!')
-        elif codec in codecs_sr and int(samplerate) < 35000 and int(samplerate) > 32000:
+        elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '32000'
-        elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 28000:
+        elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '32000'
-        elif codec in codecs_sr and int(samplerate) < 28000 and int(samplerate) > 22000:
+        elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '22050'
         elif codec in codecs_sr and int(samplerate) > 41000:
