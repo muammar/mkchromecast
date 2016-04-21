@@ -10,7 +10,6 @@ from mkchromecast.terminate import *
 import atexit
 
 print('Switching to soundflower')
-inputdev()
 outputdev()
 stream()
 

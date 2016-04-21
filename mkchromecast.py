@@ -23,7 +23,6 @@ if args.tray == False:
 
     print('Switching to soundflower...')
 
-    inputdev()
     outputdev()
 
     print('Done!')

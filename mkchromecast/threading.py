@@ -48,7 +48,6 @@ class Player(QObject):
             stream()
         else:
             mkchromecast.ffmpeg.main()
-        inputdev()
         outputdev()
         start = casting()
         start.initialize_cast()
