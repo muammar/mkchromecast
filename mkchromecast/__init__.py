@@ -13,8 +13,7 @@ from .version import __version__
 parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
-Set the audio encoder's bitrate.  The default is set to be 192k average
-bitrate.
+Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
 
 Example:
 
@@ -24,8 +23,8 @@ ffmpeg:
 node:
     python mkchromecast.py  -b 128
 
-This option works with both backends. The example above sets the
-average bitrate to 128k.
+This option works with both backends. The example above sets the average
+bitrate to 128k.
 
 ''')
 parser.add_argument('-c', '--codec', type=str, default='mp3', help=
@@ -33,7 +32,6 @@ parser.add_argument('-c', '--codec', type=str, default='mp3', help=
 Set the audio codec.
 
 Example:
-
     python mkchromecast.py --encoder-backend ffmpeg -c ogg
 
 Possible codecs:
@@ -154,6 +152,7 @@ else:
 Bitrate
 """
 codecs_br = ['mp3', 'ogg', 'aac']
+
 if codec in codecs_br:
     if args.bitrate != 0:
         bitrate = abs(args.bitrate)
@@ -175,7 +174,6 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
-
 
 """
 This is to write a PID file
