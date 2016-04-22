@@ -24,7 +24,7 @@ class casting(object):
 
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
-            print('List of Google cast devices available in your network:')
+            print('List of Google Cast devices available in your network:')
             print('------------------------------------------------------')
             print(' ')
             print('Index   Friendly name')
@@ -42,7 +42,7 @@ class casting(object):
             if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
                 print(' ')
-                print('List of Google cast devices available in your network:')
+                print('List of Google Cast devices available in your network:')
                 print('------------------------------------------------------')
                 print(' ')
                 print('Index   Friendly name')
@@ -83,7 +83,7 @@ class casting(object):
 
     def sel_cc(self):
             print(' ')
-            print('Please, select the index of the Google cast device that you want to use:')
+            print('Please, select the index of the Google Cast device that you want to use:')
             self.index = input()
 
     def inp_cc(self):
@@ -112,22 +112,46 @@ class casting(object):
         start = casting()
         localip = start.ip
         print ('Your local IP is: ', localip)
-        ncast = self.cast
-        if args.encoder_backend == 'ffmpeg':
-            import mkchromecast.ffmpeg
-            mtype = mkchromecast.ffmpeg.mtype
-            print(' ')
-            print ('The media type string used is: ',mtype)
-            ncast.play_media('http://'+localip+':5000/stream', mtype)
+
+        import mkchromecast.__init__        # This is to verify if youtube URL was set
+        try:
+            youtubeurl = mkchromecast.__init__.youtubeurl
+        except AttributeError:
+            youtubeurl = None
+
+        if youtubeurl != None:
+            print ('The Youtube URL chosen: ', youtubeurl)
+            import pychromecast.controllers.youtube as youtube
+            yt = youtube.YouTubeController()
+            self.cast.register_handler(yt)
+            try:
+                import urlparse
+                url_data = urlparse.urlparse(youtubeurl)
+                query = urlparse.parse_qs(url_data.query)
+            except ImportError:
+                import urllib.parse
+                url_data = urllib.parse.urlparse(youtubeurl)
+                query = urllib.parse.parse_qs(url_data.query)
+            video = query["v"][0]
+            print ('Playing video: ', video)
+            yt.play_video(video)
         else:
+            ncast = self.cast
+            if args.encoder_backend == 'ffmpeg':
+                import mkchromecast.ffmpeg
+                mtype = mkchromecast.ffmpeg.mtype
+                print(' ')
+                print ('The media type string used is: ',mtype)
+                ncast.play_media('http://'+localip+':5000/stream', mtype)
+            else:
+                print(' ')
+                print ('The media type string used is: audio/mpeg')
+                ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
             print(' ')
-            print ('The media type string used is: audio/mpeg')
-            ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-        print(' ')
-        print('Cast media cotroller status')
-        print(' ')
-        print(ncast.status)
-        print(' ')
+            print('Cast media cotroller status')
+            print(' ')
+            print(ncast.status)
+            print(' ')
 
     def stop_cast(self):
         ncast = self.cast

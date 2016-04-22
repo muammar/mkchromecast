@@ -4,8 +4,6 @@
 
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
-from mkchromecast.ffmpeg import *
-from mkchromecast.node import *
 from mkchromecast.terminate import *
 import os.path
 
@@ -21,18 +19,20 @@ if args.tray == False:
         print ('Your computer is not connected to any network')
         terminate()
 
-    print('Switching to soundflower...')
+    if args.youtube == None:
+        outputdev()
 
-    outputdev()
+        print('Switching to soundflower...')
+        print('Done!')
 
-    print('Done!')
+        print('Starting local streaming server')
+        if args.encoder_backend == 'node':
+            from mkchromecast.node import *
+            stream()
 
-    print('Starting local streaming server')
-    if args.encoder_backend == 'node':
-        stream()
-
-    if args.encoder_backend == 'ffmpeg':
-        mkchromecast.ffmpeg.main()
+        if args.encoder_backend == 'ffmpeg':
+            import mkchromecast.ffmpeg
+            mkchromecast.ffmpeg.main()
 
     cc.initialize_cast()
 

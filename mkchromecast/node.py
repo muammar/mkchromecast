@@ -24,42 +24,52 @@ codec = mkchromecast.__init__.codec
 bitrate = str(mkchromecast.__init__.bitrate)
 samplerate = str(mkchromecast.__init__.samplerate)
 
-if backend == 'node' and rcodec != 'mp3':
-    print ('Codec '+rcodec+' is not supported by the node server!')
-    print ('Using '+codec+' as default.')
+try:
+    youtubeurl = mkchromecast.__init__.youtubeurl
+except AttributeError:
+    youtubeurl = None
 
-if backend == 'node':
-    if int(bitrate) == 192:
-        print ('Default bitrate used: ', bitrate+'k')
-    elif int(bitrate) > 320:
-            print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
-            bitrate = '320'
-            print ('Bitrate has been set to maximum!')
-    else:
-        print ('Selected bitrate: ', bitrate+'k')
+if youtubeurl == None:
+    if backend == 'node' and rcodec != 'mp3':
+        print ('Codec '+rcodec+' is not supported by the node server!')
+        print ('Using '+codec+' as default.')
 
-    if samplerate == '44100':
-        print ('Default sample rate used: ', samplerate+'Hz')
-    else:
-        codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
-        if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
-            samplerate = '44100'
-            print ('Sample rate has been set to default!')
-        elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
-            samplerate = '32000'
-        elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
-            samplerate = '32000'
-        elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
-            samplerate = '22050'
-        elif codec in codecs_sr and int(samplerate) > 41000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
-            samplerate = '44800'
-            print ('Sample rate has been set to maximum!')
-        print ('Selected sample rate: ', samplerate+'Hz')
+    if backend == 'node':
+        if int(bitrate) == 192:
+            print ('Default bitrate used: ', bitrate+'k')
+        elif int(bitrate) > 320:
+                print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
+                bitrate = '320'
+                print ('Bitrate has been set to maximum!')
+        else:
+            print ('Selected bitrate: ', bitrate+'k')
+
+        if samplerate == '44100':
+            print ('Default sample rate used: ', samplerate+'Hz')
+        else:
+            codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+            if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
+                print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+                samplerate = '44100'
+                print ('Sample rate has been set to default!')
+
+            elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
+                print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+                samplerate = '32000'
+
+            elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
+                print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+                samplerate = '32000'
+
+            elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
+                print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+                samplerate = '22050'
+
+            elif codec in codecs_sr and int(samplerate) > 41000:
+                print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+                samplerate = '44800'
+                print ('Sample rate has been set to maximum!')
+            print ('Selected sample rate: ', samplerate+'Hz')
 
 def streaming():
     webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]

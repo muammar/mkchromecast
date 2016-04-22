@@ -3,7 +3,7 @@
 # This file is part of mkchromecast.
 
 """
-Google cast device has to point out to http://ip:5000/stream
+Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
@@ -66,15 +66,19 @@ if backend != 'node':
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '44100'
             print ('Sample rate has been set to default!')
+
         elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '32000'
+
         elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '32000'
+
         elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '22050'
+
         elif codec in codecs_sr and int(samplerate) > 41000:
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '44800'

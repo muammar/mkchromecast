@@ -69,7 +69,7 @@ class menubar(object):
         self.app.exec_()
 
     def search_menu(self):
-        self.SearchAction = self.menu.addAction("Search for Google cast devices")
+        self.SearchAction = self.menu.addAction("Search for Google Cast devices")
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
@@ -139,7 +139,7 @@ class menubar(object):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print ('Available Google cast devices', self.availablecc)
+            print ('Available Google Cast devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 self.entries = menuentry
                 self.menuentry = self.menu.addAction(str(menuentry[1]))

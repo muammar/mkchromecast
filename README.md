@@ -1,7 +1,7 @@
 mkchromecast
 ============
 
-This is a program to cast your **Mac OS X** audio to your Google cast devices.
+This is a program to cast your **Mac OS X** audio to your Google Cast devices.
 
 It is written in Python, and it streams via `node.js`, or `ffmpeg`.
 **mkchromecast** is capable of using lossy and lossless audio formats provided
@@ -213,8 +213,7 @@ to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
-* Control the Google cast volume `up` and `down`.
-* Youtube URLs.
+* Control the Google Cast volume `up` and `down`.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.

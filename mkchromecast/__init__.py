@@ -10,7 +10,7 @@ import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
 
-parser = argparse.ArgumentParser(description='Cast mac os x audio to your google cast devices.', formatter_class=RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='Cast Mac OS X audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
@@ -45,7 +45,7 @@ This option only works for the ffmpeg backend.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
-parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a google cast device')
+parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a Google Cast device')
 parser.add_argument('--encoder-backend', type=str, default='node', help=
 '''
 Set the backend for all encoders.
@@ -57,9 +57,9 @@ Example:
     python mkchromecast.py --encoder-backend ffmpeg
 
 ''')
-parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the google cast you want to connect')
+parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the Google Cast you want to connect')
 parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your laptop, use this option to reset')
-parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one google cast device use this option')
+parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one Google Cast device use this option')
 parser.add_argument('--sample-rate', type=int, default='44100', help=
 '''
 Set the sample rate. The default sample rate obtained from avfoundation audio
@@ -94,7 +94,17 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 ''')
 parser.add_argument('-t', '--tray', action="store_true", help='This option let you launch mkchromecast as a systray menu (still experimental)')
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
-parser.add_argument('-y', '--youtube', action="store_true", help='Stream a youtube URL')
+parser.add_argument('-y', '--youtube', type=str, default=None, help=
+'''
+Stream from Youtube URL. This option only works for Google Casts in TV.
+
+Example:
+    python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
+
+As I don't own a Google Cast for TVs, I cannot test this correctly. But in
+principle it should work.
+
+''')
 args = parser.parse_args()
 
 if args.reset == True:
@@ -102,7 +112,7 @@ if args.reset == True:
     outputint()
     terminate()
 
-if args.config == True or args.discover == True or args.name == True or args.youtube == True:
+if args.config == True or args.discover == True or args.name == True:
     print ('This option is not implemented yet.')
     sys.exit(0)
 
@@ -174,6 +184,16 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
+
+"""
+Youtube URLs
+"""
+if args.youtube != None:
+    if 'https' not in args.youtube:
+        print('You need to provide the youtube URL')
+        sys.exit(0)
+    else:
+        youtubeurl = args.youtube
 
 """
 This is to write a PID file
