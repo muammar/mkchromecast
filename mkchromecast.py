@@ -20,9 +20,8 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        outputdev()
-
         print('Switching to soundflower...')
+        outputdev()
         print('Done!')
 
         print('Starting local streaming server')
