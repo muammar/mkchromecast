@@ -1,5 +1,6 @@
 mkchromecast
 ============
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 
 This is a program to cast your **Mac OS X** audio to your Google Cast devices.
 
