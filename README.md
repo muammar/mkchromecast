@@ -165,6 +165,8 @@ disconnections are expected. In such a case, **mkchromecast** is able to
 restart the streaming/casting process automatically. So, some hiccups are
 expected.
 
+#### Using the `ffmpeg` backend
+
 Below an example using `mp3` with `ffmpeg`:
 
 ```
@@ -183,6 +185,16 @@ You can change the bitrate:
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128
 ```
+
+#### Playing Youtube URLs in Google Cast TV
+
+You can play Youtube URLs headlessly from the command line:
+
+```
+python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
+```
+
+**Note**: you may need to enclose the URL between quotation marks.
 
 To get more help:
 
@@ -208,7 +220,7 @@ It looks like:
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
 
-**Note**:You can pass the options when using `ffmpeg` as backend and adding `-t`
+**Note**: you can pass the options when using `ffmpeg` as backend and adding `-t`
 to launch the system tray. I am still working on improving all of this.
 
 ### TODO
