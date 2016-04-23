@@ -208,8 +208,9 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
 This will allow you to press `u` and `d` keys for `volume up` and `volume down`
 respectively.
 
-No that you need the module `py-getch`. You can install it using the
-`requirements.txt` file shipped in the repository as described above.
+**Note**: you need the module `py-getch` for this option to work. You can
+install it using the `requirements.txt` file shipped in the repository as
+described above.
 
 #### More help
 
