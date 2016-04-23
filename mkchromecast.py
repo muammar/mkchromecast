@@ -78,12 +78,14 @@ if args.tray == False:
                     print('')
                     print('Increasing volume...')
                     cc.volume_up()
-                    controls_msg()
+                    if args.encoder_backend == 'ffmpeg':
+                        controls_msg()
                 elif(key == 'd'):
                     print('')
                     print('Decreasing volume...')
                     cc.volume_down()
-                    controls_msg()
+                    if args.encoder_backend == 'ffmpeg':
+                        controls_msg()
                 elif(key == 'q'):
                     print('Quitting application...')
                     terminateapp()
