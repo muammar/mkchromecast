@@ -62,7 +62,7 @@ this repository:
 pip install -r requirements.txt
 ```
 
-_Note_: if this step fails, maybe you will need to run the installation with
+**Note**: if this step fails, maybe you will need to run the installation with
 `sudo` as shown below. However, before installing using this method verify why
 a regular user cannot install the requirements.
 
@@ -99,15 +99,10 @@ install Homebrew:
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-Once Homebrew is ready, you can install `ffmpeg` as follows:
-
-```
-brew install ffmpeg
-```
-
-As stated in the [ffmpeg
-website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), it is better to
-install some additional `ffmpeg`'s options:
+Once Homebrew is ready, you can install `ffmpeg`.  As stated in the [ffmpeg
+website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), and for using
+all audio codings in **mkchromecast**, it is better to install some additional
+`ffmpeg`'s options:
 
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
