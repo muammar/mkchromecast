@@ -101,8 +101,8 @@ install Homebrew:
 
 Once Homebrew is ready, you can install `ffmpeg`.  As stated in the [ffmpeg
 website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), and for using
-all audio codings in **mkchromecast**, it is better to install some additional
-`ffmpeg`'s options:
+all audio coding formats in **mkchromecast**, it is better to install some
+additional `ffmpeg`'s options:
 
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
