@@ -160,10 +160,9 @@ python mkchromecast.py
 This will launch **mkchromecast** using `node.js` for doing the streaming part
 together with the `mp3` audio coding format.  This works decently, **however**
 I would like to point out that the node version of this implementation is
-ancient. Moreover, the `node.js` server tends to _fail_, and some
-disconnections are expected. In such a case, **mkchromecast** is able to
-restart the streaming/casting process automatically. So, some hiccups are
-expected.
+ancient. Moreover, the `node.js` server tends to _fail_. In such a case,
+**mkchromecast** is able to restart the streaming/casting process
+automatically. So, some hiccups are expected.
 
 #### Using the `ffmpeg` backend
 
@@ -198,15 +197,15 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 
 #### Controlling the Google Cast volume
 
-You can control the volume of your Google Cast by launching **mkchromecast***
+You can control the volume of your Google Cast by launching **mkchromecast**
 with the option `--volume`:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
 ```
 
-This will allow you to press `u` and `d` keys for `volume up` and `volume down`
-respectively.
+This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
+and `volume down` respectively.
 
 **Note**: you need the module `py-getch` for this option to work. You can
 install it using the `requirements.txt` file shipped in the repository as
@@ -224,7 +223,8 @@ python mkchromecast.py -h
 
 To kill **mkchromecast** when you run it from console, there are two ways of
 doing it: if you didn't use the `--volume` option, just press
-`Ctrl-c`. Otherwise, you will need to press the `q` key to quit.
+<kbd>Ctrl</kbd>-<kbd>C</kbd>. Otherwise, you will need to press the
+<kbd>q</kbd> key to quit.
 
 ### Notes
 
