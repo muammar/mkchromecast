@@ -12,8 +12,6 @@ from .audiodevices import *
 import os.path
 import pickle
 
-
-
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
         self.ip = socket.gethostbyname(socket.gethostname())
@@ -156,3 +154,19 @@ class casting(object):
     def stop_cast(self):
         ncast = self.cast
         ncast.quit_app()
+
+    def volume_up(self):
+        """ Increment volume by 0.1 unless it is already maxed.
+        Returns the new volume.
+        """
+        ncast = self.cast
+        volume = round(ncast.status.volume_level, 1)
+        return ncast.set_volume(volume + 0.1)
+
+    def volume_down(self):
+        """ Decrement the volume by 0.1 unless it is already 0.
+        Returns the new volume.
+        """
+        ncast = self.cast
+        volume = round(ncast.status.volume_level, 1)
+        return ncast.set_volume(volume - 0.1)

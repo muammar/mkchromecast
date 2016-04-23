@@ -196,6 +196,23 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 
 **Note**: you may need to enclose the URL between quotation marks.
 
+#### Controlling the Google Cast volume
+
+You can control the volume of your Google Cast by launching **mkchromecast***
+with the option `--volume`:
+
+```
+python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
+```
+
+This will allow you to press `u` and `d` keys for `volume up` and `volume down`
+respectively.
+
+No that you need the module `py-getch`. You can install it using the
+`requirements.txt` file shipped in the repository as described above.
+
+#### More help
+
 To get more help:
 
 ```
@@ -204,7 +221,9 @@ python mkchromecast.py -h
 
 ### Killing the application
 
-To kill **mkchromecast** when you run it from console, just press `Ctrl-c`.
+To kill **mkchromecast** when you run it from console, there are two ways of
+killing the application: If you didn't use the `--volume` option, just press
+`Ctrl-c`. Otherwise, you will need to press the `q` key to quit.
 
 ### Notes
 
@@ -225,7 +244,6 @@ to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
-* Control the Google Cast volume `up` and `down`.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.

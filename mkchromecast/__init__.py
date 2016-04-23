@@ -92,8 +92,17 @@ Which sample rate to use?
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 
 ''')
-parser.add_argument('-t', '--tray', action="store_true", help='This option let you launch mkchromecast as a systray menu (still experimental)')
+parser.add_argument('-t', '--tray', action="store_true", help=
+'''
+This option let you launch mkchromecast as a systray menu (still experimental)
+''')
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
+parser.add_argument('--volume', action="store_true", default=False, help=
+'''
+This option lets you control the volume of your Google Cast Devices. Use the
+'u' and 'd' keys to perform volime up and volume down actions respectively. Not
+that to kill the application using this option, you need to press 'q'.
+''')
 parser.add_argument('-y', '--youtube', type=str, default=None, help=
 '''
 Stream from Youtube URL. This option only works for Google Casts in TV.
@@ -184,6 +193,12 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
+
+"""
+Volume
+"""
+if args.volume == True:
+    volumearg = True
 
 """
 Youtube URLs
