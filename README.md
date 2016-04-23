@@ -108,7 +108,7 @@ additional `ffmpeg`'s options:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
-When using `ffmpeg`, the following audio coding formats are available:
+With `ffmpeg`, the following audio coding formats are available:
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
