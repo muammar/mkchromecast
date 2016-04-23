@@ -223,7 +223,7 @@ python mkchromecast.py -h
 ### Killing the application
 
 To kill **mkchromecast** when you run it from console, there are two ways of
-killing the application: If you didn't use the `--volume` option, just press
+doing it: if you didn't use the `--volume` option, just press
 `Ctrl-c`. Otherwise, you will need to press the `q` key to quit.
 
 ### Notes
