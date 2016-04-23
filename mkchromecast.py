@@ -60,22 +60,30 @@ if args.tray == False:
     if volumearg == True:
         from getch import getch, pause
 
-        print('Controls:')
-        print('========')
-        print('')
-        print('Volume up: u')
-        print('Volume up: d')
-        print('Quit the application: q')
-        print('')
+        def controls_msg():
+            print('')
+            print('Controls:')
+            print('=========')
+            print('')
+            print('Volume up: u')
+            print('Volume down: d')
+            print('Quit the application: q')
+            print('')
+            return
+        controls_msg()
         try:
             while(True):
                 key = getch()
                 if(key == 'u'):
+                    print('')
                     print('Increasing volume...')
                     cc.volume_up()
+                    controls_msg()
                 elif(key == 'd'):
+                    print('')
                     print('Decreasing volume...')
                     cc.volume_down()
+                    controls_msg()
                 elif(key == 'q'):
                     print('Quitting application...')
                     terminateapp()
