@@ -1,8 +1,8 @@
-* mkchromecast (0.1.9) **unreleased**
+* mkchromecast (0.1.9) **released**: 2016/04/25
 
     - Play headless youtube URL.
-    - Now you can control Volume up and down from mkchromecast. So, don't need
-      of using the Android app anymore.
+    - Now you can control volume up and down from mkchromecast. So, no need
+      of using the Android app for thisanymore.
 
 * mkchromecast (0.1.8.1) **released**: 2016/04/21
 

@@ -36,7 +36,7 @@ In order to use **mkchromecast** you need the following software to stream with
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
 * PyQt5 (optional if you want to use the system tray menu).
 
-If you want more control, you may want to use `ffmpeg` as backend. In that case
+For more control, you may want to use `ffmpeg` as backend. In that case
 you need the following:
 
 * flask (optional).
@@ -62,7 +62,7 @@ this repository:
 pip install -r requirements.txt
 ```
 
-**Note**: if this step fails, maybe you will need to run the installation with
+**Note**: if this step fails, maybe you need to run the installation with
 `sudo` as shown below. However, before installing using this method verify why
 a regular user cannot install the requirements.
 
@@ -75,7 +75,7 @@ sudo pip install -r requirements.txt
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
 or if you have [Homebrew](http://brew.sh/) you can use [brew
-cask](https://caskroom.github.io/) to install it as follows:
+cask](https://caskroom.github.io/) as follows:
 
 ```
 brew cask install soundflower
@@ -85,15 +85,20 @@ Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
 
 By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
-to stream at higher sample rates follow the [instructions in the wiki here](https://github.com/muammar/mkchromecast/wiki/Soundflower).
+to stream at higher sample rates follow the [instructions in the wiki](https://github.com/muammar/mkchromecast/wiki/Soundflower).
+
+**Note**: resampling to higher sample rates is not a good idea. It was indeed
+an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
+Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
+a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
 #### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink.
 
-I will briefly describe the case of Homebrew here. First, you will need to
-install Homebrew:
+I will briefly describe the case of Homebrew here. First, you will need
+Homebrew:
 
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -124,16 +129,25 @@ Example using wav:
 python mkchromecast.py --encoder-backend ffmpeg -c wav
 ```
 
-There is also an option to change the `bitrate`. See example below:
+There is also an option to change the `bitrate`:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
 ```
 
+and another one to change the sampling rate:
+
+```
+python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
+```
+check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/muammar/mkchromecast#soundflower).
+
 #### PyQt5
 
-These Python bindings are needed if you intend to use the system tray menu.  As
-previously said, I also suggest you to install it using Homebrew:
+These Python bindings are needed if you intend to use the system tray menu.
+I also suggest you to install it using a package manager.
+
+Example with Homebrew:
 
 ```
 brew install pyqt5 --with-python
@@ -179,10 +193,10 @@ modify the codec:
 python mkchromecast.py --encoder-backend ffmpeg -c aac
 ```
 
-You can change the bitrate:
+change the bitrate and sample rate:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128
+python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
 #### Playing Youtube URLs in Google Cast TV
@@ -193,12 +207,13 @@ You can play Youtube URLs headlessly from the command line:
 python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 ```
 
-**Note**: you may need to enclose the URL between quotation marks.
+**Note**: you may need to enclose the URL between quotation marks. This does
+not work in Google Cast audio.
 
 #### Controlling the Google Cast volume
 
-You can control the volume of your Google Cast by launching **mkchromecast**
-with the option `--volume`:
+You can control the volume of your Google Cast device by launching
+**mkchromecast** with the option `--volume`:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
