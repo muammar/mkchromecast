@@ -7,7 +7,7 @@ Usage:
 """
 from setuptools import setup
 
-version = '0.1.9'
+version = '0.1.9.1'
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"

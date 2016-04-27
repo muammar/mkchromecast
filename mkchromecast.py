@@ -21,6 +21,7 @@ if args.tray == False:
 
     if args.youtube == None:
         print('Switching to soundflower...')
+        inputdev()
         outputdev()
         print('Done!')
 

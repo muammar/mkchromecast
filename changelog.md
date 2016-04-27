@@ -1,3 +1,7 @@
+* mkchromecast (0.1.9.1) **released**: 2016/04/27
+
+    - Fixed node bug introduced in f635c5d66649767a031ac560d7c32ba6bffe33fe.
+
 * mkchromecast (0.1.9) **released**: 2016/04/25
 
     - Play headless youtube URL.
