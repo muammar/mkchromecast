@@ -5,3 +5,4 @@ psutil == 4.1.0
 PyChromecast == 0.7.3
 setuptools == 20.10.1
 getch == 1.0
+PyQt5 == 5.6

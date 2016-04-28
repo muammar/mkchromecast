@@ -144,8 +144,12 @@ check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/m
 
 #### PyQt5
 
-These Python bindings are needed if you intend to use the system tray menu.
-I also suggest you to install it using a package manager.
+These Python bindings are needed if you intend to use the system tray menu. As
+of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
+a `pip install pyqt5`.
+
+If this does not work for you, I suggest you to install it using a package
+manager.
 
 Example with Homebrew:
 
