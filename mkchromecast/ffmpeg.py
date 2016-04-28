@@ -104,7 +104,7 @@ AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
     command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+                '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
 
 """
 WAV 24-Bit
