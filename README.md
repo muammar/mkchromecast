@@ -34,6 +34,8 @@ In order to use **mkchromecast** you need the following software to stream with
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
+* py_getch (optional if you want to control the volume of the Google cast
+  device).
 * PyQt5 (optional if you want to use the system tray menu).
 
 For more control, you may want to use `ffmpeg` as backend. In that case
