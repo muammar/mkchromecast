@@ -100,7 +100,7 @@ parser.add_argument('-v', '--version', action="store_true", help='Show the versi
 parser.add_argument('--volume', action="store_true", default=False, help=
 '''
 This option lets you control the volume of your Google Cast Devices. Use the
-'u' and 'd' keys to perform volime up and volume down actions respectively. Note
+'u' and 'd' keys to perform volume up and volume down actions respectively. Note
 that to kill the application using this option, you need to press the 'q' key.
 ''')
 parser.add_argument('-y', '--youtube', type=str, default=None, help=
