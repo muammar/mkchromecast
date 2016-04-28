@@ -4,7 +4,7 @@ mkchromecast
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
 [![node](https://img.shields.io/node/v/gh-badges.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![GitHub
-release](https://img.shields.io/github/release/muammar/mkchromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/releases)
+release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases)
 
 This is a program to cast your **Mac OS X** audio to your Google Cast devices.
 

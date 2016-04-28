@@ -136,7 +136,7 @@ def index():
 @app.route('/' + mp3file)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), 1024)
+    read_chunk = partial(os.read, process.stdout.fileno(), 512)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
