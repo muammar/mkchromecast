@@ -84,7 +84,7 @@ def streaming():
     while p.poll() is None:
         try:
             time.sleep(0.5)
-            if psutil.pid_exists(pidnumber) == False:   # With this if I ensure that if main app fails, everything
+            if psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
                 inputint()                              # will get back to normal
                 outputint()
                 parent = psutil.Process(localpid)
