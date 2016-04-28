@@ -55,7 +55,7 @@ git clone https://github.com/muammar/mkchromecast.git
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
-#### Python
+##### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
@@ -72,7 +72,7 @@ a regular user cannot install the requirements.
 sudo pip install -r requirements.txt
 ```
 
-#### Soundflower
+##### Soundflower
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
@@ -94,7 +94,7 @@ an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-#### ffmpeg
+##### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink.
@@ -144,7 +144,7 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 4800
 ```
 check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/muammar/mkchromecast#soundflower).
 
-#### PyQt5
+##### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu. As
 of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
@@ -161,7 +161,7 @@ brew install pyqt5 --with-python
 
 or if you desire it you can do it yourself from the sources.
 
-#### Updating
+##### Updating
 
 To update **mkchromecast**, just get into the cloned directory and:
 
@@ -184,7 +184,7 @@ ancient. Moreover, the `node.js` server tends to _fail_. In such a case,
 **mkchromecast** is able to restart the streaming/casting process
 automatically. So, some hiccups are expected.
 
-#### Using the `ffmpeg` backend
+##### Using the `ffmpeg` backend
 
 Below an example using `mp3` with `ffmpeg`:
 
@@ -205,7 +205,7 @@ change the bitrate and sample rate:
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-#### Playing Youtube URLs in Google Cast TV
+##### Playing Youtube URLs in Google Cast TV
 
 You can play Youtube URLs headlessly from the command line:
 
@@ -216,7 +216,7 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 **Note**: you may need to enclose the URL between quotation marks. This does
 not work in Google Cast audio.
 
-#### Controlling the Google Cast volume
+##### Controlling the Google Cast volume
 
 You can control the volume of your Google Cast device by launching
 **mkchromecast** with the option `--volume`:
@@ -232,7 +232,7 @@ and `volume down` respectively.
 install it using the `requirements.txt` file shipped in the repository as
 described above.
 
-#### More help
+##### More help
 
 To get more help:
 
@@ -247,7 +247,7 @@ doing it: if you didn't use the `--volume` option, just press
 <kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
 <kbd>q</kbd> key to quit.
 
-### Notes
+#### Notes
 
 A **beta** system tray menu is now provided. It requires you to install
 `PyQt5`. To launch it:
