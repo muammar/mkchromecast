@@ -77,9 +77,10 @@ def streaming():
 
     f = open('/tmp/mkcrhomecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print ('PID of streaming process: ', pidnumber)
+    print ('PID of main process: ', pidnumber)
 
     localpid=getpid()
+    print ('PID of streaming process: ', localpid)
 
     while p.poll() is None:
         try:
