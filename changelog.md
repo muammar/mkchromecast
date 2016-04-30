@@ -1,3 +1,8 @@
+* mkchromecast (0.2.0) **unreleased**:
+
+    - Linux support.
+    - Now by default log level for `ffmpeg` backend is set to minimum.
+
 * mkchromecast (0.1.9.1) **released**: 2016/04/27
 
     - Fixed node bug introduced in f635c5d66649767a031ac560d7c32ba6bffe33fe.
