@@ -2,7 +2,7 @@
 
 # This file is part of mkchromecast.
 
-import subprocess
+import subprocess, time
 
 def create_sink():
     name = 'mkchromecast'
@@ -12,6 +12,7 @@ def create_sink():
     rename_sink = ['pacmd', 'update-sink-proplist', name, 'device.description='+name]
     #print (rename_sink)
     subprocess.Popen(create_sink)
+    time.sleep(1)
     subprocess.Popen(rename_sink)
     return
 

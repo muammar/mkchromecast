@@ -28,6 +28,10 @@ if args.tray == False:
             inputdev()
             outputdev()
             print('Done!')
+        else:
+            print('Creating pulseaudio sink...')
+            from mkchromecast.pulseaudio import *
+            create_sink()
 
         print('Starting local streaming server')
         if args.encoder_backend == 'node' and platform == 'Darwin':
@@ -52,8 +56,11 @@ if args.tray == False:
 
     def terminateapp():
         cc.stop_cast()
-        inputint()
-        outputint()
+        if platform == 'Darwin':
+            inputint()
+            outputint()
+        else:
+            remove_sink()
         terminate()
         return
 

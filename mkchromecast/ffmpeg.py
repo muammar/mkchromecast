@@ -94,8 +94,11 @@ MP3 192k
 if  codec == 'mp3':
 
     if platform == 'Linux':
-        # parec -d steam.monitor | ffmpeg -loglevel panic -ac 2 -ar 44100 -f s16le -i - -strict -2 -f mp3 -b:a 192k tete.mp3
-        command = [backend, '-re', '-f', 'pulse', '-i', '"5"', \
+        # parec -d --format=s16le steam.monitor | ffmpeg -loglevel panic -ac 2 -ar 44100 -f s16le -i - -strict -2 -f mp3 -b:a 192k tete.mp3
+                    c_parec = ['parec', '-d', 'mkchromecast.monitor']
+                    parec = Popen(c_parec, stdout=PIPE)
+
+                    command = [ backend, '-ac', '2', '-f', 's16le', '-i', '-', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -144,7 +147,10 @@ def index():
 
 @app.route('/' + mp3file)
 def stream():
-    process = Popen(command, stdout=PIPE, bufsize=-1)
+    if platform == 'Linux':
+        process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+    else:
+        process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), 512)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
