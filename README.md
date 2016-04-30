@@ -96,7 +96,7 @@ a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 ##### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
-macports or fink.
+macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
 
 I will briefly describe the case of Homebrew here. First, you will need
 Homebrew:
