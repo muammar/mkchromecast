@@ -152,6 +152,9 @@ backends = ['node', 'ffmpeg']
 
 if args.encoder_backend in backends:
     backend = args.encoder_backend
+    if platform == 'Linux' and backend == 'node':
+        args.encoder_backend = 'ffmpeg'
+        backend = args.encoder_backend
 else:
     print ('Supported backends are: ')
     for backend in backends:
