@@ -20,6 +20,13 @@ class casting(object):
         from pychromecast import socket_client
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
 
+        import mkchromecast.__init__        # This is to verify against some needed variables
+        self.platform = mkchromecast.__init__.platform
+        try:
+            self.youtubeurl = mkchromecast.__init__.youtubeurl
+        except AttributeError:
+            self.youtubeurl = None
+
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
             print('List of Google Cast devices available in your network:')
@@ -70,8 +77,12 @@ class casting(object):
 
         elif len(self.cclist) == 0 and args.tray == False:
             print('No devices found!')
-            inputint()
-            outputint()
+            if self.platform == 'Linux':
+                import mkchromecast.pulseaudio
+                mkchromecast.pulseaudio.remove_sink()
+            else:
+                inputint()
+                outputint()
             terminate()
             exit()
 
@@ -107,10 +118,7 @@ class casting(object):
             print(' ')
 
     def play_cast(self):
-        import mkchromecast.__init__        # This is to verify against some needed variables
-
-        platform = mkchromecast.__init__.platform
-        if platform == 'Linux':
+        if self.platform == 'Linux':
             import commands
             localip = commands.getoutput("hostname -I").strip()
         else:
@@ -119,12 +127,8 @@ class casting(object):
 
         print ('Your local IP is: ', localip)
 
-        try:
-            youtubeurl = mkchromecast.__init__.youtubeurl
-        except AttributeError:
-            youtubeurl = None
 
-        if youtubeurl != None:
+        if self.youtubeurl != None:
             print ('The Youtube URL chosen: ', youtubeurl)
             import pychromecast.controllers.youtube as youtube
             yt = youtube.YouTubeController()

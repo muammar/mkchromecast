@@ -94,10 +94,7 @@ MP3 192k
 if  codec == 'mp3':
 
     if platform == 'Linux':
-        c_parec = ['parec', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
-
-        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [backend, '-re', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -108,10 +105,7 @@ OGG 192k
 """
 if  codec == 'ogg':
     if platform == 'Linux':
-        c_parec = ['parec', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
-
-        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [backend, '-re', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -122,10 +116,7 @@ AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
     if platform == 'Linux':
-        c_parec = ['parec', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
-
-        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [backend, '-re', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -136,10 +127,7 @@ WAV 24-Bit
 """
 if  codec == 'wav':
     if platform == 'Linux':
-        c_parec = ['parec', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
-
-        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [backend, '-re', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -150,10 +138,7 @@ FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityA
 """
 if  codec == 'flac':
     if platform == 'Linux':
-        c_parec = ['parec', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
-
-        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [backend, '-re', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -174,10 +159,7 @@ def index():
 
 @app.route('/' + mp3file)
 def stream():
-    if platform == 'Linux':
-        process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
-    else:
-        process = Popen(command, stdout=PIPE, bufsize=-1)
+    process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), 512)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
