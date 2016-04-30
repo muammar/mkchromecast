@@ -107,8 +107,14 @@ class casting(object):
             print(' ')
 
     def play_cast(self):
-        start = casting()
-        localip = start.ip
+        operatingsystem = 'Linux'
+        if operatingsystem == 'Linux':
+            import commands
+            localip = commands.getoutput("hostname -I")
+        else:
+            start = casting()
+            localip = start.ip
+
         print ('Your local IP is: ', localip)
 
         import mkchromecast.__init__        # This is to verify if youtube URL was set

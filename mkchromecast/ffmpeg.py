@@ -88,9 +88,15 @@ if backend != 'node':
 """
 MP3 192k
 """
+operatingsystem = "Linux"
 if  codec == 'mp3':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+
+    if operatingsystem == 'Linux':
+        command = [backend, '-re', '-f', 'alsa', '-ac', '2', '-ar', '44100', '-i', 'pulse', \
+                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
 
 """
 OGG 192k
