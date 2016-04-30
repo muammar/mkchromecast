@@ -116,9 +116,22 @@ principle it should work.
 ''')
 args = parser.parse_args()
 
+"""
+Guess the platform
+"""
+
+platform = platform.system()
+
+"""
+Reset
+"""
 if args.reset == True:
-    inputint()
-    outputint()
+    if platform == 'Darwin':
+        inputint()
+        outputint()
+    else:
+        from mkchromecast.pulseaudio import *
+        remove_sink()
     terminate()
 
 if args.config == True or args.discover == True or args.name == True:
@@ -227,7 +240,3 @@ def checkmktmp():
        os.remove('/tmp/mkcrhomecast.tmp')
     return
 
-"""
-Guess the platform
-"""
-platform = platform.system()

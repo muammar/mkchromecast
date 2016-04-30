@@ -112,7 +112,7 @@ class casting(object):
         platform = mkchromecast.__init__.platform
         if platform == 'Linux':
             import commands
-            localip = commands.getoutput("hostname -I")
+            localip = commands.getoutput("hostname -I").strip()
         else:
             start = casting()
             localip = start.ip
@@ -148,7 +148,6 @@ class casting(object):
                 print(' ')
                 print ('The media type string used is: ',mtype)
                 ncast.play_media('http://'+localip+':5000/stream', mtype)
-                print (ncast.play_media('http://'+localip+':5000/stream', mtype))
             else:
                 print(' ')
                 print ('The media type string used is: audio/mpeg')
