@@ -6,7 +6,8 @@ mkchromecast
 [![GitHub
 release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases)
 
-This is a program to cast your **Mac OS X** audio to your Google Cast devices.
+This is a program to cast your **Mac OS X** audio, or Linux audio to your
+Google Cast devices.
 
 It is written in Python, and it streams via `node.js`, or `ffmpeg`.
 **mkchromecast** is capable of using lossy and lossless audio formats provided
@@ -20,9 +21,7 @@ powerful like mine, or in the case you don't want to degrade the sound quality.
 For more information [visit the
 wiki](https://github.com/muammar/mkchromecast/wiki/).
 
-For Linux, you have a program called
-[pulseaudio-dlna](https://github.com/masmu/pulseaudio-dlna) that does this
-beautifully.
+For Linux, you have need to install ffmpeg and pulseaudio.
 
 ### Requirements:
 
