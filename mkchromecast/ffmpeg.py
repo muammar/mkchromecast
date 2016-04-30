@@ -94,11 +94,10 @@ MP3 192k
 if  codec == 'mp3':
 
     if platform == 'Linux':
-        # parec -d --format=s16le steam.monitor | ffmpeg -loglevel panic -ac 2 -ar 44100 -f s16le -i - -strict -2 -f mp3 -b:a 192k tete.mp3
-                    c_parec = ['parec', '-d', 'mkchromecast.monitor']
-                    parec = Popen(c_parec, stdout=PIPE)
+        c_parec = ['parec', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
 
-                    command = [ backend, '-ac', '2', '-f', 's16le', '-i', '-', \
+        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -108,30 +107,58 @@ if  codec == 'mp3':
 OGG 192k
 """
 if  codec == 'ogg':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    if platform == 'Linux':
+        c_parec = ['parec', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
+
+        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
 
 """
 AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    if platform == 'Linux':
+        c_parec = ['parec', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
+
+        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+                    '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
 
 """
 WAV 24-Bit
 """
 if  codec == 'wav':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    if platform == 'Linux':
+        c_parec = ['parec', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
+
+        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
 
 """
 FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
 """
 if  codec == 'flac':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-                #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
+    if platform == 'Linux':
+        c_parec = ['parec', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
+
+        command = [ backend, '-re', '-ac', '2', '-f', 's16le', '-i', '-', \
+                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+                    #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
 
 app = Flask(__name__)
 
