@@ -18,6 +18,9 @@ import psutil, pickle
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
 
+import mkchromecast.__init__        # This is to verify against some needed variables
+platform = mkchromecast.__init__.platform
+
 global entries
 
 class menubar(object):
@@ -47,7 +50,10 @@ class menubar(object):
 
         if os.path.exists('images/google.icns') == True:
             self.icon = QtGui.QIcon()
-            self.icon.addFile('images/google.icns')#, QtCore.QSize(48,48))
+            if platform == 'Darwin':
+                self.icon.addFile('images/google.icns')#, QtCore.QSize(48,48))
+            else:
+                self.icon.addFile('images/google.png')
         else:
             self.icon = QtGui.QIcon()
             self.icon.addFile('google.icns')#, QtCore.QSize(48,48))
@@ -105,7 +111,10 @@ class menubar(object):
 
     def search_cast(self):
         if os.path.exists('images/google_working.icns') == True:
-            self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+            if platform == 'Darwin':
+                self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+            else:
+                self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
@@ -118,7 +127,10 @@ class menubar(object):
 
     def cast_list(self):
         if os.path.exists('images/google.icns') == True:
-            self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+            if platform == 'Darwin':
+                self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+            else:
+                self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
             self.tray.setIcon(QtGui.QIcon('google.icns'))
         if len(self.availablecc) == 0:
@@ -127,7 +139,10 @@ class menubar(object):
             self.separator_menu()
             self.NodevAction = self.menu.addAction("No Cast devices found.")
             if os.path.exists('images/google_nodev.icns') == True:
-                self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                if platform == 'Darwin':
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                else:
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
             else:
                 self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.separator_menu()
@@ -157,14 +172,20 @@ class menubar(object):
             self.cast = mkchromecast.threading.cast
             self.ncast = self.cast
         if os.path.exists('images/google.icns') == True:
-            self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+            if platform == 'Darwin':
+                self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+            else:
+                self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
             self.tray.setIcon(QtGui.QIcon('google.icns'))
 
     def play_cast(self):
         self.menuentry.setChecked(True)
         if os.path.exists('images/google_working.icns') == True:
-            self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+            if platform == 'Darwin':
+                self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+            else:
+                self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
