@@ -97,7 +97,9 @@ if args.tray == False:
                     print('Decreasing volume...')
                     cc.volume_down()
                     if args.encoder_backend == 'ffmpeg':
-                        controls_msg()
+                        debug = mkchromecast.__init__.debug
+                        if debug == True:
+                            controls_msg()
                 elif(key == 'q'):
                     print('Quitting application...')
                     terminateapp()

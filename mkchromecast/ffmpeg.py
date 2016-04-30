@@ -87,6 +87,12 @@ if backend != 'node':
         print ('Selected sample rate: ', samplerate+'Hz')
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
+
+def debug_command():
+    command.insert(1, '-loglevel')
+    command.insert(2, 'panic')
+    return
 
 """
 MP3 192k
@@ -99,6 +105,8 @@ if  codec == 'mp3':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 OGG 192k
@@ -110,6 +118,8 @@ if  codec == 'ogg':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 AAC > 128k for Stereo, Default sample rate: 44100kHz
@@ -121,6 +131,8 @@ if  codec == 'aac':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 WAV 24-Bit
@@ -132,6 +144,8 @@ if  codec == 'wav':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
@@ -144,6 +158,8 @@ if  codec == 'flac':
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
                     #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
+    if debug == False:
+        debug_command()
 
 app = Flask(__name__)
 

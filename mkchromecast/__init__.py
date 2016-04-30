@@ -45,6 +45,7 @@ This option only works for the ffmpeg backend.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
+parser.add_argument('--debug', action="store_true", help='Option for debugging purposes')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a Google Cast device')
 parser.add_argument('--encoder-backend', type=str, default='node', help=
 '''
@@ -160,6 +161,15 @@ else:
     for backend in backends:
         print ('-',backend)
     sys.exit(0)
+
+"""
+Debug
+"""
+
+if args.debug == True:
+    debug = args.debug
+else:
+    debug = False
 
 """
 Codecs
