@@ -5,7 +5,7 @@
 import argparse
 from .audiodevices import *
 from .terminate import *
-import os.path, sys
+import os.path, sys, platform
 import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
@@ -226,3 +226,8 @@ def checkmktmp():
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
        os.remove('/tmp/mkcrhomecast.tmp')
     return
+
+"""
+Guess the platform
+"""
+platform = platform.system()

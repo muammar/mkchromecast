@@ -2,12 +2,15 @@
 
 # This file is part of mkchromecast.
 
+import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import os.path, time
 
 import atexit
+
+platform = mkchromecast.__init__.platform
 
 if args.tray == False:
 
@@ -20,13 +23,14 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        print('Switching to soundflower...')
-        inputdev()
-        outputdev()
-        print('Done!')
+        if platform == 'Darwin':
+            print('Switching to soundflower...')
+            inputdev()
+            outputdev()
+            print('Done!')
 
         print('Starting local streaming server')
-        if args.encoder_backend == 'node':
+        if args.encoder_backend == 'node' and platform == 'Darwin':
             from mkchromecast.node import *
             stream()
 
