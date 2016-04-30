@@ -92,7 +92,8 @@ operatingsystem = "Linux"
 if  codec == 'mp3':
 
     if operatingsystem == 'Linux':
-        command = [backend, '-re', '-f', 'alsa', '-ac', '2', '-ar', '44100', '-i', 'pulse', \
+        # parec -d steam.monitor | ffmpeg -loglevel panic -ac 2 -ar 44100 -f s16le -i - -strict -2 -f mp3 -b:a 192k tete.mp3
+        command = [backend, '-re', '-f', 'pulse', '-i', '"5"', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \

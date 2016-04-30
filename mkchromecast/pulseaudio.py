@@ -2,18 +2,20 @@
 
 # This file is part of mkchromecast.
 
-import mkchromecast.__init__
 import subprocess
 
 def create_sink():
+    name = 'mkchromecast'
 
-    create_sink = ['pacmd', 'load-module', 'module-null-sink', 'sink_name=', name]
-    rename_sink = ['pacmd', 'update-sink-proplist', name, 'device.description=', name]
-    create_p = subprocess.Popen(create_sink)
-    rename_p = subprocess.Popen(rename_sink)
+    create_sink = ['pactl', 'load-module', 'module-null-sink', 'sink_name='+name]
+    #print (create_sink)
+    rename_sink = ['pacmd', 'update-sink-proplist', name, 'device.description='+name]
+    #print (rename_sink)
+    subprocess.Popen(create_sink)
+    subprocess.Popen(rename_sink)
     return
 
 def remove_sink():
-    remove_sink = ['pacmd', 'unload-module', 'module-null-sink']
-    rename_p = subprocess.Popen(remove_sink)
+    remove_sink = ['pactl', 'unload-module', 'module-null-sink']
+    subprocess.Popen(remove_sink)
     return
