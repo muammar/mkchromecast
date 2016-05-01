@@ -145,7 +145,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 apt-get install ffmpeg
 ```
 
-With `ffmpeg`, the following audio coding formats are available:
+###### Audio coding formats available with `ffmpeg`
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
