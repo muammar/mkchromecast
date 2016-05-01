@@ -98,7 +98,8 @@ if args.tray == False:
                     print('Increasing volume...')
                     cc.volume_up()
                     if args.encoder_backend == 'ffmpeg':
-                        controls_msg()
+                        if debug == True:
+                            controls_msg()
                 elif(key == 'd'):
                     print('')
                     print('Decreasing volume...')

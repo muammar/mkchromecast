@@ -1,3 +1,7 @@
+* mkchromecast (0.2.0.1) **released**: 2016/05/01
+
+    - Catching some minimal errors.
+
 * mkchromecast (0.2.0) **released**: 2016/05/01
 
     - Linux support.
