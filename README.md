@@ -172,7 +172,8 @@ and another one to change the sampling rate:
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
 ```
-check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/muammar/mkchromecast#soundflower).
+check the section
+[https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
 
 For the moments, the `--encoder-backend` flag is useless for Linux users though
 I plan to give support to `avconv`.
