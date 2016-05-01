@@ -314,8 +314,19 @@ python mkchromecast.py -t
 
 It looks like:
 
+##### Mac OS X
+
 ![Image of
 working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
+
+##### Linux
+
+Check these images:
+
+[Gnome 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome1.png)
+[Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
+[KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
+[KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
 
 **Note**: you can pass the options when using `ffmpeg` as backend and adding `-t`
 to launch the system tray. I am still working on improving all of this.
