@@ -21,7 +21,8 @@ your wireless router is not very powerful like mine, or in the case you don't
 want to degrade the sound quality.  For more information [visit the
 wiki](https://github.com/muammar/mkchromecast/wiki/).
 
-For **Linux**, you have need to install `ffmpeg` and `pulseaudio`.
+For **Linux**, you have need to install `ffmpeg` and `pulseaudio`. Sometimes
+the lag between a song plays and hearing it may be 8 seconds.
 
 ### Requirements:
 
@@ -36,9 +37,10 @@ In order to use **mkchromecast** you need the following software to stream with
 * py_getch (optional if you want to control the volume of the Google cast
   device).
 * PyQt5 (optional if you want to use the system tray menu).
+* Pulseaudio (for **Linux** users _only_).
 
-For more control, you may want to use `ffmpeg` as backend. In that case
-you need the following:
+For more control, or if you are using **Linux**, you need `ffmpeg` as backend.
+In that case you need the following:
 
 * flask (optional).
 * ffmpeg (optional).
@@ -176,12 +178,17 @@ Get into the cloned **mkchromecast** directory and execute:
 python mkchromecast.py
 ```
 
-This will launch **mkchromecast** using `node.js` for doing the streaming part
-together with the `mp3` audio coding format.  This works decently, **however**
-I would like to point out that the node version of this implementation is
-ancient. Moreover, the `node.js` server tends to _fail_. In such a case,
-**mkchromecast** is able to restart the streaming/casting process
-automatically. So, some hiccups are expected.
+This will launch **mkchromecast** using `node.js` (or `ffmpeg` for **Linux**
+users) for doing the streaming part together with the `mp3` audio coding
+format.  `node.js` works decently, **however** I would like to point out that
+the node version of this implementation is ancient. Moreover, the `node.js`
+server tends to _fail_. In such a case, **mkchromecast** is able to restart the
+streaming/casting process automatically. So, some hiccups are expected.
+
+**Note**: most of the steps described herein are the same for Mac and Linux
+users. However, if your platform is **Linux**, the process is less automatized.
+You need to select with `pavucontrol` the sink called `mkchromecast` to stream.
+See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux).
 
 ##### Using the `ffmpeg` backend
 
