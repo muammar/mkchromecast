@@ -21,8 +21,9 @@ your wireless router is not very powerful like mine, or in the case you don't
 want to degrade the sound quality.  For more information [visit the
 wiki](https://github.com/muammar/mkchromecast/wiki/).
 
-For **Linux**, you have need to install `ffmpeg` and `pulseaudio`. Sometimes
-the lag between a song plays and hearing it may be 8 seconds.
+For **Linux**, you have to install `ffmpeg` and `pulseaudio`. Sometimes the lag
+between a song plays and hearing may be of 8 seconds. I don't know if it is my
+router though.
 
 ### Requirements:
 
