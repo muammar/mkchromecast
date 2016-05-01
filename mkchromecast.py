@@ -2,12 +2,15 @@
 
 # This file is part of mkchromecast.
 
+import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import os.path, time
 
 import atexit
+
+platform = mkchromecast.__init__.platform
 
 if args.tray == False:
 
@@ -20,13 +23,19 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        print('Switching to soundflower...')
-        inputdev()
-        outputdev()
-        print('Done!')
+        if platform == 'Darwin':
+            print('Switching to soundflower...')
+            inputdev()
+            outputdev()
+            print('Done!')
+        else:
+            print('Creating pulseaudio sink...')
+            print('Open pavucontrol and select the mkchromecast sink.')
+            from mkchromecast.pulseaudio import *
+            create_sink()
 
         print('Starting local streaming server')
-        if args.encoder_backend == 'node':
+        if args.encoder_backend == 'node' and platform == 'Darwin':
             from mkchromecast.node import *
             stream()
 
@@ -48,8 +57,11 @@ if args.tray == False:
 
     def terminateapp():
         cc.stop_cast()
-        inputint()
-        outputint()
+        if platform == 'Darwin':
+            inputint()
+            outputint()
+        else:
+            remove_sink()
         terminate()
         return
 
@@ -86,7 +98,9 @@ if args.tray == False:
                     print('Decreasing volume...')
                     cc.volume_down()
                     if args.encoder_backend == 'ffmpeg':
-                        controls_msg()
+                        debug = mkchromecast.__init__.debug
+                        if debug == True:
+                            controls_msg()
                 elif(key == 'q'):
                     print('Quitting application...')
                     terminateapp()

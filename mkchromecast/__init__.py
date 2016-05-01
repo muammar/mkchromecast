@@ -5,7 +5,7 @@
 import argparse
 from .audiodevices import *
 from .terminate import *
-import os.path, sys
+import os.path, sys, platform
 import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
@@ -45,6 +45,7 @@ This option only works for the ffmpeg backend.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
+parser.add_argument('--debug', action="store_true", help='Option for debugging purposes')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a Google Cast device')
 parser.add_argument('--encoder-backend', type=str, default='node', help=
 '''
@@ -116,9 +117,22 @@ principle it should work.
 ''')
 args = parser.parse_args()
 
+"""
+Guess the platform
+"""
+
+platform = platform.system()
+
+"""
+Reset
+"""
 if args.reset == True:
-    inputint()
-    outputint()
+    if platform == 'Darwin':
+        inputint()
+        outputint()
+    else:
+        from mkchromecast.pulseaudio import *
+        remove_sink()
     terminate()
 
 if args.config == True or args.discover == True or args.name == True:
@@ -139,11 +153,23 @@ backends = ['node', 'ffmpeg']
 
 if args.encoder_backend in backends:
     backend = args.encoder_backend
+    if platform == 'Linux' and backend == 'node':
+        args.encoder_backend = 'ffmpeg'
+        backend = args.encoder_backend
 else:
     print ('Supported backends are: ')
     for backend in backends:
         print ('-',backend)
     sys.exit(0)
+
+"""
+Debug
+"""
+
+if args.debug == True:
+    debug = args.debug
+else:
+    debug = False
 
 """
 Codecs
@@ -226,3 +252,4 @@ def checkmktmp():
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
        os.remove('/tmp/mkcrhomecast.tmp')
     return
+

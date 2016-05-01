@@ -11,6 +11,7 @@ from .terminate import *
 from .audiodevices import *
 import os.path
 import pickle
+import subprocess
 
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
@@ -19,6 +20,13 @@ class casting(object):
     def initialize_cast(self):
         from pychromecast import socket_client
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
+
+        import mkchromecast.__init__        # This is to verify against some needed variables
+        self.platform = mkchromecast.__init__.platform
+        try:
+            self.youtubeurl = mkchromecast.__init__.youtubeurl
+        except AttributeError:
+            self.youtubeurl = None
 
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
@@ -70,8 +78,12 @@ class casting(object):
 
         elif len(self.cclist) == 0 and args.tray == False:
             print('No devices found!')
-            inputint()
-            outputint()
+            if self.platform == 'Linux':
+                import mkchromecast.pulseaudio
+                mkchromecast.pulseaudio.remove_sink()
+            else:
+                inputint()
+                outputint()
             terminate()
             exit()
 
@@ -107,28 +119,28 @@ class casting(object):
             print(' ')
 
     def play_cast(self):
-        start = casting()
-        localip = start.ip
+        if self.platform == 'Linux':
+            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
+            localip = hostname.stdout.read().decode('utf-8').strip()
+        else:
+            start = casting()
+            localip = start.ip
+
         print ('Your local IP is: ', localip)
 
-        import mkchromecast.__init__        # This is to verify if youtube URL was set
-        try:
-            youtubeurl = mkchromecast.__init__.youtubeurl
-        except AttributeError:
-            youtubeurl = None
 
-        if youtubeurl != None:
-            print ('The Youtube URL chosen: ', youtubeurl)
+        if self.youtubeurl != None:
+            print ('The Youtube URL chosen: ', self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
             yt = youtube.YouTubeController()
             self.cast.register_handler(yt)
             try:
                 import urlparse
-                url_data = urlparse.urlparse(youtubeurl)
+                url_data = urlparse.urlparse(self.youtubeurl)
                 query = urlparse.parse_qs(url_data.query)
             except ImportError:
                 import urllib.parse
-                url_data = urllib.parse.urlparse(youtubeurl)
+                url_data = urllib.parse.urlparse(self.youtubeurl)
                 query = urllib.parse.parse_qs(url_data.query)
             video = query["v"][0]
             print ('Playing video: ', video)

@@ -12,6 +12,7 @@ from functools import partial
 from subprocess import Popen, PIPE
 from flask import Flask, Response
 import multiprocessing
+import mkchromecast.__init__        # This is to verify against some needed variables
 
 mp3file = 'stream'
 
@@ -85,41 +86,80 @@ if backend != 'node':
             print ('Sample rate has been set to maximum!')
         print ('Selected sample rate: ', samplerate+'Hz')
 
+platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
+
+def debug_command():
+    command.insert(1, '-loglevel')
+    command.insert(2, 'panic')
+    return
+
 """
 MP3 192k
 """
 if  codec == 'mp3':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+
+    if platform == 'Linux':
+        command = [backend, '-re', '-ac', '2', '-ar', '44100', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
+                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 OGG 192k
 """
 if  codec == 'ogg':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    if platform == 'Linux':
+        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
+                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    if platform == 'Linux':
+        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
+                    '-acodec', 'aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 WAV 24-Bit
 """
 if  codec == 'wav':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    if platform == 'Linux':
+        command = [backend, '-re', '-f', '-ac', '2', '-ar', '44100','pulse', '-i', 'mkchromecast.monitor', \
+                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    if debug == False:
+        debug_command()
 
 """
 FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
 """
 if  codec == 'flac':
-    command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-                #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
+    if platform == 'Linux':
+        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
+                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+    else:
+        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
+                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+                    #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
+    if debug == False:
+        debug_command()
 
 app = Flask(__name__)
 
@@ -136,7 +176,7 @@ def index():
 @app.route('/' + mp3file)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), 512)
+    read_chunk = partial(os.read, process.stdout.fileno(), 1024)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
