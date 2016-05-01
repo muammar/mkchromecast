@@ -21,11 +21,14 @@ your wireless router is not very powerful like mine, or in the case you don't
 want to degrade the sound quality.  For more information [visit the
 wiki](https://github.com/muammar/mkchromecast/wiki/).
 
-For **Linux**, you have to install `ffmpeg` and `pulseaudio`. Sometimes the lag
-between a song plays and hearing may be of 8 seconds. I don't know if it is my
-router though.
+For **Linux**, you have to install `ffmpeg` and `pulseaudio` (see the [wiki for
+more information](https://github.com/muammar/mkchromecast/wiki/Linux)).
+Sometimes the lag between a song plays and hearing may be of 8 seconds. I don't
+know if it is my router though.
 
 ### Requirements:
+
+#### Mac OS X
 
 In order to use **mkchromecast** you need the following software to stream with
 `node.js`:
@@ -39,11 +42,23 @@ In order to use **mkchromecast** you need the following software to stream with
 * py_getch (optional if you want to control the volume of the Google cast
   device).
 * PyQt5 (optional if you want to use the system tray menu).
+
+For more control, you need `ffmpeg` as backend.  In that case install
+following:
+
+* flask (optional).
+* ffmpeg (optional).
+
+#### Linux
+
 * Pulseaudio (for **Linux** users _only_).
-
-For more control, or if you are using **Linux**, you need `ffmpeg` as backend.
-In that case you need the following:
-
+* Python2, or Python3.
+* pychromecast.
+* psutil.
+* mutagen.
+* py_getch (optional if you want to control the volume of the Google cast
+  device).
+* PyQt5 (optional if you want to use the system tray menu).
 * flask (optional).
 * ffmpeg (optional).
 
@@ -58,7 +73,7 @@ git clone https://github.com/muammar/mkchromecast.git
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
-##### Python
+#### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
@@ -75,7 +90,10 @@ a regular user cannot install the requirements.
 sudo pip install -r requirements.txt
 ```
 
-##### Soundflower
+**Linux** users can try to install these python requirements using the package
+managers coming with their distributions.
+
+#### Soundflower (Mac users only)
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
@@ -97,10 +115,12 @@ an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-##### ffmpeg
+#### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
+
+##### Mac OS X
 
 I will briefly describe the case of Homebrew here. First, you will need
 Homebrew:
@@ -116,6 +136,14 @@ additional `ffmpeg`'s options:
 
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+```
+
+##### Linux
+
+As I use Debian, the way of installing `ffmpeg` is:
+
+```
+apt-get install ffmpeg
 ```
 
 With `ffmpeg`, the following audio coding formats are available:
@@ -147,7 +175,10 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 4800
 ```
 check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/muammar/mkchromecast#soundflower).
 
-##### PyQt5
+The `--encoder-backend` flag is useless for Linux users for the moments though
+I plan to give support to `avconv`.
+
+#### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu. As
 of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
@@ -156,15 +187,33 @@ a `pip install pyqt5`.
 If this does not work for you, I suggest you to install it using a package
 manager.
 
+##### Mac OS X
+
 Example with Homebrew:
 
 ```
 brew install pyqt5 --with-python
 ```
 
+##### Linux
+
+###### Debian
+
+For Python2:
+
+```
+apt-get install python-pyqt5
+```
+
+For Python3:
+
+```
+apt-get install python3-pyqt5
+```
+
 or if you desire it you can do it yourself from the sources.
 
-##### Updating
+#### Updating
 
 To update **mkchromecast**, just get into the cloned directory and:
 
@@ -181,7 +230,7 @@ python mkchromecast.py
 ```
 
 This will launch **mkchromecast** using `node.js` (or `ffmpeg` for **Linux**
-users) for doing the streaming part together with the `mp3` audio coding
+users), and will do the streaming part together with the `mp3` audio coding
 format.  `node.js` works decently, **however** I would like to point out that
 the node version of this implementation is ancient. Moreover, the `node.js`
 server tends to _fail_. In such a case, **mkchromecast** is able to restart the
@@ -192,7 +241,7 @@ users. However, if your platform is **Linux**, the process is less automatized.
 You need to select with `pavucontrol` the sink called `mkchromecast` to stream.
 See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux).
 
-##### Using the `ffmpeg` backend
+#### Using the `ffmpeg` backend
 
 Below an example using `mp3` with `ffmpeg`:
 
@@ -213,7 +262,7 @@ change the bitrate and sample rate:
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-##### Playing Youtube URLs in Google Cast TV
+#### Playing Youtube URLs in Google Cast TV
 
 You can play Youtube URLs headlessly from the command line:
 
@@ -224,7 +273,7 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 **Note**: you may need to enclose the URL between quotation marks. This does
 not work in Google Cast audio.
 
-##### Controlling the Google Cast volume
+#### Controlling the Google Cast volume
 
 You can control the volume of your Google Cast device by launching
 **mkchromecast** with the option `--volume`:
@@ -240,7 +289,7 @@ and `volume down` respectively.
 install it using the `requirements.txt` file shipped in the repository as
 described above.
 
-##### More help
+#### More help
 
 To get more help:
 
