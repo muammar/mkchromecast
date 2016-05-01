@@ -238,7 +238,11 @@ streaming/casting process automatically. So, some hiccups are expected.
 **Note**: most of the steps described herein are the same for Mac and Linux
 users. However, if your platform is **Linux**, the process is less automatized.
 You need to select with `pavucontrol` the sink called `mkchromecast` to stream.
-See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux).
+See the [wiki for more
+information](https://github.com/muammar/mkchromecast/wiki/Linux), or just the
+gif below.
+
+![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
 #### Using the `ffmpeg` backend
 
