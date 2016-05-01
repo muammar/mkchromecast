@@ -1,3 +1,7 @@
+* mkchromecast (0.2.0.2) **released**: 2016/05/01
+
+    - Fixed wav for Linux.
+
 * mkchromecast (0.2.0.1) **released**: 2016/05/01
 
     - Catching some minimal errors.

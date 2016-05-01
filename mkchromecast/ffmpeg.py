@@ -139,7 +139,7 @@ WAV 24-Bit
 """
 if  codec == 'wav':
     if platform == 'Linux':
-        command = [backend, '-re', '-f', '-ac', '2', '-ar', '44100','pulse', '-i', 'mkchromecast.monitor', \
+        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
