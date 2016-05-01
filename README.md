@@ -236,11 +236,11 @@ server tends to _fail_. In such a case, **mkchromecast** is able to restart the
 streaming/casting process automatically. So, some hiccups are expected.
 
 **Note**: most of the steps described herein are the same for Mac and Linux
-users. However, if your platform is **Linux**, the process is less automatized.
-You need to select with `pavucontrol` the sink called `mkchromecast` to stream.
-See the [wiki for more
-information](https://github.com/muammar/mkchromecast/wiki/Linux), or just the
-gif below.
+users. However, if you laucnh the command above in **Linux**, the process is
+less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
+called `mkchromecast` to stream.  See the [wiki for more
+information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
+check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
