@@ -1,6 +1,7 @@
-* mkchromecast (0.2.0) **unreleased**:
+* mkchromecast (0.2.0) **released**: 2016/05/01
 
     - Linux support.
+    - Linux only plays with ffmpeg.
     - Now by default log level for `ffmpeg` backend is set to minimum.
 
 * mkchromecast (0.1.9.1) **released**: 2016/04/27

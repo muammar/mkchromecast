@@ -337,6 +337,7 @@ to launch the system tray. I am still working on improving all of this.
 
 ### TODO
 
+* Add avconv support for Linux.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
