@@ -71,8 +71,14 @@ if args.tray == False:
         volumearg = False
 
     if volumearg == True:
-        from getch import getch, pause
+        try:
+            from getch import getch, pause
+        except ImportError:
+            print ('You need to install the module py_getch to control the volume of your Google cast.')
+            print (' ')
+            volumearg = False
 
+    if volumearg == True:
         def controls_msg():
             print('')
             print('Controls:')
