@@ -30,6 +30,7 @@ if args.tray == False:
             print('Done!')
         else:
             print('Creating pulseaudio sink...')
+            print('Open pavucontrol and select the mkchromecast sink.')
             from mkchromecast.pulseaudio import *
             create_sink()
 

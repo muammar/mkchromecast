@@ -11,6 +11,7 @@ from .terminate import *
 from .audiodevices import *
 import os.path
 import pickle
+import subprocess
 
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
@@ -119,8 +120,8 @@ class casting(object):
 
     def play_cast(self):
         if self.platform == 'Linux':
-            import commands
-            localip = commands.getoutput("hostname -I").strip()
+            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
+            localip = hostname.stdout.read().decode('utf-8').strip()
         else:
             start = casting()
             localip = start.ip
@@ -129,17 +130,17 @@ class casting(object):
 
 
         if self.youtubeurl != None:
-            print ('The Youtube URL chosen: ', youtubeurl)
+            print ('The Youtube URL chosen: ', self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
             yt = youtube.YouTubeController()
             self.cast.register_handler(yt)
             try:
                 import urlparse
-                url_data = urlparse.urlparse(youtubeurl)
+                url_data = urlparse.urlparse(self.youtubeurl)
                 query = urlparse.parse_qs(url_data.query)
             except ImportError:
                 import urllib.parse
-                url_data = urllib.parse.urlparse(youtubeurl)
+                url_data = urllib.parse.urlparse(self.youtubeurl)
                 query = urllib.parse.parse_qs(url_data.query)
             video = query["v"][0]
             print ('Playing video: ', video)
