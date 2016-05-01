@@ -321,7 +321,7 @@ It looks like:
 ##### Mac OS X
 
 ![Image of
-working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screenshot.png)
+working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.gif)
 
 ##### Linux
 
