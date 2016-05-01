@@ -174,7 +174,7 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 4800
 ```
 check [https://github.com/muammar/mkchromecast#soundflower](https://github.com/muammar/mkchromecast#soundflower).
 
-The `--encoder-backend` flag is useless for Linux users for the moments though
+For the moments, the `--encoder-backend` flag is useless for Linux users though
 I plan to give support to `avconv`.
 
 #### PyQt5
