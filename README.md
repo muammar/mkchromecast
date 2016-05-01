@@ -109,7 +109,7 @@ file](https://github.com/mattingalls/Soundflower/releases).
 By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
 to stream at higher sample rates follow the [instructions in the wiki](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-**Note**: resampling to higher sample rates is not a good idea. It was indeed
+**Note**: re-sampling to higher sample rates is not a good idea. It was indeed
 an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
@@ -236,7 +236,7 @@ server tends to _fail_. In such a case, **mkchromecast** is able to restart the
 streaming/casting process automatically. So, some hiccups are expected.
 
 **Note**: most of the steps described herein are the same for Mac and Linux
-users. However, if you laucnh the command above in **Linux**, the process is
+users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
 called `mkchromecast` to stream.  See the [wiki for more
 information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
@@ -341,7 +341,7 @@ to launch the system tray. I am still working on improving all of this.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
-* Generate a standalone Mac OS X application.
+* Generate a stand-alone Mac OS X application.
 * Video?.
 
 ### Contribute
