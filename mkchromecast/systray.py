@@ -6,7 +6,7 @@
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.node import *
-import mkchromecast.threading
+import mkchromecast.tray_threading
 import pychromecast
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -30,7 +30,7 @@ class menubar(object):
         self.cast = None
         self.stopped = False
 
-        self.obj = mkchromecast.threading.Worker()  # no parent!
+        self.obj = mkchromecast.tray_threading.Worker()  # no parent!
         self.thread = QThread()  # no parent!
 
         self.obj.intReady.connect(self.onIntReady)
@@ -38,7 +38,7 @@ class menubar(object):
         self.obj.finished.connect(self.thread.quit)
         self.thread.started.connect(self.obj._search_cast_)
 
-        self.objp = mkchromecast.threading.Player()  # no parent!
+        self.objp = mkchromecast.tray_threading.Player()  # no parent!
         self.threadplay = QThread()  # no parent!
 
         self.objp.moveToThread(self.threadplay)
@@ -169,7 +169,7 @@ class menubar(object):
     def pcastready(self, done):
         print ('done', done)
         if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            self.cast = mkchromecast.threading.cast
+            self.cast = mkchromecast.tray_threading.cast
             self.ncast = self.cast
         if os.path.exists('images/google.icns') == True:
             if platform == 'Darwin':
