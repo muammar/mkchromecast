@@ -12,7 +12,7 @@ import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
 from flask import Flask, Response
-import multiprocessing
+import multiprocessing, threading
 import psutil, pickle
 from os import getpid
 
@@ -184,6 +184,30 @@ def stream():
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
+    monitor_daemon = monitor()
+    monitor_daemon.start()
+    app.run(host= '0.0.0.0')
+
+class multi_proc(object):
+    def __init__(self):
+        self.proc = multiprocessing.Process(target=start_app)
+        self.proc.daemon = True
+        self.monitor_d = threading.Thread(target=monitor)
+        self.monitor_d.daemon = True
+
+    def start(self):
+        self.proc.start()
+        self.monitor_d.start()
+
+class monitor(object):
+    def __init__(self):
+        self.monitor_d = threading.Thread(target=monitor_daemon)
+        self.monitor_d.daemon = True
+
+    def start(self):
+        self.monitor_d.start()
+
+def monitor_daemon():
     f = open('/tmp/mkcrhomecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
     print ('PID of main process: ', pidnumber)
@@ -191,35 +215,25 @@ def start_app():
     localpid=getpid()
     print ('PID of streaming process: ', localpid)
 
-    try:
-        if psutil.pid_exists(pidnumber) == True:   # With this I ensure that if the main app fails, everything
+    while psutil.pid_exists(localpid) == True:
+        try:
             time.sleep(0.5)
-
-    except psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
-        inputint()                              # will get back to normal
-        outputint()
-        parent = psutil.Process(localpid)
-        for child in parent.children(recursive=True):  # or parent.children() for recursive=False
-            child.kill()
-        parent.kill()
-    except KeyboardInterrupt:
-        print ("Ctrl-c was requested")
-        sys.exit(0)
-    except IOError:
-        print ("I/O Error")
-        sys.exit(0)
-    except OSError:
-        print ("OSError")
-        sys.exit(0)
-    app.run(host= '0.0.0.0')
-
-class multi_proc(object):
-    def __init__(self):
-        self.proc = multiprocessing.Process(target=start_app)
-        self.proc.daemon = True
-
-    def start(self):
-        self.proc.start()
+            if psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
+                inputint()                              # will get back to normal
+                outputint()
+                parent = psutil.Process(localpid)
+                for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+                    child.kill()
+                parent.kill()
+        except KeyboardInterrupt:
+            print ("Ctrl-c was requested")
+            sys.exit(0)
+        except IOError:
+            print ("I/O Error")
+            sys.exit(0)
+        except OSError:
+            print ("OSError")
+            sys.exit(0)
 
 def main():
     st = multi_proc()
