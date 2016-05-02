@@ -7,12 +7,14 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
-import os
+from mkchromecast.audiodevices import *
+import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
 from flask import Flask, Response
 import multiprocessing
-import mkchromecast.__init__        # This is to verify against some needed variables
+import psutil, pickle
+from os import getpid
 
 mp3file = 'stream'
 
@@ -85,6 +87,8 @@ if backend != 'node':
             samplerate = '44800'
             print ('Sample rate has been set to maximum!')
         print ('Selected sample rate: ', samplerate+'Hz')
+
+
 
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
@@ -180,6 +184,33 @@ def stream():
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
+    f = open('/tmp/mkcrhomecast.pid', 'rb')
+    pidnumber=int(pickle.load(f))
+    print ('PID of main process: ', pidnumber)
+
+    localpid=getpid()
+    print ('PID of streaming process: ', localpid)
+
+    try:
+        if psutil.pid_exists(pidnumber) == True:   # With this I ensure that if the main app fails, everything
+            time.sleep(0.5)
+
+    except psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
+        inputint()                              # will get back to normal
+        outputint()
+        parent = psutil.Process(localpid)
+        for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+            child.kill()
+        parent.kill()
+    except KeyboardInterrupt:
+        print ("Ctrl-c was requested")
+        sys.exit(0)
+    except IOError:
+        print ("I/O Error")
+        sys.exit(0)
+    except OSError:
+        print ("OSError")
+        sys.exit(0)
     app.run(host= '0.0.0.0')
 
 class multi_proc(object):
