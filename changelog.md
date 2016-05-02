@@ -1,3 +1,8 @@
+* mkchromecast (0.2.1) **released**: 2016/05/02
+
+    - Method for monitoring `ffmpeg` backend. This update is useful for those
+      who use the system tray menu.
+
 * mkchromecast (0.2.0.2) **released**: 2016/05/01
 
     - Fixed wav for Linux.
