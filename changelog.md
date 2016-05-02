@@ -1,3 +1,7 @@
+* mkchromecast (0.2.2) **released**: 2016/05/03
+
+    - Fixed error with Python2 when importing threading module.
+
 * mkchromecast (0.2.1) **released**: 2016/05/02
 
     - Method for monitoring `ffmpeg` backend. This update is useful for those
