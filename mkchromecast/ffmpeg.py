@@ -11,7 +11,7 @@ from mkchromecast.audiodevices import *
 import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
-from flask import Flask, Response
+from flask import Flask, Response, request
 import multiprocessing, threading
 import psutil, pickle
 from os import getpid
@@ -161,7 +161,6 @@ if  codec == 'flac':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-                    #'-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, '-q:a', '330', '-cutoff', '15000', 'pipe:']
     if debug == False:
         debug_command()
 
@@ -177,6 +176,23 @@ def index():
 </audio>""".format(mp3file=mp3file)
 
 
+"""
+The code below is supposed to kill the Flask server. I don't know if it would
+be useful later.
+"""
+"""
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
+
+"""
 @app.route('/' + mp3file)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
