@@ -192,12 +192,9 @@ class multi_proc(object):
     def __init__(self):
         self.proc = multiprocessing.Process(target=start_app)
         self.proc.daemon = True
-        self.monitor_d = threading.Thread(target=monitor)
-        self.monitor_d.daemon = True
 
     def start(self):
         self.proc.start()
-        self.monitor_d.start()
 
 class monitor(object):
     def __init__(self):
