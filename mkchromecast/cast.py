@@ -123,8 +123,7 @@ class casting(object):
             hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
             localip = hostname.stdout.read().decode('utf-8').strip()
         else:
-            start = casting()
-            localip = start.ip
+            localip = self.ip
 
         print ('Your local IP is: ', localip)
 
