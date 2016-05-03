@@ -15,14 +15,19 @@ import subprocess
 
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
-        self.ip = socket.gethostbyname(socket.gethostname())
+        import mkchromecast.__init__        # This is to verify against some needed variables
+        self.platform = mkchromecast.__init__.platform
+        if self.platform == 'Linux':
+            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
+            self.ip = hostname.stdout.read().decode('utf-8').strip()
+        else:
+            self.ip = socket.gethostbyname(socket.gethostname())
 
     def initialize_cast(self):
         from pychromecast import socket_client
+        import mkchromecast.__init__        # This is to verify against some needed variables
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
 
-        import mkchromecast.__init__        # This is to verify against some needed variables
-        self.platform = mkchromecast.__init__.platform
         try:
             self.youtubeurl = mkchromecast.__init__.youtubeurl
         except AttributeError:
@@ -119,20 +124,16 @@ class casting(object):
             print(' ')
 
     def play_cast(self):
-        if self.platform == 'Linux':
-            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
-            localip = hostname.stdout.read().decode('utf-8').strip()
-        else:
-            localip = self.ip
+        localip = self.ip
 
         print ('Your local IP is: ', localip)
-
 
         if self.youtubeurl != None:
             print ('The Youtube URL chosen: ', self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
             yt = youtube.YouTubeController()
             self.cast.register_handler(yt)
+
             try:
                 import urlparse
                 url_data = urlparse.urlparse(self.youtubeurl)

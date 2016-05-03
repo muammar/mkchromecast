@@ -54,7 +54,6 @@ if args.tray == False:
         cc.get_cc()
         cc.play_cast()
 
-
     def terminateapp():
         cc.stop_cast()
         if platform == 'Darwin':

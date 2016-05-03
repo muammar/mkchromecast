@@ -10,7 +10,7 @@ import pickle
 from argparse import RawTextHelpFormatter
 from .version import __version__
 
-parser = argparse.ArgumentParser(description='Cast Mac OS X audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='Cast Mac OS X and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
@@ -120,7 +120,6 @@ args = parser.parse_args()
 """
 Guess the platform
 """
-
 platform = platform.system()
 
 """
@@ -165,7 +164,6 @@ else:
 """
 Debug
 """
-
 if args.debug == True:
     debug = args.debug
 else:
@@ -252,4 +250,3 @@ def checkmktmp():
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
        os.remove('/tmp/mkcrhomecast.tmp')
     return
-

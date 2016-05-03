@@ -16,7 +16,7 @@ import multiprocessing, threading
 import psutil, pickle
 from os import getpid
 
-mp3file = 'stream'
+appendtourl = 'stream'
 
 backend = mkchromecast.__init__.backend
 codec = mkchromecast.__init__.codec
@@ -86,15 +86,17 @@ if backend != 'node':
             print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
             samplerate = '44800'
             print ('Sample rate has been set to maximum!')
+
         print ('Selected sample rate: ', samplerate+'Hz')
 
-
-
+"""
+We verify platform and other options
+"""
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
 
-def debug_command():
-    command.insert(1, '-loglevel')
+def debug_command():                # This function add some more flags to the ffmpeg command
+    command.insert(1, '-loglevel')  # when user passes --debug option.
     command.insert(2, 'panic')
     return
 
@@ -169,11 +171,11 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return """<!doctype html>
-<title>Play {mp3file}</title>
+<title>Play {appendtourl}</title>
 <audio controls autoplay >
-    <source src="{mp3file}" type="audio/mp3" >
+    <source src="{appendtourl}" type="audio/mp3" >
     Your browser does not support this audio format.
-</audio>""".format(mp3file=mp3file)
+</audio>""".format(appendtourl=appendtourl)
 
 
 """
@@ -193,7 +195,7 @@ def shutdown():
     return 'Server shutting down...'
 
 """
-@app.route('/' + mp3file)
+@app.route('/' + appendtourl)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), 1024)
@@ -204,14 +206,19 @@ def start_app():
     monitor_daemon.start()
     app.run(host= '0.0.0.0')
 
-class multi_proc(object):
+class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):
         self.proc = multiprocessing.Process(target=start_app)
         self.proc.daemon = True
 
     def start(self):
         self.proc.start()
-
+"""
+I create a class to launch a thread in this process that monitors if main
+application stops.
+A normal running of mkchromecast will have 2 threads in the streaming process
+when ffmpeg is used.
+"""
 class monitor(object):
     def __init__(self):
         self.monitor_d = threading.Thread(target=monitor_daemon)
