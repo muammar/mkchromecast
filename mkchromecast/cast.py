@@ -3,12 +3,13 @@
 # This file is part of mkchromecast.
 
 from __future__ import print_function
-from .__init__ import *
+from mkchromecast.__init__ import *
+from mkchromecast.audiodevices import *
+from mkchromecast.colors import *
+from mkchromecast.terminate import *
 import time
 import pychromecast
 import socket
-from .terminate import *
-from .audiodevices import *
 import os.path
 import pickle
 import subprocess
@@ -82,7 +83,7 @@ class casting(object):
                 print('Casting to: ', self.castto)
 
         elif len(self.cclist) == 0 and args.tray == False:
-            print('No devices found!')
+            printout('No devices found!', RED)
             if self.platform == 'Linux':
                 import mkchromecast.pulseaudio
                 mkchromecast.pulseaudio.remove_sink()
@@ -93,7 +94,7 @@ class casting(object):
             exit()
 
         elif len(self.cclist) == 0 and args.tray == True:
-            print('No devices found!')
+            printout('No devices found!', RED)
             self.availablecc = []
 
     def sel_cc(self):
