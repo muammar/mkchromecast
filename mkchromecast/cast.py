@@ -5,7 +5,6 @@
 from __future__ import print_function
 from mkchromecast.__init__ import *
 from mkchromecast.audiodevices import *
-from mkchromecast.colors import *
 from mkchromecast.terminate import *
 import time
 import pychromecast
@@ -13,6 +12,7 @@ import socket
 import os.path
 import pickle
 import subprocess
+import mkchromecast.colors as colors
 
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
@@ -83,7 +83,7 @@ class casting(object):
                 print('Casting to: ', self.castto)
 
         elif len(self.cclist) == 0 and args.tray == False:
-            printout('No devices found!', RED)
+            print(colors.error('No devices found!'))
             if self.platform == 'Linux':
                 import mkchromecast.pulseaudio
                 mkchromecast.pulseaudio.remove_sink()
@@ -94,7 +94,7 @@ class casting(object):
             exit()
 
         elif len(self.cclist) == 0 and args.tray == True:
-            printout('No devices found!', RED)
+            print(colors.error('No devices found!'))
             self.availablecc = []
 
     def sel_cc(self):

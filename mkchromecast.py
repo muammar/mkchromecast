@@ -5,11 +5,10 @@
 import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
-from mkchromecast.colors import *
 from mkchromecast.terminate import *
 import os.path, time
 import atexit
-
+import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
 
@@ -20,7 +19,7 @@ if args.tray == False:
     writePidFile()
 
     if cc.ip == '127.0.0.1' or None:        # We verify the local IP.
-        printout('Your computer is not connected to any network')
+        print (colors.error('Your computer is not connected to any network'))
         terminate()
 
     if args.youtube == None:
