@@ -1,3 +1,8 @@
+* mkchromecast (0.2.3) **unreleased**:
+
+    - The code has been refactored.
+    - Printed messages have been improved.
+
 * mkchromecast (0.2.2) **released**: 2016/05/03
 
     - Fixed error with Python2 when importing threading module.
