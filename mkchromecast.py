@@ -38,6 +38,8 @@ if args.tray == False:
             create_sink()
 
         print(colors.important('Starting local streaming server'))
+        print(colors.success('[Done]'))
+
         if args.encoder_backend == 'node' and platform == 'Darwin':
             from mkchromecast.node import *
             stream()
