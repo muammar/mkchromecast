@@ -8,12 +8,12 @@ from mkchromecast.cast import *
 from mkchromecast.node import *
 import mkchromecast.tray_threading
 import pychromecast
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
 import os.path
 from os import getpid
 import psutil, pickle
+import threading
 
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
@@ -95,6 +95,7 @@ class menubar(object):
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About")
+        #self.AboutAction.triggered.connect(self.about)
 
     def exit_menu(self):
         exitAction = self.menu.addAction("Quit")
@@ -220,6 +221,11 @@ class menubar(object):
         inputint()
         outputint()
 
+    def about(self):
+        print ('debe')
+        about = about_window()
+        about.start()
+
     def exit_all(self):
         if self.cast == None and self.stopped == False:
             self.app.quit()
@@ -231,6 +237,15 @@ class menubar(object):
             self.app.quit()
         else:
             self.app.quit()
+
+class about_window(object):
+    def __init__(self):
+        self.about = QtWidgets.QApplication(sys.argv)
+        self.w = QtWidgets.QWidget()
+        QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
+
+    def start(self):
+        self.w.show()
 
 def main():
     menubar()
