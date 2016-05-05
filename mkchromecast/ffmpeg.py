@@ -33,8 +33,8 @@ else:
 
 mtype = 'audio/'+appendmtype
 
-print (colors.options('Selected backend: ')+ backend)
-print (colors.options('Selected audio codec: ')+ codec)
+print (colors.options('Selected backend:')+' '+ backend)
+print (colors.options('Selected audio codec:')+' '+ codec)
 
 if backend != 'node':
     if bitrate == '192':
@@ -60,10 +60,10 @@ if backend != 'node':
             print ('Bitrate has been set to maximum!')
 
         bitrate = bitrate+'k'
-        print (colors.options('Selected bitrate: ')+ bitrate)
+        print (colors.options('Selected bitrate:')+' '+ bitrate)
 
     if samplerate == '44100':
-        print (colors.options('Default sample rate used: ')+ samplerate+'Hz')
+        print (colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
     else:
         codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:

@@ -57,7 +57,7 @@ def important(text):
     return color(text, bold=False, fg_blue=True)
 
 def options(text):
-    return color(text, bold=False, fg_orange=True)
+    return color(text, bold=True, underline=True)
 
 def warning(text):
     return color(text, bold=False, fg_yellow=True)
