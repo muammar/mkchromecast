@@ -3,22 +3,21 @@
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
 
+import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.node import *
 import mkchromecast.tray_threading
 import pychromecast
-from PyQt5 import QtCore, QtGui, QtWidgets
 import signal
 import os.path
 from os import getpid
 import psutil, pickle
 import threading
-
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
 
-import mkchromecast.__init__        # This is to verify against some needed variables
 platform = mkchromecast.__init__.platform
 
 global entries
