@@ -8,6 +8,7 @@ Google Cast device has to point out to http://ip:5000/stream
 
 import mkchromecast.__init__
 from mkchromecast.audiodevices import *
+import mkchromecast.colors as colors
 import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
@@ -26,14 +27,14 @@ samplerate = str(mkchromecast.__init__.samplerate)
 if  codec == 'mp3':
     appendmtype = 'mpeg'
 elif codec == 'aac':
-    appendmtype = 'mp4' #This is the container used
+    appendmtype = 'mp4' #This is the container used for aac
 else:
     appendmtype = codec
 
 mtype = 'audio/'+appendmtype
 
-print ('Selected backend: ', backend)
-print ('Selected audio codec: ', codec)
+print (colors.options('Selected backend: ')+ backend)
+print (colors.options('Selected audio codec: ')+ codec)
 
 if backend != 'node':
     if bitrate == '192':
@@ -59,10 +60,10 @@ if backend != 'node':
             print ('Bitrate has been set to maximum!')
 
         bitrate = bitrate+'k'
-        print ('Selected bitrate: ', bitrate)
+        print (colors.options('Selected bitrate: ')+ bitrate)
 
     if samplerate == '44100':
-        print ('Default sample rate used: ', samplerate+'Hz')
+        print (colors.options('Default sample rate used: ')+ samplerate+'Hz')
     else:
         codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:

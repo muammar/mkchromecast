@@ -5,6 +5,7 @@
 from __future__ import print_function
 from mkchromecast.__init__ import *
 from mkchromecast.audiodevices import *
+import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 import time
 import pychromecast
@@ -36,18 +37,18 @@ class casting(object):
 
         if len(self.cclist) != 0 and args.select_cc == False:
             print(' ')
-            print('List of Google Cast devices available in your network:')
-            print('------------------------------------------------------')
+            print(colors.important('List of Google Cast devices available in your network:'))
+            print(colors.important('------------------------------------------------------'))
             print(' ')
-            print('Index   Friendly name')
-            print('=====   ============= ')
+            print(colors.important('Index   Friendly name'))
+            print(colors.important('=====   ============= '))
             for self.index,device in enumerate(self.cclist):
                 print(str(self.index)+'      ', str(device))
             print(' ')
-            print('We will cast to first device in the list above!')
+            print(colors.warning('We will cast to first device in the list above!'))
             print(' ')
             self.castto = self.cclist[0]
-            print(self.castto)
+            print(colors.success(self.castto))
             print(' ')
 
         elif len(self.cclist) != 0 and args.select_cc == True:
