@@ -15,8 +15,8 @@ highlighter: rouge
 
 
 ### content configuration ###
-title:       "SinglePaged - Simple Jekyll template"
-keywords:    "SinglePaged, jekyll, template, github, blog, single page"
+title:       "mkchromecast"
+keywords:    "Google, Cast, Audio, Mac, Linux, Python,"
 description: "A single-page template for Jekyll based blogs (like what you'd use on github pages!)"
 source_link: "https://github.com/t413/SinglePaged"
 favicon:     "img/favicon.ico"
@@ -36,4 +36,3 @@ colors:
 
 kramdown:
   auto_ids:  false
-
