@@ -39,7 +39,7 @@ print (colors.options('Selected audio codec:')+' '+ codec)
 if backend != 'node':
     if bitrate == '192':
         bitrate = bitrate+'k'
-        print ('Default bitrate used: ', bitrate)
+        print (colors.options('Default bitrate used:')+' '+ bitrate)
     elif bitrate == 'None':
         print ('The '+codec+' codec does not require the bitrate argument')
     else:
