@@ -3,6 +3,7 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.__init__
+from mkchromecast.version import __version__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
@@ -11,6 +12,8 @@ import atexit
 import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
+
+print('mkchromecast v'+__version__)
 
 if args.tray == False:
 
@@ -27,14 +30,14 @@ if args.tray == False:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
-            print('Done!')
+            print(colors.success('[Done]'))
         else:
             print('Creating pulseaudio sink...')
             print('Open pavucontrol and select the mkchromecast sink.')
             from mkchromecast.pulseaudio import *
             create_sink()
 
-        print('Starting local streaming server')
+        print(colors.important('Starting local streaming server'))
         if args.encoder_backend == 'node' and platform == 'Darwin':
             from mkchromecast.node import *
             stream()
@@ -80,8 +83,8 @@ if args.tray == False:
     if volumearg == True:
         def controls_msg():
             print('')
-            print('Controls:')
-            print('=========')
+            print(colors.important('Controls:'))
+            print(colors.important('========='))
             print('')
             print('Volume up: u')
             print('Volume down: d')

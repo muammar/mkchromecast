@@ -6,8 +6,9 @@ import mkchromecast.__init__
 import subprocess
 import multiprocessing
 import time, sys, os, signal
-from .audiodevices import *
-from .cast import *
+from mkchromecast.audiodevices import *
+import mkchromecast.colors as colors
+from mkchromecast.cast import *
 import psutil, pickle
 from os import getpid
 
@@ -32,21 +33,21 @@ except AttributeError:
 
 if youtubeurl == None:
     if backend == 'node' and rcodec != 'mp3':
-        print ('Codec '+rcodec+' is not supported by the node server!')
+        print (colors.error('Codec '+rcodec+' is not supported by the node server!'))
         print ('Using '+codec+' as default.')
 
     if backend == 'node':
         if int(bitrate) == 192:
-            print ('Default bitrate used: ', bitrate+'k')
+            print (colors.options('Default bitrate used: ')+ bitrate+'k')
         elif int(bitrate) > 320:
-                print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
+                print (colors.warning('Maximum bitrate supported by '+codec+' is: ')+str(320)+'k')
                 bitrate = '320'
                 print ('Bitrate has been set to maximum!')
         else:
-            print ('Selected bitrate: ', bitrate+'k')
+            print (colors.options('Selected bitrate: ')+bitrate+'k')
 
         if samplerate == '44100':
-            print ('Default sample rate used: ', samplerate+'Hz')
+            print (colors.options('Default sample rate used: ')+ samplerate+'Hz')
         else:
             codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
             if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:

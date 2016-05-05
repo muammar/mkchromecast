@@ -53,8 +53,14 @@ def color(text, **user_styles):
 def error(text):
     return color(text, bold=True, fg_red=True)
 
+def important(text):
+    return color(text, bold=False, fg_blue=True)
+
+def options(text):
+    return color(text, bold=False, fg_orange=True)
+
 def warning(text):
-    return color(text, bold=True, fg_orange=True)
+    return color(text, bold=False, fg_yellow=True)
 
 def success(text):
     return color(text, fg_green=True)
