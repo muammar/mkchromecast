@@ -12,7 +12,6 @@ Usage:
 """
 from setuptools import setup
 
-
 version = '0.2.3'
 
 APP = ['start_tray.py']
@@ -30,7 +29,8 @@ OPTIONS = {
         'CFBundleIdentifier': "com.mkchromecast.osx",
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
-        'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved"
+        'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved",
+        'LSPrefersPPC': True
     }
 }
 
