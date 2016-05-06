@@ -45,7 +45,7 @@ class casting(object):
             for self.index,device in enumerate(self.cclist):
                 print(str(self.index)+'      ', str(device))
             print(' ')
-            print(colors.warning('We will cast to first device in the list above!'))
+            print(colors.important('We will cast to first device in the list above!'))
             print(' ')
             self.castto = self.cclist[0]
             print(colors.success(self.castto))

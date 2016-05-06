@@ -88,9 +88,9 @@ if args.tray == False:
             print(colors.important('Controls:'))
             print(colors.important('========='))
             print('')
-            print('Volume up: u')
-            print('Volume down: d')
-            print('Quit the application: q')
+            print(colors.options('Volume up:')+' u')
+            print(colors.options('Volume down:')+' d')
+            print(colors.options('Quit the application:')+' q')
             print('')
             return
         controls_msg()
