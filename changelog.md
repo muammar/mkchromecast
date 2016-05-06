@@ -2,6 +2,8 @@
 
     - The code has been refactored.
     - Printed messages have been improved.
+    - Stand-alone application for Mac OS X is released. It only works for the
+      `node` backend.
 
 * mkchromecast (0.2.2) **released**: 2016/05/03
 
