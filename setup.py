@@ -18,7 +18,7 @@ version = '0.2.3'
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
-DATA_FILES = ['images/google.icns', 'images/google_working.icns']
+DATA_FILES = ['images/google.icns', 'images/google_working.icns', 'bin/audiodevice']
 
 OPTIONS = {
     'argv_emulation': True,
@@ -37,6 +37,7 @@ OPTIONS = {
 
 setup(
     name=APP_NAME,
+    package='mkchromecast',
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
