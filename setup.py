@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+# This file is part of mkchromecast.
+
 """
 py2app build script for MyApplication
 
