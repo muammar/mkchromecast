@@ -2,8 +2,10 @@
 py2app build script for MyApplication
 
 Usage:
-	python setup.py py2app -A --packages=PyQt5
-        python setup.py py2app --packages=PyQt5 --excludes="PyQt5.uic.port_v3"
+    python3 setup.py py2app --packages=PyQt5
+    cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
+    macdeployqt dist/mkchromecast.app
+
 """
 from setuptools import setup
 
