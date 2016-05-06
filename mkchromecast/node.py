@@ -11,6 +11,7 @@ import mkchromecast.colors as colors
 from mkchromecast.cast import *
 import psutil, pickle
 from os import getpid
+import os.path
 
 """
 These functions are used to get up the streaming server using node.
@@ -74,7 +75,10 @@ if youtubeurl == None:
             print ('Selected sample rate: ', samplerate+'Hz')
 
 def streaming():
-    webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
+    if os.path.exists('./bin/node') == True:
+        webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
+    else:
+        webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
 
     f = open('/tmp/mkcrhomecast.pid', 'rb')
