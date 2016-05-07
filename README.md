@@ -26,7 +26,8 @@ more information](https://github.com/muammar/mkchromecast/wiki/Linux)).
 Sometimes the lag between a song plays and hearing may be of 8 seconds. I don't
 know if it is my router though.
 
-### Requirements:
+Requirements:
+------------
 
 #### Mac OS X
 
@@ -61,7 +62,8 @@ following:
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
-### Installing
+Installing
+----------
 
 There are two way of installing this applications: 1) Using the binaries, or 2)
 from sources.
@@ -231,7 +233,8 @@ apt-get install python3-pyqt5
 
 or if you desire it you can do it yourself from the sources.
 
-### Updating
+Updating
+--------
 
 To update **mkchromecast**, just get into the cloned directory and:
 
@@ -239,7 +242,8 @@ To update **mkchromecast**, just get into the cloned directory and:
 git pull
 ```
 
-### Usage
+Usage
+-----
 
 Get into the cloned **mkchromecast** directory and execute:
 
@@ -311,7 +315,8 @@ and `volume down` respectively.
 install it using the `requirements.txt` file shipped in the repository as
 described above.
 
-#### More help
+More help
+---------
 
 To get more help:
 
@@ -319,14 +324,16 @@ To get more help:
 python mkchromecast.py -h
 ```
 
-### Killing the application
+Killing the application
+-----------------------
 
 To kill **mkchromecast** when you run it from console, there are two ways of
 doing it: if you didn't use the `--volume` option, just press
 <kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
 <kbd>q</kbd> key to quit.
 
-#### Notes
+Notes
+-----
 
 A **beta** system tray menu is now provided. It requires you to install
 `PyQt5`. To launch it:
@@ -354,7 +361,8 @@ Check these images:
 **Note**: you can pass the options when using `ffmpeg` as backend and adding `-t`
 to launch the system tray. I am still working on improving all of this.
 
-### TODO
+TODO
+----
 
 * Add avconv support for Linux.
 * Verify all exceptions when the system tray menu fails.
@@ -362,7 +370,8 @@ to launch the system tray. I am still working on improving all of this.
 system tray.
 * Video?.
 
-### Contribute
+Contribute
+----------
 
 If you want to contribute, help me improving this application by [reporting
 issues](https://github.com/muammar/mkchromecast/issues), [creating pull
