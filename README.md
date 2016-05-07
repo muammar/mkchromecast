@@ -62,19 +62,21 @@ following:
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
-Installing
-----------
+Install
+-------
 
-There are two way of installing this applications: 1) Using the binaries, or 2)
-from sources.
+There are two way of installing this applications:
+1. Using the binaries
+2. From sources.
 
 #### Binaries
 
 ##### Mac OS X
 
-There is available a standalone application for Mac OS X users. You can
-download it here, and drag it to your `/Applications/` folder. It works just
-with the `node` backend.
+There is available a standalone application for Mac OS X users. You need to
+drag it to your `/Applications/` folder. It works just with the `node` backend.
+
+Download it here.
 
 ##### Linux
 
