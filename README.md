@@ -61,7 +61,9 @@ following:
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
-### Installing and updating
+### Installing
+
+#### From sources
 
 To install **mkchromecast**, clone this repository:
 
@@ -72,7 +74,7 @@ git clone https://github.com/muammar/mkchromecast.git
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
-#### Python
+##### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
@@ -92,7 +94,7 @@ sudo pip install -r requirements.txt
 **Linux** users can try to install these python requirements using the package
 managers coming with their distributions.
 
-#### Soundflower (Mac users only)
+##### Soundflower (Mac users only)
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
@@ -114,12 +116,12 @@ an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-#### ffmpeg
+##### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
 
-##### Mac OS X
+###### Mac OS X
 
 I will briefly describe the case of Homebrew here. First, you will need
 Homebrew:
@@ -137,7 +139,7 @@ additional `ffmpeg`'s options:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
-##### Linux
+###### Linux
 
 As I use Debian, the way of installing `ffmpeg` is:
 
@@ -145,7 +147,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 apt-get install ffmpeg
 ```
 
-###### Audio coding formats available with `ffmpeg`
+**Audio coding formats available with `ffmpeg`**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -178,7 +180,7 @@ check the section
 For the moments, the `--encoder-backend` flag is useless for Linux users though
 I plan to give support to `avconv`.
 
-#### PyQt5
+##### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu. As
 of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
@@ -187,7 +189,7 @@ a `pip install pyqt5`.
 If this does not work for you, I suggest you to install it using a package
 manager.
 
-##### Mac OS X
+###### Mac OS X
 
 Example with Homebrew:
 
@@ -195,9 +197,9 @@ Example with Homebrew:
 brew install pyqt5 --with-python
 ```
 
-##### Linux
+###### Linux
 
-###### Debian
+* **Debian**
 
 For Python2:
 
@@ -213,7 +215,7 @@ apt-get install python3-pyqt5
 
 or if you desire it you can do it yourself from the sources.
 
-#### Updating
+### Updating
 
 To update **mkchromecast**, just get into the cloned directory and:
 
@@ -221,7 +223,7 @@ To update **mkchromecast**, just get into the cloned directory and:
 git pull
 ```
 
-### How to execute it
+### Usage
 
 Get into the cloned **mkchromecast** directory and execute:
 
