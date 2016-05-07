@@ -234,8 +234,8 @@ class menubar(object):
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
-        msgBox.setInformativeText("""Created by: Muammar El Khatib
-                \nUX design: Claudia Vargas
+        msgBox.setInformativeText("""Created by: Muammar El Khatib.
+                \nUX design: Claudia Vargas.
                 """)
         msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.exec_()
