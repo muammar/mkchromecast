@@ -51,20 +51,9 @@ class menubar(object):
         self.objp.pcastfinished.connect(self.threadplay.quit)
         self.threadplay.started.connect(self.objp._play_cast_)
 
-        """
-        This is used for about
-        """
-        #self.obja = mkchromecast.tray_threading._about_()  # no parent!
-        #self.threadabout = QThread()  # no parent!
-
-        #self.obja.moveToThread(self.threadabout)
-        #self.obja.aboutready.connect(self.aboutready)
-        #self.obja.aboutfinished.connect(self.threadabout.quit)
-        #self.threadabout.started.connect(self.obja._about_w_)
-
         self.app = QtWidgets.QApplication(sys.argv)
+        self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
         self.w = QtWidgets.QWidget()
-        w = self.w
 
         if os.path.exists('images/google.icns') == True:
             self.icon = QtGui.QIcon()
@@ -198,9 +187,6 @@ class menubar(object):
         else:
             self.tray.setIcon(QtGui.QIcon('google.icns'))
 
-    #def aboutready(self, done):
-    #    print ('aboutready', done)
-
     def play_cast(self):
         self.menuentry.setChecked(True)
         if os.path.exists('images/google_working.icns') == True:
@@ -246,7 +232,12 @@ class menubar(object):
         #self.threadabout.start()
         #QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
         msgBox = QtWidgets.QMessageBox()
-        msgBox.setText("The document has been modified.")
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
+        msgBox.setInformativeText("""Created by: Muammar El Khatib
+                \nUX design: Claudia Vargas
+                """)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msgBox.exec_()
 
     def exit_all(self):
