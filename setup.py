@@ -6,7 +6,7 @@
 py2app build script for mkchromecast
 
 Usage:
-    python3 setup.py py2app --packages=PyQt5
+    python3 setup.py py2app
     cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
     macdeployqt dist/mkchromecast.app
 """
