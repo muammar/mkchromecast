@@ -63,6 +63,22 @@ following:
 
 ### Installing
 
+There are two way of installing this applications: 1) Using the binaries, or 2)
+from sources.
+
+#### Binaries
+
+##### Mac OS X
+
+There is available a standalone application for Mac OS X users. You can
+download it here, and drag it to your `/Applications/` folder. It works just
+with the `node` backend.
+
+##### Linux
+
+* Debian
+* Ubuntu
+
 #### From sources
 
 To install **mkchromecast**, clone this repository:
