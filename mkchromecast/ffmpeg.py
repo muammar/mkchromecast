@@ -41,21 +41,24 @@ if backend != 'node':
         bitrate = bitrate+'k'
         print (colors.options('Default bitrate used:')+' '+ bitrate)
     elif bitrate == 'None':
-        print ('The '+codec+' codec does not require the bitrate argument')
+        print (colors.warning('The '+codec+' codec does not require the bitrate argument.'))
     else:
         if codec == 'mp3' and int(bitrate) > 320:
-            print ('Maximum bitrate supported by '+codec+' is: '+str(320)+'k')
+            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
+            print ('You may try losless audio coding formats.')
             bitrate = '320'
             print ('Bitrate has been set to maximum!')
 
         if codec == 'ogg' and int(bitrate) > 500:
-            print ('Maximum bitrate supported by '+codec+' is: '+str(500)+'k')
+            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+            print ('You may try losless audio coding formats.')
             bitrate = '500'
             print ('Bitrate has been set to maximum!')
 
         if codec == 'aac' and int(bitrate) > 500:
-            print ('Maximum bitrate supported by '+codec+' is: '+str(500)+'k')
-            print ('Note that about 128-256k is considered "transparent" for '+codec)
+            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+            print ('At about 128-256k is already considered as "transparent" for '+codec+'.')
+            print ('You may try losless audio coding formats.')
             bitrate = '500'
             print ('Bitrate has been set to maximum!')
 
@@ -67,28 +70,28 @@ if backend != 'node':
     else:
         codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '44100'
             print ('Sample rate has been set to default!')
 
         elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '32000'
 
         elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '32000'
 
         elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '22050'
 
         elif codec in codecs_sr and int(samplerate) > 41000:
-            print ('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz')
+            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+', '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '44800'
             print ('Sample rate has been set to maximum!')
 
-        print ('Selected sample rate: ', samplerate+'Hz')
+        print (colors.options('Selected sample rate:')+' '+samplerate+'Hz')
 
 """
 We verify platform and other options
@@ -231,10 +234,10 @@ class monitor(object):
 def monitor_daemon():
     f = open('/tmp/mkcrhomecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print ('PID of main process: ', pidnumber)
+    print (colors.options('PID of main process:')+' '+str(pidnumber))
 
     localpid=getpid()
-    print ('PID of streaming process: ', localpid)
+    print (colors.options('PID of streaming process:')+' '+str(localpid))
 
     while psutil.pid_exists(localpid) == True:
         try:

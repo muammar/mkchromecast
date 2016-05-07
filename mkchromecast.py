@@ -13,7 +13,7 @@ import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
 
-print('mkchromecast v'+__version__)
+print(colors.bold('mkchromecast ')+'v'+__version__)
 
 if args.tray == False:
 
@@ -98,28 +98,24 @@ if args.tray == False:
             while(True):
                 key = getch()
                 if(key == 'u'):
-                    print('')
-                    print('Increasing volume...')
                     cc.volume_up()
                     if args.encoder_backend == 'ffmpeg':
                         if debug == True:
                             controls_msg()
                 elif(key == 'd'):
-                    print('')
-                    print('Decreasing volume...')
                     cc.volume_down()
                     if args.encoder_backend == 'ffmpeg':
                         debug = mkchromecast.__init__.debug
                         if debug == True:
                             controls_msg()
                 elif(key == 'q'):
-                    print('Quitting application...')
+                    print(colors.error('Quitting application...'))
                     terminateapp()
         except KeyboardInterrupt:
             terminateapp()
 
     else:
-        print('Ctrl-C to kill the application at any time')
+        print(colors.error('Ctrl-C to kill the application at any time'))
         print('')
         try:
             input()

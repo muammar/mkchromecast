@@ -143,7 +143,7 @@ if args.config == True or args.discover == True or args.name == True:
 Version
 """
 if args.version is True:
-    print ('mkchromecast ', __version__)
+    print ('mkchromecast '+'v'+colors.success(__version__))
     sys.exit(0)
 
 """
@@ -230,7 +230,7 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print(colors.error('You need to provide the youtube URL'))
+        print (colors.error('You need to provide the youtube URL'))
         sys.exit(0)
     else:
         youtubeurl = args.youtube
