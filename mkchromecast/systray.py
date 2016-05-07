@@ -101,7 +101,7 @@ class menubar(object):
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def about_menu(self):
-        self.AboutAction = self.menu.addAction("About")
+        self.AboutAction = self.menu.addAction("About mkchromecast")
         self.AboutAction.triggered.connect(self.about_show)
 
     def exit_menu(self):
