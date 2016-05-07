@@ -79,8 +79,8 @@ drag it to your `/Applications/` folder. It works just with the `node` backend.
 
 Download it here.
 
-If you find any problem with the application, please (report it
-here)[https://github.com/muammar/mkchromecast/issues].
+If you find any problem with the application, please [report it
+here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
