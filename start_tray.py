@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This file is part of mkchromecast.
+# This file is part of mkchromecast. It is used to build the Mac OS X app.
 
 import mkchromecast.__init__
 from mkchromecast.audiodevices import *

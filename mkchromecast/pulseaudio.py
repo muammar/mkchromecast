@@ -5,11 +5,11 @@
 import subprocess, time
 
 def create_sink():
-    name = 'mkchromecast'
+    sink_name = 'mkchromecast'
 
-    create_sink = ['pactl', 'load-module', 'module-null-sink', 'sink_name='+name]
+    create_sink = ['pactl', 'load-module', 'module-null-sink', 'sink_name='+sink_name]
     #print (create_sink)
-    rename_sink = ['pacmd', 'update-sink-proplist', name, 'device.description='+name]
+    rename_sink = ['pacmd', 'update-sink-proplist', sink_name, 'device.description='+sink_name]
     #print (rename_sink)
     subprocess.Popen(create_sink)
     time.sleep(1)

@@ -1,3 +1,10 @@
+* mkchromecast (0.2.3) **unreleased**:
+
+    - The code has been partially refactored to ease maintenance.
+    - Printed messages have been improved.
+    - Stand-alone application for Mac OS X is released. It only works for the
+      `node` backend.
+
 * mkchromecast (0.2.2) **released**: 2016/05/03
 
     - Fixed error with Python2 when importing threading module.

@@ -1,18 +1,22 @@
+#!/usr/bin/env python
+
+# This file is part of mkchromecast.
+
 """
-py2app build script for MyApplication
+py2app build script for mkchromecast
 
 Usage:
-	python setup.py py2app -A --packages=PyQt5
-        python setup.py py2app --packages=PyQt5 --excludes="PyQt5.uic.port_v3"
+    python3 setup.py py2app
+    cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
+    macdeployqt dist/mkchromecast.app
 """
 from setuptools import setup
 
-
-version = '0.2.2'
+version = '0.2.3'
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
-DATA_FILES = ['images/google.icns', 'images/google_working.icns']
+DATA_FILES = ['images/google.icns', 'images/google_working.icns', 'bin/audiodevice', 'nodejs']
 
 OPTIONS = {
     'argv_emulation': True,
@@ -25,7 +29,8 @@ OPTIONS = {
         'CFBundleIdentifier': "com.mkchromecast.osx",
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
-        'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved"
+        'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved",
+        'LSPrefersPPC': True
     }
 }
 
@@ -33,6 +38,7 @@ setup(
     name=APP_NAME,
     app=APP,
     data_files=DATA_FILES,
+    package='mkchromecast',
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
 )

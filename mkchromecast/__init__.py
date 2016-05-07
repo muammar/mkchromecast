@@ -3,14 +3,15 @@
 # This file is part of mkchromecast.
 
 import argparse
-from .audiodevices import *
-from .terminate import *
+from mkchromecast.audiodevices import *
+import mkchromecast.colors as colors
+from mkchromecast.terminate import *
+from mkchromecast.version import __version__
 import os.path, sys, platform
 import pickle
 from argparse import RawTextHelpFormatter
-from .version import __version__
 
-parser = argparse.ArgumentParser(description='Cast Mac OS X audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='Cast Mac OS X and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
@@ -120,7 +121,6 @@ args = parser.parse_args()
 """
 Guess the platform
 """
-
 platform = platform.system()
 
 """
@@ -136,14 +136,14 @@ if args.reset == True:
     terminate()
 
 if args.config == True or args.discover == True or args.name == True:
-    print ('This option is not implemented yet.')
+    print (colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
 """
 Version
 """
 if args.version is True:
-    print ('mkchromecast ', __version__)
+    print ('mkchromecast '+'v'+colors.success(__version__))
     sys.exit(0)
 
 """
@@ -157,7 +157,7 @@ if args.encoder_backend in backends:
         args.encoder_backend = 'ffmpeg'
         backend = args.encoder_backend
 else:
-    print ('Supported backends are: ')
+    print (colors.error('Supported backends are: '))
     for backend in backends:
         print ('-',backend)
     sys.exit(0)
@@ -165,7 +165,6 @@ else:
 """
 Debug
 """
-
 if args.debug == True:
     debug = args.debug
 else:
@@ -187,8 +186,8 @@ else:
     if backend != 'node' and args.codec in codecs:
         codec = args.codec
     else:
-        print ('Selected audio codec: ', args.codec)
-        print ('Supported audio codecs are: ')
+        print (colors.options('Selected audio codec: ')+ args.codec)
+        print (colors.error('Supported audio codecs are: '))
         for codec in codecs:
             print ('-',codec)
         sys.exit(0)
@@ -213,7 +212,7 @@ Sample rate
 """
 if args.sample_rate != 0:
     if args.sample_rate < 22050:
-        print ('The sample rate has to be greater than 22049.')
+        print (colors.error('The sample rate has to be greater than 22049.'))
         sys.exit(0)
     else:
         samplerate = abs(args.sample_rate)
@@ -231,7 +230,7 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print('You need to provide the youtube URL')
+        print (colors.error('You need to provide the youtube URL'))
         sys.exit(0)
     else:
         youtubeurl = args.youtube
@@ -252,4 +251,3 @@ def checkmktmp():
     if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
        os.remove('/tmp/mkcrhomecast.tmp')
     return
-
