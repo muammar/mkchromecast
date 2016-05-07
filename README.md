@@ -207,7 +207,7 @@ I plan to give support to `avconv`.
 ##### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu. As
-of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
+of today April 28th, `pip` is able to install `PyQt5`. Therefore, you can do
 a `pip install pyqt5`.
 
 If this does not work for you, I suggest you to install it using a package

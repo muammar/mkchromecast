@@ -160,7 +160,7 @@ class casting(object):
                 print (colors.options('The media type string used is:')+' '+  'audio/mpeg')
                 ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
             print (' ')
-            print (colors.important('Cast media cotroller status'))
+            print (colors.important('Cast media controller status'))
             print (' ')
             print (ncast.status)
             print (' ')
