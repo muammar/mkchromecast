@@ -1,10 +1,9 @@
 * mkchromecast (0.2.3) **unreleased**:
 
-    - The code has been refactored.
+    - The code has been partially refactored to ease maintenance.
     - Printed messages have been improved.
     - Stand-alone application for Mac OS X is released. It only works for the
       `node` backend.
-    - Added debian branch to build a Debian package.
 
 * mkchromecast (0.2.2) **released**: 2016/05/03
 

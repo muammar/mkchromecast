@@ -57,3 +57,17 @@ class Player(QObject):
         cast = start.cast
         self.pcastready.emit('done')
         self.pcastfinished.emit()
+
+#class _about_(QObject):
+#    aboutfinished = pyqtSignal()
+#    aboutready = pyqtSignal(str)
+#
+#    def __init__(self):
+#        QObject.__init__(self)
+#
+#    @pyqtSlot()
+#    def _about_w_(self):
+#        from PyQt5 import QtCore, QtGui, QtWidgets
+#        QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
+#        self.aboutready.emit('done')
+#        self.aboutfinished.emit()
