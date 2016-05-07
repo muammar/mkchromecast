@@ -67,7 +67,7 @@ Install
 
 There are two way of installing this applications:
 
-1. Using the binaries
+1. Using the binaries.
 2. From sources.
 
 #### Binaries
@@ -78,6 +78,9 @@ There is available a standalone application for Mac OS X users. You need to
 drag it to your `/Applications/` folder. It works just with the `node` backend.
 
 Download it here.
+
+If you find any problem with the application, please (report it
+here)[https://github.com/muammar/mkchromecast/issues].
 
 ##### Linux
 
