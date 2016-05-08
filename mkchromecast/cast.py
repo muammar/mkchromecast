@@ -76,7 +76,7 @@ class casting(object):
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
                 print (' ')
 
-        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True :
+        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True:
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]

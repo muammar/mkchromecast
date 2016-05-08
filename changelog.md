@@ -1,3 +1,8 @@
+* mkchromecast (0.2.3.1) **released**: 2016/05/08
+
+    - This release fixes the Signal 9 passed by error in the Stand-alone
+      application.
+
 * mkchromecast (0.2.3) **released**: 2016/05/08
 
     - The code has been partially refactored to ease maintenance.
