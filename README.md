@@ -65,7 +65,7 @@ following:
 Install
 -------
 
-There are two way of installing this applications:
+There are two ways of installing this applications:
 
 1. Using the binaries.
 2. From sources.
