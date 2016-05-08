@@ -1,4 +1,4 @@
-* mkchromecast (0.2.3) **unreleased**:
+* mkchromecast (0.2.3) **released**: 2016/05/08
 
     - The code has been partially refactored to ease maintenance.
     - Printed messages have been improved.
