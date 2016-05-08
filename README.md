@@ -77,7 +77,9 @@ There are two way of installing this applications:
 There is available a standalone application for Mac OS X users. You need to
 drag it to your `/Applications/` folder. It works just with the `node` backend.
 
-Download the DMG here. You need also to [install
+[Download the DMG
+here](https://github.com/muammar/mkchromecast/releases/download/0.2.3/mkchromecast_v0.2.3.dmg).
+You need also to [install
 Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
 
 If you find any problem with the application, please [report it
