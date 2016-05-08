@@ -1,8 +1,7 @@
 
 
-Design by Tim O'Brien [t413.com](http://t413.com/)
+mkchromecast
 &mdash;
-[SinglePaged theme](https://github.com/t413/SinglePaged)
+&copy; Muammar El Khatib 2016
 &mdash;
-this site is [open source]({{ site.source_link }})
-
+site theme [here]({{ site.source_link }}).
