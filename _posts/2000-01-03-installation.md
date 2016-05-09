@@ -10,7 +10,7 @@ fa-icon: toggle-on
 [Download the dmg](#download), and drag **mkchromecast** to your
 `/Applications/` folder.  Note that for the moments `node` is the only backend
 supported. You also need to install Soundflower as shown below. If you use
-homebrew, you can install with one command line **mkchromecast**:
+homebrew, you can install **mkchromecast** with one command line:
 
 ```
 brew cask install mkchromecast
