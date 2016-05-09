@@ -1,6 +1,11 @@
-* mkchromecast (0.2.3) **unreleased**:
+* mkchromecast (0.2.3.1) **released**: 2016/05/08
 
-    - The code has been refactored.
+    - This release fixes the Signal 9 passed by error in the Stand-alone
+      application.
+
+* mkchromecast (0.2.3) **released**: 2016/05/08
+
+    - The code has been partially refactored to ease maintenance.
     - Printed messages have been improved.
     - Stand-alone application for Mac OS X is released. It only works for the
       `node` backend.

@@ -26,7 +26,8 @@ more information](https://github.com/muammar/mkchromecast/wiki/Linux)).
 Sometimes the lag between a song plays and hearing may be of 8 seconds. I don't
 know if it is my router though.
 
-### Requirements:
+Requirements:
+------------
 
 #### Mac OS X
 
@@ -61,7 +62,37 @@ following:
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
-### Installing and updating
+Install
+-------
+
+There are two ways of installing this application:
+
+1. Using the binaries.
+2. From sources.
+
+#### Binaries
+
+##### Mac OS X
+
+There is available a standalone application for Mac OS X users. You need to
+drag it to your `/Applications/` folder. It works just with the `node` backend.
+
+[Download the DMG
+here](https://github.com/muammar/mkchromecast/releases/download/0.2.3.1/mkchromecast_v0.2.3.1.dmg).
+You need also to [install
+Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
+
+If you find any problem with the application, please [report it
+here](https://github.com/muammar/mkchromecast/issues).
+
+##### Linux
+
+* Debian
+* Ubuntu
+
+More information soon.
+
+#### From sources
 
 To install **mkchromecast**, clone this repository:
 
@@ -72,7 +103,7 @@ git clone https://github.com/muammar/mkchromecast.git
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
-#### Python
+##### Python
 
 To install the python requirements use the `requirements.txt` file shipped in
 this repository:
@@ -92,7 +123,7 @@ sudo pip install -r requirements.txt
 **Linux** users can try to install these python requirements using the package
 managers coming with their distributions.
 
-#### Soundflower (Mac users only)
+##### Soundflower (Mac users only)
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
@@ -114,12 +145,12 @@ an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-#### ffmpeg
+##### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
 
-##### Mac OS X
+###### Mac OS X
 
 I will briefly describe the case of Homebrew here. First, you will need
 Homebrew:
@@ -137,7 +168,7 @@ additional `ffmpeg`'s options:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
-##### Linux
+###### Linux
 
 As I use Debian, the way of installing `ffmpeg` is:
 
@@ -145,7 +176,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 apt-get install ffmpeg
 ```
 
-###### Audio coding formats available with `ffmpeg`
+**Audio coding formats available with `ffmpeg`**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -178,16 +209,16 @@ check the section
 For the moments, the `--encoder-backend` flag is useless for Linux users though
 I plan to give support to `avconv`.
 
-#### PyQt5
+##### PyQt5
 
 These Python bindings are needed if you intend to use the system tray menu. As
-of today April 28th, `pip` is able to install `pyqt5`. Therefore, you can do
+of today April 28th, `pip` is able to install `PyQt5`. Therefore, you can do
 a `pip install pyqt5`.
 
 If this does not work for you, I suggest you to install it using a package
 manager.
 
-##### Mac OS X
+###### Mac OS X
 
 Example with Homebrew:
 
@@ -195,9 +226,9 @@ Example with Homebrew:
 brew install pyqt5 --with-python
 ```
 
-##### Linux
+###### Linux
 
-###### Debian
+* **Debian**
 
 For Python2:
 
@@ -213,7 +244,8 @@ apt-get install python3-pyqt5
 
 or if you desire it you can do it yourself from the sources.
 
-#### Updating
+Updating
+--------
 
 To update **mkchromecast**, just get into the cloned directory and:
 
@@ -221,7 +253,8 @@ To update **mkchromecast**, just get into the cloned directory and:
 git pull
 ```
 
-### How to execute it
+Usage
+-----
 
 Get into the cloned **mkchromecast** directory and execute:
 
@@ -293,7 +326,8 @@ and `volume down` respectively.
 install it using the `requirements.txt` file shipped in the repository as
 described above.
 
-#### More help
+More help
+---------
 
 To get more help:
 
@@ -301,14 +335,16 @@ To get more help:
 python mkchromecast.py -h
 ```
 
-### Killing the application
+Killing the application
+-----------------------
 
 To kill **mkchromecast** when you run it from console, there are two ways of
 doing it: if you didn't use the `--volume` option, just press
 <kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
 <kbd>q</kbd> key to quit.
 
-#### Notes
+Notes
+-----
 
 A **beta** system tray menu is now provided. It requires you to install
 `PyQt5`. To launch it:
@@ -336,7 +372,8 @@ Check these images:
 **Note**: you can pass the options when using `ffmpeg` as backend and adding `-t`
 to launch the system tray. I am still working on improving all of this.
 
-### TODO
+TODO
+----
 
 * Add avconv support for Linux.
 * Verify all exceptions when the system tray menu fails.
@@ -344,7 +381,8 @@ to launch the system tray. I am still working on improving all of this.
 system tray.
 * Video?.
 
-### Contribute
+Contribute
+----------
 
 If you want to contribute, help me improving this application by [reporting
 issues](https://github.com/muammar/mkchromecast/issues), [creating pull

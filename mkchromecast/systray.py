@@ -29,6 +29,9 @@ class menubar(object):
         self.cast = None
         self.stopped = False
 
+        """
+        This is used when searching for cast devices
+        """
         self.obj = mkchromecast.tray_threading.Worker()  # no parent!
         self.thread = QThread()  # no parent!
 
@@ -37,6 +40,9 @@ class menubar(object):
         self.obj.finished.connect(self.thread.quit)
         self.thread.started.connect(self.obj._search_cast_)
 
+        """
+        This is used when one click on cast device
+        """
         self.objp = mkchromecast.tray_threading.Player()  # no parent!
         self.threadplay = QThread()  # no parent!
 
@@ -46,6 +52,8 @@ class menubar(object):
         self.threadplay.started.connect(self.objp._play_cast_)
 
         self.app = QtWidgets.QApplication(sys.argv)
+        self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
+        self.w = QtWidgets.QWidget()
 
         if os.path.exists('images/google.icns') == True:
             self.icon = QtGui.QIcon()
@@ -93,8 +101,8 @@ class menubar(object):
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def about_menu(self):
-        self.AboutAction = self.menu.addAction("About")
-        #self.AboutAction.triggered.connect(self.about)
+        self.AboutAction = self.menu.addAction("About mkchromecast")
+        self.AboutAction.triggered.connect(self.about_show)
 
     def exit_menu(self):
         exitAction = self.menu.addAction("Quit")
@@ -220,10 +228,17 @@ class menubar(object):
         inputint()
         outputint()
 
-    def about(self):
-        print ('debe')
-        about = about_window()
-        about.start()
+    def about_show(self):
+        #self.threadabout.start()
+        #QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
+        msgBox.setInformativeText("""Created by: Muammar El Khatib.
+                \nUX design: Claudia Vargas.
+                """)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.exec_()
 
     def exit_all(self):
         if self.cast == None and self.stopped == False:
@@ -236,15 +251,6 @@ class menubar(object):
             self.app.quit()
         else:
             self.app.quit()
-
-class about_window(object):
-    def __init__(self):
-        self.about = QtWidgets.QApplication(sys.argv)
-        self.w = QtWidgets.QWidget()
-        QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
-
-    def start(self):
-        self.w.show()
 
 def main():
     menubar()

@@ -36,33 +36,33 @@ class casting(object):
             self.youtubeurl = None
 
         if len(self.cclist) != 0 and args.select_cc == False:
-            print(' ')
-            print(colors.important('List of Google Cast devices available in your network:'))
-            print(colors.important('------------------------------------------------------'))
-            print(' ')
-            print(colors.important('Index   Friendly name'))
-            print(colors.important('=====   ============= '))
+            print (' ')
+            print (colors.important('List of Google Cast devices available in your network:'))
+            print (colors.important('------------------------------------------------------'))
+            print (' ')
+            print (colors.important('Index   Friendly name'))
+            print (colors.important('=====   ============= '))
             for self.index,device in enumerate(self.cclist):
-                print(str(self.index)+'      ', str(device))
-            print(' ')
-            print(colors.important('We will cast to first device in the list above!'))
-            print(' ')
+                print (str(self.index)+'      ', str(device))
+            print (' ')
+            print (colors.important('We will cast to first device in the list above!'))
+            print (' ')
             self.castto = self.cclist[0]
-            print(colors.success(self.castto))
-            print(' ')
+            print (colors.success(self.castto))
+            print (' ')
 
         elif len(self.cclist) != 0 and args.select_cc == True:
             if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
-                print(' ')
-                print('List of Google Cast devices available in your network:')
-                print('------------------------------------------------------')
-                print(' ')
-                print('Index   Friendly name')
-                print('=====   ============= ')
+                print (' ')
+                print (colors.important('List of Google Cast devices available in your network:'))
+                print (colors.important('------------------------------------------------------'))
+                print (' ')
+                print (colors.important('Index   Friendly name'))
+                print (colors.important('=====   ============= '))
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'      ',str(device))
+                    print (str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 #print ('Array')
@@ -72,19 +72,19 @@ class casting(object):
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
-                print(' ')
-                print('Casting to: ', self.castto)
-                print(' ')
+                print (' ')
+                print (colors.options('Casting to:')+' '+colors.success(self.castto))
+                print (' ')
 
-        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True :
+        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True:
                 self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
-                print(' ')
-                print('Casting to: ', self.castto)
+                print (' ')
+                print (colors.options('Casting to:')+' '+colors.success(self.castto))
 
         elif len(self.cclist) == 0 and args.tray == False:
-            print(colors.error('No devices found!'))
+            print (colors.error('No devices found!'))
             if self.platform == 'Linux':
                 import mkchromecast.pulseaudio
                 mkchromecast.pulseaudio.remove_sink()
@@ -95,43 +95,43 @@ class casting(object):
             exit()
 
         elif len(self.cclist) == 0 and args.tray == True:
-            print(colors.error('No devices found!'))
+            print (colors.error('No devices found!'))
             self.availablecc = []
 
     def sel_cc(self):
-            print(' ')
-            print('Please, select the index of the Google Cast device that you want to use:')
+            print (' ')
+            print ('Please, select the '+colors.important('Index')+' of the Google Cast device that you want to use:')
             self.index = input()
 
     def inp_cc(self):
             pickle.dump(self.index, self.tf)
             self.tf.close()
             self.castto = self.cclist[int(self.index)]
-            print(' ')
-            print('Casting to: ', self.castto)
-            print(' ')
+            print (' ')
+            print (colors.options('Casting to:')+' '+colors.success(self.castto))
+            print (' ')
 
     def get_cc(self):
             self.cast = pychromecast.get_chromecast(self.castto)
             # Wait for cast device to be ready
             self.cast.wait()
-            print(' ')
-            print('Information about ', self.castto)
-            print(' ')
-            print(self.cast.device)
-            print(' ')
-            print('Status of device ', self.castto)
-            print(' ')
-            print(self.cast.status)
-            print(' ')
+            print (' ')
+            print (colors.important('Information about ')+' '+colors.success(self.castto))
+            print (' ')
+            print (self.cast.device)
+            print (' ')
+            print (colors.important('Status of device ')+' '+colors.success(self.castto))
+            print (' ')
+            print (self.cast.status)
+            print (' ')
 
     def play_cast(self):
         localip = self.ip
 
-        print ('Your local IP is: ', localip)
+        print (colors.options('Your local IP is:')+' '+localip)
 
         if self.youtubeurl != None:
-            print ('The Youtube URL chosen: ', self.youtubeurl)
+            print (colors.options('The Youtube URL chosen:')+' '+self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
             yt = youtube.YouTubeController()
             self.cast.register_handler(yt)
@@ -145,25 +145,25 @@ class casting(object):
                 url_data = urllib.parse.urlparse(self.youtubeurl)
                 query = urllib.parse.parse_qs(url_data.query)
             video = query["v"][0]
-            print ('Playing video: ', video)
+            print (colors.options('Playing video:')+' '+video)
             yt.play_video(video)
         else:
             ncast = self.cast
             if args.encoder_backend == 'ffmpeg':
                 import mkchromecast.ffmpeg
                 mtype = mkchromecast.ffmpeg.mtype
-                print(' ')
-                print ('The media type string used is: ',mtype)
+                print (' ')
+                print (colors.options('The media type string used is:')+' '+mtype)
                 ncast.play_media('http://'+localip+':5000/stream', mtype)
             else:
-                print(' ')
-                print ('The media type string used is: audio/mpeg')
+                print (' ')
+                print (colors.options('The media type string used is:')+' '+  'audio/mpeg')
                 ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
-            print(' ')
-            print('Cast media cotroller status')
-            print(' ')
-            print(ncast.status)
-            print(' ')
+            print (' ')
+            print (colors.important('Cast media controller status'))
+            print (' ')
+            print (ncast.status)
+            print (' ')
 
     def stop_cast(self):
         ncast = self.cast
@@ -173,6 +173,8 @@ class casting(object):
         """ Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
+        print ('Increasing volume...')
+        print (' ')
         ncast = self.cast
         volume = round(ncast.status.volume_level, 1)
         return ncast.set_volume(volume + 0.1)
@@ -181,6 +183,8 @@ class casting(object):
         """ Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
+        print ('Decreasing volume...')
+        print (' ')
         ncast = self.cast
         volume = round(ncast.status.volume_level, 1)
         return ncast.set_volume(volume - 0.1)
