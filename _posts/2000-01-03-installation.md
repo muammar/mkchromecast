@@ -25,9 +25,9 @@ For Soundflower you can check
 or if you have [Homebrew](http://brew.sh/) you can use [brew
 cask](https://caskroom.github.io/) as follows:
 
-``
+```
 brew cask install soundflower
-``
+```
 
 Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).`
