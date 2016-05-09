@@ -48,6 +48,10 @@ if args.tray == False:
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
 
+        if args.encoder_backend == 'avconv' and platform == 'Linux':
+            import mkchromecast.avconv
+            mkchromecast.avconv.main()
+
     cc.initialize_cast()
 
     if args.select_cc == True: # This is done for the case that -s is passed

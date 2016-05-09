@@ -54,6 +54,7 @@ Set the backend for all encoders.
 Possible backends:
     - node (default)
     - ffmpeg
+    - avconv (only for Linux)
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
@@ -149,18 +150,29 @@ if args.version is True:
 """
 Check that encoders exist in the list
 """
-backends = ['node', 'ffmpeg']
 
-if args.encoder_backend in backends:
-    backend = args.encoder_backend
-    if platform == 'Linux' and backend == 'node':
-        args.encoder_backend = 'ffmpeg'
-        backend = args.encoder_backend
-else:
+backends = ['node', 'ffmpeg', 'avconv']
+
+if args.encoder_backend not in backends:
     print (colors.error('Supported backends are: '))
     for backend in backends:
         print ('-',backend)
     sys.exit(0)
+else:
+    if platform == 'Mac':
+        backends.remove('avconv')
+    else:
+        backends.remove('node')
+
+    if args.encoder_backend in backends:
+        backend = args.encoder_backend
+    elif args.encoder_backend not in backends:
+        if platform == 'Linux':
+            args.encoder_backend = 'ffmpeg'
+            backend = args.encoder_backend
+        elif platform == 'Mac':
+            args.encoder_backend = 'node'
+            backend = args.encoder_backend
 
 """
 Debug
