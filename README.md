@@ -9,7 +9,7 @@ release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https:
 This is a program to cast your **Mac OS X** audio, or **Linux** audio to your
 Google Cast devices.
 
-It is written in Python, and it streams via `node.js`, or `ffmpeg`.
+It is written in Python, and it streams via `node.js`, `ffmpeg`, or `avconv`.
 **mkchromecast** is capable of using lossy and lossless audio formats provided
 that `ffmpeg` is installed. Additionally, a system tray menu is also available.
 
@@ -21,10 +21,11 @@ your wireless router is not very powerful like mine, or in the case you don't
 want to degrade the sound quality.  For more information [visit the
 wiki](https://github.com/muammar/mkchromecast/wiki/).
 
-For **Linux**, you have to install `ffmpeg` and `pulseaudio` (see the [wiki for
-more information](https://github.com/muammar/mkchromecast/wiki/Linux)).
-Sometimes the lag between a song plays and hearing may be of 8 seconds. I don't
-know if it is my router though.
+For **Linux**, you have to install `ffmpeg` (or `avconv`) together with
+`pulseaudio` (see the [wiki for more
+information](https://github.com/muammar/mkchromecast/wiki/Linux)).  Sometimes
+the lag between playing a song and hearing may be of 8 seconds. I don't know if
+it is my router though.
 
 Requirements:
 ------------
@@ -81,6 +82,14 @@ drag it to your `/Applications/` folder. It works just with the `node` backend.
 here](https://github.com/muammar/mkchromecast/releases/download/0.2.3.1/mkchromecast_v0.2.3.1.dmg).
 You need also to [install
 Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
+
+###### Homebrew Cask
+
+Now it is possible to install the binary as follows:
+
+```
+brew cask install mkchromecast
+```
 
 If you find any problem with the application, please [report it
 here](https://github.com/muammar/mkchromecast/issues).
@@ -205,9 +214,6 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 4800
 ```
 check the section
 [https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
-
-For the moments, the `--encoder-backend` flag is useless for Linux users though
-I plan to give support to `avconv`.
 
 ##### PyQt5
 
@@ -375,7 +381,6 @@ to launch the system tray. I am still working on improving all of this.
 TODO
 ----
 
-* Add avconv support for Linux.
 * Verify all exceptions when the system tray menu fails.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
