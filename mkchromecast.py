@@ -6,6 +6,7 @@ import mkchromecast.__init__
 from mkchromecast.version import __version__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from mkchromecast.pulseaudio import *
 from mkchromecast.terminate import *
 import os.path, time
 import atexit
@@ -34,7 +35,6 @@ if args.tray == False:
         else:
             print('Creating pulseaudio sink...')
             print('Open pavucontrol and select the mkchromecast sink.')
-            from mkchromecast.pulseaudio import *
             create_sink()
 
         print(colors.important('Starting local streaming server'))

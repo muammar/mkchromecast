@@ -1,3 +1,7 @@
+* mkchromecast (0.2.4) **unreleased**
+
+    - This release fixes the system tray menu for Linux.
+
 * mkchromecast (0.2.3.1) **released**: 2016/05/08
 
     - This release fixes the Signal 9 passed by error in the Stand-alone

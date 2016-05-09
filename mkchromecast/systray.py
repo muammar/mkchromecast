@@ -7,6 +7,7 @@ import mkchromecast.__init__        # This is to verify against some needed vari
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.node import *
+from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 import pychromecast
 import signal
@@ -225,8 +226,11 @@ class menubar(object):
             self.stopped = True
 
     def reset_audio(self):
-        inputint()
-        outputint()
+        if platform == 'Darwin':
+            inputint()
+            outputint()
+        else:
+            remove_sink()
 
     def about_show(self):
         #self.threadabout.start()
