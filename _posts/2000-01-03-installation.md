@@ -7,11 +7,18 @@ fa-icon: toggle-on
 
 ## Mac OS X app
 
-[Download the DMG](#download), and drag **mkchromecast** to your
+[Download the dmg](#download), and drag **mkchromecast** to your
 `/Applications/` folder.  Note that for the moments `node` is the only backend
-supported. You also need to install Soundflower as shown below.
+supported. You also need to install Soundflower as shown below. If you use
+homebrew, you can install with one command line **mkchromecast**:
 
-### Soundflower (Mac users only)
+```
+brew cask install mkchromecast
+```
+
+This will install the latest dmg and will install the Soundflower dependency.
+
+### Installing Soundflower (Mac users only)
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
