@@ -8,11 +8,13 @@ from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 import mkchromecast.ffmpeg
 from mkchromecast.node import *
+from mkchromecast.pulseaudio import *
 from mkchromecast.systray import *
 import os.path, pickle, pychromecast
 
 
 backend = mkchromecast.__init__.backend
+platform = mkchromecast.__init__.platform
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -48,8 +50,11 @@ class Player(QObject):
             stream()
         else:
             mkchromecast.ffmpeg.main()
-        inputdev()
-        outputdev()
+        if platform == 'Darwin':
+            inputdev()
+            outputdev()
+        else:
+            create_sink()
         start = casting()
         start.initialize_cast()
         start.get_cc()

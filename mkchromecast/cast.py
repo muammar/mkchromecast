@@ -149,7 +149,7 @@ class casting(object):
             yt.play_video(video)
         else:
             ncast = self.cast
-            if args.encoder_backend == 'ffmpeg':
+            if args.encoder_backend == 'ffmpeg' or args.encoder_backend == 'avconv':
                 import mkchromecast.ffmpeg
                 mtype = mkchromecast.ffmpeg.mtype
                 print (' ')
