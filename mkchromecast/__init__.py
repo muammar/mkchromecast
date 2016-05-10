@@ -158,7 +158,7 @@ if args.encoder_backend not in backends:
         print ('-',backend)
     sys.exit(0)
 else:
-    if platform == 'Mac':
+    if platform == 'Darwin':
         backends.remove('avconv')
     else:
         backends.remove('node')
@@ -169,7 +169,7 @@ else:
         if platform == 'Linux':
             args.encoder_backend = 'ffmpeg'
             backend = args.encoder_backend
-        elif platform == 'Mac':
+        elif platform == 'Darwin':
             args.encoder_backend = 'node'
             backend = args.encoder_backend
 
