@@ -1,10 +1,10 @@
 Source: mkchromecast
-Section: unknown
+Section: sound
 Priority: optional
 Maintainer: Muammar El Khatib <muammar@debian.org>
-Build-Depends: debhelper (>=9),dh-python,python-all (>= 2.6.6-3~),python-setuptools,python3-all,python3-setuptools
+Build-Depends: debhelper (>=9), dh-python, python-all (>= 2.6.6-3~), python-setuptools
 Standards-Version: 3.9.6
-Homepage: <insert the upstream URL, if relevant>
+Homepage: http://mkchromecast.com
 X-Python-Version: >= 2.6
 X-Python3-Version: >= 3.2
 #Vcs-Git: git://anonscm.debian.org/collab-maint/mkchromecast.git
@@ -12,21 +12,28 @@ X-Python3-Version: >= 3.2
 
 Package: python-mkchromecast
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}
-Suggests: python-mkchromecast-doc
-Description: <insert up to 60 chars description> (Python 2)
- <insert long description, indented with spaces>
+Depends: ${python:Depends}, ${misc:Depends}, python-flask, python-pychromecast, ffmpeg, python-psutil, python-pyqt5
+Suggests: python-mkchromecast-doc, libav-tools
+Description:  cast your Mac OS X audio, or Linux audio to your Google Cast devices.
+ It is written in Python, and it streams via node.js, ffmpeg, or avconv.
+ mkchromecast is capable of using lossy and lossless audio formats provided
+ that ffmpeg is installed. Additionally, a system tray menu is also available.
  .
- This package installs the library for Python 2.
+ By default, mkchromecast streams with node.js (or ffmpeg in Linux) together
+ with mp3 audio coding format at a sample rate of 44100Hz and average bitrate
+ of 192k. These defaults can be changed using the --sample-rate and -b flags.
+ It is useful to modify these parameters when your wireless router is not very
+ powerful like mine, or in the case you don't want to degrade the sound
+ quality.
 
-Package: python3-mkchromecast
-Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends}
-Suggests: python-mkchromecast-doc
-Description: <insert up to 60 chars description> (Python 3)
- <insert long description, indented with spaces>
- .
- This package installs the library for Python 3.
+#Package: python3-mkchromecast
+#Architecture: all
+#Depends: ${python3:Depends}, ${misc:Depends}
+#Suggests: python-mkchromecast-doc
+#Description: <insert up to 60 chars description> (Python 3)
+# <insert long description, indented with spaces>
+# .
+# This package installs the library for Python 3.
 
 Package: python-mkchromecast-doc
 Architecture: all
