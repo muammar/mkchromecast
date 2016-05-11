@@ -233,8 +233,6 @@ class menubar(object):
             remove_sink()
 
     def about_show(self):
-        #self.threadabout.start()
-        #QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
         msgBox = QtWidgets.QMessageBox()
         msgBox.setIcon(QtWidgets.QMessageBox.Information)
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
