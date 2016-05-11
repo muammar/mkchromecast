@@ -8,7 +8,7 @@ import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 from mkchromecast.version import __version__
 import os.path, sys, platform
-import pickle
+import pickle, subprocess
 from argparse import RawTextHelpFormatter
 
 parser = argparse.ArgumentParser(description='Cast Mac OS X and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
@@ -99,6 +99,19 @@ parser.add_argument('-t', '--tray', action="store_true", help=
 '''
 This option let you launch mkchromecast as a systray menu (still experimental)
 ''')
+parser.add_argument('--update', action="store_true", help="""
+Update mkchromecast git repository.
+
+Example:
+    python mkchromecast.py --update
+
+This will execute for you:
+
+    git pull --all
+    git fetch -p
+
+"""
+)
 parser.add_argument('-v', '--version', action="store_true", help='Show the version')
 parser.add_argument('--volume', action="store_true", default=False, help=
 '''
@@ -145,6 +158,20 @@ Version
 """
 if args.version is True:
     print ('mkchromecast '+'v'+colors.success(__version__))
+    sys.exit(0)
+
+"""
+Update
+"""
+if args.update is True:
+
+    print (colors.warning('Updating mkchromecast'))
+    print (colors.important('git pull --all'))
+    pull = subprocess.Popen(['git', 'pull', '--all'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print (pull.stdout.read().decode('utf-8').strip())
+    print (colors.important('git fetch -p'))
+    prune = subprocess.Popen(['git', 'fetch', '-p'], stdout=subprocess.PIPE, stderr=subprocess.PIPE  )
+    print (prune.stdout.read().decode('utf-8').strip())
     sys.exit(0)
 
 """

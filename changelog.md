@@ -2,6 +2,7 @@
 
     - This release fixes the system tray menu for Linux.
     - Now avconv is supported.
+    - Pass the `--update` option to update the repository.
 
 * mkchromecast (0.2.3.1) **released**: 2016/05/08
 
