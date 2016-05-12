@@ -177,6 +177,12 @@ class menubar(QtWidgets.QMainWindow):
             self.about_menu()
             self.exit_menu()
         else:
+            if platform == 'Darwin':
+                try:
+                    from pync import Notifier
+                    Notifier.notify('Google cast devices found!', title='mkchromecast')
+                except ImportError:
+                    print('If you want to receive notifications in Mac OS X, install the pync')
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
