@@ -256,7 +256,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setMinimum(0)
         self.sl.setMaximum(10)
         self.sl.setValue(2)
-        self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        #self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
         #self.sl.setTickInterval(1)
 
         self.sl.valueChanged.connect(self.valuechange)
@@ -265,13 +265,15 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         print (value)
-        self.ncast
-        if round(self.ncast.status.volume_level, 1) == 1:
+        try:
+            if round(self.ncast.status.volume_level, 1) == 1:
+                pass
+            else:
+                volume = value/10
+                print (volume)
+                self.ncast.set_volume(volume)
+        except AttributeError:
             pass
-        else:
-            volume = value/10
-            print (volume)
-            self.ncast.set_volume(volume)
 
     def reset_audio(self):
         if platform == 'Darwin':
