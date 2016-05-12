@@ -23,7 +23,7 @@ platform = mkchromecast.__init__.platform
 
 global entries
 
-class menubar(object):
+class menubar(QtWidgets.QMainWindow):
     def __init__(self):
         self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -65,7 +65,10 @@ class menubar(object):
         else:
             self.icon = QtGui.QIcon()
             self.icon.addFile('google.icns')#, QtCore.QSize(48,48))
+        super(QtWidgets.QMainWindow,self).__init__()
+        self.createUI()
 
+    def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
 
         self.menu = QtWidgets.QMenu()
@@ -233,7 +236,35 @@ class menubar(object):
             self.stopped = True
 
     def volume_cast(self):
-        pass
+        from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication)
+        from PyQt5.QtCore import Qt
+        from PyQt5.QtGui import QPixmap
+
+        sld = QSlider(Qt.Horizontal, self)
+        sld.setFocusPolicy(Qt.NoFocus)
+        sld.setGeometry(30, 40, 100, 30)
+        sld.valueChanged[int].connect(self.changeValue)
+
+        self.label = QLabel(self)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setPixmap(QPixmap('images/mute.png'))
+        self.label.setGeometry(160, 40, 80, 30)
+
+        self.setGeometry(300, 300, 280, 170)
+        self.setWindowTitle('Google Cast volume')
+        self.show()
+
+    def changeValue(self, value):
+        from PyQt5.QtGui import QPixmap
+        if value == 0:
+            self.label.setPixmap(QPixmap('mute.png'))
+        elif value > 0 and value <=30:
+            self.label.setPixmap(QPixmap('min.png'))
+        elif value >30 and value <= 80:
+            self.label.setPixmap(QPixmap('mid.png'))
+        else:
+            self.label.setPixmap(QPixmap('max.png'))
+        print (value)
 
     def reset_audio(self):
         if platform == 'Darwin':
@@ -270,33 +301,3 @@ def main():
 if __name__ == '__main__':
     checkmktmp()
     main()
-
-#class sliderdemo(QtWidgets.QWidget):
-#   def __init__(self, parent = None):
-#      super(sliderdemo, self).__init__(parent)
-#
-#      layout = QtWidgets.QVBoxLayout()
-#      self.l1 = QtWidgets.QLabel("Hello")
-#      self.l1.setAlignment(Qt.AlignCenter)
-#      layout.addWidget(self.l1)
-#
-#      self.sl = QtWidgets.QSlider(Qt.Horizontal)
-#      self.sl.setMinimum(10)
-#      self.sl.setMaximum(30)
-#      self.sl.setValue(20)
-#      self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
-#      self.sl.setTickInterval(5)
-#
-#      layout.addWidget(self.sl)
-#      self.sl.valueChanged.connect(self.valuechange)
-#      self.setLayout(layout)
-#      self.setWindowTitle("Google Cast volume")
-#
-#   def valuechange(self):
-#      size = self.sl.value()
-#
-#def main_volume():
-#   app = QtWidgets.QApplication(sys.argv)
-#   ex = sliderdemo()
-#   ex.show()
-#   sys.exit(app.exec_())
