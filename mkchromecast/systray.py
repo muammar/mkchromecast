@@ -3,6 +3,7 @@
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
 
+from __future__ import division
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
@@ -240,34 +241,29 @@ class menubar(QtWidgets.QMainWindow):
         from PyQt5.QtCore import Qt
         from PyQt5.QtGui import QPixmap
 
-        sld = QSlider(Qt.Horizontal, self)
-        sld.setFocusPolicy(Qt.NoFocus)
-        sld.setGeometry(30, 10, 130, 30)
-        sld.valueChanged[int].connect(self.changeValue)
+        #self.l1 = QtWidgets.QLabel("Hello")
+        #self.l1.setAlignment(Qt.AlignCenter)
 
-        #self.label = QLabel(self)
-        #self.label.setAlignment(Qt.AlignCenter)
-        #self.label.setPixmap(QPixmap('images/mute.png').scaled(self.label.size(), Qt.KeepAspectRatio))
-        #self.label.setGeometry(140, 10, 80, 30)
+        self.sl = QtWidgets.QSlider(Qt.Horizontal)
+        self.sl.setMinimum(0)
+        self.sl.setMaximum(10)
+        self.sl.setValue(2)
+        self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        #self.sl.setTickInterval(1)
 
-        self.setGeometry(300, 300, 200, 60)
-        self.setWindowTitle('Google Cast volume')
-        self.show()
+        self.sl.valueChanged.connect(self.valuechange)
+        self.sl.setWindowTitle("Google Cast volume")
+        self.sl.show()
 
-    def changeValue(self, value):
-        from PyQt5.QtGui import QPixmap
-        if value == 0:
-            #self.label.setPixmap(QPixmap('images/mute.png').scaled(self.label.size(), Qt.KeepAspectRatio))
-            print (value)
-        elif value > 0 and value <=30:
-            #self.label.setPixmap(QPixmap('min.png'))
-            print (value)
-        elif value >30 and value <= 80:
-            #self.label.setPixmap(QPixmap('mid.png'))
-            print (value)
+    def valuechange(self, value):
+        print (value)
+        self.ncast
+        if round(self.ncast.status.volume_level, 1) == 1:
+            pass
         else:
-            #self.label.setPixmap(QPixmap('images/max.svg').scaled(self.label.size(), Qt.KeepAspectRatio))
-            print (value)
+            volume = value/10
+            print (volume)
+            self.ncast.set_volume(volume)
 
     def reset_audio(self):
         if platform == 'Darwin':
