@@ -306,9 +306,12 @@ class menubar(QtWidgets.QMainWindow):
 
     def reboot(self):
         if platform == 'Darwin':
-            self.host = socket.gethostbyname(self.castto+'.local')
-            print (self.host)
-            reboot(self.host)
+            try:
+                self.host = socket.gethostbyname(self.castto+'.local')
+                print (self.host)
+                reboot(self.host)
+            except AttributeError:
+                pass
         else:
             pass
 
