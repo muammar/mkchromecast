@@ -242,29 +242,32 @@ class menubar(QtWidgets.QMainWindow):
 
         sld = QSlider(Qt.Horizontal, self)
         sld.setFocusPolicy(Qt.NoFocus)
-        sld.setGeometry(30, 40, 100, 30)
+        sld.setGeometry(30, 10, 130, 30)
         sld.valueChanged[int].connect(self.changeValue)
 
-        self.label = QLabel(self)
-        self.label.setAlignment(Qt.AlignCenter)
-        self.label.setPixmap(QPixmap('images/mute.png'))
-        self.label.setGeometry(160, 40, 80, 30)
+        #self.label = QLabel(self)
+        #self.label.setAlignment(Qt.AlignCenter)
+        #self.label.setPixmap(QPixmap('images/mute.png').scaled(self.label.size(), Qt.KeepAspectRatio))
+        #self.label.setGeometry(140, 10, 80, 30)
 
-        self.setGeometry(300, 300, 280, 170)
+        self.setGeometry(300, 300, 200, 60)
         self.setWindowTitle('Google Cast volume')
         self.show()
 
     def changeValue(self, value):
         from PyQt5.QtGui import QPixmap
         if value == 0:
-            self.label.setPixmap(QPixmap('mute.png'))
+            #self.label.setPixmap(QPixmap('images/mute.png').scaled(self.label.size(), Qt.KeepAspectRatio))
+            print (value)
         elif value > 0 and value <=30:
-            self.label.setPixmap(QPixmap('min.png'))
+            #self.label.setPixmap(QPixmap('min.png'))
+            print (value)
         elif value >30 and value <= 80:
-            self.label.setPixmap(QPixmap('mid.png'))
+            #self.label.setPixmap(QPixmap('mid.png'))
+            print (value)
         else:
-            self.label.setPixmap(QPixmap('max.png'))
-        print (value)
+            #self.label.setPixmap(QPixmap('images/max.svg').scaled(self.label.size(), Qt.KeepAspectRatio))
+            print (value)
 
     def reset_audio(self):
         if platform == 'Darwin':
