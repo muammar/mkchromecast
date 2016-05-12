@@ -249,6 +249,12 @@ class menubar(QtWidgets.QMainWindow):
             self.search_cast()
             self.ncast.quit_app()
             self.stopped = True
+            if platform == 'Darwin':
+                try:
+                    from pync import Notifier
+                    Notifier.notify('Cast stopped!', title='mkchromecast')
+                except ImportError:
+                    print('If you want to receive notifications in Mac OS X, install the pync')
 
     def volume_cast(self):
         from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication)
