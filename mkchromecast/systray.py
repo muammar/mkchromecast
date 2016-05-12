@@ -11,6 +11,7 @@ from mkchromecast.node import *
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 import pychromecast
+from pychromecast.dial import reboot
 import signal
 import os.path
 from os import getpid
@@ -80,6 +81,7 @@ class menubar(QtWidgets.QMainWindow):
         self.stop_menu()
         self.volume_menu()
         self.resetaudio_menu()
+        self.reboot_menu()
         self.about_menu()
         self.exit_menu()
 
@@ -107,8 +109,12 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset audio")
+        self.ResetAudioAction = self.menu.addAction("Reset computer's audio...")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
+
+    def reboot_menu(self):
+        self.rebootAction = self.menu.addAction("Reboot...")
+        self.rebootAction.triggered.connect(self.reboot)
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About mkchromecast")
@@ -167,6 +173,7 @@ class menubar(QtWidgets.QMainWindow):
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
+            self.reboot_menu()
             self.about_menu()
             self.exit_menu()
         else:
@@ -183,6 +190,7 @@ class menubar(QtWidgets.QMainWindow):
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
+            self.reboot_menu()
             self.about_menu()
             self.exit_menu()
 
@@ -271,6 +279,14 @@ class menubar(QtWidgets.QMainWindow):
             outputint()
         else:
             remove_sink()
+
+    def reboot(self):
+        if platform == 'Darwin':
+            self.host = socket.gethostbyname(self.castto+'.local')
+            print (self.host)
+            reboot(self.host)
+        else:
+            pass
 
     def about_show(self):
         msgBox = QtWidgets.QMessageBox()

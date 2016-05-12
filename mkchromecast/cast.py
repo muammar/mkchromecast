@@ -9,6 +9,7 @@ import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 import time
 import pychromecast
+from pychromecast.dial import reboot
 import socket
 import os.path
 import pickle
@@ -128,6 +129,10 @@ class casting(object):
     def play_cast(self):
         localip = self.ip
 
+        if platform == 'Darwin':
+            self.host = socket.gethostbyname(self.castto+'.local')
+
+        print (colors.options('The IP of '+colors.success(self.castto)+' is:')+' '+self.host)
         print (colors.options('Your local IP is:')+' '+localip)
 
         if self.youtubeurl != None:
@@ -188,3 +193,11 @@ class casting(object):
         ncast = self.cast
         volume = round(ncast.status.volume_level, 1)
         return ncast.set_volume(volume - 0.1)
+
+    def reboot(self):
+        if platform == 'Darwin':
+            self.host = socket.gethostbyname(self.castto+'.local')
+            reboot(self.host)
+        else:
+            print (colors.error('This method is not supported in Linux yet.'))
+
