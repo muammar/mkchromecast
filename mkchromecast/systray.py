@@ -16,7 +16,7 @@ from os import getpid
 import psutil, pickle
 import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
 
 
 platform = mkchromecast.__init__.platform
@@ -74,6 +74,7 @@ class menubar(object):
         self.populating_menu()
         self.separator_menu()
         self.stop_menu()
+        self.volume_menu()
         self.resetaudio_menu()
         self.about_menu()
         self.exit_menu()
@@ -89,6 +90,10 @@ class menubar(object):
     def stop_menu(self):
         self.StopCastAction = self.menu.addAction("Stop casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
+
+    def volume_menu(self):
+        self.VolumeCastAction = self.menu.addAction("Volume")
+        self.VolumeCastAction.triggered.connect(self.volume_cast)
 
     def separator_menu(self):
         self.menu.addSeparator()
@@ -156,6 +161,7 @@ class menubar(object):
                 self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.separator_menu()
             self.stop_menu()
+            self.volume_menu()
             self.resetaudio_menu()
             self.about_menu()
             self.exit_menu()
@@ -171,6 +177,7 @@ class menubar(object):
                 self.menuentry.setCheckable(True)
             self.separator_menu()
             self.stop_menu()
+            self.volume_menu()
             self.resetaudio_menu()
             self.about_menu()
             self.exit_menu()
@@ -225,6 +232,9 @@ class menubar(object):
             self.ncast.quit_app()
             self.stopped = True
 
+    def volume_cast(self):
+        pass
+
     def reset_audio(self):
         if platform == 'Darwin':
             inputint()
@@ -260,3 +270,33 @@ def main():
 if __name__ == '__main__':
     checkmktmp()
     main()
+
+#class sliderdemo(QtWidgets.QWidget):
+#   def __init__(self, parent = None):
+#      super(sliderdemo, self).__init__(parent)
+#
+#      layout = QtWidgets.QVBoxLayout()
+#      self.l1 = QtWidgets.QLabel("Hello")
+#      self.l1.setAlignment(Qt.AlignCenter)
+#      layout.addWidget(self.l1)
+#
+#      self.sl = QtWidgets.QSlider(Qt.Horizontal)
+#      self.sl.setMinimum(10)
+#      self.sl.setMaximum(30)
+#      self.sl.setValue(20)
+#      self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
+#      self.sl.setTickInterval(5)
+#
+#      layout.addWidget(self.sl)
+#      self.sl.valueChanged.connect(self.valuechange)
+#      self.setLayout(layout)
+#      self.setWindowTitle("Google Cast volume")
+#
+#   def valuechange(self):
+#      size = self.sl.value()
+#
+#def main_volume():
+#   app = QtWidgets.QApplication(sys.argv)
+#   ex = sliderdemo()
+#   ex.show()
+#   sys.exit(app.exec_())
