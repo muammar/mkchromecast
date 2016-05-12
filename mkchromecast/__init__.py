@@ -165,9 +165,6 @@ Reboot
 if args.reboot == True:
     print (colors.error('This option is not implemented yet.'))
     sys.exit(0)
-else:
-    print (colors.error('This option is not implemented yet.'))
-    sys.exit(0)
 
 """
 Not yet implemented
