@@ -82,6 +82,8 @@ class menubar(QtWidgets.QMainWindow):
         self.volume_menu()
         self.resetaudio_menu()
         self.reboot_menu()
+        self.separator_menu()
+        self.preferences_menu()
         self.about_menu()
         self.exit_menu()
 
@@ -115,6 +117,10 @@ class menubar(QtWidgets.QMainWindow):
     def reboot_menu(self):
         self.rebootAction = self.menu.addAction("Reboot...")
         self.rebootAction.triggered.connect(self.reboot)
+
+    def preferences_menu(self):
+        self.preferencesAction = self.menu.addAction("Preferences")
+        self.preferencesAction.triggered.connect(self.preferences_show)
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About mkchromecast")
@@ -174,6 +180,8 @@ class menubar(QtWidgets.QMainWindow):
             self.volume_menu()
             self.resetaudio_menu()
             self.reboot_menu()
+            self.separator_menu()
+            self.preferences_menu()
             self.about_menu()
             self.exit_menu()
         else:
@@ -197,6 +205,8 @@ class menubar(QtWidgets.QMainWindow):
             self.volume_menu()
             self.resetaudio_menu()
             self.reboot_menu()
+            self.separator_menu()
+            self.preferences_menu()
             self.about_menu()
             self.exit_menu()
 
@@ -301,6 +311,9 @@ class menubar(QtWidgets.QMainWindow):
             reboot(self.host)
         else:
             pass
+
+    def preferences_show(self):
+        pass
 
     def about_show(self):
         msgBox = QtWidgets.QMessageBox()
