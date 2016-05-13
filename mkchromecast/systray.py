@@ -111,7 +111,7 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset computer's audio...")
+        self.ResetAudioAction = self.menu.addAction("Reset audio...")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
