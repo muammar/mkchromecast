@@ -108,7 +108,13 @@ def streaming():
             print ("OSError")
             sys.exit(0)
     else:
-        print (colors.warning('Reconnecting streaming...'))
+        print (colors.warning('Reconnecting node streaming...'))
+        if platform == 'Darwin' and args.tray == True:
+            try:
+                from pync import Notifier
+                Notifier.notify('Reconnecting node streaming...', title='mkchromecast')
+            except ImportError:
+                print('If you want to receive notifications in Mac OS X, install the pync')
         relaunch(stream,recasting,kill)
     return
 
