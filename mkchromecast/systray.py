@@ -277,7 +277,10 @@ class menubar(QtWidgets.QMainWindow):
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
         self.sl.setMaximum(10)
-        self.sl.setValue(2)
+        try:
+            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+        except AttributeError:
+            self.sl.setValue(2)
         #self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
         #self.sl.setTickInterval(1)
 
@@ -286,14 +289,16 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.show()
 
     def valuechange(self, value):
-        print (value)
+        if args.debug == True:
+            print ('Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
                 pass
             else:
                 volume = value/10
-                print (volume)
                 self.ncast.set_volume(volume)
+            if args.debug == True:
+                print ('Volume set to: '+str(volume))
         except AttributeError:
             pass
 
