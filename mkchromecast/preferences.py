@@ -3,14 +3,10 @@
 # This file is part of mkchromecast.
 
 import sys
-from PyQt5.QtWidgets import (QWidget, QLabel,
-    QComboBox, QApplication)
-
+from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
 from PyQt5 import QtCore
 
-
 class Example(QWidget):
-
     def __init__(self):
         try:
             super().__init__()
@@ -19,7 +15,6 @@ class Example(QWidget):
 
         self.initUI()
 
-
     def initUI(self):
         platform = 'Darwin'
 
@@ -27,7 +22,6 @@ class Example(QWidget):
             self.lbl = QLabel("node", self)
         else:
             self.lbl = QLabel("ffmpeg", self)
-
 
         """
         Backend
@@ -93,13 +87,11 @@ class Example(QWidget):
         self.setWindowTitle('mkchromecast Preferences')
         self.show()
 
-
     def onActivated(self, text):
         self.lbl.setText(text)
         self.lbl.adjustSize()
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec_())
