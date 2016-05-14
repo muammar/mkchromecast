@@ -89,7 +89,8 @@ class Example(QWidget):
         self.lbl.move(50, 150)
 
         self.setGeometry(300, 300, 300, 200)
-        self.setWindowTitle('Preferences')
+        self.setFixedSize(300, 200)
+        self.setWindowTitle('mkchromecast Preferences')
         self.show()
 
 
