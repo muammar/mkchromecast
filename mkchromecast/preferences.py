@@ -11,7 +11,7 @@ class Example(QWidget):
         try:
             super().__init__()
         except TypeError:
-            super().__init__(self)
+            super(self.__class__, self).__init__() #This is to port to python2
 
         self.initUI()
 
@@ -83,7 +83,7 @@ class Example(QWidget):
         self.lbl.move(50, 150)
 
         self.setGeometry(300, 300, 300, 200)
-        self.setFixedSize(300, 200)
+        self.setFixedSize(300, 200)     #This is to fix the size of the window
         self.setWindowTitle('mkchromecast Preferences')
         self.show()
 
