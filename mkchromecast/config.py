@@ -38,20 +38,22 @@ class config_manager(object):
         """
         Creation of the configuration file.
         """
-        configf = directory+'mkchromecast.cfg'
-        if not os.path.exists(configf):
+        self.configf = directory+'mkchromecast.cfg'
+        if not os.path.exists(self.configf):
             if platform == 'Darwin':
                 config.set('settings', 'backend', 'node')
                 config.set('settings', 'codec', 'mp3')
                 config.set('settings', 'bitrate', '192')
-                config.set('settings', 'samplerate', '41000')
+                config.set('settings', 'samplerate', '44100')
+                config.set('settings', 'notifications', 'enabled')
             else:
                 config.set('settings', 'backend', 'ffmpeg')
                 config.set('settings', 'codec', 'mp3')
                 config.set('settings', 'bitrate', '192')
-                config.set('settings', 'samplerate', '41000')
+                config.set('settings', 'samplerate', '44100')
+                config.set('settings', 'notifications', 'enabled')
 
-            with open(configf, 'w') as configfile:
+            with open(self.configf, 'w') as configfile:
                 config.write(configfile)
 
 
