@@ -315,6 +315,8 @@ class menubar(QtWidgets.QMainWindow):
                 self.host = socket.gethostbyname(self.castto+'.local')
                 print (self.host)
                 reboot(self.host)
+                self.reset_audio()
+                self.stop_cast()
             except AttributeError:
                 pass
         else:
