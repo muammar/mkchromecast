@@ -146,6 +146,23 @@ class preferences(QWidget):
         with open(self.configf, 'w') as configfile:
                 config.write(configfile)
         self.read_defaults()
+        self.qccodec.clear()
+        if self.backendconf == 'node':
+            codecs = ['mp3']
+            config.read(self.configf)
+            config.set('settings','codec','mp3')
+            with open(self.configf, 'w') as configfile:
+                    config.write(configfile)
+        else:
+            codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+        print (codecs)
+        codecindex = codecs.index(self.codecconf)
+        self.qccodec.move(180, 54)
+        self.qccodec.setMinimumContentsLength(7)
+        for item in codecs:
+            self.qccodec.addItem(item)
+        self.qccodec.setCurrentIndex(codecindex)
+        self.qccodec.activated[str].connect(self.onActivatedcc)
 
     def onActivatedcc(self, text):
         config.read(self.configf)
@@ -180,6 +197,12 @@ class preferences(QWidget):
     def read_defaults(self):
         self.backendconf = ConfigSectionMap("settings")['backend']
         self.codecconf = ConfigSectionMap("settings")['codec']
+        if self.backendconf == 'node' and self.codecconf != 'mp3':
+            config.read(self.configf)
+            config.set('settings','codec','mp3')
+            with open(self.configf, 'w') as configfile:
+                    config.write(configfile)
+            self.codecconf = ConfigSectionMap("settings")['codec']
         self.bitrateconf = ConfigSectionMap("settings")['bitrate']
         self.samplerateconf = ConfigSectionMap("settings")['samplerate']
         self.notificationsconf = ConfigSectionMap("settings")['notifications']
