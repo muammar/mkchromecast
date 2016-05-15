@@ -1,19 +1,54 @@
 #!/usr/bin/env python
 
 # This file is part of mkchromecast.
-
-import ConfigParser
-
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
+import os, getpass
+user = getpass.getuser()
 config = ConfigParser.RawConfigParser()
+platform = 'Darwin'
 
 config.add_section('settings')
-config.set('settings', 'backend', '15')
-config.set('settings', 'codec', 'true')
-config.set('settings', 'bitrate', '3.1415')
-config.set('settings', 'samplerate', 'fun')
 
-# Writing our configuration file to 'example.cfg'
-with open('mkchromecast.cfg', 'wb') as configfile:
+# Writing our configuration file
+
+"""
+Depeding the platform we create the configuration directory in different
+locations.
+"""
+if platform == 'Darwin':
+    directory = '/Users/'+user+'/Library/Application Support/mkchromecast/'
+else:
+    directory = '/home/'+user+'/.config/mkchromecast/'      #Linux
+
+"""
+Verify that the directory set before exists.
+"""
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+"""
+Creation of the configuration file.
+"""
+configf = directory+'mkchromecast.cfg'
+if not os.path.exists(configf):
+    if platform == 'Darwin':
+        config.set('settings', 'backend', 'node')
+        config.set('settings', 'codec', 'mp3')
+        config.set('settings', 'bitrate', '192')
+        config.set('settings', 'samplerate', '41000')
+    else:
+        config.set('settings', 'backend', 'ffmpeg')
+        config.set('settings', 'codec', 'mp3')
+        config.set('settings', 'bitrate', '192')
+        config.set('settings', 'samplerate', '41000')
+
+with open(configf, 'w') as configfile:
     config.write(configfile)
 
 """
@@ -33,4 +68,5 @@ def ConfigSectionMap(section):
             dict1[option] = None
     return dict1
 
+print (platform)
 print (ConfigSectionMap("settings")['bitrate'])
