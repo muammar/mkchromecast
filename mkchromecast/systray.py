@@ -323,9 +323,8 @@ class menubar(QtWidgets.QMainWindow):
             pass
 
     def preferences_show(self):
-        p = mkchromecast.preferences.preferences()
-        self.setCentralWidget(p)
-        print('p.show()')
+        self.p = mkchromecast.preferences.preferences()
+        self.p.show()
 
     def about_show(self):
         msgBox = QMessageBox()

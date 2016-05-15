@@ -8,7 +8,6 @@ from PyQt5 import QtCore
 
 class preferences(QWidget):
     def __init__(self):
-        print ('init')
         try:
             super().__init__()
         except TypeError:
@@ -17,7 +16,6 @@ class preferences(QWidget):
         self.initUI()
 
     def initUI(self):
-        print ('initUI')
         platform = 'Darwin'
 
         if platform == 'Darwin':
