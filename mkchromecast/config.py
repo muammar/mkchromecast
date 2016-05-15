@@ -48,8 +48,10 @@ if not os.path.exists(configf):
         config.set('settings', 'bitrate', '192')
         config.set('settings', 'samplerate', '41000')
 
-with open(configf, 'w') as configfile:
-    config.write(configfile)
+    with open(configf, 'w') as configfile:
+        config.write(configfile)
+else:
+    config.read(configf)
 
 """
 The function below helps to map the options inside each section. Taken from:
