@@ -26,59 +26,60 @@ class preferences(QWidget):
         """
         Backend
         """
+        backends = ["node", "ffmpeg", "avconv"]
         self.backend = QLabel('Select Backend', self)
         self.backend.move(20, 24)
         self.qcbackend = QComboBox(self)
         self.qcbackend.move(180, 20)
         self.qcbackend.setMinimumContentsLength(7)
-        self.qcbackend.addItem("node")
-        self.qcbackend.addItem("ffmpeg")
-        self.qcbackend.addItem("avconv")
+        for item in backends:
+            self.qcbackend.addItem(item)
+        if platform == 'Darwin':
+            self.qcbackend.setCurrentIndex(0)
+        else:
+            self.qcbackend.setCurrentIndex(1)
         self.qcbackend.activated[str].connect(self.onActivated)
 
         """
         Bitrate
         """
+        bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
         self.bitrate = QLabel('Select Bitrate (kbit/s)', self)
-        #self.bitrate.setAlignment(QtCore.Qt.AlignLeft)
         self.bitrate.move(20, 56)
         self.qcbitrate = QComboBox(self)
         self.qcbitrate.move(180, 54)
         self.qcbitrate.setMinimumContentsLength(7)
-        self.qcbitrate.addItem("128")
-        self.qcbitrate.addItem("160")
-        self.qcbitrate.addItem("192")
-        self.qcbitrate.addItem("224")
-        self.qcbitrate.addItem("256")
-        self.qcbitrate.addItem("320")
-        self.qcbitrate.addItem("500")
+        for item in bitrates:
+            self.qcbitrate.addItem(item)
+        self.qcbitrate.setCurrentIndex(2)
         self.qcbitrate.activated[str].connect(self.onActivated)
 
         """
         Sample rate
         """
+        samplerates = ["48000", "44100", "32000", "22050"]
         self.samplerate = QLabel('Sample rate (Hz)', self)
-        #self.samplerate.setAlignment(QtCore.Qt.AlignLeft)
         self.samplerate.move(20, 88)
         self.qcsamplerate = QComboBox(self)
         self.qcsamplerate.move(180, 88)
         self.qcsamplerate.setMinimumContentsLength(7)
-        self.qcsamplerate.addItem("48000")
-        self.qcsamplerate.addItem("44100")
-        self.qcsamplerate.addItem("32000")
-        self.qcsamplerate.addItem("22050")
+        for item in samplerates:
+            self.qcsamplerate.addItem(item)
+        self.qcsamplerate.setCurrentIndex(1)
         self.qcsamplerate.activated[str].connect(self.onActivated)
 
         """
         Notifications
         """
+        notifications = ["Enabled", "Disabled"]
         self.notifications = QLabel('Notifications', self)
         self.notifications.move(20, 120)
         self.qcnotifications = QComboBox(self)
         self.qcnotifications.move(180, 120)
         self.qcnotifications.setMinimumContentsLength(7)
-        self.qcnotifications.addItem("Enabled")
-        self.qcnotifications.addItem("Disabled")
+        for item in notifications:
+            self.qcnotifications.addItem(item)
+        self.qcnotifications.setCurrentIndex(0)
 
         self.lbl.move(50, 150)
 
