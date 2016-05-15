@@ -297,15 +297,15 @@ if args.youtube != None:
 This is to write a PID file
 """
 def writePidFile():
-    if os.path.exists('/tmp/mkcrhomecast.pid') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.pid')
+    if os.path.exists('/tmp/mkchromecast.pid') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkchromecast.pid')
     pid = str(os.getpid())
-    f = open('/tmp/mkcrhomecast.pid', 'wb')
+    f = open('/tmp/mkchromecast.pid', 'wb')
     pickle.dump(pid, f)
     f.close()
     return
 
 def checkmktmp():
-    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.tmp')
+    if os.path.exists('/tmp/mkchromecast.tmp') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkchromecast.tmp')
     return

@@ -6,8 +6,9 @@ import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
 from PyQt5 import QtCore
 
-class Example(QWidget):
+class preferences(QWidget):
     def __init__(self):
+        print ('init')
         try:
             super().__init__()
         except TypeError:
@@ -16,6 +17,7 @@ class Example(QWidget):
         self.initUI()
 
     def initUI(self):
+        print ('initUI')
         platform = 'Darwin'
 
         if platform == 'Darwin':
@@ -85,13 +87,13 @@ class Example(QWidget):
         self.setGeometry(300, 300, 300, 200)
         self.setFixedSize(300, 200)     #This is to fix the size of the window
         self.setWindowTitle('mkchromecast Preferences')
-        self.show()
 
     def onActivated(self, text):
         self.lbl.setText(text)
         self.lbl.adjustSize()
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Example()
-    sys.exit(app.exec_())
+#if __name__ == '__main__':
+#    app = QApplication(sys.argv)
+#    p = preferences()
+#    p.show()
+#    sys.exit(app.exec_())

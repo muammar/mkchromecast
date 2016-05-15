@@ -8,6 +8,7 @@ import mkchromecast.__init__        # This is to verify against some needed vari
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.node import *
+import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 import pychromecast
@@ -19,6 +20,8 @@ import psutil, pickle
 import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
+from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
+from PyQt5.QtGui import QPixmap
 
 
 platform = mkchromecast.__init__.platform
@@ -56,7 +59,7 @@ class menubar(QtWidgets.QMainWindow):
 
         self.app = QtWidgets.QApplication(sys.argv)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
-        self.w = QtWidgets.QWidget()
+        self.w = QWidget()
 
         if os.path.exists('images/google.icns') == True:
             self.icon = QtGui.QIcon()
@@ -149,8 +152,8 @@ class menubar(QtWidgets.QMainWindow):
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         args.select_cc = True
-        if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            os.remove('/tmp/mkcrhomecast.tmp')
+        if self.stopped == True and os.path.exists('/tmp/mkchromecast.tmp') == True:
+            os.remove('/tmp/mkchromecast.tmp')
 
         self.thread.start()
 
@@ -212,7 +215,7 @@ class menubar(QtWidgets.QMainWindow):
 
     def pcastready(self, done):
         print ('done', done)
-        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
             self.cast = mkchromecast.tray_threading.cast
             self.ncast = self.cast
         if os.path.exists('images/google.icns') == True:
@@ -237,8 +240,8 @@ class menubar(QtWidgets.QMainWindow):
         print (self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
-        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
+            self.tf = open('/tmp/mkchromecast.tmp', 'wb')
         pickle.dump(self.index, self.tf)
         self.tf.close()
         self.threadplay.start()
@@ -267,9 +270,6 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Mac OS X, install the pync')
 
     def volume_cast(self):
-        from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication)
-        from PyQt5.QtCore import Qt
-        from PyQt5.QtGui import QPixmap
 
         #self.l1 = QtWidgets.QLabel("Hello")
         #self.l1.setAlignment(Qt.AlignCenter)
@@ -323,16 +323,18 @@ class menubar(QtWidgets.QMainWindow):
             pass
 
     def preferences_show(self):
-        pass
+        p = mkchromecast.preferences.preferences()
+        self.setCentralWidget(p)
+        print('p.show()')
 
     def about_show(self):
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
         msgBox.setInformativeText("""Created by: Muammar El Khatib.
                 \nUX design: Claudia Vargas.
                 """)
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
     def exit_all(self):

@@ -53,8 +53,8 @@ class casting(object):
             print (' ')
 
         elif len(self.cclist) != 0 and args.select_cc == True:
-            if os.path.exists('/tmp/mkcrhomecast.tmp') == False:
-                self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+            if os.path.exists('/tmp/mkchromecast.tmp') == False:
+                self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print (' ')
                 print (colors.important('List of Google Cast devices available in your network:'))
                 print (colors.important('------------------------------------------------------'))
@@ -70,7 +70,7 @@ class casting(object):
                 #print (availablecc)
 
             else:
-                self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
+                self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
                 print (' ')
@@ -78,7 +78,7 @@ class casting(object):
                 print (' ')
 
         elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True:
-                self.tf = open('/tmp/mkcrhomecast.tmp', 'rb')
+                self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
                 print (' ')

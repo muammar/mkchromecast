@@ -81,7 +81,7 @@ def streaming():
         webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
 
-    f = open('/tmp/mkcrhomecast.pid', 'rb')
+    f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
     print (colors.options('PID of main process:')+' '+str(pidnumber))
 

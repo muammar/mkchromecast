@@ -232,7 +232,7 @@ class monitor(object):
         self.monitor_d.start()
 
 def monitor_daemon():
-    f = open('/tmp/mkcrhomecast.pid', 'rb')
+    f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
     print (colors.options('PID of main process:')+' '+str(pidnumber))
 
