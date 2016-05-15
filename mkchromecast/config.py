@@ -9,54 +9,59 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 import os, getpass
-user = getpass.getuser()
-config = ConfigParser.RawConfigParser()
-platform = 'Darwin'
 
-config.add_section('settings')
+class config_manager(object):
+    def __init__(self):
+        user = getpass.getuser()
+        config = ConfigParser.RawConfigParser()
+        platform = 'Darwin'
 
-# Writing our configuration file
+        config.add_section('settings')
 
-"""
-Depeding the platform we create the configuration directory in different
-locations.
-"""
-if platform == 'Darwin':
-    directory = '/Users/'+user+'/Library/Application Support/mkchromecast/'
-else:
-    directory = '/home/'+user+'/.config/mkchromecast/'      #Linux
+        # Writing our configuration file
 
-"""
-Verify that the directory set before exists.
-"""
-if not os.path.exists(directory):
-    os.makedirs(directory)
+        """
+        Depeding the platform we create the configuration directory in different
+        locations.
+        """
+        if platform == 'Darwin':
+            directory = '/Users/'+user+'/Library/Application Support/mkchromecast/'
+        else:
+            directory = '/home/'+user+'/.config/mkchromecast/'      #Linux
 
-"""
-Creation of the configuration file.
-"""
-configf = directory+'mkchromecast.cfg'
-if not os.path.exists(configf):
-    if platform == 'Darwin':
-        config.set('settings', 'backend', 'node')
-        config.set('settings', 'codec', 'mp3')
-        config.set('settings', 'bitrate', '192')
-        config.set('settings', 'samplerate', '41000')
-    else:
-        config.set('settings', 'backend', 'ffmpeg')
-        config.set('settings', 'codec', 'mp3')
-        config.set('settings', 'bitrate', '192')
-        config.set('settings', 'samplerate', '41000')
+        """
+        Verify that the directory set before exists.
+        """
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
-    with open(configf, 'w') as configfile:
-        config.write(configfile)
-else:
-    config.read(configf)
+        """
+        Creation of the configuration file.
+        """
+        configf = directory+'mkchromecast.cfg'
+        if not os.path.exists(configf):
+            if platform == 'Darwin':
+                config.set('settings', 'backend', 'node')
+                config.set('settings', 'codec', 'mp3')
+                config.set('settings', 'bitrate', '192')
+                config.set('settings', 'samplerate', '41000')
+            else:
+                config.set('settings', 'backend', 'ffmpeg')
+                config.set('settings', 'codec', 'mp3')
+                config.set('settings', 'bitrate', '192')
+                config.set('settings', 'samplerate', '41000')
+
+            with open(configf, 'w') as configfile:
+                config.write(configfile)
+
 
 """
 The function below helps to map the options inside each section. Taken from:
 https://wiki.python.org/moin/ConfigParserExamples
-"""
+import ConfigParser
+config = ConfigParser.RawConfigParser()
+config.read(configf)
+
 def ConfigSectionMap(section):
     dict1 = {}
     options = config.options(section)
@@ -72,3 +77,4 @@ def ConfigSectionMap(section):
 
 print (platform)
 print (ConfigSectionMap("settings")['bitrate'])
+"""
