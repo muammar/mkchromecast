@@ -5,8 +5,7 @@
     - Pass the `--update` option to update the repository.
     - It is now possible to control the Google cast device volume from the
       systray.
-    - You can reboot the Google cast devices from the systray and the command
-      line.
+    - You can reboot the Google cast devices from the systray.
 
 * mkchromecast (0.2.3.1) **released**: 2016/05/08
 

@@ -75,7 +75,6 @@ class menubar(QtWidgets.QMainWindow):
 
     def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
-
         self.menu = QtWidgets.QMenu()
         self.search_menu()
         self.separator_menu()
@@ -89,7 +88,6 @@ class menubar(QtWidgets.QMainWindow):
         self.preferences_menu()
         self.about_menu()
         self.exit_menu()
-
         self.tray.setContextMenu(self.menu)
         self.tray.show()
         self.app.exec_()
@@ -152,6 +150,7 @@ class menubar(QtWidgets.QMainWindow):
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         args.select_cc = True
+
         if self.stopped == True and os.path.exists('/tmp/mkchromecast.tmp') == True:
             os.remove('/tmp/mkchromecast.tmp')
 
@@ -236,7 +235,6 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
-        #print ('yes')
         print (self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
@@ -270,10 +268,8 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Mac OS X, install the pync')
 
     def volume_cast(self):
-
         #self.l1 = QtWidgets.QLabel("Hello")
         #self.l1.setAlignment(Qt.AlignCenter)
-
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
         self.sl.setMaximum(10)
@@ -283,7 +279,6 @@ class menubar(QtWidgets.QMainWindow):
             self.sl.setValue(2)
         #self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
         #self.sl.setTickInterval(1)
-
         self.sl.valueChanged.connect(self.valuechange)
         self.sl.setWindowTitle("Google Cast volume")
         self.sl.show()
