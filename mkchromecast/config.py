@@ -4,17 +4,19 @@
 """
 Configparser is imported differently in Python3
 """
+import mkchromecast.__init__        # This is to verify against some needed variables
 try:
     import ConfigParser
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 import os, getpass
 
+platform = mkchromecast.__init__.platform
+
 class config_manager(object):
     def __init__(self):
         user = getpass.getuser()
         config = ConfigParser.RawConfigParser()
-        platform = 'Darwin'
 
         config.add_section('settings')
 
