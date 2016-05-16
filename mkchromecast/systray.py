@@ -174,6 +174,16 @@ class menubar(QtWidgets.QMainWindow):
 
         args.select_cc = True
 
+        """
+        This catches the error cause by an empty tmp file
+        """
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
+            try:
+                self.tf = open('/tmp/mkchromecast.tmp', 'rb')
+                self.index=pickle.load(self.tf)
+            except EOFError:
+                os.remove('/tmp/mkchromecast.tmp')
+
         if self.stopped == True and os.path.exists('/tmp/mkchromecast.tmp') == True:
             os.remove('/tmp/mkchromecast.tmp')
 
