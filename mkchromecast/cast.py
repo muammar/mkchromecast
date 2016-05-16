@@ -6,6 +6,8 @@ from __future__ import print_function
 from mkchromecast.__init__ import *
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.terminate import *
 import time
 import pychromecast
@@ -15,11 +17,19 @@ import os.path
 import pickle
 import subprocess
 import mkchromecast.colors as colors
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
 
 class casting(object):
     def __init__(self): ## __init__ to call the self.ip
         import mkchromecast.__init__        # This is to verify against some needed variables
         self.platform = mkchromecast.__init__.platform
+        self.tray = mkchromecast.__init__.tray
         if self.platform == 'Linux':
             hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
             self.ip = hostname.stdout.read().decode('utf-8').strip()
@@ -77,14 +87,14 @@ class casting(object):
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
                 print (' ')
 
-        elif len(self.cclist) != 0 and args.select_cc == False and args.tray == True:
+        elif len(self.cclist) != 0 and args.select_cc == False and self.tray == True:
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
                 print (' ')
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
 
-        elif len(self.cclist) == 0 and args.tray == False:
+        elif len(self.cclist) == 0 and self.tray == False:
             print (colors.error('No devices found!'))
             if self.platform == 'Linux':
                 import mkchromecast.pulseaudio
@@ -95,7 +105,7 @@ class casting(object):
             terminate()
             exit()
 
-        elif len(self.cclist) == 0 and args.tray == True:
+        elif len(self.cclist) == 0 and self.tray == True:
             print (colors.error('No devices found!'))
             self.availablecc = []
 
@@ -129,7 +139,7 @@ class casting(object):
     def play_cast(self):
         localip = self.ip
 
-        if platform == 'Darwin':
+        if self.platform == 'Darwin':
             self.host = socket.gethostbyname(self.castto+'.local')
 
         print (colors.options('The IP of '+colors.success(self.castto)+' is:')+' '+self.host)
@@ -154,7 +164,22 @@ class casting(object):
             yt.play_video(video)
         else:
             ncast = self.cast
-            if args.encoder_backend == 'ffmpeg' or args.encoder_backend == 'avconv':
+
+        if self.tray == True:
+            config = ConfigParser.RawConfigParser()
+            configurations = config_manager()    # Class from mkchromecast.config
+            configf = configurations.configf
+
+            if os.path.exists(configf) and tray == True:
+                print (tray)
+                print(colors.warning('Configuration file exist'))
+                print(colors.warning('Using defaults set there'))
+                config.read(configf)
+                self.backend = ConfigSectionMap("settings")['backend']
+            else:
+                self.backend = mkchromecast.__init__.backend
+
+            if self.backend == 'ffmpeg' or self.backend == 'avconv':
                 import mkchromecast.ffmpeg
                 mtype = mkchromecast.ffmpeg.mtype
                 print (' ')
@@ -195,7 +220,7 @@ class casting(object):
         return ncast.set_volume(volume - 0.1)
 
     def reboot(self):
-        if platform == 'Darwin':
+        if self.platform == 'Darwin':
             self.host = socket.gethostbyname(self.castto+'.local')
             reboot(self.host)
         else:

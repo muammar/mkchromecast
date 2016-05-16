@@ -7,7 +7,6 @@ from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
-import mkchromecast.ffmpeg
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
@@ -26,14 +25,6 @@ config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
 
-if os.path.exists(configf) and args.tray == True:
-    print(colors.warning('threading Configuration file exist'))
-    print(colors.warning('threading Using defaults set there'))
-    config.read(configf)
-    backend = ConfigSectionMap("settings")['backend']
-    print(backend)
-else:
-    backend = mkchromecast.__init__.backend
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -46,7 +37,7 @@ class Worker(QObject):
     def _search_cast_(self):
         self.cc = casting()
         self.cc.initialize_cast()
-        if len(self.cc.availablecc) == 0 and args.tray == True:
+        if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
             self.finished.emit()
@@ -64,10 +55,19 @@ class Player(QObject):
 
     @pyqtSlot()
     def _play_cast_(self):
+        if os.path.exists(configf):
+            print(colors.warning('threading Configuration file exist'))
+            print(colors.warning('threading Using defaults set there'))
+            config.read(configf)
+            backend = ConfigSectionMap("settings")['backend']
+            print(backend)
+        else:
+            backend = mkchromecast.__init__.backend
         global cast
         if backend == 'node':
             stream()
         else:
+            import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
         if platform == 'Darwin':
             inputdev()

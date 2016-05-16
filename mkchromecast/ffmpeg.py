@@ -26,7 +26,6 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
-platform = mkchromecast.__init__.platform
 tray = mkchromecast.__init__.tray
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
@@ -42,7 +41,7 @@ if os.path.exists(configf) and tray == True:
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
     notifications = ConfigSectionMap("settings")['notifications']
-    print(backend,codec,bitrate,samplerate,notifications)
+    print(backend,codec,bitrate,samplerate)
 else:
     backend = mkchromecast.__init__.backend
     codec = mkchromecast.__init__.codec
@@ -198,6 +197,8 @@ if  codec == 'flac':
         debug_command()
 
 app = Flask(__name__)
+
+print ('command '+str(command))
 
 @app.route('/')
 def index():
