@@ -30,6 +30,7 @@ class casting(object):
         import mkchromecast.__init__        # This is to verify against some needed variables
         self.platform = mkchromecast.__init__.platform
         self.tray = mkchromecast.__init__.tray
+        self.backend = mkchromecast.__init__.backend
         if self.platform == 'Linux':
             hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
             self.ip = hostname.stdout.read().decode('utf-8').strip()
@@ -166,19 +167,17 @@ class casting(object):
         else:
             ncast = self.cast
 
-        if self.tray == True:
-            config = ConfigParser.RawConfigParser()
-            configurations = config_manager()    # Class from mkchromecast.config
-            configf = configurations.configf
+            if self.tray == True:
+                config = ConfigParser.RawConfigParser()
+                configurations = config_manager()    # Class from mkchromecast.config
+                configf = configurations.configf
 
-            if os.path.exists(configf) and tray == True:
-                print (tray)
-                print(colors.warning('Configuration file exist'))
-                print(colors.warning('Using defaults set there'))
-                config.read(configf)
-                self.backend = ConfigSectionMap("settings")['backend']
-            else:
-                self.backend = mkchromecast.__init__.backend
+                if os.path.exists(configf) and tray == True:
+                    print (tray)
+                    print(colors.warning('Configuration file exist'))
+                    print(colors.warning('Using defaults set there'))
+                    config.read(configf)
+                    self.backend = ConfigSectionMap("settings")['backend']
 
             if self.backend == 'ffmpeg' or self.backend == 'avconv':
                 import mkchromecast.ffmpeg
