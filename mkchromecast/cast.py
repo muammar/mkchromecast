@@ -96,7 +96,7 @@ class casting(object):
 
         elif len(self.cclist) == 0 and self.tray == False:
             print (colors.error('No devices found!'))
-            if self.platform == 'Linux':
+            if platform == 'Linux':
                 import mkchromecast.pulseaudio
                 mkchromecast.pulseaudio.remove_sink()
             else:
@@ -138,8 +138,9 @@ class casting(object):
 
     def play_cast(self):
         localip = self.ip
+        print (platform)
 
-        if self.platform == 'Darwin':
+        if platform == 'Darwin':
             self.host = socket.gethostbyname(self.castto+'.local')
 
         print (colors.options('The IP of '+colors.success(self.castto)+' is:')+' '+self.host)
@@ -220,7 +221,7 @@ class casting(object):
         return ncast.set_volume(volume - 0.1)
 
     def reboot(self):
-        if self.platform == 'Darwin':
+        if platform == 'Darwin':
             self.host = socket.gethostbyname(self.castto+'.local')
             reboot(self.host)
         else:
