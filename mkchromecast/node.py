@@ -37,6 +37,7 @@ def streaming():
     """
     platform = mkchromecast.__init__.platform
     tray = mkchromecast.__init__.tray
+    debug = mkchromecast.__init__.debug
     notifications = mkchromecast.__init__.notifications
     config = ConfigParser.RawConfigParser()
     configurations = config_manager()    # Class from mkchromecast.config
@@ -114,7 +115,8 @@ def streaming():
     else:
         webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
-    print (webcast)
+    if args.debug == True:
+        print (webcast)
 
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))

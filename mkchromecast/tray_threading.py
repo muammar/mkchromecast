@@ -7,6 +7,7 @@ from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
+import mkchromecast.ffmpeg
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
@@ -67,7 +68,11 @@ class Player(QObject):
         if backend == 'node':
             stream()
         else:
-            import mkchromecast.ffmpeg
+            try:
+                reload(mkchromecast.ffmpeg)
+            except NameError:
+                from imp import reload
+                reload(mkchromecast.ffmpeg)
             mkchromecast.ffmpeg.main()
         if platform == 'Darwin':
             inputdev()

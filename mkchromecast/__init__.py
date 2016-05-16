@@ -150,8 +150,8 @@ platform = platform.system()
 Assigment of args to variables
 """
 tray = args.tray
+debug = args.debug
 notifications = args.notifications
-print (tray)
 
 """
 Reset

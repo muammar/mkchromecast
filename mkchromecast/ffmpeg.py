@@ -198,7 +198,8 @@ if  codec == 'flac':
 
 app = Flask(__name__)
 
-print ('command '+str(command))
+if debug == True:
+    print ('command '+str(command))
 
 @app.route('/')
 def index():

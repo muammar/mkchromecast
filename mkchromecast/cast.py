@@ -139,12 +139,11 @@ class casting(object):
 
     def play_cast(self):
         localip = self.ip
-        print (platform)
 
         if platform == 'Darwin':
             self.host = socket.gethostbyname(self.castto+'.local')
 
-        print (colors.options('The IP of '+colors.success(self.castto)+' is:')+' '+self.host)
+        print (colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
         print (colors.options('Your local IP is:')+' '+localip)
 
         if self.youtubeurl != None:
