@@ -38,7 +38,6 @@ def streaming():
     platform = mkchromecast.__init__.platform
     tray = mkchromecast.__init__.tray
     debug = mkchromecast.__init__.debug
-    notifications = mkchromecast.__init__.notifications
     config = ConfigParser.RawConfigParser()
     configurations = config_manager()    # Class from mkchromecast.config
     configf = configurations.configf
@@ -59,6 +58,7 @@ def streaming():
         codec = mkchromecast.__init__.codec
         bitrate = str(mkchromecast.__init__.bitrate)
         samplerate = str(mkchromecast.__init__.samplerate)
+        notifications = mkchromecast.__init__.notifications
 
     try:
         youtubeurl = mkchromecast.__init__.youtubeurl
@@ -146,7 +146,7 @@ def streaming():
             sys.exit(0)
     else:
         print (colors.warning('Reconnecting node streaming...'))
-        if platform == 'Darwin' and tray == True and notifications == True:
+        if platform == 'Darwin' and tray == True and notifications == 'enabled':
             try:
                 from pync import Notifier
                 Notifier.notify('Reconnecting node streaming...', title='mkchromecast')

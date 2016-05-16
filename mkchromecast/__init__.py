@@ -151,7 +151,10 @@ Assigment of args to variables
 """
 tray = args.tray
 debug = args.debug
-notifications = args.notifications
+if args.notifications == True:
+    notifications = 'enabled'
+else:
+    notifications = 'disabled'
 
 """
 Reset

@@ -27,21 +27,22 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 tray = mkchromecast.__init__.tray
+debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
 
 if os.path.exists(configf) and tray == True:
-    print (tray)
-    print(colors.warning('Configuration file exist'))
-    print(colors.warning('Using defaults set there'))
     config.read(configf)
     backend = ConfigSectionMap("settings")['backend']
     codec= ConfigSectionMap("settings")['codec']
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
-    notifications = ConfigSectionMap("settings")['notifications']
-    print(backend,codec,bitrate,samplerate)
+    if debug == True:
+        print (tray)
+        print(colors.warning('Configuration file exist'))
+        print(colors.warning('Using defaults set there'))
+        print(backend,codec,bitrate,samplerate)
 else:
     backend = mkchromecast.__init__.backend
     codec = mkchromecast.__init__.codec
@@ -123,7 +124,6 @@ if backend != 'node':
 We verify platform and other options
 """
 platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
 
 def debug_command():                # This function add some more flags to the ffmpeg command
     command.insert(1, '-loglevel')  # when user passes --debug option.

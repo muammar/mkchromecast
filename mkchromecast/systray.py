@@ -7,6 +7,8 @@ from __future__ import division
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.node import *
 import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
@@ -22,6 +24,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
 from PyQt5.QtGui import QPixmap
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
 
 
 platform = mkchromecast.__init__.platform
@@ -34,6 +43,20 @@ class menubar(QtWidgets.QMainWindow):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
+
+        """
+        This is to load variables from configuration file
+        """
+        config = ConfigParser.RawConfigParser()
+        configurations = config_manager()    # Class from mkchromecast.config
+        configf = configurations.configf
+
+        if os.path.exists(configf):
+            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Using defaults set there'))
+            config.read(configf)
+            self.notifications = ConfigSectionMap("settings")['notifications']
+            print('self.notifications '+self.notifications)
 
         """
         This is used when searching for cast devices
@@ -187,7 +210,7 @@ class menubar(QtWidgets.QMainWindow):
             self.about_menu()
             self.exit_menu()
         else:
-            if platform == 'Darwin':
+            if platform == 'Darwin' and self.notifications == 'enabled':
                 try:
                     from pync import Notifier
                     Notifier.notify('Google cast devices found!', title='mkchromecast')
@@ -260,7 +283,7 @@ class menubar(QtWidgets.QMainWindow):
             self.search_cast()
             self.ncast.quit_app()
             self.stopped = True
-            if platform == 'Darwin':
+            if platform == 'Darwin' and self.notifications == 'enabled':
                 try:
                     from pync import Notifier
                     Notifier.notify('Cast stopped!', title='mkchromecast')
