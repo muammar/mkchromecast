@@ -9,6 +9,8 @@ Google Cast device has to point out to http://ip:5000/stream
 import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
 import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
@@ -16,13 +18,38 @@ from flask import Flask, Response, request
 import multiprocessing, threading
 import psutil, pickle
 from os import getpid
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
+
+platform = mkchromecast.__init__.platform
+tray = mkchromecast.__init__.tray
+config = ConfigParser.RawConfigParser()
+configurations = config_manager()    # Class from mkchromecast.config
+configf = configurations.configf
+
+if os.path.exists(configf) and tray == True:
+    print (tray)
+    print(colors.warning('Configuration file exist'))
+    print(colors.warning('Using defaults set there'))
+    config.read(configf)
+    backend = ConfigSectionMap("settings")['backend']
+    codec= ConfigSectionMap("settings")['codec']
+    bitrate = ConfigSectionMap("settings")['bitrate']
+    samplerate= ConfigSectionMap("settings")['samplerate']
+    notifications = ConfigSectionMap("settings")['notifications']
+    print(backend,codec,bitrate,samplerate,notifications)
+else:
+    backend = mkchromecast.__init__.backend
+    codec = mkchromecast.__init__.codec
+    bitrate = str(mkchromecast.__init__.bitrate)
+    samplerate = str(mkchromecast.__init__.samplerate)
 
 appendtourl = 'stream'
-
-backend = mkchromecast.__init__.backend
-codec = mkchromecast.__init__.codec
-bitrate = str(mkchromecast.__init__.bitrate)
-samplerate = str(mkchromecast.__init__.samplerate)
 
 if  codec == 'mp3':
     appendmtype = 'mpeg'

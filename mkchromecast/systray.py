@@ -116,7 +116,7 @@ class menubar(QtWidgets.QMainWindow):
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot...")
+        self.rebootAction = self.menu.addAction("Reboot Cast device...")
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):

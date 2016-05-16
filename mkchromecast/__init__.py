@@ -61,6 +61,9 @@ Example:
 
 ''')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the Google Cast you want to connect')
+parser.add_argument('--notifications', action="store_true", help='''
+Use this flag to enable the notifications.
+''')
 parser.add_argument('-r', '--reset', action="store_true", help='''
 When the application fails, and you have no audio in your computer, use this
 option to reset the computer's audio
@@ -103,7 +106,7 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 ''')
 parser.add_argument('-t', '--tray', action="store_true", help=
 '''
-This option let you launch mkchromecast as a systray menu (still experimental)
+This option let you launch mkchromecast as a systray menu (beta)
 ''')
 parser.add_argument('--update', action="store_true", help="""
 Update mkchromecast git repository.
@@ -142,6 +145,13 @@ args = parser.parse_args()
 Guess the platform
 """
 platform = platform.system()
+
+"""
+Assigment of args to variables
+"""
+tray = args.tray
+notifications = args.notifications
+print (tray)
 
 """
 Reset

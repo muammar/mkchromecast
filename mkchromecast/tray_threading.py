@@ -6,15 +6,34 @@ import mkchromecast.__init__
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from mkchromecast.config import *
 import mkchromecast.ffmpeg
 from mkchromecast.node import *
+from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
 from mkchromecast.systray import *
 import os.path, pickle, pychromecast
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
 
-
-backend = mkchromecast.__init__.backend
 platform = mkchromecast.__init__.platform
+config = ConfigParser.RawConfigParser()
+configurations = config_manager()    # Class from mkchromecast.config
+configf = configurations.configf
+
+if os.path.exists(configf) and args.tray == True:
+    print(colors.warning('threading Configuration file exist'))
+    print(colors.warning('threading Using defaults set there'))
+    config.read(configf)
+    backend = ConfigSectionMap("settings")['backend']
+    print(backend)
+else:
+    backend = mkchromecast.__init__.backend
 
 class Worker(QObject):
     finished = pyqtSignal()
