@@ -15,10 +15,10 @@ platform = mkchromecast.__init__.platform
 
 class config_manager(object):
     def __init__(self):
-        user = getpass.getuser()
-        config = ConfigParser.RawConfigParser()
+        self.user = getpass.getuser()
+        self.config = ConfigParser.RawConfigParser()
 
-        config.add_section('settings')
+        self.config.add_section('settings')
 
         # Writing our configuration file
 
@@ -27,36 +27,37 @@ class config_manager(object):
         locations.
         """
         if platform == 'Darwin':
-            directory = '/Users/'+user+'/Library/Application Support/mkchromecast/'
+            self.directory = '/Users/'+self.user+'/Library/Application Support/mkchromecast/'
         else:
-            directory = '/home/'+user+'/.config/mkchromecast/'      #Linux
+            self.directory = '/home/'+self.user+'/.config/mkchromecast/'      #Linux
+        self.configf = self.directory+'mkchromecast.cfg'
 
+    def config_defaults(self):
         """
         Verify that the directory set before exists.
         """
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
 
         """
         Creation of the configuration file.
         """
-        self.configf = directory+'mkchromecast.cfg'
         if not os.path.exists(self.configf):
             if platform == 'Darwin':
-                config.set('settings', 'backend', 'node')
-                config.set('settings', 'codec', 'mp3')
-                config.set('settings', 'bitrate', '192')
-                config.set('settings', 'samplerate', '44100')
-                config.set('settings', 'notifications', 'enabled')
+                self.config.set('settings', 'backend', 'node')
+                self.config.set('settings', 'codec', 'mp3')
+                self.config.set('settings', 'bitrate', '192')
+                self.config.set('settings', 'samplerate', '44100')
+                self.config.set('settings', 'notifications', 'enabled')
             else:
-                config.set('settings', 'backend', 'ffmpeg')
-                config.set('settings', 'codec', 'mp3')
-                config.set('settings', 'bitrate', '192')
-                config.set('settings', 'samplerate', '44100')
-                config.set('settings', 'notifications', 'enabled')
+                self.config.set('settings', 'backend', 'ffmpeg')
+                self.config.set('settings', 'codec', 'mp3')
+                self.config.set('settings', 'bitrate', '192')
+                self.config.set('settings', 'samplerate', '44100')
+                self.config.set('settings', 'notifications', 'enabled')
 
             with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
 
 
 """

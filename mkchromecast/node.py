@@ -1,18 +1,6 @@
 #!/usr/bin/env python
 
 # This file is part of mkchromecast.
-
-import mkchromecast.__init__
-import subprocess
-import multiprocessing
-import time, sys, os, signal
-from mkchromecast.audiodevices import *
-import mkchromecast.colors as colors
-from mkchromecast.cast import *
-import psutil, pickle
-from os import getpid
-import os.path
-
 """
 These functions are used to get up the streaming server using node.
 
@@ -21,11 +9,46 @@ To call them:
     name()
 """
 
-backend = mkchromecast.__init__.backend
-rcodec = mkchromecast.__init__.rcodec
-codec = mkchromecast.__init__.codec
-bitrate = str(mkchromecast.__init__.bitrate)
-samplerate = str(mkchromecast.__init__.samplerate)
+import mkchromecast.__init__
+import subprocess
+import multiprocessing
+import time, sys, os, signal
+from mkchromecast.audiodevices import *
+import mkchromecast.colors as colors
+from mkchromecast.cast import *
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
+import psutil, pickle
+from os import getpid
+import os.path
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
+
+platform = mkchromecast.__init__.platform
+config = ConfigParser.RawConfigParser()
+configurations = config_manager()    # Class from mkchromecast.config
+configf = configurations.configf
+
+if os.path.exists(configf):
+    print('configuration file exist')
+    config.read(configf)
+    backend = ConfigSectionMap("settings")['backend']
+    codec= ConfigSectionMap("settings")['codec']
+    bitrate = ConfigSectionMap("settings")['bitrate']
+    samplerate= ConfigSectionMap("settings")['samplerate']
+    notifications = ConfigSectionMap("settings")['notifications']
+    print(backend,codec,bitrate,samplerate,notifications)
+else:
+    backend = mkchromecast.__init__.backend
+    rcodec = mkchromecast.__init__.rcodec
+    codec = mkchromecast.__init__.codec
+    bitrate = str(mkchromecast.__init__.bitrate)
+    samplerate = str(mkchromecast.__init__.samplerate)
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl

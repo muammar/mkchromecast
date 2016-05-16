@@ -5,7 +5,6 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
 from PyQt5 import QtCore
-
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
 """
@@ -18,12 +17,12 @@ except ImportError:
 
 
 platform = mkchromecast.__init__.platform
-config = ConfigParser.RawConfigParser()
-configurations = config_manager()    # Class from mkchromecast.config
-configf = configurations.configf
-config.read(configf)
 
 def ConfigSectionMap(section):
+    config = ConfigParser.RawConfigParser()
+    configurations = config_manager()    # Class from mkchromecast.config
+    configf = configurations.configf
+    config.read(configf)
     dict1 = {}
     options = config.options(section)
     for option in options:
@@ -36,7 +35,6 @@ def ConfigSectionMap(section):
             dict1[option] = None
     return dict1
 
-
 class preferences(QWidget):
     def __init__(self):
         try:
@@ -44,12 +42,16 @@ class preferences(QWidget):
         except TypeError:
             super(self.__class__, self).__init__() #This is to port to python2
 
+        self.config = ConfigParser.RawConfigParser()
         configurations = config_manager()    # Class from mkchromecast.config
         self.configf = configurations.configf
+        if os.path.exists(self.configf) == False:
+            print ('config does not exist')
+            configurations.config_defaults()
+        self.read_defaults()
         self.initUI()
 
     def initUI(self):
-        self.read_defaults()
 
         """
         Backend
@@ -141,18 +143,18 @@ class preferences(QWidget):
         self.setWindowTitle('mkchromecast Preferences')
 
     def onActivatedbk(self, text):
-        config.read(self.configf)
-        config.set('settings','backend',text)
+        self.config.read(self.configf)
+        self.config.set('settings','backend',text)
         with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
         self.read_defaults()
         self.qccodec.clear()
         if self.backendconf == 'node':
             codecs = ['mp3']
-            config.read(self.configf)
-            config.set('settings','codec','mp3')
+            self.config.read(self.configf)
+            self.config.set('settings','codec','mp3')
             with open(self.configf, 'w') as configfile:
-                    config.write(configfile)
+                    self.config.write(configfile)
         else:
             codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         print (codecs)
@@ -165,31 +167,31 @@ class preferences(QWidget):
         self.qccodec.activated[str].connect(self.onActivatedcc)
 
     def onActivatedcc(self, text):
-        config.read(self.configf)
-        config.set('settings','codec',text)
+        self.config.read(self.configf)
+        self.config.set('settings','codec',text)
         with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
         self.read_defaults()
 
     def onActivatedbt(self, text):
-        config.read(self.configf)
-        config.set('settings','bitrate',text)
+        self.config.read(self.configf)
+        self.config.set('settings','bitrate',text)
         with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
         self.read_defaults()
 
     def onActivatedsr(self, text):
-        config.read(self.configf)
-        config.set('settings','samplerate',text)
+        self.config.read(self.configf)
+        self.config.set('settings','samplerate',text)
         with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
         self.read_defaults()
 
     def onActivatednotify(self, text):
-        config.read(self.configf)
-        config.set('settings','notifications',text)
+        self.config.read(self.configf)
+        self.config.set('settings','notifications',text)
         with open(self.configf, 'w') as configfile:
-                config.write(configfile)
+                self.config.write(configfile)
         self.read_defaults()
         #self.lbl.setText(text)
         #self.lbl.adjustSize()
@@ -198,10 +200,10 @@ class preferences(QWidget):
         self.backendconf = ConfigSectionMap("settings")['backend']
         self.codecconf = ConfigSectionMap("settings")['codec']
         if self.backendconf == 'node' and self.codecconf != 'mp3':
-            config.read(self.configf)
-            config.set('settings','codec','mp3')
+            self.config.read(self.configf)
+            self.config.set('settings','codec','mp3')
             with open(self.configf, 'w') as configfile:
-                    config.write(configfile)
+                    self.config.write(configfile)
             self.codecconf = ConfigSectionMap("settings")['codec']
         self.bitrateconf = ConfigSectionMap("settings")['bitrate']
         self.samplerateconf = ConfigSectionMap("settings")['samplerate']
