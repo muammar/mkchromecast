@@ -94,15 +94,32 @@ class preferences(QWidget):
         """
         Bitrate
         """
-        bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
         self.bitrate = QLabel('Select Bitrate (kbit/s)', self)
-        bitrateindex = bitrates.index(self.bitrateconf)
         self.bitrate.move(20, 88)
         self.qcbitrate = QComboBox(self)
         self.qcbitrate.move(180, 88)
         self.qcbitrate.setMinimumContentsLength(7)
+        if self.codecconf == 'wav':
+            bitrates = ["None"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','None')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+        elif self.codecconf == 'flac':
+            bitrates = ["None"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','None')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+        else:
+            bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','192')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
         for item in bitrates:
             self.qcbitrate.addItem(item)
+        bitrateindex = bitrates.index(self.bitrateconf)
         self.qcbitrate.setCurrentIndex(bitrateindex)
         self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
@@ -172,6 +189,29 @@ class preferences(QWidget):
         with open(self.configf, 'w') as configfile:
                 self.config.write(configfile)
         self.read_defaults()
+        self.qcbitrate.clear()
+        if self.codecconf == 'wav':
+            bitrates = ["None"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','None')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+        elif self.codecconf == 'flac':
+            bitrates = ["None"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','None')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+        else:
+            bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
+            self.config.read(self.configf)
+            self.config.set('settings','bitrate','None')
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+        bitrateindex = bitrates.index(self.bitrateconf)
+        self.qcbitrate.move(180, 88)
+        self.qcbitrate.setCurrentIndex(bitrateindex)
+        self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
     def onActivatedbt(self, text):
         self.config.read(self.configf)
