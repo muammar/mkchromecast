@@ -231,6 +231,16 @@ class menubar(QtWidgets.QMainWindow):
                         Notifier.notify('Google cast devices found!', title='mkchromecast')
                     except ImportError:
                         print('If you want to receive notifications in Mac OS X, install the pync')
+                elif platform == 'Linux' and self.notifications == 'enabled':
+                    try:
+                        import gi
+                        gi.require_version('Notify', '0.7')
+                        from gi.repository import Notify
+                        Notify.init("mkchromecast")
+                        found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                        found.show()
+                    except ImportError:
+                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
             except AttributeError:
                 pass
             self.menu.clear()
@@ -308,6 +318,16 @@ class menubar(QtWidgets.QMainWindow):
                         Notifier.notify('Cast stopped!', title='mkchromecast')
                     except ImportError:
                         print('If you want to receive notifications in Mac OS X, install the pync')
+                elif platform == 'Linux' and self.notifications == 'enabled':
+                    try:
+                        import gi
+                        gi.require_version('Notify', '0.7')
+                        from gi.repository import Notify
+                        Notify.init("mkchromecast")
+                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                        stop.show()
+                    except ImportError:
+                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
             except AttributeError:
                 pass
 
