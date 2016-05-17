@@ -139,9 +139,9 @@ class casting(object):
 
     def play_cast(self):
         localip = self.ip
-
-        if platform == 'Darwin':
-            self.host = socket.gethostbyname(self.castto+'.local')
+        #if platform == 'Darwin':
+        #   self.host = socket.gethostbyname(self.castto+'.local')
+        self.host = self.cast.host
 
         print (colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
         print (colors.options('Your local IP is:')+' '+localip)
