@@ -7,6 +7,14 @@ from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
 from PyQt5 import QtCore
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
+import distutils.spawn
+
+"""
+Check if external programs are available to build the preferences
+"""
+def is_installed(name):
+      return distutils.spawn.find_executable(name) is not None
+
 """
 Configparser is imported differently in Python3
 """
@@ -57,10 +65,16 @@ class preferences(QWidget):
         """
         Backend
         """
+        backends_supported = ["node", "ffmpeg",  "avconv"]
+        backends = []
         if platform == 'Darwin':
-            backends = ["node", "ffmpeg"]
+            for item in backends_supported:
+                if is_installed(item) == True and item != 'avconv':
+                    backends.append(item)
         else:
-            backends.append("avconv")
+            for item in backends_supported:
+                if is_installed(item) == True and item != 'node':
+                    backends.append(item)
         backendindex = backends.index(self.backendconf)
         self.backend = QLabel('Select Backend', self)
         self.backend.move(20, 24)
