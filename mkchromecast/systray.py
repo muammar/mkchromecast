@@ -43,20 +43,7 @@ class menubar(QtWidgets.QMainWindow):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
-
-        """
-        This is to load variables from configuration file
-        """
-        config = ConfigParser.RawConfigParser()
-        configurations = config_manager()    # Class from mkchromecast.config
-        configf = configurations.configf
-
-        if os.path.exists(configf):
-            print(colors.warning('Configuration file exist'))
-            print(colors.warning('Using defaults set there'))
-            config.read(configf)
-            self.notifications = ConfigSectionMap("settings")['notifications']
-            print('self.notifications '+self.notifications)
+        self.read_config()
 
         """
         This is used when searching for cast devices
@@ -114,6 +101,21 @@ class menubar(QtWidgets.QMainWindow):
         self.tray.setContextMenu(self.menu)
         self.tray.show()
         self.app.exec_()
+
+    def read_config(self):
+        """
+        This is to load variables from configuration file
+        """
+        config = ConfigParser.RawConfigParser()
+        configurations = config_manager()    # Class from mkchromecast.config
+        configf = configurations.configf
+
+        if os.path.exists(configf):
+            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Using defaults set there'))
+            config.read(configf)
+            self.notifications = ConfigSectionMap("settings")['notifications']
+            print('self.notifications '+self.notifications)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search for Google Cast devices")
@@ -220,12 +222,16 @@ class menubar(QtWidgets.QMainWindow):
             self.about_menu()
             self.exit_menu()
         else:
-            if platform == 'Darwin' and self.notifications == 'enabled':
-                try:
-                    from pync import Notifier
-                    Notifier.notify('Google cast devices found!', title='mkchromecast')
-                except ImportError:
-                    print('If you want to receive notifications in Mac OS X, install the pync')
+            self.read_config()
+            try:    #This is needed to aboud AttributeError when no configuration file exists
+                if platform == 'Darwin' and self.notifications == 'enabled':
+                    try:
+                        from pync import Notifier
+                        Notifier.notify('Google cast devices found!', title='mkchromecast')
+                    except ImportError:
+                        print('If you want to receive notifications in Mac OS X, install the pync')
+            except AttributeError:
+                pass
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -293,12 +299,16 @@ class menubar(QtWidgets.QMainWindow):
             self.search_cast()
             self.ncast.quit_app()
             self.stopped = True
-            if platform == 'Darwin' and self.notifications == 'enabled':
-                try:
-                    from pync import Notifier
-                    Notifier.notify('Cast stopped!', title='mkchromecast')
-                except ImportError:
-                    print('If you want to receive notifications in Mac OS X, install the pync')
+            self.read_config()
+            try:
+                if platform == 'Darwin' and self.notifications == 'enabled':
+                    try:
+                        from pync import Notifier
+                        Notifier.notify('Cast stopped!', title='mkchromecast')
+                    except ImportError:
+                        print('If you want to receive notifications in Mac OS X, install the pync')
+            except AttributeError:
+                pass
 
     def volume_cast(self):
         #self.l1 = QtWidgets.QLabel("Hello")
