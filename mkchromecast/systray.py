@@ -193,7 +193,6 @@ class menubar(QtWidgets.QMainWindow):
 
         self.thread.start()
 
-
     def cast_list(self):
         if os.path.exists('images/google.icns') == True:
             if platform == 'Darwin':
@@ -350,17 +349,25 @@ class menubar(QtWidgets.QMainWindow):
             remove_sink()
 
     def reboot(self):
-        if platform == 'Darwin':
-            try:
-                self.host = socket.gethostbyname(self.castto+'.local')
-                print ('Cast device IP: '+str(self.host))
-                reboot(self.host)
-                self.reset_audio()
-                self.stop_cast()
-            except AttributeError:
-                pass
-        else:
-            pass
+        #if platform == 'Darwin':
+        #    try:
+        #        self.host = socket.gethostbyname(self.castto+'.local')
+        #        print ('Cast device IP: '+str(self.host))
+        #        reboot(self.host)
+        #        self.reset_audio()
+        #        self.stop_cast()
+        #    except AttributeError:
+        #        pass
+        #else:
+        #    pass
+        try:
+            self.host = self.cast.host
+            print ('Cast device IP: '+str(self.host))
+            reboot(self.host)
+            self.reset_audio()
+            self.stop_cast()
+        except AttributeError:
+            pass    # I should add a notification here
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences()
