@@ -51,7 +51,6 @@ def streaming():
         bitrate = ConfigSectionMap("settings")['bitrate']
         samplerate= ConfigSectionMap("settings")['samplerate']
         notifications = ConfigSectionMap("settings")['notifications']
-        print(backend,rcodec,bitrate,samplerate,notifications)
     else:
         backend = mkchromecast.__init__.backend
         rcodec = mkchromecast.__init__.rcodec
@@ -59,6 +58,9 @@ def streaming():
         bitrate = str(mkchromecast.__init__.bitrate)
         samplerate = str(mkchromecast.__init__.samplerate)
         notifications = mkchromecast.__init__.notifications
+
+    if debug == True:
+        print(backend,rcodec,bitrate,samplerate,notifications)
 
     try:
         youtubeurl = mkchromecast.__init__.youtubeurl
@@ -115,7 +117,7 @@ def streaming():
     else:
         webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
-    if args.debug == True:
+    if debug == True:
         print (webcast)
 
     f = open('/tmp/mkchromecast.pid', 'rb')

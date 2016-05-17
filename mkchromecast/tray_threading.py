@@ -57,11 +57,11 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         if os.path.exists(configf):
-            print(colors.warning('threading Configuration file exist'))
-            print(colors.warning('threading Using defaults set there'))
+            print(colors.warning(':::Threading::: Configuration file exist'))
+            print(colors.warning(':::Threading::: Using defaults set there'))
             config.read(configf)
             backend = ConfigSectionMap("settings")['backend']
-            print(backend)
+            print(':::Threading backend::: '+backend)
         else:
             backend = mkchromecast.__init__.backend
         global cast

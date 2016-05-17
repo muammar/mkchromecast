@@ -17,6 +17,7 @@ except ImportError:
 
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 
 def ConfigSectionMap(section):
     config = ConfigParser.RawConfigParser()
@@ -82,7 +83,8 @@ class preferences(QWidget):
             codecs = ['mp3']
         else:
             codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
-        print (codecs)
+        if debug == True:
+            print (codecs)
         codecindex = codecs.index(self.codecconf)
         self.qccodec.move(180, 54)
         self.qccodec.setMinimumContentsLength(7)
@@ -165,7 +167,8 @@ class preferences(QWidget):
                     self.config.write(configfile)
         else:
             codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
-        print (codecs)
+        if debug == True:
+            print (codecs)
         codecindex = codecs.index(self.codecconf)
         self.qccodec.move(180, 54)
         self.qccodec.setMinimumContentsLength(7)
@@ -231,8 +234,8 @@ class preferences(QWidget):
         self.bitrateconf = ConfigSectionMap("settings")['bitrate']
         self.samplerateconf = ConfigSectionMap("settings")['samplerate']
         self.notificationsconf = ConfigSectionMap("settings")['notifications']
-
-        print (self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
+        if debug == True:
+            print (self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

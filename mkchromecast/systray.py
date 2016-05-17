@@ -34,6 +34,7 @@ except ImportError:
 
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 
 global entries
 
@@ -115,7 +116,8 @@ class menubar(QtWidgets.QMainWindow):
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap("settings")['notifications']
-            print('self.notifications '+self.notifications)
+            if debug == True:
+                print('self.notifications '+self.notifications)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search for Google Cast devices")
@@ -161,7 +163,7 @@ class menubar(QtWidgets.QMainWindow):
     """
 
     def onIntReady(self, availablecc):
-        print ('availablecc')
+        print ('availablecc received')
         self.availablecc = availablecc
         self.cast_list()
 
@@ -252,7 +254,7 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
 
     def pcastready(self, done):
-        print ('done', done)
+        print ('pcastready ?', done)
         if os.path.exists('/tmp/mkchromecast.tmp') == True:
             self.cast = mkchromecast.tray_threading.cast
             self.ncast = self.cast
@@ -327,7 +329,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.show()
 
     def valuechange(self, value):
-        if args.debug == True:
+        if debug == True:
             print ('Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
@@ -335,7 +337,7 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 volume = value/10
                 self.ncast.set_volume(volume)
-            if args.debug == True:
+            if debug == True:
                 print ('Volume set to: '+str(volume))
         except AttributeError:
             pass
@@ -351,7 +353,7 @@ class menubar(QtWidgets.QMainWindow):
         if platform == 'Darwin':
             try:
                 self.host = socket.gethostbyname(self.castto+'.local')
-                print (self.host)
+                print ('Cast device IP: '+str(self.host))
                 reboot(self.host)
                 self.reset_audio()
                 self.stop_cast()

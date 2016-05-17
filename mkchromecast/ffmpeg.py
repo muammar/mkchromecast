@@ -39,7 +39,7 @@ if os.path.exists(configf) and tray == True:
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
     if debug == True:
-        print (tray)
+        print ('tray ='+tray)
         print(colors.warning('Configuration file exist'))
         print(colors.warning('Using defaults set there'))
         print(backend,codec,bitrate,samplerate)
