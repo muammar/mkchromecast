@@ -171,7 +171,7 @@ class casting(object):
                 configurations = config_manager()    # Class from mkchromecast.config
                 configf = configurations.configf
 
-                if os.path.exists(configf) and tray == True:
+                if os.path.exists(configf) and self.tray == True:
                     print (tray)
                     print(colors.warning('Configuration file exist'))
                     print(colors.warning('Using defaults set there'))
