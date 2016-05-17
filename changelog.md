@@ -6,6 +6,8 @@
     - It is now possible to control the Google cast device volume from the
       systray.
     - You can reboot the Google cast devices from the systray.
+    - There is a Preferences window to control `backends`, `bitrates`, `sample
+      rates`, `audio coding formats` and `notifications`.
 
 * mkchromecast (0.2.3.1) **released**: 2016/05/08
 
