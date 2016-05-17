@@ -9,6 +9,8 @@ Google Cast device has to point out to http://ip:5000/stream
 import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
 import os, sys, time
 from functools import partial
 from subprocess import Popen, PIPE
@@ -16,13 +18,38 @@ from flask import Flask, Response, request
 import multiprocessing, threading
 import psutil, pickle
 from os import getpid
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
+
+tray = mkchromecast.__init__.tray
+debug = mkchromecast.__init__.debug
+config = ConfigParser.RawConfigParser()
+configurations = config_manager()    # Class from mkchromecast.config
+configf = configurations.configf
+
+if os.path.exists(configf) and tray == True:
+    config.read(configf)
+    backend = ConfigSectionMap("settings")['backend']
+    codec= ConfigSectionMap("settings")['codec']
+    bitrate = ConfigSectionMap("settings")['bitrate']
+    samplerate= ConfigSectionMap("settings")['samplerate']
+    if debug == True:
+        print ('tray ='+tray)
+        print(colors.warning('Configuration file exist'))
+        print(colors.warning('Using defaults set there'))
+        print(backend,codec,bitrate,samplerate)
+else:
+    backend = mkchromecast.__init__.backend
+    codec = mkchromecast.__init__.codec
+    bitrate = str(mkchromecast.__init__.bitrate)
+    samplerate = str(mkchromecast.__init__.samplerate)
 
 appendtourl = 'stream'
-
-backend = mkchromecast.__init__.backend
-codec = mkchromecast.__init__.codec
-bitrate = str(mkchromecast.__init__.bitrate)
-samplerate = str(mkchromecast.__init__.samplerate)
 
 if  codec == 'mp3':
     appendmtype = 'mpeg'
@@ -97,7 +124,6 @@ if backend != 'node':
 We verify platform and other options
 """
 platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
 
 def debug_command():                # This function add some more flags to the ffmpeg command
     command.insert(1, '-loglevel')  # when user passes --debug option.
@@ -172,6 +198,9 @@ if  codec == 'flac':
 
 app = Flask(__name__)
 
+if debug == True:
+    print ('command '+str(command))
+
 @app.route('/')
 def index():
     return """<!doctype html>
@@ -232,7 +261,7 @@ class monitor(object):
         self.monitor_d.start()
 
 def monitor_daemon():
-    f = open('/tmp/mkcrhomecast.pid', 'rb')
+    f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
     print (colors.options('PID of main process:')+' '+str(pidnumber))
 

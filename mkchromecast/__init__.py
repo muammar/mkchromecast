@@ -61,7 +61,16 @@ Example:
 
 ''')
 parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the Google Cast you want to connect')
-parser.add_argument('-r', '--reset', action="store_true", help='When the application fails, and you have no audio in your computer, use this option to reset')
+parser.add_argument('--notifications', action="store_true", help='''
+Use this flag to enable the notifications.
+''')
+parser.add_argument('-r', '--reset', action="store_true", help='''
+When the application fails, and you have no audio in your computer, use this
+option to reset the computer's audio
+''')
+parser.add_argument('--reboot', action="store_true", help='''
+Reboot the Google Cast device
+''')
 parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one Google Cast device use this option')
 parser.add_argument('--sample-rate', type=int, default='44100', help=
 '''
@@ -97,7 +106,7 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 ''')
 parser.add_argument('-t', '--tray', action="store_true", help=
 '''
-This option let you launch mkchromecast as a systray menu (still experimental)
+This option let you launch mkchromecast as a systray menu (beta)
 ''')
 parser.add_argument('--update', action="store_true", help="""
 Update mkchromecast git repository.
@@ -138,6 +147,16 @@ Guess the platform
 platform = platform.system()
 
 """
+Assigment of args to variables
+"""
+tray = args.tray
+debug = args.debug
+if args.notifications == True:
+    notifications = 'enabled'
+else:
+    notifications = 'disabled'
+
+"""
 Reset
 """
 if args.reset == True:
@@ -149,6 +168,20 @@ if args.reset == True:
         remove_sink()
     terminate()
 
+if args.config == True or args.discover == True or args.name == True:
+    print (colors.error('This option is not implemented yet.'))
+    sys.exit(0)
+
+"""
+Reboot
+"""
+if args.reboot == True:
+    print (colors.error('This option is not implemented yet.'))
+    sys.exit(0)
+
+"""
+Not yet implemented
+"""
 if args.config == True or args.discover == True or args.name == True:
     print (colors.error('This option is not implemented yet.'))
     sys.exit(0)
@@ -277,15 +310,15 @@ if args.youtube != None:
 This is to write a PID file
 """
 def writePidFile():
-    if os.path.exists('/tmp/mkcrhomecast.pid') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.pid')
+    if os.path.exists('/tmp/mkchromecast.pid') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkchromecast.pid')
     pid = str(os.getpid())
-    f = open('/tmp/mkcrhomecast.pid', 'wb')
+    f = open('/tmp/mkchromecast.pid', 'wb')
     pickle.dump(pid, f)
     f.close()
     return
 
 def checkmktmp():
-    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:     #This is to verify that pickle tmp file exists
-       os.remove('/tmp/mkcrhomecast.tmp')
+    if os.path.exists('/tmp/mkchromecast.tmp') == True:     #This is to verify that pickle tmp file exists
+       os.remove('/tmp/mkchromecast.tmp')
     return
