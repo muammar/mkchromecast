@@ -150,8 +150,9 @@ def streaming():
         print (colors.warning('Reconnecting node streaming...'))
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
             try:
-                from pync import Notifier
-                Notifier.notify('Reconnecting node streaming...', title='mkchromecast')
+                #from pync import Notifier
+                #Notifier.notify('Reconnecting node streaming...', title='mkchromecast')
+                print('break?')
             except ImportError:
                 print('If you want to receive notifications in Mac OS X, install the pync')
         relaunch(stream,recasting,kill)

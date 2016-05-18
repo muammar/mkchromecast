@@ -18,7 +18,7 @@ from pychromecast.dial import reboot
 import signal
 import os.path
 from os import getpid
-import psutil, pickle
+import psutil, pickle, subprocess
 import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
@@ -225,8 +225,13 @@ class menubar(QtWidgets.QMainWindow):
             try:    #This is needed to aboud AttributeError when no configuration file exists
                 if platform == 'Darwin' and self.notifications == 'enabled':
                     try:
-                        from pync import Notifier
-                        Notifier.notify('Google cast devices found!', title='mkchromecast')
+                        #from pync import Notifier
+                        #Notifier.notify('Google cast devices found!', title='mkchromecast')
+                        found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'address-book-sync', '-title', 'mkchromecast', '-subtitle', 'Cast devices found', '-message', 'Imported 42 contacts.']
+                        subprocess.Popen(found)
+                        if debug == True:
+                            print (found)
+                        print('break?')
                     except ImportError:
                         print('If you want to receive notifications in Mac OS X, install the pync')
                 elif platform == 'Linux' and self.notifications == 'enabled':
@@ -312,8 +317,9 @@ class menubar(QtWidgets.QMainWindow):
             try:
                 if platform == 'Darwin' and self.notifications == 'enabled':
                     try:
-                        from pync import Notifier
-                        Notifier.notify('Cast stopped!', title='mkchromecast')
+                        #from pync import Notifier
+                        #Notifier.notify('Cast stopped!', title='mkchromecast')
+                        print('break?')
                     except ImportError:
                         print('If you want to receive notifications in Mac OS X, install the pync')
                 elif platform == 'Linux' and self.notifications == 'enabled':
