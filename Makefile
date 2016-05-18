@@ -1,5 +1,6 @@
 # This file is part of mkchromecast. It is used to build the Mac OS X app.
 # It does the following:
+#
 # 	1) it changes the string tray from args.tray to True.
 # 	2) Build the application using py2app.
 # 	3) Copy Qt plugins.
@@ -12,8 +13,17 @@
 # be deleted, and all changes to mkchromecast/__init__.py will be discarded if
 # they are not commited.
 #
+# How to use it?
+#
+# 	Test the application
+# 		make test
+# 	Deploy
+# 	make clean
+# 	make deploy
+#
 # Muammar El Khatib
 #
+
 test:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app -A
