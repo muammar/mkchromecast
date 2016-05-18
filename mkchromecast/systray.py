@@ -176,8 +176,6 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
-        args.select_cc = True
-
         """
         This catches the error cause by an empty tmp file
         """

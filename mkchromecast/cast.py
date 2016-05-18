@@ -66,7 +66,6 @@ class casting(object):
             print (' ')
 
         elif len(self.cclist) != 0 and self.select_cc == True:
-            print ('segundo')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print (' ')
@@ -110,7 +109,7 @@ class casting(object):
             exit()
 
         elif len(self.cclist) == 0 and self.tray == True:
-            print (colors.error('No devices found!'))
+            print (colors.error(':::Tray::: No devices found!'))
             self.availablecc = []
 
     def sel_cc(self):
