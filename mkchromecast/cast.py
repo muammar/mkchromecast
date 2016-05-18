@@ -38,8 +38,8 @@ class casting(object):
             self.ip = socket.gethostbyname(socket.gethostname())
 
     def initialize_cast(self):
-        from pychromecast import socket_client
         import mkchromecast.__init__        # This is to verify against some needed variables
+        from pychromecast import socket_client
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
 
         try:
