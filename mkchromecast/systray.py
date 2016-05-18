@@ -116,6 +116,8 @@ class menubar(QtWidgets.QMainWindow):
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap("settings")['notifications']
+        else:
+            self.notifications = 'disabled'
             if debug == True:
                 print('self.notifications '+self.notifications)
 
