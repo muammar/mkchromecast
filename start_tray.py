@@ -7,8 +7,8 @@ from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.terminate import *
 import os.path, time
-
 import mkchromecast.systray
+
 checkmktmp()
 writePidFile()
 mkchromecast.systray.main()

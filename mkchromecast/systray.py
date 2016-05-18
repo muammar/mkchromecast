@@ -3,31 +3,48 @@
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
 
+from __future__ import division
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from mkchromecast.config import *
+from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.node import *
+import mkchromecast.preferences
+from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 import pychromecast
+from pychromecast.dial import reboot
 import signal
 import os.path
 from os import getpid
 import psutil, pickle
 import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
+from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
+from PyQt5.QtGui import QPixmap
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
 
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 
 global entries
 
-class menubar(object):
+class menubar(QtWidgets.QMainWindow):
     def __init__(self):
         self.cc = casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
+        self.read_config()
 
         """
         This is used when searching for cast devices
@@ -53,7 +70,7 @@ class menubar(object):
 
         self.app = QtWidgets.QApplication(sys.argv)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
-        self.w = QtWidgets.QWidget()
+        self.w = QWidget()
 
         if os.path.exists('images/google.icns') == True:
             self.icon = QtGui.QIcon()
@@ -64,22 +81,43 @@ class menubar(object):
         else:
             self.icon = QtGui.QIcon()
             self.icon.addFile('google.icns')#, QtCore.QSize(48,48))
+        super(QtWidgets.QMainWindow,self).__init__()
+        self.createUI()
 
+    def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
-
         self.menu = QtWidgets.QMenu()
         self.search_menu()
         self.separator_menu()
         self.populating_menu()
         self.separator_menu()
         self.stop_menu()
+        self.volume_menu()
         self.resetaudio_menu()
+        self.reboot_menu()
+        self.separator_menu()
+        self.preferences_menu()
         self.about_menu()
         self.exit_menu()
-
         self.tray.setContextMenu(self.menu)
         self.tray.show()
         self.app.exec_()
+
+    def read_config(self):
+        """
+        This is to load variables from configuration file
+        """
+        config = ConfigParser.RawConfigParser()
+        configurations = config_manager()    # Class from mkchromecast.config
+        configf = configurations.configf
+
+        if os.path.exists(configf):
+            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Using defaults set there'))
+            config.read(configf)
+            self.notifications = ConfigSectionMap("settings")['notifications']
+            if debug == True:
+                print('self.notifications '+self.notifications)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search for Google Cast devices")
@@ -89,6 +127,10 @@ class menubar(object):
         self.StopCastAction = self.menu.addAction("Stop casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
 
+    def volume_menu(self):
+        self.VolumeCastAction = self.menu.addAction("Volume")
+        self.VolumeCastAction.triggered.connect(self.volume_cast)
+
     def separator_menu(self):
         self.menu.addSeparator()
 
@@ -97,8 +139,16 @@ class menubar(object):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset audio")
+        self.ResetAudioAction = self.menu.addAction("Reset audio...")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
+
+    def reboot_menu(self):
+        self.rebootAction = self.menu.addAction("Reboot Cast device...")
+        self.rebootAction.triggered.connect(self.reboot)
+
+    def preferences_menu(self):
+        self.preferencesAction = self.menu.addAction("Preferences")
+        self.preferencesAction.triggered.connect(self.preferences_show)
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About mkchromecast")
@@ -113,7 +163,7 @@ class menubar(object):
     """
 
     def onIntReady(self, availablecc):
-        print ('availablecc')
+        print ('availablecc received')
         self.availablecc = availablecc
         self.cast_list()
 
@@ -126,12 +176,20 @@ class menubar(object):
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
-        args.select_cc = True
-        if self.stopped == True and os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            os.remove('/tmp/mkcrhomecast.tmp')
+        """
+        This catches the error cause by an empty tmp file
+        """
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
+            try:
+                self.tf = open('/tmp/mkchromecast.tmp', 'rb')
+                self.index=pickle.load(self.tf)
+            except EOFError:
+                os.remove('/tmp/mkchromecast.tmp')
+
+        if self.stopped == True and os.path.exists('/tmp/mkchromecast.tmp') == True:
+            os.remove('/tmp/mkchromecast.tmp')
 
         self.thread.start()
-
 
     def cast_list(self):
         if os.path.exists('images/google.icns') == True:
@@ -155,10 +213,34 @@ class menubar(object):
                 self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.separator_menu()
             self.stop_menu()
+            self.volume_menu()
             self.resetaudio_menu()
+            self.reboot_menu()
+            self.separator_menu()
+            self.preferences_menu()
             self.about_menu()
             self.exit_menu()
         else:
+            self.read_config()
+            try:    #This is needed to aboud AttributeError when no configuration file exists
+                if platform == 'Darwin' and self.notifications == 'enabled':
+                    try:
+                        from pync import Notifier
+                        Notifier.notify('Google cast devices found!', title='mkchromecast')
+                    except ImportError:
+                        print('If you want to receive notifications in Mac OS X, install the pync')
+                elif platform == 'Linux' and self.notifications == 'enabled':
+                    try:
+                        import gi
+                        gi.require_version('Notify', '0.7')
+                        from gi.repository import Notify
+                        Notify.init("mkchromecast")
+                        found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                        found.show()
+                    except ImportError:
+                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
+            except AttributeError:
+                pass
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -170,13 +252,17 @@ class menubar(object):
                 self.menuentry.setCheckable(True)
             self.separator_menu()
             self.stop_menu()
+            self.volume_menu()
             self.resetaudio_menu()
+            self.reboot_menu()
+            self.separator_menu()
+            self.preferences_menu()
             self.about_menu()
             self.exit_menu()
 
     def pcastready(self, done):
-        print ('done', done)
-        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
+        print ('pcastready ?', done)
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
             self.cast = mkchromecast.tray_threading.cast
             self.ncast = self.cast
         if os.path.exists('images/google.icns') == True:
@@ -197,12 +283,11 @@ class menubar(object):
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
-        #print ('yes')
         print (self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
-        if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-            self.tf = open('/tmp/mkcrhomecast.tmp', 'wb')
+        if os.path.exists('/tmp/mkchromecast.tmp') == True:
+            self.tf = open('/tmp/mkchromecast.tmp', 'wb')
         pickle.dump(self.index, self.tf)
         self.tf.close()
         self.threadplay.start()
@@ -223,21 +308,96 @@ class menubar(object):
             self.search_cast()
             self.ncast.quit_app()
             self.stopped = True
+            self.read_config()
+            try:
+                if platform == 'Darwin' and self.notifications == 'enabled':
+                    try:
+                        from pync import Notifier
+                        Notifier.notify('Cast stopped!', title='mkchromecast')
+                    except ImportError:
+                        print('If you want to receive notifications in Mac OS X, install the pync')
+                elif platform == 'Linux' and self.notifications == 'enabled':
+                    try:
+                        import gi
+                        gi.require_version('Notify', '0.7')
+                        from gi.repository import Notify
+                        Notify.init("mkchromecast")
+                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                        stop.show()
+                    except ImportError:
+                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
+            except AttributeError:
+                pass
+
+    def volume_cast(self):
+        #self.l1 = QtWidgets.QLabel("Hello")
+        #self.l1.setAlignment(Qt.AlignCenter)
+        self.sl = QtWidgets.QSlider(Qt.Horizontal)
+        self.sl.setMinimum(0)
+        self.sl.setMaximum(10)
+        try:
+            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+        except AttributeError:
+            self.sl.setValue(2)
+        #self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        #self.sl.setTickInterval(1)
+        self.sl.valueChanged.connect(self.valuechange)
+        self.sl.setWindowTitle("Google Cast volume")
+        self.sl.show()
+
+    def valuechange(self, value):
+        if debug == True:
+            print ('Value changed: '+str(value))
+        try:
+            if round(self.ncast.status.volume_level, 1) == 1:
+                pass
+            else:
+                volume = value/10
+                self.ncast.set_volume(volume)
+            if debug == True:
+                print ('Volume set to: '+str(volume))
+        except AttributeError:
+            pass
 
     def reset_audio(self):
-        inputint()
-        outputint()
+        if platform == 'Darwin':
+            inputint()
+            outputint()
+        else:
+            remove_sink()
+
+    def reboot(self):
+        if platform == 'Darwin':
+            try:
+                self.host = socket.gethostbyname(self.castto+'.local')
+                print ('Cast device IP: '+str(self.host))
+                reboot(self.host)
+                self.reset_audio()
+                self.stop_cast()
+            except AttributeError:
+                pass    # I should add a notification here
+        else:
+            try:
+                self.host = self.cast.host
+                print ('Cast device IP: '+str(self.host))
+                reboot(self.host)
+                self.reset_audio()
+                self.stop_cast()
+            except AttributeError:
+                pass    # I should add a notification here
+
+    def preferences_show(self):
+        self.p = mkchromecast.preferences.preferences()
+        self.p.show()
 
     def about_show(self):
-        #self.threadabout.start()
-        #QtWidgets.QMessageBox.about(self.w, "About", "An example messagebox @ pythonspot.com ")
-        msgBox = QtWidgets.QMessageBox()
-        msgBox.setIcon(QtWidgets.QMessageBox.Information)
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
-        msgBox.setInformativeText("""Created by: Muammar El Khatib
-                \nUX design: Claudia Vargas
+        msgBox.setInformativeText("""Created by: Muammar El Khatib.
+                \nUX design: Claudia Vargas.
                 """)
-        msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
     def exit_all(self):

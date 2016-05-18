@@ -1,4 +1,20 @@
-* mkchromecast (0.2.3) **unreleased**:
+* mkchromecast (0.2.4) **unreleased**
+
+    - This release fixes the system tray menu for Linux.
+    - Now avconv is supported.
+    - Pass the `--update` option to update the repository.
+    - It is now possible to control the Google cast device volume from the
+      systray.
+    - You can reboot the Google cast devices from the systray.
+    - There is a Preferences window to control `backends`, `bitrates`, `sample
+      rates`, `audio coding formats` and `notifications`.
+
+* mkchromecast (0.2.3.1) **released**: 2016/05/08
+
+    - This release fixes the Signal 9 passed by error in the Stand-alone
+      application.
+
+* mkchromecast (0.2.3) **released**: 2016/05/08
 
     - The code has been partially refactored to ease maintenance.
     - Printed messages have been improved.

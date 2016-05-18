@@ -15,8 +15,8 @@ To call them:
 """
 
 def terminate():
-    if os.path.exists('/tmp/mkcrhomecast.tmp') == True:
-        os.remove('/tmp/mkcrhomecast.tmp')
+    if os.path.exists('/tmp/mkchromecast.tmp') == True:
+        os.remove('/tmp/mkchromecast.tmp')
 
     parent_pid = getpid()
     parent = psutil.Process(parent_pid)
