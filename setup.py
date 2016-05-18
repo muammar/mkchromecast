@@ -20,8 +20,9 @@ DATA_FILES = ['images/google.icns', 'images/google_working.icns', 'images/google
 
 OPTIONS = {
     'argv_emulation': True,
+        'prefer_ppc': True,
     'iconfile': 'images/google.icns',
-    'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets'],
+    'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'Flask', 'pync', 'configparser'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
@@ -39,6 +40,7 @@ setup(
     app=APP,
     data_files=DATA_FILES,
     package='mkchromecast',
+    platforms=['i386', 'x86_64'],
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
 )

@@ -6,15 +6,26 @@ import mkchromecast.__init__
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
+from mkchromecast.config import *
 import mkchromecast.ffmpeg
 from mkchromecast.node import *
+from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
 from mkchromecast.systray import *
 import os.path, pickle, pychromecast
+"""
+Configparser is imported differently in Python3
+"""
+try:
+    import ConfigParser
+except ImportError:
+    import configparser as ConfigParser # This is for Python3
 
-
-backend = mkchromecast.__init__.backend
 platform = mkchromecast.__init__.platform
+config = ConfigParser.RawConfigParser()
+configurations = config_manager()    # Class from mkchromecast.config
+configf = configurations.configf
+
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -27,7 +38,7 @@ class Worker(QObject):
     def _search_cast_(self):
         self.cc = casting()
         self.cc.initialize_cast()
-        if len(self.cc.availablecc) == 0 and args.tray == True:
+        if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
             self.finished.emit()
@@ -45,10 +56,23 @@ class Player(QObject):
 
     @pyqtSlot()
     def _play_cast_(self):
+        if os.path.exists(configf):
+            print(colors.warning(':::Threading::: Configuration file exist'))
+            print(colors.warning(':::Threading::: Using defaults set there'))
+            config.read(configf)
+            backend = ConfigSectionMap("settings")['backend']
+            print(':::Threading backend::: '+backend)
+        else:
+            backend = mkchromecast.__init__.backend
         global cast
         if backend == 'node':
             stream()
         else:
+            try:
+                reload(mkchromecast.ffmpeg)
+            except NameError:
+                from imp import reload
+                reload(mkchromecast.ffmpeg)
             mkchromecast.ffmpeg.main()
         if platform == 'Darwin':
             inputdev()
