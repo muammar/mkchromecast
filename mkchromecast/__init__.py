@@ -150,7 +150,10 @@ platform = platform.system()
 Assigment of args to variables
 """
 tray = args.tray
-select_cc = args.select_cc
+if tray == True:
+    select_cc = True
+else:
+    select_cc = args.select_cc
 debug = args.debug
 if args.notifications == True:
     notifications = 'enabled'
