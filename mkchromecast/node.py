@@ -147,14 +147,17 @@ def streaming():
             print ("OSError")
             sys.exit(0)
     else:
+        if platform == 'Darwin' and self.notifications == 'enabled':
+            if os.path.exists('images/google.icns') == True:
+                noticon = 'images/google.icns'
+            else:
+                noticon = 'google.icns'
         print (colors.warning('Reconnecting node streaming...'))
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
-            try:
-                #from pync import Notifier
-                #Notifier.notify('Reconnecting node streaming...', title='mkchromecast')
-                print('break?')
-            except ImportError:
-                print('If you want to receive notifications in Mac OS X, install the pync')
+            reconnecting = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
+            subprocess.Popen(reconnecting)
+            if debug == True:
+                print (reconnecting)
         relaunch(stream,recasting,kill)
     return
 

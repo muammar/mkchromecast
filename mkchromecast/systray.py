@@ -222,30 +222,25 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
         else:
             self.read_config()
-            try:    #This is needed to aboud AttributeError when no configuration file exists
-                if platform == 'Darwin' and self.notifications == 'enabled':
-                    try:
-                        #from pync import Notifier
-                        #Notifier.notify('Google cast devices found!', title='mkchromecast')
-                        found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'address-book-sync', '-title', 'mkchromecast', '-subtitle', 'Cast devices found', '-message', 'Imported 42 contacts.']
-                        subprocess.Popen(found)
-                        if debug == True:
-                            print (found)
-                        print('break?')
-                    except ImportError:
-                        print('If you want to receive notifications in Mac OS X, install the pync')
-                elif platform == 'Linux' and self.notifications == 'enabled':
-                    try:
-                        import gi
-                        gi.require_version('Notify', '0.7')
-                        from gi.repository import Notify
-                        Notify.init("mkchromecast")
-                        found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
-                        found.show()
-                    except ImportError:
-                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
-            except AttributeError:
-                pass
+            if platform == 'Darwin' and self.notifications == 'enabled':
+                if os.path.exists('images/google.icns') == True:
+                    noticon = 'images/google.icns'
+                else:
+                    noticon = 'google.icns'
+                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
+                subprocess.Popen(found)
+                if debug == True:
+                    print (found)
+            elif platform == 'Linux' and self.notifications == 'enabled':
+                try:
+                    import gi
+                    gi.require_version('Notify', '0.7')
+                    from gi.repository import Notify
+                    Notify.init("mkchromecast")
+                    found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                    found.show()
+                except ImportError:
+                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -314,26 +309,21 @@ class menubar(QtWidgets.QMainWindow):
             self.ncast.quit_app()
             self.stopped = True
             self.read_config()
-            try:
-                if platform == 'Darwin' and self.notifications == 'enabled':
-                    try:
-                        #from pync import Notifier
-                        #Notifier.notify('Cast stopped!', title='mkchromecast')
-                        print('break?')
-                    except ImportError:
-                        print('If you want to receive notifications in Mac OS X, install the pync')
-                elif platform == 'Linux' and self.notifications == 'enabled':
-                    try:
-                        import gi
-                        gi.require_version('Notify', '0.7')
-                        from gi.repository import Notify
-                        Notify.init("mkchromecast")
-                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
-                        stop.show()
-                    except ImportError:
-                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
-            except AttributeError:
-                pass
+            if platform == 'Darwin' and self.notifications == 'enabled':
+                stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
+                subprocess.Popen(stop)
+                if debug == True:
+                    print (stop)
+            elif platform == 'Linux' and self.notifications == 'enabled':
+                try:
+                    import gi
+                    gi.require_version('Notify', '0.7')
+                    from gi.repository import Notify
+                    Notify.init("mkchromecast")
+                    stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                    stop.show()
+                except ImportError:
+                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
         #self.l1 = QtWidgets.QLabel("Hello")
