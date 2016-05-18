@@ -35,3 +35,4 @@ deploy:
 clean:
 	git clean -f -d
 	git checkout mkchromecast/__init__.py
+	rm mkchromecast/*.pyc
