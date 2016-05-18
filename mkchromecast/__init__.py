@@ -150,10 +150,7 @@ platform = platform.system()
 Assigment of args to variables
 """
 tray = args.tray
-if tray == True:    # This should fix the problem with the Mac app
-    select_cc = True
-else:
-    select_cc = args.select_cc
+select_cc = args.select_cc
 debug = args.debug
 if args.notifications == True:
     notifications = 'enabled'
