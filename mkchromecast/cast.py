@@ -30,6 +30,8 @@ class casting(object):
         import mkchromecast.__init__        # This is to verify against some needed variables
         self.platform = mkchromecast.__init__.platform
         self.tray = mkchromecast.__init__.tray
+        self.select_cc = mkchromecast.__init__.select_cc
+
         self.backend = mkchromecast.__init__.backend
         if self.platform == 'Linux':
             hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
@@ -47,7 +49,7 @@ class casting(object):
         except AttributeError:
             self.youtubeurl = None
 
-        if len(self.cclist) != 0 and args.select_cc == False:
+        if len(self.cclist) != 0 and self.select_cc == False:
             print (' ')
             print (colors.important('List of Google Cast devices available in your network:'))
             print (colors.important('------------------------------------------------------'))
@@ -63,7 +65,8 @@ class casting(object):
             print (colors.success(self.castto))
             print (' ')
 
-        elif len(self.cclist) != 0 and args.select_cc == True:
+        elif len(self.cclist) != 0 and self.select_cc == True:
+            print ('segundo')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print (' ')
@@ -88,7 +91,7 @@ class casting(object):
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
                 print (' ')
 
-        elif len(self.cclist) != 0 and args.select_cc == False and self.tray == True:
+        elif len(self.cclist) != 0 and self.select_cc == False and self.tray == True:
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
