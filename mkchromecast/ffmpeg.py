@@ -60,9 +60,9 @@ if tray == True and backend == 'ffmpeg':
         if os.path.exists(verifyif) == False:
             continue
         else:
+            backend = verifyif
             if debug == True:
                 print (':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
-                backend = verifyif
 
 
 appendtourl = 'stream'

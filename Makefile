@@ -33,22 +33,22 @@ sed:
 # This target creates the app just to be used locally
 test:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
-	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
 	#sed -i -e  's/select_cc = args.select_cc/select_cc = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app -A
 
-# This target creates a standalone app with debuggin enabled
+# This target creates a standalone app with debugging enabled
 debug:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
-	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app
 	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
 	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
 
-# This target creates a standalone app with debuggin disabled
+# This target creates a standalone app with debugging disabled
 deploy:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
-	#sed -i -e  's/select_cc = args.select_cc/select_cc = True/g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = False/g' mkchromecast/__init__.py
 	python3 setup.py py2app
 	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
 	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
