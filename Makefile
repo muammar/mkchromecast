@@ -61,7 +61,7 @@ deploy:
 	sed -i -e  's/debug = args.debug/debug = False/g' mkchromecast/__init__.py
 	python3 setup.py py2app
 	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
+	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app -dmg
 
 # This cleans
 clean:
