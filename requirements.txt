@@ -1,9 +1,9 @@
 Flask == 0.10.1
 py_getch == 1.0.1
 mutagen == 1.32
-psutil == 4.1.0
+psutil == 4.2.0
 PyChromecast == 0.7.3
-pync == 1.6.1
 setuptools == 21.0.0
 PyQt5 == 5.6
 getch == 1.0
+gi == 1.2

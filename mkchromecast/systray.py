@@ -18,7 +18,7 @@ from pychromecast.dial import reboot
 import signal
 import os.path
 from os import getpid
-import psutil, pickle
+import psutil, pickle, subprocess
 import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
@@ -116,8 +116,10 @@ class menubar(QtWidgets.QMainWindow):
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap("settings")['notifications']
+        else:
+            self.notifications = 'disabled'
             if debug == True:
-                print('self.notifications '+self.notifications)
+                print(':::systray::: self.notifications '+self.notifications)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search for Google Cast devices")
@@ -222,25 +224,25 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
         else:
             self.read_config()
-            try:    #This is needed to aboud AttributeError when no configuration file exists
-                if platform == 'Darwin' and self.notifications == 'enabled':
-                    try:
-                        from pync import Notifier
-                        Notifier.notify('Google cast devices found!', title='mkchromecast')
-                    except ImportError:
-                        print('If you want to receive notifications in Mac OS X, install the pync')
-                elif platform == 'Linux' and self.notifications == 'enabled':
-                    try:
-                        import gi
-                        gi.require_version('Notify', '0.7')
-                        from gi.repository import Notify
-                        Notify.init("mkchromecast")
-                        found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
-                        found.show()
-                    except ImportError:
-                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
-            except AttributeError:
-                pass
+            if platform == 'Darwin' and self.notifications == 'enabled':
+                if os.path.exists('images/google.icns') == True:
+                    noticon = 'images/google.icns'
+                else:
+                    noticon = 'google.icns'
+                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
+                subprocess.Popen(found)
+                if debug == True:
+                    print (':::systray:::',found)
+            elif platform == 'Linux' and self.notifications == 'enabled':
+                try:
+                    import gi
+                    gi.require_version('Notify', '0.7')
+                    from gi.repository import Notify
+                    Notify.init("mkchromecast")
+                    found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                    found.show()
+                except ImportError:
+                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -309,25 +311,21 @@ class menubar(QtWidgets.QMainWindow):
             self.ncast.quit_app()
             self.stopped = True
             self.read_config()
-            try:
-                if platform == 'Darwin' and self.notifications == 'enabled':
-                    try:
-                        from pync import Notifier
-                        Notifier.notify('Cast stopped!', title='mkchromecast')
-                    except ImportError:
-                        print('If you want to receive notifications in Mac OS X, install the pync')
-                elif platform == 'Linux' and self.notifications == 'enabled':
-                    try:
-                        import gi
-                        gi.require_version('Notify', '0.7')
-                        from gi.repository import Notify
-                        Notify.init("mkchromecast")
-                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
-                        stop.show()
-                    except ImportError:
-                        print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
-            except AttributeError:
-                pass
+            if platform == 'Darwin' and self.notifications == 'enabled':
+                stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
+                subprocess.Popen(stop)
+                if debug == True:
+                    print (':::systray::: stop', stop)
+            elif platform == 'Linux' and self.notifications == 'enabled':
+                try:
+                    import gi
+                    gi.require_version('Notify', '0.7')
+                    from gi.repository import Notify
+                    Notify.init("mkchromecast")
+                    stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                    stop.show()
+                except ImportError:
+                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
         #self.l1 = QtWidgets.QLabel("Hello")
@@ -347,7 +345,7 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         if debug == True:
-            print ('Value changed: '+str(value))
+            print (':::systray::: Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
                 pass
@@ -355,7 +353,7 @@ class menubar(QtWidgets.QMainWindow):
                 volume = value/10
                 self.ncast.set_volume(volume)
             if debug == True:
-                print ('Volume set to: '+str(volume))
+                print (':::systray::: Volume set to: '+str(volume))
         except AttributeError:
             pass
 
