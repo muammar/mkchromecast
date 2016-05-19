@@ -7,13 +7,39 @@ from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
 from PyQt5 import QtCore
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
-import distutils.spawn
+import os, getpass
+import subprocess
 
 """
 Check if external programs are available to build the preferences
 """
+
+platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
+USER = getpass.getuser()
+
+if platform == 'Darwin':
+    PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+else:
+    PATH = os.environ['PATH']
+
+if debug == True:
+    print ('USER ='+str(USER))
+    print ('PATH ='+str(PATH))
+
 def is_installed(name):
-      return distutils.spawn.find_executable(name) is not None
+    #import distutils.spawn
+    #return distutils.spawn.find_executable(name) is not None
+    iterate = PATH.split(':')
+    for item in iterate:
+        verifyif = str(item+'/'+name)
+        if os.path.exists(verifyif) == False:
+            continue
+        else:
+            if debug == True:
+                print ('Program '+str(name)+' found in '+str(verifyif))
+            return True
+    return
 
 """
 Configparser is imported differently in Python3
@@ -24,8 +50,6 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 
-platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
 
 def ConfigSectionMap(section):
     config = ConfigParser.RawConfigParser()
