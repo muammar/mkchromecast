@@ -16,9 +16,11 @@
 # How to use it?
 #
 # 	Test the start_tray.py script:
+# 		make clean
 # 		make sed
 # 		python start_tray.py
 # 	Test the application locally
+# 		make clean
 # 		make test
 # 		check dist/ directory
 # 	Deploy with debug
