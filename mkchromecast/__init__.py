@@ -238,14 +238,6 @@ else:
             backend = args.encoder_backend
 
 """
-Debug
-"""
-if args.debug == True:
-    debug = args.debug
-else:
-    debug = False
-
-"""
 Codecs
 """
 codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']

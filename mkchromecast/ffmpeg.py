@@ -39,7 +39,7 @@ if os.path.exists(configf) and tray == True:
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
     if debug == True:
-        print ('tray ='+str(tray))
+        print (':::ffmpeg::: tray ='+str(tray))
         print(colors.warning('Configuration file exist'))
         print(colors.warning('Using defaults set there'))
         print(backend,codec,bitrate,samplerate)
@@ -48,6 +48,22 @@ else:
     codec = mkchromecast.__init__.codec
     bitrate = str(mkchromecast.__init__.bitrate)
     samplerate = str(mkchromecast.__init__.samplerate)
+
+if tray == True and backend == 'ffmpeg':
+    import os, getpass
+    import subprocess
+    USER = getpass.getuser()
+    PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+    iterate = PATH.split(':')
+    for item in iterate:
+        verifyif = str(item+'/'+backend)
+        if os.path.exists(verifyif) == False:
+            continue
+        else:
+            if debug == True:
+                print (':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
+                backend = verifyif
+
 
 appendtourl = 'stream'
 
@@ -199,7 +215,7 @@ if  codec == 'flac':
 app = Flask(__name__)
 
 if debug == True:
-    print ('command '+str(command))
+    print (':::ffmpeg::: command '+str(command))
 
 @app.route('/')
 def index():

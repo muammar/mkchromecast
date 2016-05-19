@@ -31,6 +31,7 @@ class casting(object):
         self.platform = mkchromecast.__init__.platform
         self.tray = mkchromecast.__init__.tray
         self.select_cc = mkchromecast.__init__.select_cc
+        self.debug = mkchromecast.__init__.debug
 
         self.backend = mkchromecast.__init__.backend
         if self.platform == 'Linux':
@@ -43,6 +44,8 @@ class casting(object):
         import mkchromecast.__init__        # This is to verify against some needed variables
         from pychromecast import socket_client
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
+        if self.debug == True:
+            print ('self.cclist', self.cclist)
 
         try:
             self.youtubeurl = mkchromecast.__init__.youtubeurl
@@ -50,6 +53,8 @@ class casting(object):
             self.youtubeurl = None
 
         if len(self.cclist) != 0 and self.select_cc == False:
+            if self.debug == True:
+                print ('if len(self.cclist) != 0 and self.select_cc == False:')
             print (' ')
             print (colors.important('List of Google Cast devices available in your network:'))
             print (colors.important('------------------------------------------------------'))
@@ -65,7 +70,9 @@ class casting(object):
             print (colors.success(self.castto))
             print (' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == True:
+        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:
+            if self.debug == True:
+                print ('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print (' ')
@@ -83,6 +90,8 @@ class casting(object):
                 #print (availablecc)
 
             else:
+                if self.debug == True:
+                    print ('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
@@ -90,14 +99,38 @@ class casting(object):
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
                 print (' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == False and self.tray == True:
+        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == True:
+            if self.debug == True:
+                print ('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == True:')
+            if os.path.exists('/tmp/mkchromecast.tmp') == False:
+                self.tf = open('/tmp/mkchromecast.tmp', 'wb')
+                print (' ')
+                print (colors.important('List of Google Cast devices available in your network:'))
+                print (colors.important('------------------------------------------------------'))
+                print (' ')
+                print (colors.important('Index   Friendly name'))
+                print (colors.important('=====   ============= '))
+                self.availablecc=[]
+                for self.index,device in enumerate(self.cclist):
+                    print (str(self.index)+'      ',str(device))
+                    toappend = [self.index,device]
+                    self.availablecc.append(toappend)
+                #print ('Array')
+                #print (availablecc)
+
+            else:
+                if self.debug == True:
+                    print ('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
                 print (' ')
                 print (colors.options('Casting to:')+' '+colors.success(self.castto))
+                print (' ')
 
         elif len(self.cclist) == 0 and self.tray == False:
+            if self.debug == True:
+                print ('elif len(self.cclist) == 0 and self.tray == False:')
             print (colors.error('No devices found!'))
             if self.platform == 'Linux':
                 import mkchromecast.pulseaudio
@@ -126,20 +159,24 @@ class casting(object):
             print (' ')
 
     def get_cc(self):
-            self.cast = pychromecast.get_chromecast(self.castto)
-            # Wait for cast device to be ready
-            self.cast.wait()
-            print (' ')
-            print (colors.important('Information about ')+' '+colors.success(self.castto))
-            print (' ')
-            print (self.cast.device)
-            print (' ')
-            print (colors.important('Status of device ')+' '+colors.success(self.castto))
-            print (' ')
-            print (self.cast.status)
-            print (' ')
+        if self.debug == True:
+            print ('def get_cc(self):')
+        self.cast = pychromecast.get_chromecast(self.castto)
+        # Wait for cast device to be ready
+        self.cast.wait()
+        print (' ')
+        print (colors.important('Information about ')+' '+colors.success(self.castto))
+        print (' ')
+        print (self.cast.device)
+        print (' ')
+        print (colors.important('Status of device ')+' '+colors.success(self.castto))
+        print (' ')
+        print (self.cast.status)
+        print (' ')
 
     def play_cast(self):
+        if self.debug == True:
+            print ('def play_cast(self):')
         localip = self.ip
         #if platform == 'Darwin':
         #   self.host = socket.gethostbyname(self.castto+'.local')

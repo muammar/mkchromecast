@@ -119,7 +119,7 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.notifications = 'disabled'
             if debug == True:
-                print('self.notifications '+self.notifications)
+                print(':::systray::: self.notifications '+self.notifications)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search for Google Cast devices")
@@ -232,7 +232,7 @@ class menubar(QtWidgets.QMainWindow):
                 found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
                 subprocess.Popen(found)
                 if debug == True:
-                    print (found)
+                    print (':::systray:::',found)
             elif platform == 'Linux' and self.notifications == 'enabled':
                 try:
                     import gi
@@ -315,7 +315,7 @@ class menubar(QtWidgets.QMainWindow):
                 stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
                 subprocess.Popen(stop)
                 if debug == True:
-                    print (stop)
+                    print (':::systray::: stop', stop)
             elif platform == 'Linux' and self.notifications == 'enabled':
                 try:
                     import gi
@@ -345,7 +345,7 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         if debug == True:
-            print ('Value changed: '+str(value))
+            print (':::systray::: Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
                 pass
@@ -353,7 +353,7 @@ class menubar(QtWidgets.QMainWindow):
                 volume = value/10
                 self.ncast.set_volume(volume)
             if debug == True:
-                print ('Volume set to: '+str(volume))
+                print (':::systray::: Volume set to: '+str(volume))
         except AttributeError:
             pass
 

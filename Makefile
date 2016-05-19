@@ -24,16 +24,36 @@
 # Muammar El Khatib
 #
 
+# This target is used to test the start_tray.py script that is used to deploy
+# the Mac app
+sed:
+	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+
+# This target creates the app just to be used locally
 test:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
 	#sed -i -e  's/select_cc = args.select_cc/select_cc = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app -A
+
+# This target creates a standalone app with debuggin enabled
+debug:
+	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+	python3 setup.py py2app
+	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
+	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
+
+# This target creates a standalone app with debuggin disabled
 deploy:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	#sed -i -e  's/select_cc = args.select_cc/select_cc = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app
 	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
 	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
+
+# This cleans
 clean:
 	git clean -f -d
 	git checkout mkchromecast/__init__.py

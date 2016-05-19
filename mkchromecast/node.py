@@ -147,7 +147,7 @@ def streaming():
             print ("OSError")
             sys.exit(0)
     else:
-        if platform == 'Darwin' and self.notifications == 'enabled':
+        if platform == 'Darwin' and notifications == 'enabled':
             if os.path.exists('images/google.icns') == True:
                 noticon = 'images/google.icns'
             else:
