@@ -150,7 +150,7 @@ platform = platform.system()
 Assigment of args to variables
 """
 tray = args.tray
-if tray == True:    # This should fix the problem with the Mac app
+if tray == True:
     select_cc = True
 else:
     select_cc = args.select_cc
@@ -236,14 +236,6 @@ else:
         elif platform == 'Darwin':
             args.encoder_backend = 'node'
             backend = args.encoder_backend
-
-"""
-Debug
-"""
-if args.debug == True:
-    debug = args.debug
-else:
-    debug = False
 
 """
 Codecs

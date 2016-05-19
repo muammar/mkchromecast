@@ -16,13 +16,13 @@ version = '0.2.4'
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
-DATA_FILES = ['images/google.icns', 'images/google_working.icns', 'images/google_nodev.icns', 'bin/audiodevice', 'nodejs']
+DATA_FILES = ['images/google.icns', 'images/google_working.icns', 'images/google_nodev.icns', 'bin/audiodevice', 'nodejs', 'notifier']
 
 OPTIONS = {
     'argv_emulation': True,
         'prefer_ppc': True,
     'iconfile': 'images/google.icns',
-    'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'Flask', 'pync', 'configparser'],
+    'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'Flask', 'configparser'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,

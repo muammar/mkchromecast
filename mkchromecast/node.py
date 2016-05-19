@@ -60,7 +60,7 @@ def streaming():
         notifications = mkchromecast.__init__.notifications
 
     if debug == True:
-        print(backend,rcodec,bitrate,samplerate,notifications)
+        print(':::node::: variables', backend,rcodec,bitrate,samplerate,notifications)
 
     try:
         youtubeurl = mkchromecast.__init__.youtubeurl
@@ -118,7 +118,7 @@ def streaming():
         webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
     if debug == True:
-        print (webcast)
+        print (':::node::: node command', webcast)
 
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
@@ -148,12 +148,20 @@ def streaming():
             sys.exit(0)
     else:
         print (colors.warning('Reconnecting node streaming...'))
+        if platform == 'Darwin' and notifications == 'enabled':
+            if os.path.exists('images/google.icns') == True:
+                noticon = 'images/google.icns'
+            else:
+                noticon = 'google.icns'
+        if debug == True:
+            print (':::node::: platform, tray, notifications', platform, tray, notifications)
+
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
-            try:
-                from pync import Notifier
-                Notifier.notify('Reconnecting node streaming...', title='mkchromecast')
-            except ImportError:
-                print('If you want to receive notifications in Mac OS X, install the pync')
+            reconnecting = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-subtitle', 'node server failed', '-message', 'Reconnecting...']
+            subprocess.Popen(reconnecting)
+
+            if debug == True:
+                print (':::node::: reconnecting notifier command', reconnecting)
         relaunch(stream,recasting,kill)
     return
 
