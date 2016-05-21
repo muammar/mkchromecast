@@ -124,11 +124,11 @@ class menubar(QtWidgets.QMainWindow):
                 print(':::systray::: self.notifications '+self.notifications)
 
     def search_menu(self):
-        self.SearchAction = self.menu.addAction("Search for Google Cast devices")
+        self.SearchAction = self.menu.addAction("Search For Google Cast Devices")
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
-        self.StopCastAction = self.menu.addAction("Stop casting")
+        self.StopCastAction = self.menu.addAction("Stop Casting")
         self.StopCastAction.triggered.connect(self.stop_cast)
 
     def volume_menu(self):
@@ -143,11 +143,11 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset audio...")
+        self.ResetAudioAction = self.menu.addAction("Reset Audio...")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Cast device...")
+        self.rebootAction = self.menu.addAction("Reboot Cast Device...")
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
@@ -207,7 +207,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            self.NodevAction = self.menu.addAction("No Cast devices found.")
+            self.NodevAction = self.menu.addAction("No Cast Devices Found.")
             if os.path.exists('images/google_nodev.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
