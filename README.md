@@ -374,8 +374,11 @@ It looks like:
 
 ##### Mac OS X
 
-![Image of
-working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.gif)
+<center>
+<iframe width="640" height="480"
+src="https://www.youtube.com/embed/d9Qn_LltOjU" frameborder="0"
+allowfullscreen></iframe>
+</center>
 
 ##### Linux
 
