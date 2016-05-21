@@ -9,6 +9,11 @@ Usage:
     python3 setup.py py2app
     cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
     macdeployqt dist/mkchromecast.app
+
+You need to install using pip3 the following:
+
+    bs4
+    google
 """
 from setuptools import setup
 
