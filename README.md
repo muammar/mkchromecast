@@ -374,7 +374,7 @@ It looks like:
 
 ##### Mac OS X
 
-<iframe width="640" height="480" src="https://www.youtube.com/embed/d9Qn_LltOjU" frameborder="0" allowfullscreen></iframe>
+[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
 
 ##### Linux
 
