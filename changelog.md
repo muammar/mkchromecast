@@ -1,4 +1,4 @@
-* mkchromecast (0.2.4) **unreleased**
+* mkchromecast (0.2.4) **released**: 2016/05/21
 
     - This release fixes the system tray menu for Linux.
     - Now avconv is supported.
