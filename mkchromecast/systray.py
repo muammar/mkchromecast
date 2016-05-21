@@ -70,6 +70,8 @@ class menubar(QtWidgets.QMainWindow):
 
         self.app = QtWidgets.QApplication(sys.argv)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
+        if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
+                    self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
         self.w = QWidget()
 
         if os.path.exists('images/google.icns') == True:
