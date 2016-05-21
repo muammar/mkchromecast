@@ -330,8 +330,7 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
-        #self.l1 = QtWidgets.QLabel("Hello")
-        #self.l1.setAlignment(Qt.AlignCenter)
+        """
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
         self.sl.setMaximum(10)
@@ -339,12 +338,29 @@ class menubar(QtWidgets.QMainWindow):
             self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
         except AttributeError:
             self.sl.setValue(2)
-        #self.sl.setTickPosition(QtWidgets.QSlider.TicksBelow)
-        #self.sl.setTickInterval(1)
         self.sl.valueChanged.connect(self.valuechange)
         self.sl.setWindowTitle("Google Cast volume")
         self.sl.show()
 
+        """
+        self.sl = QSlider(Qt.Horizontal, self)
+        self.sl.setMinimum(0)
+        self.sl.setMaximum(10)
+        #self.sl.setFocusPolicy(Qt.NoFocus)
+        self.sl.setGeometry(30, 40, 180, 20)
+        try:
+            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+        except AttributeError:
+            self.sl.setValue(2)
+        self.sl.valueChanged.connect(self.valuechange)
+
+        #self.label = QLabel(self)
+        #self.label.setPixmap(QPixmap('images/max.png'))
+        #self.label.setGeometry(160, 40, 80, 30)
+
+        self.setGeometry(300, 300, 240, 100)
+        self.setWindowTitle('Google cast volume')
+        self.show()
     def valuechange(self, value):
         if debug == True:
             print (':::systray::: Value changed: '+str(value))
