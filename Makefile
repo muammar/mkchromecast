@@ -15,11 +15,22 @@
 #
 # How to use it?
 #
-# 	Test the application
+# 	Test the start_tray.py script:
+# 		make clean
+# 		make sed
+# 		python start_tray.py
+# 	Test the application locally
+# 		make clean
 # 		make test
+# 		check dist/ directory
+# 	Deploy with debug
+# 		make clean
+# 		make debug
 # 	Deploy
-# 	make clean
-# 	make deploy
+# 		make clean
+# 		make deploy
+#
+# Note that make clean will do a checkout of mkchromecast/__init__.py.
 #
 # Muammar El Khatib
 #
@@ -34,7 +45,6 @@ sed:
 test:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
-	#sed -i -e  's/select_cc = args.select_cc/select_cc = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app -A
 
 # This target creates a standalone app with debugging enabled
@@ -51,7 +61,7 @@ deploy:
 	sed -i -e  's/debug = args.debug/debug = False/g' mkchromecast/__init__.py
 	python3 setup.py py2app
 	cp -R /usr/local/Cellar/qt5/5.6.0/plugins dist/mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app
+	/usr/local/Cellar/qt5/5.6.0/bin/macdeployqt dist/mkchromecast.app -dmg
 
 # This cleans
 clean:

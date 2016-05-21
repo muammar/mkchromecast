@@ -18,14 +18,15 @@ together with `mp3` audio coding format at a sample rate of `44100Hz` and
 average bitrate of `192k`.  These defaults can be changed using the
 `--sample-rate` and `-b` flags. It is useful to modify these parameters when
 your wireless router is not very powerful like mine, or in the case you don't
-want to degrade the sound quality.  For more information [visit the
-wiki](https://github.com/muammar/mkchromecast/wiki/).
+want to degrade the sound quality. For more information visit the
+[wiki](https://github.com/muammar/mkchromecast/wiki/), and the
+[FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ) for more information.
 
 For **Linux**, you have to install `ffmpeg` (or `avconv`) together with
-`pulseaudio` (see the [wiki for more
-information](https://github.com/muammar/mkchromecast/wiki/Linux)).  Sometimes
-the lag between playing a song and hearing may be of 8 seconds. I don't know if
-it is my router though.
+`pulseaudio` ([more information
+here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Sometimes the lag
+between playing a song and hearing may be of 8 seconds. I don't know if it is
+my router though.
 
 Requirements:
 ------------
@@ -43,7 +44,6 @@ In order to use **mkchromecast** you need the following software to stream with
 * py_getch (optional if you want to control the volume of the Google cast
   device).
 * PyQt5 (optional if you want to use the system tray menu).
-* pync (optional if you want to receive alerts in the notification center).
 
 For more control, you need `ffmpeg` as backend.  In that case install
 following:
@@ -79,8 +79,8 @@ There are two ways of installing this application:
 There is available a standalone application for Mac OS X users. You need to
 drag it to your `/Applications/` folder. It works just with the `node` backend.
 
-[Download the dmg
-here](https://github.com/muammar/mkchromecast/releases/download/0.2.3.1/mkchromecast_v0.2.3.1.dmg).
+[Download the latest dmg
+here](https://github.com/muammar/mkchromecast/releases/).
 You need also to [install
 Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
 
@@ -254,11 +254,21 @@ or if you desire it you can do it yourself from the sources.
 Updating
 --------
 
-To update **mkchromecast**, just get into the cloned directory and:
+To update **mkchromecast** sources, just get into the cloned directory and:
 
 ```
 git pull
 ```
+
+or if you prefer just pass the `--update` argument to `mkchromecast`:
+
+```
+python mkchromecast.py --update
+```
+
+If you are using the Mac OS X application, [download the latest dmg
+here](https://github.com/muammar/mkchromecast/releases/), and replace the
+`mkchromecast.app` in your `/Applications/` directory.
 
 Usage
 -----
