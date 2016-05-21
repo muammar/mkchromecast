@@ -374,11 +374,7 @@ It looks like:
 
 ##### Mac OS X
 
-<center>
-<iframe width="640" height="480"
-src="https://www.youtube.com/embed/d9Qn_LltOjU" frameborder="0"
-allowfullscreen></iframe>
-</center>
+<iframe width="640" height="480" src="https://www.youtube.com/embed/d9Qn_LltOjU" frameborder="0" allowfullscreen></iframe>
 
 ##### Linux
 
