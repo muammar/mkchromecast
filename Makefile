@@ -1,7 +1,7 @@
 # This file is part of mkchromecast. It is used to build the Mac OS X app.
 # It does the following:
 #
-# 	1) it changes the strings tray and debug to True.
+# 	1) It changes the strings tray and debug to True.
 # 	2) Build the application using py2app.
 # 	3) Copy Qt plugins.
 # 	4) macdeployqt
