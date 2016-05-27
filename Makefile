@@ -22,15 +22,15 @@
 # 	Test the application locally
 # 		make clean
 # 		make test
-# 		check dist/ directory
+# 		check inside the dist/ directory
 # 	Deploy with debug
 # 		make clean
 # 		make debug
-# 		check dist/ directory
+# 		check inside the dist/ directory
 # 	Deploy
 # 		make clean
 # 		make deploy
-# 		check dist/ directory
+# 		check inside the dist/ directory
 #
 # Note again that make clean will do a checkout of mkchromecast/__init__.py.
 #
