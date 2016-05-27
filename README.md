@@ -374,8 +374,7 @@ It looks like:
 
 ##### Mac OS X
 
-![Image of
-working menu](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.gif)
+[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
 
 ##### Linux
 

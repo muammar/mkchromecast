@@ -76,11 +76,11 @@ class preferences(QWidget):
             super(self.__class__, self).__init__() #This is to port to python2
 
         self.config = ConfigParser.RawConfigParser()
-        configurations = config_manager()    # Class from mkchromecast.config
-        self.configf = configurations.configf
+        self.configurations = config_manager()    # Class from mkchromecast.config
+        self.configf = self.configurations.configf
         if os.path.exists(self.configf) == False:
             print ('config does not exist')
-            configurations.config_defaults()
+            self.configurations.config_defaults()
         self.read_defaults()
         self.initUI()
 
@@ -229,6 +229,8 @@ class preferences(QWidget):
             bitrateindex = 0
             bitrates = ["None"]
         else:
+            self.configurations.verify_config()
+            self.read_defaults()
             bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
             bitrateindex = bitrates.index(self.bitrateconf)
         self.qcbitrate.move(180, 88)

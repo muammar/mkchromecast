@@ -1,20 +1,20 @@
 # This file is part of mkchromecast. It is used to build the Mac OS X app.
 # It does the following:
 #
-# 	1) it changes the string tray from args.tray to True.
+# 	1) It changes the strings tray and debug to True.
 # 	2) Build the application using py2app.
 # 	3) Copy Qt plugins.
-# 	4) macdeploit
+# 	4) macdeployqt
 #
-# The clean target does a git clean -f -d to delete all untracked directories,
-# and does a checkout to mkchromecast/__init__.py.
+# The clean target does a `git clean -f -d` to delete all untracked
+# directories, and does a `git checkout mkchromecast/__init__.py`.
 #
 # Note: Be careful when using this Makefile, because all files not tracked will
 # be deleted, and all changes to mkchromecast/__init__.py will be discarded if
 # they are not commited.
 #
 # How to use it?
-#
+# ==============
 # 	Test the start_tray.py script:
 # 		make clean
 # 		make sed
@@ -22,15 +22,17 @@
 # 	Test the application locally
 # 		make clean
 # 		make test
-# 		check dist/ directory
+# 		check inside the dist/ directory
 # 	Deploy with debug
 # 		make clean
 # 		make debug
+# 		check inside the dist/ directory
 # 	Deploy
 # 		make clean
 # 		make deploy
+# 		check inside the dist/ directory
 #
-# Note that make clean will do a checkout of mkchromecast/__init__.py.
+# Note again that make clean will do a checkout of mkchromecast/__init__.py.
 #
 # Muammar El Khatib
 #

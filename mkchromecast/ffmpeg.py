@@ -33,6 +33,7 @@ configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
 
 if os.path.exists(configf) and tray == True:
+    configurations.verify_config()
     config.read(configf)
     backend = ConfigSectionMap("settings")['backend']
     codec= ConfigSectionMap("settings")['codec']

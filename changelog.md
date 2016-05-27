@@ -1,3 +1,9 @@
+* mkchromecast (0.2.5) **released**: 2016/05/25
+
+    - This release fixes a problem with the system tray menu failing to read
+      configuration files when changing from lossless to lossy audio coding
+      formats.
+
 * mkchromecast (0.2.4) **released**: 2016/05/21
 
     - This release fixes the system tray menu for Linux.

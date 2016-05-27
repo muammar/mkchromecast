@@ -59,6 +59,28 @@ class config_manager(object):
             with open(self.configf, 'w') as configfile:
                 self.config.write(configfile)
 
+    def verify_config(self):
+        from mkchromecast.preferences import ConfigSectionMap
+        self.config.read(self.configf)
+        backend = ConfigSectionMap("settings")['backend']
+        codec= ConfigSectionMap("settings")['codec']
+        bitrate = ConfigSectionMap("settings")['bitrate']
+        samplerate= ConfigSectionMap("settings")['samplerate']
+        notifications = ConfigSectionMap("settings")['notifications']
+        codecs = ['mp3','ogg', 'aac']
+        if os.path.exists(self.configf):
+            """
+            Reading the codec from config file
+            """
+            if codec in codecs and bitrate == 'None':
+                self.config.set('settings', 'backend', str(backend))
+                self.config.set('settings', 'codec', str(codec))
+                self.config.set('settings', 'bitrate', '192')
+                self.config.set('settings', 'samplerate', str(samplerate))
+                self.config.set('settings', 'notifications', str(notifications))
+
+            with open(self.configf, 'w') as configfile:
+                self.config.write(configfile)
 
 """
 The function below helps to map the options inside each section. Taken from:

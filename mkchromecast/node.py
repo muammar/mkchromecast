@@ -43,6 +43,7 @@ def streaming():
     configf = configurations.configf
 
     if os.path.exists(configf) and tray == True:
+        configurations.verify_config()
         print(colors.warning('Configuration file exist'))
         print(colors.warning('Using defaults set there'))
         config.read(configf)
