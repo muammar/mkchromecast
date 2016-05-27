@@ -1,0 +1,8 @@
+Flask == 0.10.1
+py_getch == 1.0.1
+mutagen == 1.32
+psutil == 4.2.0
+PyChromecast == 0.7.3
+setuptools == 21.1.0
+getch == 1.0
+gi == 1.2
