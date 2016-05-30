@@ -332,10 +332,10 @@ class menubar(QtWidgets.QMainWindow):
     def volume_cast(self):
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
-        self.sl.setMaximum(10)
+        self.sl.setMaximum(20)
         self.sl.setGeometry(30, 40, 230, 70)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+            self.sl.setValue(round((self.ncast.status.volume_level*20), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -370,7 +370,7 @@ class menubar(QtWidgets.QMainWindow):
             if round(self.ncast.status.volume_level, 1) == 1:
                 pass
             else:
-                volume = value/10
+                volume = value/20
                 self.ncast.set_volume(volume)
             if debug == True:
                 print (':::systray::: Volume set to: '+str(volume))
