@@ -388,6 +388,16 @@ Check these images:
 **Note**: you can pass the options when using `ffmpeg` as backend and adding `-t`
 to launch the system tray. I am still working on improving all of this.
 
+Known problems
+--------------
+
+The standalone **mkchromecast**  application is only supported for Mac models
+from 2011 ([more information
+here](https://github.com/muammar/mkchromecast/issues/4)). I am working to solve
+this issue. In the meantime, you may try [creating the standalone
+app](https://github.com/muammar/mkchromecast/wiki/Mac-standalone-app) by
+yourself, or launch **mkchromecast** with the `-t` option from the terminal.
+
 TODO
 ----
 

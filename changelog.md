@@ -1,3 +1,7 @@
+* mkchromecast (0.2.5) **unreleased**:
+
+    - Volume now set to max/20 instead of max/10.
+
 * mkchromecast (0.2.5) **released**: 2016/05/25
 
     - This release fixes a problem with the system tray menu failing to read
