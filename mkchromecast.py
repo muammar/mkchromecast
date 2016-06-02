@@ -44,7 +44,7 @@ if args.tray == False:
             from mkchromecast.node import *
             stream()
 
-        if args.encoder_backend == 'ffmpeg' or args.encoder_backend == 'avconv':
+        if args.encoder_backend == 'ffmpeg' or args.encoder_backend == 'avconv' or args.encoder_backend == 'parec':
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
 

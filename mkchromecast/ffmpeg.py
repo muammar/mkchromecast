@@ -152,13 +152,17 @@ MP3 192k
 """
 if  codec == 'mp3':
 
-    if platform == 'Linux':
+    if platform == 'Linux' and backend != 'parec':
         command = [backend, '-re', '-ac', '2', '-ar', '44100', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
+    elif platform == 'Linux' and backend == 'parec':
+        c_parec = ['parec', '--format=s16le', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
+        command = ['lame', '-b', bitrate[:-1], '-r', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
-    if debug == False:
+    if debug == False and backend != 'parec':
         debug_command()
 
 """
@@ -247,7 +251,10 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    process = Popen(command, stdout=PIPE, bufsize=-1)
+    if platform == 'Linux' and backend == 'parec':
+        process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+    else:
+        process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), 1024)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
