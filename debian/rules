@@ -6,8 +6,21 @@
 export PYBUILD_NAME=mkchromecast
 
 %:
-	dh $@  --with python2 --buildsystem=pybuild
+	#dh $@  --with python2 --buildsystem=pybuild
+	dh $@  --with python2
 
+override_dh_auto_build:
+	touch build
+
+override_dh_auto_test:
+	echo 'Do nothing'
+
+override_dh_install:
+	dh_install
+	dh_python2
+
+override_dh_auto_clean:
+	echo 'Do nothing'
 
 # If you need to rebuild the Sphinx documentation
 # Add spinxdoc to the dh --with line
