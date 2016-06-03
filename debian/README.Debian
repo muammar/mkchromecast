@@ -1,6 +1,29 @@
 mkchromecast for Debian
 ----------------------
+Using this program
+==================
 
-<possible notes regarding this package - if none, delete this file>
+1. Execute mkchromecast as a local user.
+2. After startup, the program will detect your google cast devices in your LAN
+   and add a new sink called mkchromecast.
+3. In order to cast you have to install pavucontrol, and select the
+   mkchromecast sink.
+4. If you stop mkchromecast, the audio will be sent to the default output
+   device.
+
+Supported encoders
+==================
++---------+------------------------------+------------+
+| Encoder |         Description          | Identifier |
++---------+------------------------------+------------+
+| lame    | MPEG Audio Layer III         | mp3        |
+| oggenc  | Ogg Vorbis                   | ogg        |
+| flac    | Free Lossless Audio Codec    | flac       |
+| sox     | Waveform Audio File Format   | wav        |
+| faac    | Advanced Audio Coding        | aac        |
++---------+------------------------------+------------+
+
+Note: faac is not added as dependency to the Debian package, but you can
+install it if you would like to use such encoder.
 
  -- Muammar El Khatib <muammar@debian.org>  Fri, 06 May 2016 15:47:56 +0200

@@ -2,7 +2,11 @@ Source: mkchromecast
 Section: sound
 Priority: optional
 Maintainer: Muammar El Khatib <muammar@debian.org>
-Build-Depends: debhelper (>=9), dh-python, python-all (>= 2.6.6-3~), python-setuptools
+Build-Depends: debhelper (>=9),
+               dh-python,
+               python-all (>= 2.6.6-3~),
+               python-setuptools,
+               dh-python
 Standards-Version: 3.9.6
 Homepage: http://mkchromecast.com
 X-Python-Version: >= 2.6
@@ -12,8 +16,19 @@ X-Python-Version: >= 2.6
 
 Package: mkchromecast
 Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}, python-flask, python-pychromecast, ffmpeg, python-psutil, python-pyqt5
-Suggests: python-mkchromecast-doc, libav-tools
+Depends: ${python:Depends},
+         ${misc:Depends},
+         python-flask,
+         python-pychromecast,
+         python-psutil,
+         vorbis-tools (>=1.4.0),
+         sox (>=14.4.1),
+         lame (>=3.99.0),
+         flac (>=1.3.0),
+         python-pyqt5,
+Suggests: mkchromecast-doc,
+          libav-tools,
+          ffmpeg
 Description: cast your Mac OS X audio, or Linux audio to your Google Cast devices.
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided
