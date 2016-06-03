@@ -24,7 +24,7 @@ ffmpeg:
 node:
     python mkchromecast.py  -b 128
 
-This option works with both backends. The example above sets the average
+This option works with all backends. The example above sets the average
 bitrate to 128k.
 
 ''')
@@ -42,7 +42,7 @@ Possible codecs:
     - wav  [HQ]     Waveform Audio File Format
     - flac [HQ]     Free Lossless Audio Codec
 
-This option only works for the ffmpeg and avconv backends.
+This option only works for the ffmpeg, avconv and parec backends.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
@@ -52,7 +52,8 @@ parser.add_argument('--encoder-backend', type=str, default=None, help=
 '''
 Set the backend for all encoders.
 Possible backends:
-    - node (default)
+    - node (default in Mac)
+    - parec (default in Linux)
     - ffmpeg
     - avconv
 
@@ -235,7 +236,7 @@ if args.encoder_backend in backends:
     backend = args.encoder_backend
 elif args.encoder_backend  == None:     #This is to define defaults
     if platform == 'Linux':
-        args.encoder_backend = 'ffmpeg'
+        args.encoder_backend = 'parec'
         backend = args.encoder_backend
     elif platform == 'Darwin':
         args.encoder_backend = 'node'
