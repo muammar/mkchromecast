@@ -1,6 +1,8 @@
 * mkchromecast (0.2.5) **unreleased**:
 
     - Volume now set to max/20 instead of max/10.
+    - This release let user linux use parec with external libraries to stream
+      instead of `ffmpeg` or `avconv`.
 
 * mkchromecast (0.2.5) **released**: 2016/05/25
 
