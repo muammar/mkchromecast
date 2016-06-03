@@ -145,9 +145,7 @@ managers coming with their distributions.
 Example for Debian based distros:
 
 ```
-sudo apt-get install python2.7 python-pip python-pychromecast python-flask
-python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame
-flac faac opus-tools
+sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
 
 ```
 
@@ -439,6 +437,9 @@ yourself, or launch **mkchromecast** with the `-t` option from the terminal.
 When using `parec` and `lame` encoder, the delay between audio played and
 listened can be up to 8 seconds. I suggest you to use something different than
 mp3.
+
+You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
+for more information.
 
 TODO
 ----
