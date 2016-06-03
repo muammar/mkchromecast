@@ -106,6 +106,9 @@ here](https://github.com/muammar/mkchromecast/issues).
 * Debian
 * Ubuntu
 
+I am working in a debian package, so that you just `apt-get install
+mkchromecast`.
+
 More information soon.
 
 #### From sources
@@ -139,6 +142,18 @@ sudo pip install -r requirements.txt
 **Linux** users can try to install these python requirements using the package
 managers coming with their distributions.
 
+Example for Debian based distros:
+
+```
+sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
+```
+
+Additionally, using `pip` you need:
+
+```
+pip install py_getch
+```
+
 ##### Soundflower (Mac users only)
 
 For Soundflower you can check
@@ -161,7 +176,7 @@ an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
 
-##### ffmpeg
+##### ffmpeg or avconv
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
@@ -184,6 +199,8 @@ additional `ffmpeg`'s options:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
+**mkchromecast** does not support `avconv` in Mac OS X.
+
 ###### Linux
 
 As I use Debian, the way of installing `ffmpeg` is:
@@ -191,8 +208,13 @@ As I use Debian, the way of installing `ffmpeg` is:
 ```
 apt-get install ffmpeg
 ```
+or
 
-**Audio coding formats available with `ffmpeg`**
+```
+apt-get install libav-tools
+```
+
+**Audio coding formats available with `ffmpeg` and `avconv`**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -221,6 +243,9 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 4800
 ```
 check the section
 [https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
+
+**Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
+commands above.
 
 ##### PyQt5
 
@@ -411,6 +436,9 @@ yourself, or launch **mkchromecast** with the `-t` option from the terminal.
 When using `parec` and `lame` encoder, the delay between audio played and
 listened can be up to 8 seconds. I suggest you to use something different than
 mp3.
+
+You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
+for more information.
 
 TODO
 ----
