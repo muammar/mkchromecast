@@ -10,36 +10,36 @@ X-Python-Version: >= 2.6
 #Vcs-Git: git://anonscm.debian.org/collab-maint/mkchromecast.git
 #Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/mkchromecast.git
 
-Package: python-mkchromecast
+Package: mkchromecast
 Architecture: all
 Depends: ${python:Depends}, ${misc:Depends}, python-flask, python-pychromecast, ffmpeg, python-psutil, python-pyqt5
 Suggests: python-mkchromecast-doc, libav-tools
-Description:  cast your Mac OS X audio, or Linux audio to your Google Cast devices.
+Description: cast your Mac OS X audio, or Linux audio to your Google Cast devices.
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided
  that ffmpeg is installed. Additionally, a system tray menu is also available.
  .
- By default, mkchromecast streams with node.js (or ffmpeg in Linux) together
- with mp3 audio coding format at a sample rate of 44100Hz and average bitrate
- of 192k. These defaults can be changed using the --sample-rate and -b flags.
- It is useful to modify these parameters when your wireless router is not very
- powerful like mine, or in the case you don't want to degrade the sound
- quality.
+ By default, mkchromecast streams with node.js (or using parec in Linux)
+ together with mp3 audio coding format at a sample rate of 44100Hz and average
+ bitrate of 192k. These defaults can be changed using the --sample-rate and -b
+ flags.  It is useful to modify these parameters when your wireless router is
+ not very powerful like mine, or in the case you don't want to degrade the
+ sound quality.
 
-#Package: python3-mkchromecast
-#Architecture: all
-#Depends: ${python3:Depends}, ${misc:Depends}
-#Suggests: python-mkchromecast-doc
-#Description: <insert up to 60 chars description> (Python 3)
-# <insert long description, indented with spaces>
-# .
-# This package installs the library for Python 3.
-
-Package: python-mkchromecast-doc
+Package: mkchromecast-doc
 Architecture: all
 Section: doc
 Depends: ${sphinxdoc:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description> (common documentation)
- <insert long description, indented with spaces>
+Description: cast your Mac OS X audio, or Linux audio to your Google Cast devices. (common documentation)
+ It is written in Python, and it streams via node.js, ffmpeg, or avconv.
+ mkchromecast is capable of using lossy and lossless audio formats provided
+ that ffmpeg is installed. Additionally, a system tray menu is also available.
+ .
+ By default, mkchromecast streams with node.js (or using parec in Linux)
+ together with mp3 audio coding format at a sample rate of 44100Hz and average
+ bitrate of 192k. These defaults can be changed using the --sample-rate and -b
+ flags.  It is useful to modify these parameters when your wireless router is
+ not very powerful like mine, or in the case you don't want to degrade the
+ sound quality.
  .
  This is the common documentation package.
