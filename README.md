@@ -146,7 +146,6 @@ Example for Debian based distros:
 
 ```
 sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
-
 ```
 
 Additionally, using `pip` you need:
