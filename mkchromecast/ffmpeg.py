@@ -156,8 +156,6 @@ if  codec == 'mp3':
         command = [backend, '-re', '-ac', '2', '-ar', '44100', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
     elif platform == 'Linux' and backend == 'parec':
-        c_parec = ['parec', '--format=s16le', '-d', 'mkchromecast.monitor']
-        parec = Popen(c_parec, stdout=PIPE)
         command = ['lame', '-b', bitrate[:-1], '-r', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
@@ -169,9 +167,11 @@ if  codec == 'mp3':
 OGG 192k
 """
 if  codec == 'ogg':
-    if platform == 'Linux':
+    if platform == 'Linux' and backend != 'parec':
         command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
+    elif platform == 'Linux' and backend == 'parec':
+        command = ['oggenc', '-b', bitrate[:-1], '-Q', '-r', '--ignorelength', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
@@ -252,6 +252,8 @@ def shutdown():
 @app.route('/' + appendtourl)
 def stream():
     if platform == 'Linux' and backend == 'parec':
+        c_parec = [backend, '--format=s16le', '-d', 'mkchromecast.monitor']
+        parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
     else:
         process = Popen(command, stdout=PIPE, bufsize=-1)
