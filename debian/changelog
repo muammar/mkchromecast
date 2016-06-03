@@ -1,5 +1,5 @@
 mkchromecast (0.2.6-1) unstable; urgency=medium
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release (Closes: #123456).
 
  -- Muammar El Khatib <muammar@debian.org>  Fri, 06 May 2016 15:47:56 +0200
