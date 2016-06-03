@@ -89,7 +89,7 @@ class preferences(QWidget):
         """
         Backend
         """
-        backends_supported = ["node", "ffmpeg",  "avconv"]
+        backends_supported = ['node', 'ffmpeg', 'avconv', 'parec']
         backends = []
         if platform == 'Darwin':
             for item in backends_supported:
