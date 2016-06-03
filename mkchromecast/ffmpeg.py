@@ -182,9 +182,11 @@ if  codec == 'ogg':
 AAC > 128k for Stereo, Default sample rate: 44100kHz
 """
 if  codec == 'aac':
-    if platform == 'Linux':
+    if platform == 'Linux' and backend != 'parec':
         command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
+    elif platform == 'Linux' and backend == 'parec':
+        command = ['faac', '-b', bitrate[:-1], '-X', '-P', '-o', '-', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
@@ -195,9 +197,12 @@ if  codec == 'aac':
 WAV 24-Bit
 """
 if  codec == 'wav':
-    if platform == 'Linux':
+    if platform == 'Linux' and backend != 'parec':
         command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
+    elif platform == 'Linux' and backend == 'parec':
+        command = ['sox', '-t', 'raw', '-b', '16', '-e', 'signed', '-c', '2', '-r', samplerate, '-', '-t', 'wav', \
+                    '-b', '16', '-e', 'signed', '-c', '2', '-r', samplerate, '-L', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
@@ -205,12 +210,15 @@ if  codec == 'wav':
         debug_command()
 
 """
-FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio)
+FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
 """
 if  codec == 'flac':
-    if platform == 'Linux':
+    if platform == 'Linux' and backend != 'parec':
         command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
+    elif platform == 'Linux' and backend == 'parec':
+        command = ['flac', '-', '-c', '--channels', '2', '--bps', '16', '--sample-rate', samplerate, \
+                    '--endian', 'little', '--sign', 'signed', '-s']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']

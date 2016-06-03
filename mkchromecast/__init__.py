@@ -215,7 +215,7 @@ if args.update is True:
 """
 Check that encoders exist in the list
 """
-backends = ['node', 'ffmpeg', 'avconv', 'sox']
+backends = ['node', 'ffmpeg', 'avconv']
 if platform == 'Darwin':
     backends.remove('avconv')
 else:
