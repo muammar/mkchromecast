@@ -1,8 +1,9 @@
-* mkchromecast (0.2.5) **unreleased**:
+* mkchromecast (0.2.6) **unreleased**:
 
     - Volume now set to max/20 instead of max/10.
     - This release lets Linux users cast using  `parec` with external libraries
       instead of `ffmpeg` or `avconv`.
+    - A deb package is now provided in this release.
 
 * mkchromecast (0.2.5) **released**: 2016/05/25
 
