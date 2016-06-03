@@ -60,6 +60,8 @@ def streaming():
         samplerate = str(mkchromecast.__init__.samplerate)
         notifications = mkchromecast.__init__.notifications
 
+    print (colors.options('Selected backend:')+' '+ backend)
+
     if debug == True:
         print(':::node::: variables', backend,rcodec,bitrate,samplerate,notifications)
 
