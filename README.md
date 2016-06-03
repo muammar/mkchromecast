@@ -111,8 +111,6 @@ mkchromecast`.
 
 More information soon.
 
-###### Minimal requirements
-
 #### From sources
 
 To install **mkchromecast**, clone this repository:
