@@ -26,6 +26,8 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
+backends_dict = { }
+
 tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
@@ -36,6 +38,7 @@ if os.path.exists(configf) and tray == True:
     configurations.verify_config()
     config.read(configf)
     backend = ConfigSectionMap("settings")['backend']
+    backends_dict[backend] = backend
     codec= ConfigSectionMap("settings")['codec']
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
@@ -46,12 +49,12 @@ if os.path.exists(configf) and tray == True:
         print(backend,codec,bitrate,samplerate)
 else:
     backend = mkchromecast.__init__.backend
+    backends_dict[backend] = backend
     codec = mkchromecast.__init__.codec
     bitrate = str(mkchromecast.__init__.bitrate)
     samplerate = str(mkchromecast.__init__.samplerate)
 
 backends = ['ffmpeg', 'avconv', 'parec']
-backends_dict = { }
 if tray == True and backend in backends:
     import os, getpass
     import subprocess
@@ -163,7 +166,7 @@ if  codec == 'mp3':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
-    if debug == False and backend != 'parec':
+    if debug == False and backends_dict[backend] != 'parec':
         debug_command()
 
 """
@@ -178,7 +181,7 @@ if  codec == 'ogg':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
-    if debug == False:
+    if debug == False and backends_dict[backend] != 'parec':
         debug_command()
 
 """
@@ -193,7 +196,7 @@ if  codec == 'aac':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
-    if debug == False:
+    if debug == False and backends_dict[backend] != 'parec':
         debug_command()
 
 """
@@ -209,7 +212,7 @@ if  codec == 'wav':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
-    if debug == False:
+    if debug == False and backends_dict[backend] != 'parec':
         debug_command()
 
 """
@@ -225,7 +228,7 @@ if  codec == 'flac':
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-    if debug == False:
+    if debug == False and backends_dict[backend] != 'parec':
         debug_command()
 
 app = Flask(__name__)
