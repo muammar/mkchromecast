@@ -1,0 +1,3 @@
+mkchromecast/*                  usr/share/mkchromecast/mkchromecast
+mkchromecast/mkchromecast.py    usr/share/mkchromecast/
+debian/scripts/mkchromecast     usr/bin
