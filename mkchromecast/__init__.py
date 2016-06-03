@@ -24,7 +24,7 @@ ffmpeg:
 node:
     python mkchromecast.py  -b 128
 
-This option works with both backends. The example above sets the average
+This option works with all backends. The example above sets the average
 bitrate to 128k.
 
 ''')
@@ -42,17 +42,18 @@ Possible codecs:
     - wav  [HQ]     Waveform Audio File Format
     - flac [HQ]     Free Lossless Audio Codec
 
-This option only works for the ffmpeg and avconv backends.
+This option only works for the ffmpeg, avconv and parec backends.
 
 ''')
 parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
 parser.add_argument('--debug', action="store_true", help='Option for debugging purposes')
 parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a Google Cast device')
-parser.add_argument('--encoder-backend', type=str, default='node', help=
+parser.add_argument('--encoder-backend', type=str, default=None, help=
 '''
 Set the backend for all encoders.
 Possible backends:
-    - node (default)
+    - node (default in Mac)
+    - parec (default in Linux)
     - ffmpeg
     - avconv
 
@@ -155,6 +156,7 @@ if tray == True:
 else:
     select_cc = args.select_cc
 debug = args.debug
+
 if args.notifications == True:
     notifications = 'enabled'
 else:
@@ -215,27 +217,30 @@ if args.update is True:
 Check that encoders exist in the list
 """
 backends = ['node', 'ffmpeg', 'avconv']
+if platform == 'Darwin':
+    backends.remove('avconv')
+else:
+    backends.remove('node')
+    backends.append('parec')
 
-if args.encoder_backend not in backends:
+if args.debug == True:
+    print ('backends: ',backends)
+
+if args.encoder_backend not in backends and args.encoder_backend != None:
     print (colors.error('Supported backends are: '))
     for backend in backends:
         print ('-',backend)
     sys.exit(0)
-else:
-    if platform == 'Darwin':
-        backends.remove('avconv')
-    else:
-        backends.remove('node')
 
-    if args.encoder_backend in backends:
+if args.encoder_backend in backends:
+    backend = args.encoder_backend
+elif args.encoder_backend  == None:     #This is to define defaults
+    if platform == 'Linux':
+        args.encoder_backend = 'parec'
         backend = args.encoder_backend
-    elif args.encoder_backend not in backends:
-        if platform == 'Linux':
-            args.encoder_backend = 'ffmpeg'
-            backend = args.encoder_backend
-        elif platform == 'Darwin':
-            args.encoder_backend = 'node'
-            backend = args.encoder_backend
+    elif platform == 'Darwin':
+        args.encoder_backend = 'node'
+        backend = args.encoder_backend
 
 """
 Codecs

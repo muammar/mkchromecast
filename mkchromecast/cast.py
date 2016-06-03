@@ -217,7 +217,7 @@ class casting(object):
                     config.read(configf)
                     self.backend = ConfigSectionMap("settings")['backend']
 
-            if self.backend == 'ffmpeg' or self.backend == 'avconv':
+            if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
                 import mkchromecast.ffmpeg
                 mtype = mkchromecast.ffmpeg.mtype
                 print (' ')
