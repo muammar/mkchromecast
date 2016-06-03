@@ -1,11 +1,10 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: mkchromecast
-Source: <url://example.com>
+Source: http://mkchromecast.com
 
 Files: *
-Copyright: <years> <put author's name and email here>
-           <years> <likewise for another author>
-License: <special license>
+Copyright: 2016 Muammar El Khatib <muammarelkhatib@gmail.com>
+License: MIT
  <Put the license of the package here indented by 1 space>
  <This follows the format of Description: lines in control file>
  .

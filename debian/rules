@@ -6,7 +6,7 @@
 export PYBUILD_NAME=mkchromecast
 
 %:
-	dh $@  --with python2,python3 --buildsystem=pybuild
+	dh $@  --with python2 --buildsystem=pybuild
 
 
 # If you need to rebuild the Sphinx documentation
