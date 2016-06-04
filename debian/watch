@@ -2,6 +2,6 @@
 version=4
 
 # GitHub hosted projects
-opts="filenamemangle="s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%<project>-$1.tar.gz%" \
-   https://github.com/muammar/mkchromecast/tags \
-   (?:.*?/)?v?(\d[\d.]*)\.tar\.gz debian uupdate
+
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/mkchromecast-$1\.tar\.gz/ \
+  https://github.com/muammar/mkchromecast/tags .*/v?(\d\S*)\.tar\.gz
