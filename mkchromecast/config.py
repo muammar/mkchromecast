@@ -102,6 +102,6 @@ def ConfigSectionMap(section):
             dict1[option] = None
     return dict1
 
-print (platform)
-print (ConfigSectionMap("settings")['bitrate'])
+print(platform)
+print(ConfigSectionMap("settings")['bitrate'])
 """

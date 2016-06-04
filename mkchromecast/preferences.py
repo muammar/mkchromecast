@@ -24,8 +24,8 @@ else:
     PATH = os.environ['PATH']
 
 if debug == True:
-    print ('USER ='+str(USER))
-    print ('PATH ='+str(PATH))
+    print('USER ='+str(USER))
+    print('PATH ='+str(PATH))
 
 def is_installed(name):
     #import distutils.spawn
@@ -37,7 +37,7 @@ def is_installed(name):
             continue
         else:
             if debug == True:
-                print ('Program '+str(name)+' found in '+str(verifyif))
+                print('Program '+str(name)+' found in '+str(verifyif))
             return True
     return
 
@@ -79,7 +79,7 @@ class preferences(QWidget):
         self.configurations = config_manager()    # Class from mkchromecast.config
         self.configf = self.configurations.configf
         if os.path.exists(self.configf) == False:
-            print ('config does not exist')
+            print('config does not exist')
             self.configurations.config_defaults()
         self.read_defaults()
         self.initUI()
@@ -122,7 +122,7 @@ class preferences(QWidget):
         else:
             codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if debug == True:
-            print (codecs)
+            print(codecs)
         codecindex = codecs.index(self.codecconf)
         self.qccodec.move(180, 54)
         self.qccodec.setMinimumContentsLength(7)
@@ -206,7 +206,7 @@ class preferences(QWidget):
         else:
             codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if debug == True:
-            print (codecs)
+            print(codecs)
         codecindex = codecs.index(self.codecconf)
         self.qccodec.move(180, 54)
         self.qccodec.setMinimumContentsLength(7)
@@ -275,7 +275,7 @@ class preferences(QWidget):
         self.samplerateconf = ConfigSectionMap("settings")['samplerate']
         self.notificationsconf = ConfigSectionMap("settings")['notifications']
         if debug == True:
-            print (self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
+            print(self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

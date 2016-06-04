@@ -43,7 +43,7 @@ if os.path.exists(configf) and tray == True:
     bitrate = ConfigSectionMap("settings")['bitrate']
     samplerate= ConfigSectionMap("settings")['samplerate']
     if debug == True:
-        print (':::ffmpeg::: tray ='+str(tray))
+        print(':::ffmpeg::: tray ='+str(tray))
         print(colors.warning('Configuration file exist'))
         print(colors.warning('Using defaults set there'))
         print(backend,codec,bitrate,samplerate)
@@ -69,8 +69,8 @@ if tray == True and backend in backends:
             backends_dict[verifyif] = backend
             backend = verifyif
             if debug == True:
-                print (':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
-                print (':::ffmpeg::: backend dictionary '+str(backends_dict))
+                print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
+                print(':::ffmpeg::: backend dictionary '+str(backends_dict))
 
 appendtourl = 'stream'
 
@@ -83,65 +83,65 @@ else:
 
 mtype = 'audio/'+appendmtype
 
-print (colors.options('Selected backend:')+' '+ backend)
-print (colors.options('Selected audio codec:')+' '+ codec)
+print(colors.options('Selected backend:')+' '+ backend)
+print(colors.options('Selected audio codec:')+' '+ codec)
 
 if backend != 'node':
     if bitrate == '192':
         bitrate = bitrate+'k'
-        print (colors.options('Default bitrate used:')+' '+ bitrate)
+        print(colors.options('Default bitrate used:')+' '+ bitrate)
     elif bitrate == 'None':
-        print (colors.warning('The '+codec+' codec does not require the bitrate argument.'))
+        print(colors.warning('The '+codec+' codec does not require the bitrate argument.'))
     else:
         if codec == 'mp3' and int(bitrate) > 320:
-            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
-            print (colors.warning('You may try lossless audio coding formats.'))
+            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
+            print(colors.warning('You may try lossless audio coding formats.'))
             bitrate = '320'
-            print (colors.warning('Bitrate has been set to maximum!'))
+            print(colors.warning('Bitrate has been set to maximum!'))
 
         if codec == 'ogg' and int(bitrate) > 500:
-            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-            print (colors.warning('You may try lossless audio coding formats.'))
+            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+            print(colors.warning('You may try lossless audio coding formats.'))
             bitrate = '500'
-            print (colors.warning('Bitrate has been set to maximum!'))
+            print(colors.warning('Bitrate has been set to maximum!'))
 
         if codec == 'aac' and int(bitrate) > 500:
-            print (colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-            print (colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
-            print (colors.warning('You may try lossless audio coding formats.'))
+            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+            print(colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
+            print(colors.warning('You may try lossless audio coding formats.'))
             bitrate = '500'
-            print (colors.warning('Bitrate has been set to maximum!'))
+            print(colors.warning('Bitrate has been set to maximum!'))
 
         bitrate = bitrate+'k'
-        print (colors.options('Selected bitrate:')+' '+ bitrate)
+        print(colors.options('Selected bitrate:')+' '+ bitrate)
 
     if samplerate == '44100':
-        print (colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+        print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
     else:
         codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
         if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '44100'
-            print (colors.warning('Sample rate has been set to default!'))
+            print(colors.warning('Sample rate has been set to default!'))
 
         elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '32000'
 
         elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '32000'
 
         elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '22050'
 
         elif codec in codecs_sr and int(samplerate) > 41000:
-            print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
             samplerate = '44800'
-            print (colors.warning('Sample rate has been set to maximum!'))
+            print(colors.warning('Sample rate has been set to maximum!'))
 
-        print (colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+        print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
 """
 We verify platform and other options
@@ -234,7 +234,7 @@ if  codec == 'flac':
 app = Flask(__name__)
 
 if debug == True:
-    print (':::ffmpeg::: command '+str(command))
+    print(':::ffmpeg::: command '+str(command))
 
 @app.route('/')
 def index():
@@ -303,10 +303,10 @@ class monitor(object):
 def monitor_daemon():
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print (colors.options('PID of main process:')+' '+str(pidnumber))
+    print(colors.options('PID of main process:')+' '+str(pidnumber))
 
     localpid=getpid()
-    print (colors.options('PID of streaming process:')+' '+str(localpid))
+    print(colors.options('PID of streaming process:')+' '+str(localpid))
 
     while psutil.pid_exists(localpid) == True:
         try:
@@ -319,13 +319,13 @@ def monitor_daemon():
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
-            print ("Ctrl-c was requested")
+            print("Ctrl-c was requested")
             sys.exit(0)
         except IOError:
-            print ("I/O Error")
+            print("I/O Error")
             sys.exit(0)
         except OSError:
-            print ("OSError")
+            print("OSError")
             sys.exit(0)
 
 def main():
