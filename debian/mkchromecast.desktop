@@ -6,4 +6,4 @@ Terminal=false
 Type=Application
 Icon=/usr/share/pixmaps/mkchromecast.xpm
 Categories=Audio
-
+Keywords=audio;chromecast;google;cast;pychromecast;
