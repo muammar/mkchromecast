@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-cd /usr/share/mkchromecast && python mkchromecast.py "$@"
