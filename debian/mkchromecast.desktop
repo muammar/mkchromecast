@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=mkchromecast
+Comment=Cast your Linux audio to your Google cast device
+Exec=/usr/bin/mkchromecast -t
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/mkchromecast.xpm
+Categories=Audio
+

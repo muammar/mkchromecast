@@ -1,2 +1,3 @@
-mkchromecast/*      usr/share/mkchromecast/mkchromecast/
-mkchromecast.py     usr/share/mkchromecast/
+mkchromecast/*          usr/share/mkchromecast/mkchromecast/
+mkchromecast.py         usr/share/mkchromecast/
+images/mkchromecast.xpm usr/share/pixmaps
