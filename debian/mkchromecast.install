@@ -1,3 +1,4 @@
-mkchromecast/*          usr/share/mkchromecast/mkchromecast/
-mkchromecast.py         usr/share/mkchromecast/
-images/mkchromecast.xpm usr/share/pixmaps
+mkchromecast/*              usr/share/mkchromecast/mkchromecast/
+mkchromecast.py             usr/share/mkchromecast/
+images/mkchromecast.xpm     usr/share/pixmaps
+debian/mkchromecast.desktop usr/share/applications
