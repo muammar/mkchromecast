@@ -20,7 +20,8 @@ override_dh_install:
 	dh_python2
 
 override_dh_auto_clean:
-	echo 'Do nothing'
+	echo 'Cleaning *.pyc'
+	find . -name \*.pyc -exec rm {} \;
 
 # If you need to rebuild the Sphinx documentation
 # Add spinxdoc to the dh --with line
