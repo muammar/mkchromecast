@@ -3,8 +3,6 @@
 # This file is part of mkchromecast.
 
 import sys
-from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
-from PyQt5 import QtCore
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
 import os, getpass
@@ -16,7 +14,13 @@ Check if external programs are available to build the preferences
 
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
+tray = mkchromecast.__init__.tray
 USER = getpass.getuser()
+
+if tray == True:
+    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
+    from PyQt5 import QtCore
+
 
 if platform == 'Darwin':
     PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
