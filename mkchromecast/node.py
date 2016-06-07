@@ -60,7 +60,7 @@ def streaming():
         samplerate = str(mkchromecast.__init__.samplerate)
         notifications = mkchromecast.__init__.notifications
 
-    print (colors.options('Selected backend:')+' '+ backend)
+    print(colors.options('Selected backend:')+' '+ backend)
 
     if debug == True:
         print(':::node::: variables', backend,rcodec,bitrate,samplerate,notifications)
@@ -72,45 +72,45 @@ def streaming():
 
     if youtubeurl == None:
         if backend == 'node' and rcodec != 'mp3':
-            print (colors.warning('Codec '+rcodec+' is not supported by the node server!'))
-            print ('Using '+codec+' as default.')
+            print(colors.warning('Codec '+rcodec+' is not supported by the node server!'))
+            print('Using '+codec+' as default.')
 
         if backend == 'node':
             if int(bitrate) == 192:
-                print (colors.options('Default bitrate used:')+' '+bitrate+'k')
+                print(colors.options('Default bitrate used:')+' '+bitrate+'k')
             elif int(bitrate) > 320:
-                    print (colors.warning('Maximum bitrate supported by '+codec+' is:')+' '+str(320)+'k')
+                    print(colors.warning('Maximum bitrate supported by '+codec+' is:')+' '+str(320)+'k')
                     bitrate = '320'
-                    print (colors.warning('Bitrate has been set to maximum!'))
+                    print(colors.warning('Bitrate has been set to maximum!'))
             else:
-                print (colors.options('Selected bitrate: ')+bitrate+'k')
+                print(colors.options('Selected bitrate: ')+bitrate+'k')
 
             if samplerate == '44100':
-                print (colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+                print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
             else:
                 codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
                 if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-                    print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
                     samplerate = '44100'
-                    print (colors.warning('Sample rate has been set to default!'))
+                    print(colors.warning('Sample rate has been set to default!'))
 
                 elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-                    print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
                     samplerate = '32000'
 
                 elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-                    print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
                     samplerate = '32000'
 
                 elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-                    print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
                     samplerate = '22050'
 
                 elif codec in codecs_sr and int(samplerate) > 41000:
-                    print (colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
                     samplerate = '44800'
-                    print (colors.warning('Sample rate has been set to maximum!'))
-                print (colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+                    print(colors.warning('Sample rate has been set to maximum!'))
+                print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
     """
     Node section
@@ -121,14 +121,14 @@ def streaming():
         webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
     p = subprocess.Popen(webcast)
     if debug == True:
-        print (':::node::: node command', webcast)
+        print(':::node::: node command', webcast)
 
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print (colors.options('PID of main process:')+' '+str(pidnumber))
+    print(colors.options('PID of main process:')+' '+str(pidnumber))
 
     localpid=getpid()
-    print (colors.options('PID of streaming process:')+' '+str(localpid))
+    print(colors.options('PID of streaming process:')+' '+str(localpid))
 
     while p.poll() is None:
         try:
@@ -141,30 +141,30 @@ def streaming():
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
-            print ("Ctrl-c was requested")
+            print("Ctrl-c was requested")
             sys.exit(0)
         except IOError:
-            print ("I/O Error")
+            print("I/O Error")
             sys.exit(0)
         except OSError:
-            print ("OSError")
+            print("OSError")
             sys.exit(0)
     else:
-        print (colors.warning('Reconnecting node streaming...'))
+        print(colors.warning('Reconnecting node streaming...'))
         if platform == 'Darwin' and notifications == 'enabled':
             if os.path.exists('images/google.icns') == True:
                 noticon = 'images/google.icns'
             else:
                 noticon = 'google.icns'
         if debug == True:
-            print (':::node::: platform, tray, notifications', platform, tray, notifications)
+            print(':::node::: platform, tray, notifications', platform, tray, notifications)
 
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
             reconnecting = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-subtitle', 'node server failed', '-message', 'Reconnecting...']
             subprocess.Popen(reconnecting)
 
             if debug == True:
-                print (':::node::: reconnecting notifier command', reconnecting)
+                print(':::node::: reconnecting notifier command', reconnecting)
         relaunch(stream,recasting,kill)
     return
 

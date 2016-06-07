@@ -23,7 +23,7 @@ if args.tray == False:
     writePidFile()
 
     if cc.ip == '127.0.0.1' or None:        # We verify the local IP.
-        print (colors.error('Your computer is not connected to any network'))
+        print(colors.error('Your computer is not connected to any network'))
         terminate()
 
     if args.youtube == None:
@@ -34,7 +34,7 @@ if args.tray == False:
             print(colors.success('[Done]'))
         else:
             print('Creating pulseaudio sink...')
-            print('Open pavucontrol and select the mkchromecast sink.')
+            print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
             create_sink()
 
         print(colors.important('Starting local streaming server'))
@@ -79,8 +79,8 @@ if args.tray == False:
         try:
             from getch import getch, pause
         except ImportError:
-            print ('You need to install the module py_getch to control the volume of your Google cast.')
-            print (' ')
+            print('You need to install the module py_getch to control the volume of your Google cast.')
+            print(' ')
             volumearg = False
 
     if volumearg == True:
@@ -116,6 +116,9 @@ if args.tray == False:
             terminateapp()
 
     else:
+        if platform == 'Linux':
+            print(colors.warning('Remember to open pavucontrol and select the mkchromecast sink.'))
+        print('')
         print(colors.error('Ctrl-C to kill the application at any time'))
         print('')
         try:
