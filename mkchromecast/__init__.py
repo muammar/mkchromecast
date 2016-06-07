@@ -175,28 +175,28 @@ if args.reset == True:
     terminate()
 
 if args.config == True or args.discover == True or args.name == True:
-    print (colors.error('This option is not implemented yet.'))
+    print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
 """
 Reboot
 """
 if args.reboot == True:
-    print (colors.error('This option is not implemented yet.'))
+    print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
 """
 Not yet implemented
 """
 if args.config == True or args.discover == True or args.name == True:
-    print (colors.error('This option is not implemented yet.'))
+    print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
 """
 Version
 """
 if args.version is True:
-    print ('mkchromecast '+'v'+colors.success(__version__))
+    print('mkchromecast '+'v'+colors.success(__version__))
     sys.exit(0)
 
 """
@@ -204,13 +204,13 @@ Update
 """
 if args.update is True:
 
-    print (colors.warning('Updating mkchromecast'))
-    print (colors.important('git pull --all'))
+    print(colors.warning('Updating mkchromecast'))
+    print(colors.important('git pull --all'))
     pull = subprocess.Popen(['git', 'pull', '--all'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print (pull.stdout.read().decode('utf-8').strip())
-    print (colors.important('git fetch -p'))
+    print(pull.stdout.read().decode('utf-8').strip())
+    print(colors.important('git fetch -p'))
     prune = subprocess.Popen(['git', 'fetch', '-p'], stdout=subprocess.PIPE, stderr=subprocess.PIPE  )
-    print (prune.stdout.read().decode('utf-8').strip())
+    print(prune.stdout.read().decode('utf-8').strip())
     sys.exit(0)
 
 """
@@ -224,12 +224,12 @@ else:
     backends.append('parec')
 
 if args.debug == True:
-    print ('backends: ',backends)
+    print('backends: ',backends)
 
 if args.encoder_backend not in backends and args.encoder_backend != None:
-    print (colors.error('Supported backends are: '))
+    print(colors.error('Supported backends are: '))
     for backend in backends:
-        print ('-',backend)
+        print('-',backend)
     sys.exit(0)
 
 if args.encoder_backend in backends:
@@ -258,10 +258,10 @@ else:
     if backend != 'node' and args.codec in codecs:
         codec = args.codec
     else:
-        print (colors.options('Selected audio codec: ')+ args.codec)
-        print (colors.error('Supported audio codecs are: '))
+        print(colors.options('Selected audio codec: ')+ args.codec)
+        print(colors.error('Supported audio codecs are: '))
         for codec in codecs:
-            print ('-',codec)
+            print('-',codec)
         sys.exit(0)
 
 """
@@ -284,7 +284,7 @@ Sample rate
 """
 if args.sample_rate != 0:
     if args.sample_rate < 22050:
-        print (colors.error('The sample rate has to be greater than 22049.'))
+        print(colors.error('The sample rate has to be greater than 22049.'))
         sys.exit(0)
     else:
         samplerate = abs(args.sample_rate)
@@ -302,7 +302,7 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print (colors.error('You need to provide the youtube URL'))
+        print(colors.error('You need to provide the youtube URL'))
         sys.exit(0)
     else:
         youtubeurl = args.youtube

@@ -167,7 +167,7 @@ class menubar(QtWidgets.QMainWindow):
     """
 
     def onIntReady(self, availablecc):
-        print ('availablecc received')
+        print('availablecc received')
         self.availablecc = availablecc
         self.cast_list()
 
@@ -234,7 +234,7 @@ class menubar(QtWidgets.QMainWindow):
                 found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
                 subprocess.Popen(found)
                 if debug == True:
-                    print (':::systray:::',found)
+                    print(':::systray:::',found)
             elif platform == 'Linux' and self.notifications == 'enabled':
                 try:
                     import gi
@@ -248,7 +248,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print ('Available Google Cast devices', self.availablecc)
+            print('Available Google Cast devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 self.entries = menuentry
                 self.menuentry = self.menu.addAction(str(menuentry[1]))
@@ -265,7 +265,7 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
 
     def pcastready(self, done):
-        print ('pcastready ?', done)
+        print('pcastready ?', done)
         if os.path.exists('/tmp/mkchromecast.tmp') == True:
             self.cast = mkchromecast.tray_threading.cast
             self.ncast = self.cast
@@ -287,7 +287,7 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
-        print (self.entries[0], self.entries[1])
+        print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
         if os.path.exists('/tmp/mkchromecast.tmp') == True:
@@ -317,7 +317,7 @@ class menubar(QtWidgets.QMainWindow):
                 stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
                 subprocess.Popen(stop)
                 if debug == True:
-                    print (':::systray::: stop', stop)
+                    print(':::systray::: stop', stop)
             elif platform == 'Linux' and self.notifications == 'enabled':
                 try:
                     import gi
@@ -365,7 +365,7 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         if debug == True:
-            print (':::systray::: Value changed: '+str(value))
+            print(':::systray::: Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
                 pass
@@ -373,7 +373,7 @@ class menubar(QtWidgets.QMainWindow):
                 volume = value/20
                 self.ncast.set_volume(volume)
             if debug == True:
-                print (':::systray::: Volume set to: '+str(volume))
+                print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
             pass
 
@@ -388,7 +388,7 @@ class menubar(QtWidgets.QMainWindow):
         if platform == 'Darwin':
             try:
                 self.host = socket.gethostbyname(self.castto+'.local')
-                print ('Cast device IP: '+str(self.host))
+                print('Cast device IP: '+str(self.host))
                 reboot(self.host)
                 self.reset_audio()
                 self.stop_cast()
@@ -397,7 +397,7 @@ class menubar(QtWidgets.QMainWindow):
         else:
             try:
                 self.host = self.cast.host
-                print ('Cast device IP: '+str(self.host))
+                print('Cast device IP: '+str(self.host))
                 reboot(self.host)
                 self.reset_audio()
                 self.stop_cast()
