@@ -238,28 +238,6 @@ apt-get install libav-tools
   `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
   `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
 
-Example using wav:
-
-```
-python mkchromecast.py --encoder-backend ffmpeg -c wav
-```
-
-There is also an option to change the `bitrate`:
-
-```
-python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
-```
-
-and another one to change the sampling rate:
-
-```
-python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
-```
-check the section
-[https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
-
-**Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
-commands above.
 
 ##### PyQt5
 
@@ -324,7 +302,7 @@ Get into the cloned **mkchromecast** directory and execute:
 python mkchromecast.py
 ```
 
-This will launch **mkchromecast** using `node.js` (or `ffmpeg` for **Linux**
+This will launch **mkchromecast** using `node.js` (or `parec` for **Linux**
 users), and will do the streaming part together with the `mp3` audio coding
 format.  `node.js` works decently, **however** I would like to point out that
 the node version of this implementation is ancient. Moreover, the `node.js`
@@ -340,16 +318,16 @@ check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
-#### Using the `ffmpeg` backend
+##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
 
-Below an example using `mp3` with `ffmpeg`:
+Below an example using `mp3`:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg
 ```
 
-This is way more stable than the `node` implementation. With `ffmpeg` you can
-modify the codec:
+This is way more stable than the `node` implementation in Mac. With `ffmpeg`
+you can modify the codec:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c aac
@@ -360,6 +338,31 @@ change the bitrate and sample rate:
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
+
+check the section
+[https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only)
+for more about sample rates.
+
+##### Other examples with **mkchromecast** installed using the debian package
+
+```
+mkchromecast --encoder-backend ffmpeg -c wav
+```
+
+There is also an option to change the `bitrate`:
+
+```
+mkchromecast --encoder-backend ffmpeg -c ogg -b 128
+```
+
+and another one to change the sampling rate:
+
+```
+mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
+```
+
+**Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
+commands above.
 
 #### Playing Youtube URLs in Google Cast TV
 
@@ -397,6 +400,13 @@ To get more help:
 python mkchromecast.py -h
 ```
 
+or when installing the debian package:
+
+```
+mkchromecast -h
+```
+
+
 Killing the application
 -----------------------
 
@@ -414,6 +424,15 @@ A **beta** system tray menu is now provided. It requires you to install
 ```
 python mkchromecast.py -t
 ```
+
+or
+
+
+```
+mkchromecast -t
+```
+
+Additionally, Mac OS X users can install the standalone app.
 
 It looks like:
 
@@ -438,12 +457,7 @@ Known issues
 
 ##### Mac OS X
 
-The standalone **mkchromecast**  application is only supported for Mac models
-from 2011 ([more information
-here](https://github.com/muammar/mkchromecast/issues/4)). I am working to solve
-this issue. In the meantime, you may try [creating the standalone
-app](https://github.com/muammar/mkchromecast/wiki/Mac-standalone-app) by
-yourself, or launch **mkchromecast** with the `-t` option from the terminal.
+No new issues reported.
 
 ##### Linux
 
