@@ -26,7 +26,7 @@ want to degrade the sound quality. For more information visit the
 For **Linux**, you can optionally install `ffmpeg` (or `avconv`) together with
 `pulseaudio` ([more information
 here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note that sometimes the lag
-between playing a song and hearing may be of 8 seconds. 
+between playing a song and hearing may be of 8 seconds.
 
 Requirements:
 ------------
@@ -106,9 +106,24 @@ here](https://github.com/muammar/mkchromecast/issues).
 * Debian
 * Ubuntu
 
-I am working in a debian package, so that you just `dpkg -i mkchromecast*`.
+Download the latest [deb package
+here](https://github.com/muammar/mkchromecast/releases/), and install it as
+follows:
 
-More information soon.
+```
+sudo dpkg -i mkchromecast_$VERSION_all.deb
+```
+
+where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`. Then, if the dependencies are
+not available you have to do:
+
+```
+sudo apt-get -f install
+```
+
+This should work in Debian Unstable and Testing. I would appreciate Ubuntu
+testers as well. If you find any problems, please [report it
+here](https://github.com/muammar/mkchromecast/issues).
 
 #### From sources
 
