@@ -23,11 +23,10 @@ want to degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ) for more information.
 
-For **Linux**, you have to install `ffmpeg` (or `avconv`) together with
+For **Linux**, you can optionally install `ffmpeg` (or `avconv`) together with
 `pulseaudio` ([more information
-here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Sometimes the lag
-between playing a song and hearing may be of 8 seconds. I don't know if it is
-my router though.
+here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note that sometimes the lag
+between playing a song and hearing may be of 8 seconds. 
 
 Requirements:
 ------------
