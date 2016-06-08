@@ -26,7 +26,7 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
-backends_dict = { }
+backends_dict = {}
 
 tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
