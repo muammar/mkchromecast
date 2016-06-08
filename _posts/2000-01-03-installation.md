@@ -30,13 +30,28 @@ brew cask install soundflower
 ```
 
 Or just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases).`
+file](https://github.com/mattingalls/Soundflower/releases).
 
 -------------------------
 
 ## Linux based installation
 
-More information soon.
+Download the latest [deb package here](#download), and install it as follows:
+
+```
+sudo dpkg -i mkchromecast_$VERSION_all.deb
+```
+
+where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`. Then, if the dependencies are
+not available you have to do:
+
+```
+sudo apt-get -f install
+```
+
+This should work in Debian Unstable and Testing. I would appreciate Ubuntu
+testers as well. If you find any problems, please [report it
+here](https://github.com/muammar/mkchromecast/issues).`
 
 -------------------------
 
