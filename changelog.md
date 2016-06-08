@@ -1,4 +1,4 @@
-* mkchromecast (0.2.6) **unreleased**:
+* mkchromecast (0.2.6) **released**: 2016/06/08
 
     - Volume now set to max/20 instead of max/10.
     - This release lets Linux users cast using  `parec` with external libraries
