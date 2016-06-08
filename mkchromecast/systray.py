@@ -310,7 +310,12 @@ class menubar(QtWidgets.QMainWindow):
                 child.kill()
             checkmktmp()
             self.search_cast()
-            self.ncast.quit_app()
+            while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
+                try:
+                    self.ncast.quit_app()
+                except pychromecast.error.NotConnected:
+                    continue
+                break
             self.stopped = True
             self.read_config()
             if platform == 'Darwin' and self.notifications == 'enabled':
