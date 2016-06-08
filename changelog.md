@@ -6,6 +6,10 @@
     - The program does not import any PyQt5 module when launched without the
       system tray.
     - A deb package is now provided in this release.
+    - The system tray will retry stopping the google cast before closing
+      abruptly.
+    - The Mac OS X application now support models below the year 2010. See
+      [#4](https://github.com/muammar/mkchromecast/issues/4).
 
 * mkchromecast (0.2.5) **released**: 2016/05/25
 
