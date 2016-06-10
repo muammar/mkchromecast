@@ -1,3 +1,9 @@
+mkchromecast (0.2.6-2) unstable; urgency=medium
+
+  * Problem with icons fixed.
+
+ -- Muammar El Khatib <muammar@debian.org>  Fri, 10 Jun 2016 14:02:25 +0200
+
 mkchromecast (0.2.6-1) unstable; urgency=medium
 
   * Initial release.
