@@ -74,15 +74,18 @@ class menubar(QtWidgets.QMainWindow):
                     self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
         self.w = QWidget()
 
-        if os.path.exists('images/google.icns') == True:
+        if os.path.exists('images/google.icns') == True:    # This is useful when launching from git repo
             self.icon = QtGui.QIcon()
             if platform == 'Darwin':
-                self.icon.addFile('images/google.icns')#, QtCore.QSize(48,48))
+                self.icon.addFile('images/google.icns')
             else:
                 self.icon.addFile('images/google.png')
-        else:
+        else:                                               # This is useful for applications
             self.icon = QtGui.QIcon()
-            self.icon.addFile('google.icns')#, QtCore.QSize(48,48))
+            if platform == 'Linux':
+                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+            else:
+                self.icon.addFile('google.icns')
         super(QtWidgets.QMainWindow,self).__init__()
         self.createUI()
 
@@ -178,7 +181,10 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
-            self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+            if platform == 'Linux':
+                self.icon.addFile('/usr/share/mkchromecast/images/google_working.png')
+            else:
+                self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         """
         This catches the error cause by an empty tmp file
@@ -202,7 +208,11 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
-            self.tray.setIcon(QtGui.QIcon('google.icns'))
+            if platform == 'Linux':
+                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+            else:
+                self.tray.setIcon(QtGui.QIcon('google.icns'))
+
         if len(self.availablecc) == 0:
             self.menu.clear()
             self.search_menu()
@@ -214,7 +224,11 @@ class menubar(QtWidgets.QMainWindow):
                 else:
                     self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
             else:
-                self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
+                if platform == 'Linux':
+                    self.icon.addFile('/usr/share/mkchromecast/images/google_nodev.png')
+                else:
+                    self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
+
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
@@ -275,7 +289,10 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
-            self.tray.setIcon(QtGui.QIcon('google.icns'))
+            if platform == 'Linux':
+                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+            else:
+                self.tray.setIcon(QtGui.QIcon('google.icns'))
 
     def play_cast(self):
         self.menuentry.setChecked(True)
@@ -285,7 +302,10 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
-            self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+            if platform == 'Linux':
+                self.icon.addFile('/usr/share/mkchromecast/images/google_working.png')
+            else:
+                self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
