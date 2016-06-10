@@ -182,7 +182,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/google_working.png')
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_working.png'))
             else:
                 self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
@@ -209,7 +209,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google.png'))
             else:
                 self.tray.setIcon(QtGui.QIcon('google.icns'))
 
@@ -225,7 +225,7 @@ class menubar(QtWidgets.QMainWindow):
                     self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
             else:
                 if platform == 'Linux':
-                    self.icon.addFile('/usr/share/mkchromecast/images/google_nodev.png')
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_nodev.png'))
                 else:
                     self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
 
@@ -290,7 +290,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('images/google.png'))
         else:
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google.png'))
             else:
                 self.tray.setIcon(QtGui.QIcon('google.icns'))
 
@@ -303,7 +303,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
         else:
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/google_working.png')
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_working.png'))
             else:
                 self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
