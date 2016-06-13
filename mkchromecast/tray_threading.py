@@ -36,8 +36,11 @@ class Worker(QObject):
 
     @pyqtSlot()
     def _search_cast_(self):
-        self.cc = casting()
-        self.cc.initialize_cast()
+        try:                        # This should fix the error socket.gaierror making the system tray to be closed.
+            self.cc = casting()
+            self.cc.initialize_cast()
+        except socket.gaierror:
+            self.cc.availablecc == 0
         if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
