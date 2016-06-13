@@ -1,3 +1,5 @@
+* mkchromecast (0.2.7) **unreleased**:
+
 * mkchromecast (0.2.6) **released**: 2016/06/08
 
     - Volume now set to max/20 instead of max/10.
