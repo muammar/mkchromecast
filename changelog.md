@@ -1,5 +1,10 @@
 * mkchromecast (0.2.7) **unreleased**:
 
+    - Volume now set to max/50 instead of max/10. I have remarked that changing
+      volume directly in the chromecast is more stable and faster than doing it
+      from the streaming part, e.g. pavucontrol, or soundflower.
+    - General improvements in system tray's behavior.
+
 * mkchromecast (0.2.6) **released**: 2016/06/08
 
     - Volume now set to max/20 instead of max/10.

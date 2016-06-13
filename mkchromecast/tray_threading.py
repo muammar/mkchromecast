@@ -81,8 +81,11 @@ class Player(QObject):
             create_sink()
         start = casting()
         start.initialize_cast()
-        start.get_cc()
-        start.play_cast()
-        cast = start.cast
-        self.pcastready.emit('done')
+        try:
+            start.get_cc()
+            start.play_cast()
+            cast = start.cast
+            self.pcastready.emit('_play_cast_ success')
+        except AttributeError:
+            self.pcastready.emit('_play_cast_ failed')
         self.pcastfinished.emit()
