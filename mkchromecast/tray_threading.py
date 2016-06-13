@@ -22,6 +22,7 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -40,6 +41,8 @@ class Worker(QObject):
             self.cc = casting()
             self.cc.initialize_cast()
         except socket.gaierror:
+            if debug == True:
+                print(colors.warning(':::Threading::: Socket error, CC set to 0'))
             self.cc.availablecc == 0
         if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
