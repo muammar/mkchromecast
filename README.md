@@ -41,7 +41,6 @@ In order to use **mkchromecast** you need the following software to stream with
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
-* py_getch (optional if you want to control the volume of the Google cast
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
@@ -66,8 +65,6 @@ following:
 * faac.
 * ffmpeg (optional).
 * avconv (optional).
-* py_getch (optional if you want to control the volume of the Google cast
-  device).
 * PyQt5 (optional if you want to use the system tray menu).
 
 Install
@@ -160,12 +157,6 @@ Example for Debian based distros:
 
 ```
 sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
-```
-
-Additionally, using `pip` you need:
-
-```
-pip install py_getch
 ```
 
 ##### Soundflower (Mac users only)
@@ -386,10 +377,6 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
 
 This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
 and `volume down` respectively.
-
-**Note**: you need the module `py-getch` for this option to work. You can
-install it using the `requirements.txt` file shipped in the repository as
-described above.
 
 More help
 ---------
