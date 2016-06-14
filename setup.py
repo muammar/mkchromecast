@@ -17,7 +17,7 @@ You need to install using pip3 the following:
 """
 from setuptools import setup
 
-version = '0.2.5'
+version = '0.2.7'
 
 APP = ['start_tray.py']
 APP_NAME = "mkchromecast"
