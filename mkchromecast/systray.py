@@ -359,12 +359,13 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
+        self.maxvolset = 40
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
-        self.sl.setMaximum(50)
+        self.sl.setMaximum(self.maxvolset)
         self.sl.setGeometry(30, 40, 230, 70)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*50), 1))
+            self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -396,10 +397,10 @@ class menubar(QtWidgets.QMainWindow):
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
                 print (':::systray::: maximum volume level reached')
-                volume = value/50
+                volume = value/self.maxvolset
                 self.ncast.set_volume(volume)
             else:
-                volume = value/50
+                volume = value/self.maxvolset
                 self.ncast.set_volume(volume)
             if debug == True:
                 print(':::systray::: Volume set to: '+str(volume))
