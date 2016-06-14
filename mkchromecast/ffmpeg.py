@@ -192,7 +192,7 @@ if  codec == 'aac':
         command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
                     '-acodec', 'aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
     elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['faac', '-b', bitrate[:-1], '-X', '-P', '-o', '-', '-']
+        command = ['faac', '-b', bitrate[:-1], '-X', '-P', '-c','18000','-o', '-', '-']
     else:
         command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
                     '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
