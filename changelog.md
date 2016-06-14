@@ -4,6 +4,7 @@
       volume directly in the chromecast is more stable and faster than doing it
       from the streaming part, e.g. pavucontrol, or soundflower.
     - General improvements in system tray's behavior.
+    - An error when setting volume to maximum has been fixed.
 
 * mkchromecast (0.2.6) **released**: 2016/06/08
 
