@@ -393,11 +393,11 @@ class menubar(QtWidgets.QMainWindow):
         """
 
     def valuechange(self, value):
-        if debug == True:
-            print(':::systray::: Value changed: '+str(value))
         try:
             if round(self.ncast.status.volume_level, 1) == 1:
-                pass
+                print (':::systray::: maximum volume level reached')
+                volume = value/50
+                self.ncast.set_volume(volume)
             else:
                 volume = value/50
                 self.ncast.set_volume(volume)
@@ -405,6 +405,8 @@ class menubar(QtWidgets.QMainWindow):
                 print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
             pass
+        if debug == True:
+            print(':::systray::: Value changed: '+str(value))
 
     def reset_audio(self):
         if platform == 'Darwin':
