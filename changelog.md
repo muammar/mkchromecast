@@ -5,6 +5,9 @@
       from the streaming part, e.g. pavucontrol, or soundflower.
     - General improvements in system tray's behavior.
     - An error when setting volume to maximum has been fixed.
+    - Now the muted time when launching a cast session is reduced. This is
+      possible given that Soundflower changes input/output devices
+      automatically. Linux users have to select a sink in pavucontrol.
 
 * mkchromecast (0.2.6) **released**: 2016/06/08
 
