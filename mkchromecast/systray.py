@@ -281,6 +281,7 @@ class menubar(QtWidgets.QMainWindow):
     def pcastready(self, message):
         print('pcastready ?', message)
         if message == '_play_cast_ success':
+            self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
                 self.ncast = self.cast
