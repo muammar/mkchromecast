@@ -8,6 +8,7 @@
     - Now the muted time when launching a cast session is reduced. This is
       possible given that Soundflower changes input/output devices
       automatically. Linux users have to select a sink in pavucontrol.
+    - Change from `Mac OS X` to  `macOS`.
 
 * mkchromecast (0.2.6) **released**: 2016/06/08
 
