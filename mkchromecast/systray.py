@@ -295,6 +295,7 @@ class menubar(QtWidgets.QMainWindow):
                 else:
                     self.tray.setIcon(QtGui.QIcon('google.icns'))
         else:
+            self.pcastfailed = True
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
@@ -343,7 +344,10 @@ class menubar(QtWidgets.QMainWindow):
             self.stopped = True
             self.read_config()
             if platform == 'Darwin' and self.notifications == 'enabled':
-                stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
+                if self.pcastfailed == True:
+                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Casting process failed. Try again...']
+                else:
+                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
                 subprocess.Popen(stop)
                 if debug == True:
                     print(':::systray::: stop', stop)
@@ -353,7 +357,10 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                    if self.pcastfailed == True:
+                        stop=Notify.Notification.new("mkchromecast", "Casting process failed. Try again...", "dialog-information")
+                    else:
+                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
                     stop.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
