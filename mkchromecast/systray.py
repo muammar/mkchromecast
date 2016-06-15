@@ -44,6 +44,7 @@ class menubar(QtWidgets.QMainWindow):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
+        self.played = False
         self.read_config()
 
         """
@@ -301,6 +302,8 @@ class menubar(QtWidgets.QMainWindow):
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
     def play_cast(self):
+        if self.played == True:
+            self.kill_child()
         self.menuentry.setChecked(True)
         if os.path.exists('images/google_working.icns') == True:
             if platform == 'Darwin':
@@ -320,6 +323,7 @@ class menubar(QtWidgets.QMainWindow):
             self.tf = open('/tmp/mkchromecast.tmp', 'wb')
         pickle.dump(self.index, self.tf)
         self.tf.close()
+        self.played = True
         self.threadplay.start()
 
     def stop_cast(self):
@@ -330,10 +334,7 @@ class menubar(QtWidgets.QMainWindow):
             self.ncast.quit_app()
             self.menuentry.setChecked(False)
             self.reset_audio()
-            self.parent_pid = getpid()
-            self.parent = psutil.Process(self.parent_pid)
-            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-                child.kill()
+            self.kill_child()
             checkmktmp()
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
@@ -458,13 +459,18 @@ class menubar(QtWidgets.QMainWindow):
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
+    def kill_child(self):       # Not a beautiful name, I know...
+        self.parent_pid = getpid()
+        self.parent = psutil.Process(self.parent_pid)
+        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
+            child.kill()
+
     def exit_all(self):
         if self.cast == None and self.stopped == False:
             self.app.quit()
         elif self.stopped == True or self.cast != None:
-            self.stop_cast()
-            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-                child.kill()
+            #self.stop_cast() # This was duplicated.
+            self.kill_child()
             self.stop_cast()
             self.app.quit()
         else:
