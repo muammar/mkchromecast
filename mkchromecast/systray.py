@@ -70,6 +70,11 @@ class menubar(QtWidgets.QMainWindow):
         self.threadplay.started.connect(self.objp._play_cast_)
 
         self.app = QtWidgets.QApplication(sys.argv)
+        screen_resolution = self.app.desktop().screenGeometry()
+        self.width = screen_resolution.width()
+        self.height = screen_resolution.height()
+        if debug == True:
+            print(':::systray::: Screen resolution: ', self.width, self.height)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
         if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
                     self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
