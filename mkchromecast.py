@@ -76,14 +76,8 @@ if args.tray == False:
         volumearg = False
 
     if volumearg == True:
-        try:
-            from mkchromecast.getch import getch, pause
-        except ImportError:
-            print('You need to install the module py_getch to control the volume of your Google cast.')
-            print(' ')
-            volumearg = False
+        from mkchromecast.getch import getch, pause
 
-    if volumearg == True:
         def controls_msg():
             print('')
             print(colors.important('Controls:'))
