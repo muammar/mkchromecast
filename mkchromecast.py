@@ -27,12 +27,7 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        if platform == 'Darwin':
-            print('Switching to soundflower...')
-            inputdev()
-            outputdev()
-            print(colors.success('[Done]'))
-        else:
+        if platform == 'Linux':
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
             create_sink()
@@ -55,9 +50,19 @@ if args.tray == False:
         cc.sel_cc()
         cc.inp_cc()
         cc.get_cc()
+        if platform == 'Darwin':
+            print('Switching to soundflower...')
+            inputdev()
+            outputdev()
+            print(colors.success('[Done]'))
         cc.play_cast()
     else:
         cc.get_cc()
+        if platform == 'Darwin':
+            print('Switching to soundflower...')
+            inputdev()
+            outputdev()
+            print(colors.success('[Done]'))
         cc.play_cast()
 
     def terminateapp():
