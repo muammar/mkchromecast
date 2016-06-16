@@ -1,12 +1,11 @@
 #!/usr/bin/make -f
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
-#export DH_VERBOSE = 1
+export DH_VERBOSE = 1
 
 export PYBUILD_NAME=mkchromecast
 
 %:
-	#dh $@  --with python2 --buildsystem=pybuild
 	dh $@  --with python2
 
 override_dh_auto_build:
