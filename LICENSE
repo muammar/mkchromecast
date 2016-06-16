@@ -29,3 +29,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 All files located in the nodejs and archive directories are externally
 maintained codes used by this software which have their own licenses; we
 recommend you read them, as their terms may differ from the terms above.
+
+Files in `mkchromecast/getch` are maintained under the MIT license. For more
+information please see: https://github.com/joeyespo/py-getch.
+
+Files in `notifier`, except for `Terminal.icns` are  maintained under the MIT
+license. For more information see:
+https://github.com/julienXX/terminal-notifier#license

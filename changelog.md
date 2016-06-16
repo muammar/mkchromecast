@@ -1,4 +1,16 @@
-* mkchromecast (0.2.6) **unreleased**:
+* mkchromecast (0.2.7) **released**: 2016/06/16
+
+    - Volume now set to max/40 instead of max/10. I have remarked that changing
+      volume directly in the chromecast is more stable and faster than doing it
+      from the streaming part, e.g. pavucontrol, or soundflower.
+    - General improvements in system tray's behavior.
+    - An error when setting volume to maximum has been fixed.
+    - Now the muted time when launching a cast session is reduced. This is
+      possible given that Soundflower changes input/output devices
+      automatically. Linux users have to select a sink in pavucontrol.
+    - Change from `Mac OS X` to  `macOS`.
+
+* mkchromecast (0.2.6) **released**: 2016/06/08
 
     - Volume now set to max/20 instead of max/10.
     - This release lets Linux users cast using  `parec` with external libraries
@@ -6,6 +18,10 @@
     - The program does not import any PyQt5 module when launched without the
       system tray.
     - A deb package is now provided in this release.
+    - The system tray will retry stopping the google cast before closing
+      abruptly.
+    - The Mac OS X application now supports models below the year 2010. See
+      [#4](https://github.com/muammar/mkchromecast/issues/4).
 
 * mkchromecast (0.2.5) **released**: 2016/05/25
 

@@ -11,7 +11,7 @@ import os.path, sys, platform
 import pickle, subprocess
 from argparse import RawTextHelpFormatter
 
-parser = argparse.ArgumentParser(description='Cast Mac OS X and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='Cast macOS and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
@@ -52,7 +52,7 @@ parser.add_argument('--encoder-backend', type=str, default=None, help=
 '''
 Set the backend for all encoders.
 Possible backends:
-    - node (default in Mac)
+    - node (default in macOS)
     - parec (default in Linux)
     - ffmpeg
     - avconv

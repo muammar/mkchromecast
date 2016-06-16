@@ -163,29 +163,31 @@ class casting(object):
             print('def get_cc(self):')
         try:
             self.cast = pychromecast.get_chromecast(self.castto)
+            # Wait for cast device to be ready
+            self.cast.wait()
+            print(' ')
+            print(colors.important('Information about ')+' '+colors.success(self.castto))
+            print(' ')
+            print(self.cast.device)
+            print(' ')
+            print(colors.important('Status of device ')+' '+colors.success(self.castto))
+            print(' ')
+            print(self.cast.status)
+            print(' ')
         except pychromecast.error.NoChromecastFoundError:
             print(colors.error('No Chromecasts matching filter critera were found!'))
-            print(colors.error('Finishing the application...'))
-            if self.platform == 'Linux':
-                import mkchromecast.pulseaudio
-                mkchromecast.pulseaudio.remove_sink()
-            else:
+            if self.platform == 'Darwin':
                 inputint()
                 outputint()
+            elif self.platform == 'Linux':
+                import mkchromecast.pulseaudio
+                mkchromecast.pulseaudio.remove_sink()
             if self.tray == False:  # In the case that the tray is used, we don't kill the application
+                print(colors.error('Finishing the application...'))
                 terminate()
                 exit()
-        # Wait for cast device to be ready
-        self.cast.wait()
-        print(' ')
-        print(colors.important('Information about ')+' '+colors.success(self.castto))
-        print(' ')
-        print(self.cast.device)
-        print(' ')
-        print(colors.important('Status of device ')+' '+colors.success(self.castto))
-        print(' ')
-        print(self.cast.status)
-        print(' ')
+            else:
+                self.stop_cast()
 
     def play_cast(self):
         if self.debug == True:

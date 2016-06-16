@@ -22,6 +22,7 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -36,8 +37,13 @@ class Worker(QObject):
 
     @pyqtSlot()
     def _search_cast_(self):
-        self.cc = casting()
-        self.cc.initialize_cast()
+        try:                        # This should fix the error socket.gaierror making the system tray to be closed.
+            self.cc = casting()
+            self.cc.initialize_cast()
+        except socket.gaierror:
+            if debug == True:
+                print(colors.warning(':::Threading::: Socket error, CC set to 0'))
+            self.cc.availablecc == 0
         if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
@@ -74,15 +80,18 @@ class Player(QObject):
                 from imp import reload
                 reload(mkchromecast.ffmpeg)
             mkchromecast.ffmpeg.main()
-        if platform == 'Darwin':
-            inputdev()
-            outputdev()
-        else:
+        if platform == 'Linux':
             create_sink()
         start = casting()
         start.initialize_cast()
-        start.get_cc()
-        start.play_cast()
-        cast = start.cast
-        self.pcastready.emit('done')
+        try:
+            start.get_cc()
+            start.play_cast()
+            cast = start.cast
+            if platform == 'Darwin': # Let's change inputs at the end to avoid muting sound too early.
+                inputdev()           # For Linux it does not matter given that user has to select sink in pulse audio.
+                outputdev()          # Therefore the sooner it is available, the better.
+            self.pcastready.emit('_play_cast_ success')
+        except AttributeError:
+            self.pcastready.emit('_play_cast_ failed')
         self.pcastfinished.emit()

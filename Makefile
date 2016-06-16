@@ -1,4 +1,4 @@
-# This file is part of mkchromecast. It is used to build the Mac OS X app.
+# This file is part of mkchromecast. It is used to build the macOS app.
 # It does the following:
 #
 # 	1) It changes the strings tray and debug to True.
@@ -38,7 +38,7 @@
 #
 
 # This target is used to test the start_tray.py script that is used to deploy
-# the Mac app
+# the macOS app
 sed:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
