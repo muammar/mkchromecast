@@ -80,10 +80,7 @@ class Player(QObject):
                 from imp import reload
                 reload(mkchromecast.ffmpeg)
             mkchromecast.ffmpeg.main()
-        if platform == 'Darwin':
-            inputdev()
-            outputdev()
-        else:
+        if platform == 'Linux':
             create_sink()
         start = casting()
         start.initialize_cast()
@@ -91,6 +88,9 @@ class Player(QObject):
             start.get_cc()
             start.play_cast()
             cast = start.cast
+            if platform == 'Darwin': # Let's change inputs at the end to avoid muting sound too early.
+                inputdev()           # For Linux it does not matter given that user has to select sink in pulse audio.
+                outputdev()          # Therefore the sooner it is available, the better.
             self.pcastready.emit('_play_cast_ success')
         except AttributeError:
             self.pcastready.emit('_play_cast_ failed')

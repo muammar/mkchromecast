@@ -1,10 +1,14 @@
-* mkchromecast (0.2.7) **unreleased**:
+* mkchromecast (0.2.7) **released**: 2016/06/16
 
     - Volume now set to max/40 instead of max/10. I have remarked that changing
       volume directly in the chromecast is more stable and faster than doing it
       from the streaming part, e.g. pavucontrol, or soundflower.
     - General improvements in system tray's behavior.
     - An error when setting volume to maximum has been fixed.
+    - Now the muted time when launching a cast session is reduced. This is
+      possible given that Soundflower changes input/output devices
+      automatically. Linux users have to select a sink in pavucontrol.
+    - Change from `Mac OS X` to  `macOS`.
 
 * mkchromecast (0.2.6) **released**: 2016/06/08
 

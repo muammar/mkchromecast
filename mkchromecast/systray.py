@@ -44,6 +44,7 @@ class menubar(QtWidgets.QMainWindow):
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
+        self.played = False
         self.read_config()
 
         """
@@ -69,6 +70,11 @@ class menubar(QtWidgets.QMainWindow):
         self.threadplay.started.connect(self.objp._play_cast_)
 
         self.app = QtWidgets.QApplication(sys.argv)
+        screen_resolution = self.app.desktop().screenGeometry()
+        self.width = screen_resolution.width()
+        self.height = screen_resolution.height()
+        if debug == True:
+            print(':::systray::: Screen resolution: ', self.width, self.height)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
         if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
                     self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
@@ -281,6 +287,7 @@ class menubar(QtWidgets.QMainWindow):
     def pcastready(self, message):
         print('pcastready ?', message)
         if message == '_play_cast_ success':
+            self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
                 self.ncast = self.cast
@@ -295,10 +302,13 @@ class menubar(QtWidgets.QMainWindow):
                 else:
                     self.tray.setIcon(QtGui.QIcon('google.icns'))
         else:
+            self.pcastfailed = True
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
     def play_cast(self):
+        if self.played == True:
+            self.kill_child()
         self.menuentry.setChecked(True)
         if os.path.exists('images/google_working.icns') == True:
             if platform == 'Darwin':
@@ -318,6 +328,7 @@ class menubar(QtWidgets.QMainWindow):
             self.tf = open('/tmp/mkchromecast.tmp', 'wb')
         pickle.dump(self.index, self.tf)
         self.tf.close()
+        self.played = True
         self.threadplay.start()
 
     def stop_cast(self):
@@ -328,10 +339,7 @@ class menubar(QtWidgets.QMainWindow):
             self.ncast.quit_app()
             self.menuentry.setChecked(False)
             self.reset_audio()
-            self.parent_pid = getpid()
-            self.parent = psutil.Process(self.parent_pid)
-            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-                child.kill()
+            self.kill_child()
             checkmktmp()
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
@@ -343,7 +351,10 @@ class menubar(QtWidgets.QMainWindow):
             self.stopped = True
             self.read_config()
             if platform == 'Darwin' and self.notifications == 'enabled':
-                stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
+                if self.pcastfailed == True:
+                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Casting process failed. Try again...']
+                else:
+                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
                 subprocess.Popen(stop)
                 if debug == True:
                     print(':::systray::: stop', stop)
@@ -353,7 +364,10 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                    if self.pcastfailed == True:
+                        stop=Notify.Notification.new("mkchromecast", "Casting process failed. Try again...", "dialog-information")
+                    else:
+                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
                     stop.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
@@ -450,13 +464,18 @@ class menubar(QtWidgets.QMainWindow):
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
+    def kill_child(self):       # Not a beautiful name, I know...
+        self.parent_pid = getpid()
+        self.parent = psutil.Process(self.parent_pid)
+        for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
+            child.kill()
+
     def exit_all(self):
         if self.cast == None and self.stopped == False:
             self.app.quit()
         elif self.stopped == True or self.cast != None:
-            self.stop_cast()
-            for child in self.parent.children(recursive=True):  # or parent.children() for recursive=False
-                child.kill()
+            #self.stop_cast() # This was duplicated.
+            self.kill_child()
             self.stop_cast()
             self.app.quit()
         else:
