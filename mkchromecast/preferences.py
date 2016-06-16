@@ -27,8 +27,6 @@ if debug == True:
     print('PATH ='+str(PATH))
 
 def is_installed(name):
-    #import distutils.spawn
-    #return distutils.spawn.find_executable(name) is not None
     iterate = PATH.split(':')
     for item in iterate:
         verifyif = str(item+'/'+name)
