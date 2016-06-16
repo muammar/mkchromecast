@@ -1,4 +1,4 @@
-* mkchromecast (0.2.7) **unreleased**:
+* mkchromecast (0.2.7) **released**: 2016/06/16
 
     - Volume now set to max/40 instead of max/10. I have remarked that changing
       volume directly in the chromecast is more stable and faster than doing it
