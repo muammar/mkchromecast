@@ -378,6 +378,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setMinimum(0)
         self.sl.setMaximum(self.maxvolset)
         self.sl.setGeometry(30, 40, 230, 70)
+        self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
             self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
