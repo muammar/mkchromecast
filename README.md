@@ -9,9 +9,9 @@ release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https:
 This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices.
 
-It is written in Python, and it can stream via `node.js`, `parec` (Linux),
+It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
-audio formats provided that `ffmpeg`, `avconv` (Linux), or `parec` (Linux) are
+audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec` (**Linux**) are
 installed. Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
@@ -41,7 +41,6 @@ In order to use **mkchromecast** you need the following software to stream with
 * psutil.
 * mutagen.
 * [Soundflower](https://github.com/mattingalls/Soundflower/).
-  device).
 * PyQt5 (optional if you want to use the system tray menu).
 
 For more control, you need `ffmpeg` as backend.  In that case install the
@@ -85,7 +84,7 @@ There is a standalone application for macOS users. You need to drag it to your
 [Download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/).
 You need also to [install
-Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only).
+Soundflower](https://github.com/muammar/mkchromecast#soundflower-macos-users-only).
 
 ###### Homebrew Cask
 
@@ -220,7 +219,7 @@ or
 apt-get install libav-tools
 ```
 
-**Audio coding formats available with `parec`, ffmpeg` and `avconv` backends**
+**Audio coding formats available with `parec`, `ffmpeg` and `avconv` backends**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -304,7 +303,7 @@ format.  `node.js` works decently but the server tends to _fail_ under certain
 situations. In such a case, **mkchromecast** is able to restart the
 _streaming/casting_ process automatically. So, some hiccups are expected.
 
-**Note**: most of the steps described herein are the same for macOS and Linux
+**Note**: most of the steps described herein are the same for **macOS** and **Linux**
 users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
 called `mkchromecast` to stream.  See the [wiki for more
@@ -312,6 +311,8 @@ information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
 check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
+
+**Note**: the cast process is independent from the selection of the pulseaudio sink. This means that **mkchromecast** will tell the cast device to listen your computer but no sound will be heard until you select the sink.
 
 ##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
 
@@ -376,7 +377,7 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 **Note**: you may need to enclose the URL between quotation marks. This does
 not work in Google Cast audio.
 
-#### Controlling the Google Cast volume
+#### Controlling the Google Cast's volume
 
 You can control the volume of your Google Cast device by launching
 **mkchromecast** with the option `--volume`:
@@ -387,6 +388,8 @@ python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
 
 This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
 and `volume down` respectively.
+
+The system tray has a window with a volume slider to do `volume up` and `volume down`.
 
 More help
 ---------
@@ -409,20 +412,18 @@ Killing the application
 To kill **mkchromecast** when you run it from console, there are two ways of
 doing it: if you didn't use the `--volume` option, just press
 <kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
-<kbd>q</kbd> key to quit.
+<kbd>q</kbd> key to quit. Otherwise, use the `Quit` button in the system tray.
 
 Notes
 -----
 
-A **beta** system tray menu is now provided. It requires you to install
+A **beta** system tray menu is provided. It requires you to install
 `PyQt5`. To launch it:
 
 ```
 python mkchromecast.py -t
 ```
-
 or
-
 
 ```
 mkchromecast -t
