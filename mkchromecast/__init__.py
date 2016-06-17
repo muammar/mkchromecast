@@ -11,7 +11,35 @@ import os.path, sys, platform
 import pickle, subprocess
 from argparse import RawTextHelpFormatter
 
-parser = argparse.ArgumentParser(description='Cast macOS and Linux audio to your Google Cast devices.', formatter_class=RawTextHelpFormatter)
+parser = argparse.ArgumentParser(description='''
+This is a program to cast your macOS audio, or Linux audio to your Google Cast
+devices.
+
+It is written in Python, and it can stream via node.js, ffmpeg, parec (Linux
+only), or avconv (Linux only). mkchromecast is capable of using lossy and
+lossless audio formats provided that ffmpeg, avconv or parec is installed.
+Additionally, a system tray menu is available.
+
+Linux users that have installed the debian package need to launch the command
+`mkchromecast`, e.g.:
+
+    mkchromecast
+
+whereas, installation from source needs users to go inside the cloned git
+repository and execute:
+
+    python mkchromecast.py
+
+The two examples above will make mkchromecast streams with node.js (or parec in
+Linux) together with mp3 audio coding format at a sample rate of 44100Hz and an
+average bitrate of 192k (defaults). These defaults can be changed using the
+--sample-rate and -b flags. It is useful to modify these parameters when your
+wireless router is not very powerful, or in the case you don't want to degrade
+the sound quality. For more information visit the wiki and the FAQ
+https://github.com/muammar/mkchromecast/wiki/.
+
+
+''', formatter_class=RawTextHelpFormatter)
 parser.add_argument('-b', '--bitrate', type=int, default='192', help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.

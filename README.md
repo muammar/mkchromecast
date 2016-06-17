@@ -11,22 +11,22 @@ Google Cast devices.
 
 It is written in Python, and it can stream via `node.js`, `parec` (Linux only),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
-audio formats provided that `ffmpeg` is installed. Additionally, a system tray
-menu is also available.
+audio formats provided that `ffmpeg`, `avconv` (Linux only), or `parec` (Linux
+only) are installed. Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
 together with `mp3` audio coding format at a sample rate of `44100Hz` and
 average bitrate of `192k`.  These defaults can be changed using the
 `--sample-rate` and `-b` flags. It is useful to modify these parameters when
-your wireless router is not very powerful like mine, or in the case you don't
-want to degrade the sound quality. For more information visit the
+your wireless router is not very powerful, or in the case you don't want to
+degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ) for more information.
 
-For **Linux**, you can optionally install `ffmpeg` (or `avconv`) together with
-`pulseaudio` ([more information
-here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note that sometimes the lag
-between playing a song and hearing may be of 8 seconds.
+For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
+information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
+that sometimes the lag between playing a song and hearing may be up to
+8 seconds for certain backends.
 
 Requirements:
 ------------
@@ -44,7 +44,7 @@ In order to use **mkchromecast** you need the following software to stream with
   device).
 * PyQt5 (optional if you want to use the system tray menu).
 
-For more control, you need `ffmpeg` as backend.  In that case install
+For more control, you need `ffmpeg` as backend.  In that case install the
 following:
 
 * flask (optional).
@@ -79,8 +79,8 @@ There are two ways of installing this application:
 
 ##### macOS
 
-There is available a standalone application for macOS users. You need to
-drag it to your `/Applications/` folder. It works just with the `node` backend.
+There is a standalone application for macOS users. You need to drag it to your
+`/Applications/` folder.
 
 [Download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/).
@@ -89,7 +89,7 @@ Soundflower](https://github.com/muammar/mkchromecast#soundflower-mac-users-only)
 
 ###### Homebrew Cask
 
-Now it is possible to install the binary as follows:
+If you are using homebrew,  it is possible to install the binary as follows:
 
 ```
 brew cask install mkchromecast
@@ -163,21 +163,22 @@ sudo apt-get install python2.7 python-pip python-pychromecast python-flask pytho
 
 For Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
-or if you have [Homebrew](http://brew.sh/) you can use [brew
+and just download the [latest dmg
+file](https://github.com/mattingalls/Soundflower/releases).
+
+If you have [Homebrew](http://brew.sh/) you can use [brew
 cask](https://caskroom.github.io/) as follows:
 
 ```
 brew cask install soundflower
 ```
 
-Or just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases).
-
 By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
-to stream at higher sample rates follow the [instructions in the wiki](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
+to stream at higher sample rates follow the [instructions in the
+wiki](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
 **Note**: re-sampling to higher sample rates is not a good idea. It was indeed
-an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
+an issue in chromecast audio devices. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
@@ -189,16 +190,16 @@ macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
 ###### macOS
 
 I will briefly describe the case of Homebrew here. First, you will need
-Homebrew:
+Homebrew installed in your machine:
 
 ```
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 Once Homebrew is ready, you can install `ffmpeg`.  As stated in the [ffmpeg
-website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), and for using
-all audio coding formats in **mkchromecast**, it is better to install some
-additional `ffmpeg`'s options:
+website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), and for being
+able to use all audio coding formats in **mkchromecast**, it is better to
+install `ffmpeg` with the following options enabled:
 
 ```
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
@@ -219,7 +220,7 @@ or
 apt-get install libav-tools
 ```
 
-**Audio coding formats available with `ffmpeg` and `avconv`**
+**Audio coding formats available with `parec`, ffmpeg` and `avconv` backends**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -283,6 +284,10 @@ python mkchromecast.py --update
 If you are using the macOS application, [download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/), and replace the
 `mkchromecast.app` in your `/Applications/` directory.
+
+Linux users need to [download the latest deb
+here](https://github.com/muammar/mkchromecast/releases/), and `dpkg -i
+mkchromecast_$VERSION_all.deb`.
 
 Usage
 -----
@@ -354,6 +359,12 @@ mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
 **Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
 commands above.
 
+##### Using **mkchromecast** from the system tray
+
+The system tray application can perform all the actions from the aforementioned
+commands. To get an idea, please check the [Youtube video
+here](https://github.com/muammar/mkchromecast#macos-4).
+
 #### Playing Youtube URLs in Google Cast TV
 
 You can play Youtube URLs headlessly from the command line:
@@ -391,7 +402,6 @@ or when installing the debian package:
 ```
 mkchromecast -h
 ```
-
 
 Killing the application
 -----------------------
