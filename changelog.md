@@ -2,7 +2,7 @@
 
     - Preferences and volume windows always on top.
     - The node streaming has been updated to work with v6.2.1. This improves
-      stability for macOS users.
+      stability for macOS users when streaming with node.
 
 * mkchromecast (0.2.7) **released**: 2016/06/16
 
