@@ -334,8 +334,8 @@ change the bitrate and sample rate:
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-check the section
-[https://github.com/muammar/mkchromecast#soundflower-mac-users-only](https://github.com/muammar/mkchromecast#soundflower-mac-users-only)
+check the section [Soundflower (macOS users
+only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
 for more about sample rates.
 
 ##### Other examples with **mkchromecast** installed using the debian package
