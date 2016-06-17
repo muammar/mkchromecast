@@ -78,7 +78,7 @@ There are two ways of installing this application:
 
 ##### macOS
 
-There is a standalone application for macOS users. You need to drag it to your
+There is a standalone application for **macOS** users. You need to drag it to your
 `/Applications/` folder.
 
 [Download the latest dmg
@@ -184,7 +184,7 @@ a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Sample-rates)
 ##### ffmpeg or avconv
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
-macports or fink. Or in the case of Linux, *e.g.*: apt, yum, or pacman.
+macports or fink. Or in the case of **Linux**, *e.g.*: apt, yum, or pacman.
 
 ###### macOS
 
@@ -204,7 +204,7 @@ install `ffmpeg` with the following options enabled:
 brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
-**mkchromecast** does not support `avconv` in macOS.
+**mkchromecast** does not support `avconv` in **macOS**.
 
 ###### Linux
 
@@ -280,11 +280,11 @@ or if you prefer just pass the `--update` argument to `mkchromecast`:
 python mkchromecast.py --update
 ```
 
-If you are using the macOS application, [download the latest dmg
+If you are using the **macOS** application, [download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/), and replace the
 `mkchromecast.app` in your `/Applications/` directory.
 
-Linux users need to [download the latest deb
+**Linux** users need to [download the latest deb
 here](https://github.com/muammar/mkchromecast/releases/), and `dpkg -i
 mkchromecast_$VERSION_all.deb`.
 
@@ -322,7 +322,7 @@ Below an example using `mp3`:
 python mkchromecast.py --encoder-backend ffmpeg
 ```
 
-This is way more stable than the `node` implementation in macOS. With `ffmpeg`
+This is way more stable than the `node` implementation in **macOS**. With `ffmpeg`
 you can modify the codec:
 
 ```
@@ -429,7 +429,7 @@ or
 mkchromecast -t
 ```
 
-Additionally, macOS users can install the standalone app.
+Additionally, **macOS** users can install the standalone app.
 
 It looks like:
 
