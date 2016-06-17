@@ -1,6 +1,7 @@
 * mkchromecast (0.2.8) **unreleased**:
 
     - Preferences and volume windows always on top.
+    - The node streaming has been updated to work with v6.2.1.
 
 * mkchromecast (0.2.7) **released**: 2016/06/16
 
