@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/node/v/gh-badges.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/node/v/mkchromecast.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![GitHub
 release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases)
 
@@ -295,10 +295,9 @@ python mkchromecast.py
 
 This will launch **mkchromecast** using `node.js` (or `parec` for **Linux**
 users), and will do the streaming part together with the `mp3` audio coding
-format.  `node.js` works decently, **however** I would like to point out that
-the node version of this implementation is ancient. Moreover, the `node.js`
-server tends to _fail_. In such a case, **mkchromecast** is able to restart the
-streaming/casting process automatically. So, some hiccups are expected.
+format.  `node.js` works decently but the server tends to _fail_ under certain
+situations. In such a case, **mkchromecast** is able to restart the
+_streaming/casting_ process automatically. So, some hiccups are expected.
 
 **Note**: most of the steps described herein are the same for macOS and Linux
 users. However, if you launch the command above in **Linux**, the process is
