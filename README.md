@@ -174,12 +174,12 @@ Or just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
 
 By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
-to stream at higher sample rates follow the [instructions in the wiki](https://github.com/muammar/mkchromecast/wiki/Soundflower).
+to stream at higher sample rates follow the [instructions in the wiki](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
 **Note**: re-sampling to higher sample rates is not a good idea. It was indeed
 an issue in the chromecast audio. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
-a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Soundflower).
+a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
 ##### ffmpeg or avconv
 
