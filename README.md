@@ -9,10 +9,10 @@ release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https:
 This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices.
 
-It is written in Python, and it can stream via `node.js`, `parec` (Linux only),
+It is written in Python, and it can stream via `node.js`, `parec` (Linux),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
-audio formats provided that `ffmpeg`, `avconv` (Linux only), or `parec` (Linux
-only) are installed. Additionally, a system tray menu is available.
+audio formats provided that `ffmpeg`, `avconv` (Linux), or `parec` (Linux) are
+installed. Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
 together with `mp3` audio coding format at a sample rate of `44100Hz` and
