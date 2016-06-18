@@ -11,4 +11,4 @@ To build node, just execute;
 ./recompile_node.sh
 ```
 
-This will install the package at `mkchromecast/nodejs/node-6.2.1`.
+This will install the package at `mkchromecast/nodejs/node-6.2.2`.

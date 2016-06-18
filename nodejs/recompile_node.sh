@@ -4,13 +4,13 @@
 
 localpwd=`pwd`
 
-tar zxvf ../archive/node-v6.2.1.tar.gz
-cd node-v6.2.1/
+tar zxvf ../archive/node-v6.2.2.tar.gz
+cd node-v6.2.2/
 ./configure
-./configure --prefix=$localpwd/node-6.2.1/
+./configure --prefix=$localpwd/node-6.2.2/
 
 make -j8
 
 make install
 
-rm -r ../node-v6.2.1/
+rm -r ../node-v6.2.2/
