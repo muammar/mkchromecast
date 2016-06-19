@@ -492,7 +492,7 @@ class menubar(QtWidgets.QMainWindow):
                 updaterBox.setText("New version of mkchromecast availabe!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif updater() == False:
-                updaterBox.setText("You are up to date")
+                updaterBox.setText("mkchromecast is up to date!")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
