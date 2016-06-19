@@ -468,6 +468,7 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
+* More eye candy.
 * Check that the index of the cast selected is correctly passed in the
 system tray.
 * Video?.

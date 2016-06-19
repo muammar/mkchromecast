@@ -303,6 +303,16 @@ class menubar(QtWidgets.QMainWindow):
                     self.tray.setIcon(QtGui.QIcon('google.icns'))
         else:
             self.pcastfailed = True
+            if os.path.exists('images/google_nodev.icns') == True:
+                if platform == 'Darwin':
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                else:
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
+            else:
+                if platform == 'Linux':
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_nodev.png'))
+                else:
+                    self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
