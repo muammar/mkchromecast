@@ -27,8 +27,6 @@ if debug == True:
     print('PATH ='+str(PATH))
 
 def is_installed(name):
-    #import distutils.spawn
-    #return distutils.spawn.find_executable(name) is not None
     iterate = PATH.split(':')
     for item in iterate:
         verifyif = str(item+'/'+name)
@@ -191,7 +189,7 @@ if tray == True:
 
             self.setGeometry(300, 300, 300, 200)
             self.setFixedSize(300, 200)     #This is to fix the size of the window
-            self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+            self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('mkchromecast Preferences')
 
         def onActivatedbk(self, text):

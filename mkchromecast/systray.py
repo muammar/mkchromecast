@@ -59,7 +59,7 @@ class menubar(QtWidgets.QMainWindow):
         self.thread.started.connect(self.obj._search_cast_)
 
         """
-        This is used when one click on cast device
+        This is used when one clicks on cast device
         """
         self.objp = mkchromecast.tray_threading.Player()  # no parent!
         self.threadplay = QThread()  # no parent!
@@ -108,6 +108,7 @@ class menubar(QtWidgets.QMainWindow):
         self.reboot_menu()
         self.separator_menu()
         self.preferences_menu()
+        self.update_menu()
         self.about_menu()
         self.exit_menu()
         self.tray.setContextMenu(self.menu)
@@ -162,6 +163,10 @@ class menubar(QtWidgets.QMainWindow):
     def preferences_menu(self):
         self.preferencesAction = self.menu.addAction("Preferences")
         self.preferencesAction.triggered.connect(self.preferences_show)
+
+    def update_menu(self):
+        self.updateAction = self.menu.addAction("Check for Updates")
+        self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About mkchromecast")
@@ -242,6 +247,7 @@ class menubar(QtWidgets.QMainWindow):
             self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
+            self.update_menu()
             self.about_menu()
             self.exit_menu()
         else:
@@ -281,6 +287,7 @@ class menubar(QtWidgets.QMainWindow):
             self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
+            self.update_menu()
             self.about_menu()
             self.exit_menu()
 
@@ -303,6 +310,16 @@ class menubar(QtWidgets.QMainWindow):
                     self.tray.setIcon(QtGui.QIcon('google.icns'))
         else:
             self.pcastfailed = True
+            if os.path.exists('images/google_nodev.icns') == True:
+                if platform == 'Darwin':
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                else:
+                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
+            else:
+                if platform == 'Linux':
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_nodev.png'))
+                else:
+                    self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
@@ -324,10 +341,15 @@ class menubar(QtWidgets.QMainWindow):
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
-        if os.path.exists('/tmp/mkchromecast.tmp') == True:
-            self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-        pickle.dump(self.index, self.tf)
-        self.tf.close()
+        while True:
+            try:
+                if os.path.exists('/tmp/mkchromecast.tmp') == True:
+                    self.tf = open('/tmp/mkchromecast.tmp', 'wb')
+                pickle.dump(self.index, self.tf)
+                self.tf.close()
+            except ValueError:
+                continue
+            break
         self.played = True
         self.threadplay.start()
 
@@ -378,6 +400,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setMinimum(0)
         self.sl.setMaximum(self.maxvolset)
         self.sl.setGeometry(30, 40, 230, 70)
+        self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
             self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
@@ -454,8 +477,28 @@ class menubar(QtWidgets.QMainWindow):
         self.p = mkchromecast.preferences.preferences()
         self.p.show()
 
+    def update_show(self):
+        chk = casting()
+        updaterBox = QMessageBox()
+        updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        updaterBox.setIcon(QMessageBox.Information)
+        updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
+        if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
+            updaterBox.setText("No network connection detected")
+            updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
+        else:
+            from mkchromecast.version import updater
+            if updater() == True:
+                updaterBox.setText("New version of mkchromecast availabe!")
+                updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
+            elif updater() == False:
+                updaterBox.setText("You are up to date")
+        updaterBox.setStandardButtons(QMessageBox.Ok)
+        updaterBox.exec_()
+
     def about_show(self):
         msgBox = QMessageBox()
+        msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
         msgBox.setInformativeText("""Created by: Muammar El Khatib.
