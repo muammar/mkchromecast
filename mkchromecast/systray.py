@@ -482,8 +482,8 @@ class menubar(QtWidgets.QMainWindow):
         updaterBox = QMessageBox()
         updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         updaterBox.setIcon(QMessageBox.Information)
-        updaterBox.setTextFormat(Qt.RichText)
-        if chk.ip == '127.0.0.1' or None:        # We verify the local IP.
+        updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
+        if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
             updaterBox.setText("No network connection detected")
             updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
         else:
