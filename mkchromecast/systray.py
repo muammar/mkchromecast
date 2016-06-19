@@ -324,10 +324,15 @@ class menubar(QtWidgets.QMainWindow):
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
         self.castto = self.entries[1]
-        if os.path.exists('/tmp/mkchromecast.tmp') == True:
-            self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-        pickle.dump(self.index, self.tf)
-        self.tf.close()
+        while True:
+            try:
+                if os.path.exists('/tmp/mkchromecast.tmp') == True:
+                    self.tf = open('/tmp/mkchromecast.tmp', 'wb')
+                pickle.dump(self.index, self.tf)
+                self.tf.close()
+            except ValueError:
+                continue
+            break
         self.played = True
         self.threadplay.start()
 
