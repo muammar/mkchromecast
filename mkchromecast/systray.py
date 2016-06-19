@@ -59,7 +59,7 @@ class menubar(QtWidgets.QMainWindow):
         self.thread.started.connect(self.obj._search_cast_)
 
         """
-        This is used when one click on cast device
+        This is used when one clicks on cast device
         """
         self.objp = mkchromecast.tray_threading.Player()  # no parent!
         self.threadplay = QThread()  # no parent!
@@ -108,6 +108,7 @@ class menubar(QtWidgets.QMainWindow):
         self.reboot_menu()
         self.separator_menu()
         self.preferences_menu()
+        self.update_menu()
         self.about_menu()
         self.exit_menu()
         self.tray.setContextMenu(self.menu)
@@ -162,6 +163,10 @@ class menubar(QtWidgets.QMainWindow):
     def preferences_menu(self):
         self.preferencesAction = self.menu.addAction("Preferences")
         self.preferencesAction.triggered.connect(self.preferences_show)
+
+    def update_menu(self):
+        self.updateAction = self.menu.addAction("Check for Updates")
+        self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
         self.AboutAction = self.menu.addAction("About mkchromecast")
@@ -242,6 +247,7 @@ class menubar(QtWidgets.QMainWindow):
             self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
+            self.update_menu()
             self.about_menu()
             self.exit_menu()
         else:
@@ -281,6 +287,7 @@ class menubar(QtWidgets.QMainWindow):
             self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
+            self.update_menu()
             self.about_menu()
             self.exit_menu()
 
@@ -469,6 +476,20 @@ class menubar(QtWidgets.QMainWindow):
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences()
         self.p.show()
+
+    def update_show(self):
+        from mkchromecast.version import updater
+        updaterBox = QMessageBox()
+        updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        updaterBox.setIcon(QMessageBox.Information)
+        updaterBox.setTextFormat(Qt.RichText)
+        if updater() == True:
+            updaterBox.setText("New version of mkchromecast availabe!")
+            updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
+        elif updater() == False:
+            updaterBox.setText("You are up to date")
+        updaterBox.setStandardButtons(QMessageBox.Ok)
+        updaterBox.exec_()
 
     def about_show(self):
         msgBox = QMessageBox()

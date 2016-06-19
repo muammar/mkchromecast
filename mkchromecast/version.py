@@ -15,6 +15,7 @@ def updater():
 
     if version > __version__:
         print ('Version ' + version + ' is available to download')
+        return True
     else:
         print ('You are up to date')
-        return
+        return False
