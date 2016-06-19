@@ -478,16 +478,21 @@ class menubar(QtWidgets.QMainWindow):
         self.p.show()
 
     def update_show(self):
-        from mkchromecast.version import updater
+        chk = casting()
         updaterBox = QMessageBox()
         updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)
-        if updater() == True:
-            updaterBox.setText("New version of mkchromecast availabe!")
-            updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
-        elif updater() == False:
-            updaterBox.setText("You are up to date")
+        if chk.ip == '127.0.0.1' or None:        # We verify the local IP.
+            updaterBox.setText("No network connection detected")
+            updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
+        else:
+            from mkchromecast.version import updater
+            if updater() == True:
+                updaterBox.setText("New version of mkchromecast availabe!")
+                updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
+            elif updater() == False:
+                updaterBox.setText("You are up to date")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
