@@ -146,17 +146,25 @@ class casting(object):
             self.availablecc = []
 
     def sel_cc(self):
-            print(' ')
-            print('Please, select the '+colors.important('Index')+' of the Google Cast device that you want to use:')
-            self.index = input()
+        print(' ')
+        print('Please, select the '+colors.important('Index')+' of the Google Cast device that you want to use:')
+        self.index = input()
 
     def inp_cc(self):
-            pickle.dump(self.index, self.tf)
-            self.tf.close()
-            self.castto = self.cclist[int(self.index)]
-            print(' ')
-            print(colors.options('Casting to:')+' '+colors.success(self.castto))
-            print(' ')
+        while True:
+            try:
+                pickle.dump(self.index, self.tf)
+                self.tf.close()
+                self.castto = self.cclist[int(self.index)]
+                print(' ')
+                print(colors.options('Casting to:')+' '+colors.success(self.castto))
+                print(' ')
+            except IndexError:
+                checkmktmp()
+                self.tf = open('/tmp/mkchromecast.tmp', 'wb')
+                self.sel_cc()
+                continue
+            break
 
     def get_cc(self):
         if self.debug == True:
