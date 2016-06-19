@@ -1,16 +1,5 @@
 #include "OSXAudioInput.h"
 
-#include <AudioToolbox/AudioQueue.h>
-#include <CoreAudio/CoreAudioTypes.h>
-#include <CoreFoundation/CFRunLoop.h>
-
-#define NUM_CHANNELS 2
-#define NUM_BUFFERS 4
-#define BUFFER_SIZE 4096
-#define SAMPLE_TYPE short
-#define MAX_NUMBER 32767
-#define SAMPLE_RATE 44100
-
 OSXAudioInput :: OSXAudioInput() {
 	format.mSampleRate = SAMPLE_RATE;
 	format.mFormatID = kAudioFormatLinearPCM;
