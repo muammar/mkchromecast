@@ -514,7 +514,7 @@ class menubar(QtWidgets.QMainWindow):
                 updaterBox.setText("New version of mkchromecast available!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif self.upmsg == False:
-                updaterBox.setText("No new updates availabe.")
+                updaterBox.setText("No new updates available.")
                 updaterBox.setInformativeText("""You are using the latest version: v"""+mkchromecast.__init__.__version__+'.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
