@@ -95,3 +95,23 @@ class Player(QObject):
         except AttributeError:
             self.pcastready.emit('_play_cast_ failed')
         self.pcastfinished.emit()
+
+class Updater(QObject):
+    upcastfinished = pyqtSignal()
+    upcastready = pyqtSignal(str)
+
+    def __init__(self):
+        QObject.__init__(self)
+
+    @pyqtSlot()
+    def _updater_(self):
+        chk = casting()
+        if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
+            self.upcastready.emit('None')
+        else:
+            from mkchromecast.version import updater
+            if updater() == True:
+                self.upcastready.emit('True')
+            else:
+                self.upcastready.emit('False')
+        self.upcastfinished.emit()

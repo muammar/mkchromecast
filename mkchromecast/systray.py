@@ -69,6 +69,17 @@ class menubar(QtWidgets.QMainWindow):
         self.objp.pcastfinished.connect(self.threadplay.quit)
         self.threadplay.started.connect(self.objp._play_cast_)
 
+        """
+        This is used when one clicks on the updater
+        """
+        self.objup = mkchromecast.tray_threading.Updater()  # no parent!
+        self.threadupdater = QThread()  # no parent!
+
+        self.objup.moveToThread(self.threadupdater)
+        self.objup.upcastready.connect(self.upcastready)
+        self.objup.upcastfinished.connect(self.threadupdater.quit)
+        self.threadupdater.started.connect(self.objup._updater_)
+
         self.app = QtWidgets.QApplication(sys.argv)
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
@@ -477,24 +488,33 @@ class menubar(QtWidgets.QMainWindow):
         self.p = mkchromecast.preferences.preferences()
         self.p.show()
 
-    def update_show(self):
-        chk = casting()
+    def upcastready(self, message):
+        print('upcastready ?', message)
+        if message == 'None':
+            self.upmsg = None
+        elif message == 'True':
+            self.upmsg = True
+        else:
+            self.upmsg = False
         updaterBox = QMessageBox()
         updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
-        if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
+        if self.upmsg == None:       # We verify the local IP.
             updaterBox.setText("No network connection detected")
             updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
         else:
-            from mkchromecast.version import updater
-            if updater() == True:
+            if self.upmsg == True:
                 updaterBox.setText("New version of mkchromecast availabe!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
-            elif updater() == False:
-                updaterBox.setText("You are up to date")
+            elif self.upmsg == False:
+                updaterBox.setText("mkchromecast is up to date!")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
+
+
+    def update_show(self):
+        self.threadupdater.start()
 
     def about_show(self):
         msgBox = QMessageBox()
