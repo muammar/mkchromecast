@@ -70,12 +70,13 @@ if tray == True:
     from PyQt5 import QtCore
 
     class preferences(QWidget):
-        def __init__(self):
+        def __init__(self, scale_factor):
             try:
                 super().__init__()
             except TypeError:
                 super(self.__class__, self).__init__() #This is to port to python2
 
+            self.scale_factor = scale_factor
             self.config = ConfigParser.RawConfigParser()
             self.configurations = config_manager()    # Class from mkchromecast.config
             self.configf = self.configurations.configf
@@ -86,7 +87,6 @@ if tray == True:
             self.initUI()
 
         def initUI(self):
-
             """
             Backend
             """
@@ -102,9 +102,9 @@ if tray == True:
                         backends.append(item)
             backendindex = backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
-            self.backend.move(20, 24)
+            self.backend.move(20*self.scale_factor, 24*self.scale_factor)
             self.qcbackend = QComboBox(self)
-            self.qcbackend.move(180, 20)
+            self.qcbackend.move(180*self.scale_factor, 20*self.scale_factor)
             self.qcbackend.setMinimumContentsLength(7)
             for item in backends:
                 self.qcbackend.addItem(item)
@@ -115,7 +115,7 @@ if tray == True:
             Codec
             """
             self.codec = QLabel('Audio coding format', self)
-            self.codec.move(20, 56)
+            self.codec.move(20*self.scale_factor, 56*self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
             if self.backendconf == 'node':
@@ -125,7 +125,7 @@ if tray == True:
             if debug == True:
                 print(codecs)
             codecindex = codecs.index(self.codecconf)
-            self.qccodec.move(180, 54)
+            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
             for item in codecs:
                 self.qccodec.addItem(item)
@@ -136,10 +136,10 @@ if tray == True:
             Bitrate
             """
             self.bitrate = QLabel('Select Bitrate (kbit/s)', self)
-            self.bitrate.move(20, 88)
+            self.bitrate.move(20*self.scale_factor, 88*self.scale_factor)
             self.qcbitrate = QComboBox(self)
             self.qcbitrate.clear()
-            self.qcbitrate.move(180, 88)
+            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             self.qcbitrate.setMinimumContentsLength(7)
             if self.codecconf == 'wav':
                 bitrates = ["None"]
@@ -161,9 +161,9 @@ if tray == True:
             samplerates = ["48000", "44100", "32000", "22050"]
             sampleratesindex = samplerates.index(self.samplerateconf)
             self.samplerate = QLabel('Sample rate (Hz)', self)
-            self.samplerate.move(20, 120)
+            self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate = QComboBox(self)
-            self.qcsamplerate.move(180, 120)
+            self.qcsamplerate.move(180*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate.setMinimumContentsLength(7)
             for item in samplerates:
                 self.qcsamplerate.addItem(item)
@@ -176,9 +176,9 @@ if tray == True:
             notifications = ["enabled", "disabled"]
             notindex = notifications.index(self.notificationsconf)
             self.notifications = QLabel('Notifications', self)
-            self.notifications.move(20, 152)
+            self.notifications.move(20*self.scale_factor, 152*self.scale_factor)
             self.qcnotifications = QComboBox(self)
-            self.qcnotifications.move(180, 152)
+            self.qcnotifications.move(180*self.scale_factor, 152*self.scale_factor)
             self.qcnotifications.setMinimumContentsLength(7)
             for item in notifications:
                 self.qcnotifications.addItem(item)
@@ -187,8 +187,8 @@ if tray == True:
 
             #self.lbl.move(50, 150)
 
-            self.setGeometry(300, 300, 300, 200)
-            self.setFixedSize(300, 200)     #This is to fix the size of the window
+            self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
+            self.setFixedSize(300*self.scale_factor, 200*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('mkchromecast Preferences')
 
@@ -210,7 +210,7 @@ if tray == True:
             if debug == True:
                 print(codecs)
             codecindex = codecs.index(self.codecconf)
-            self.qccodec.move(180, 54)
+            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
             for item in codecs:
                 self.qccodec.addItem(item)
@@ -235,7 +235,7 @@ if tray == True:
                 self.read_defaults()
                 bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
                 bitrateindex = bitrates.index(self.bitrateconf)
-            self.qcbitrate.move(180, 88)
+            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             for item in bitrates:
                 self.qcbitrate.addItem(item)
             self.qcbitrate.setCurrentIndex(bitrateindex)

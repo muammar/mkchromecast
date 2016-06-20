@@ -36,8 +36,6 @@ except ImportError:
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
 
-global entries
-
 class menubar(QtWidgets.QMainWindow):
     def __init__(self):
         self.cc = casting()
@@ -81,9 +79,17 @@ class menubar(QtWidgets.QMainWindow):
         self.threadupdater.started.connect(self.objup._updater_)
 
         self.app = QtWidgets.QApplication(sys.argv)
+        """
+        This is to determine the scale factor.
+        """
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
         self.height = screen_resolution.height()
+        if self.width > 1280:
+            self.scale_factor = 2
+        else:
+            self.scale_factor = 1
+
         if debug == True:
             print(':::systray::: Screen resolution: ', self.width, self.height)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
@@ -410,7 +416,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
         self.sl.setMaximum(self.maxvolset)
-        self.sl.setGeometry(30, 40, 230, 70)
+        self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
             self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
@@ -485,7 +491,7 @@ class menubar(QtWidgets.QMainWindow):
                 pass    # I should add a notification here
 
     def preferences_show(self):
-        self.p = mkchromecast.preferences.preferences()
+        self.p = mkchromecast.preferences.preferences(self.scale_factor)
         self.p.show()
 
     def upcastready(self, message):
