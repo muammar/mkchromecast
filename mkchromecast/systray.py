@@ -495,7 +495,7 @@ class menubar(QtWidgets.QMainWindow):
         self.p.show()
 
     def upcastready(self, message):
-        print('upcastready ?', message)
+        print('update ready ?', message)
         if message == 'None':
             self.upmsg = None
         elif message == 'True':
@@ -507,14 +507,15 @@ class menubar(QtWidgets.QMainWindow):
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
         if self.upmsg == None:       # We verify the local IP.
-            updaterBox.setText("No network connection detected")
-            updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
+            updaterBox.setText("No network connection detected!")
+            updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
         else:
             if self.upmsg == True:
-                updaterBox.setText("New version of mkchromecast availabe!")
+                updaterBox.setText("New version of mkchromecast available!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif self.upmsg == False:
-                updaterBox.setText("mkchromecast is up to date!")
+                updaterBox.setText("No new updates availabe.")
+                updaterBox.setInformativeText("""You are using the latest version: v"""+mkchromecast.__init__.__version__+'.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
