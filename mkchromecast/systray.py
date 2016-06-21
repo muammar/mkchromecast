@@ -36,8 +36,6 @@ except ImportError:
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
 
-global entries
-
 class menubar(QtWidgets.QMainWindow):
     def __init__(self):
         self.cc = casting()
@@ -81,9 +79,17 @@ class menubar(QtWidgets.QMainWindow):
         self.threadupdater.started.connect(self.objup._updater_)
 
         self.app = QtWidgets.QApplication(sys.argv)
+        """
+        This is to determine the scale factor.
+        """
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
         self.height = screen_resolution.height()
+        if self.width > 1280:
+            self.scale_factor = 2
+        else:
+            self.scale_factor = 1
+
         if debug == True:
             print(':::systray::: Screen resolution: ', self.width, self.height)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
@@ -164,19 +170,19 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset Audio...")
+        self.ResetAudioAction = self.menu.addAction("Reset Audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Cast Device...")
+        self.rebootAction = self.menu.addAction("Reboot Cast Device")
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
-        self.preferencesAction = self.menu.addAction("Preferences")
+        self.preferencesAction = self.menu.addAction("Preferences...")
         self.preferencesAction.triggered.connect(self.preferences_show)
 
     def update_menu(self):
-        self.updateAction = self.menu.addAction("Check for Updates")
+        self.updateAction = self.menu.addAction("Check for Updates...")
         self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
@@ -410,7 +416,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
         self.sl.setMaximum(self.maxvolset)
-        self.sl.setGeometry(30, 40, 230, 70)
+        self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
             self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
@@ -485,11 +491,11 @@ class menubar(QtWidgets.QMainWindow):
                 pass    # I should add a notification here
 
     def preferences_show(self):
-        self.p = mkchromecast.preferences.preferences()
+        self.p = mkchromecast.preferences.preferences(self.scale_factor)
         self.p.show()
 
     def upcastready(self, message):
-        print('upcastready ?', message)
+        print('update ready ?', message)
         if message == 'None':
             self.upmsg = None
         elif message == 'True':
@@ -501,14 +507,15 @@ class menubar(QtWidgets.QMainWindow):
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
         if self.upmsg == None:       # We verify the local IP.
-            updaterBox.setText("No network connection detected")
-            updaterBox.setInformativeText("""Verify your computer is connected to your router, and try again.""")
+            updaterBox.setText("No network connection detected!")
+            updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
         else:
             if self.upmsg == True:
-                updaterBox.setText("New version of mkchromecast availabe!")
+                updaterBox.setText("New version of mkchromecast available!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif self.upmsg == False:
-                updaterBox.setText("mkchromecast is up to date!")
+                updaterBox.setText("You are up to date!")
+                updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 

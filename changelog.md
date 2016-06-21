@@ -1,9 +1,10 @@
-* mkchromecast (0.2.8) **unreleased**:
+* mkchromecast (0.2.8) **released**: 2016/06/22
 
     - Preferences and volume windows always on top.
     - The node streaming has been updated to work with v6.2.1. This improves
       stability for macOS users when streaming with node.
     - It is now possible to check for updates using the system tray icon.
+    - Scale factor added for retina resolutions.
 
 * mkchromecast (0.2.7) **released**: 2016/06/16
 
