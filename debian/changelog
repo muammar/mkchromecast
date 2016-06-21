@@ -1,3 +1,9 @@
+mkchromecast (0.2.8-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Muammar El Khatib <muammar@debian.org>  Tue, 21 Jun 2016 23:47:28 +0200
+
 mkchromecast (0.2.7-1) unstable; urgency=medium
 
   * New upstream release.
