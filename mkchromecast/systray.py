@@ -182,7 +182,7 @@ class menubar(QtWidgets.QMainWindow):
         self.preferencesAction.triggered.connect(self.preferences_show)
 
     def update_menu(self):
-        self.updateAction = self.menu.addAction("Check for Updates")
+        self.updateAction = self.menu.addAction("Check for Updates...")
         self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
@@ -514,8 +514,8 @@ class menubar(QtWidgets.QMainWindow):
                 updaterBox.setText("New version of mkchromecast available!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif self.upmsg == False:
-                updaterBox.setText("No new updates available.")
-                updaterBox.setInformativeText("""You are using the latest version: v"""+mkchromecast.__init__.__version__+'.')
+                updaterBox.setText("You are up to date!")
+                updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
