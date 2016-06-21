@@ -170,15 +170,15 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset Audio...")
+        self.ResetAudioAction = self.menu.addAction("Reset Audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Cast Device...")
+        self.rebootAction = self.menu.addAction("Reboot Cast Device")
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
-        self.preferencesAction = self.menu.addAction("Preferences")
+        self.preferencesAction = self.menu.addAction("Preferences...")
         self.preferencesAction.triggered.connect(self.preferences_show)
 
     def update_menu(self):
