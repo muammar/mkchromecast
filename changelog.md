@@ -1,3 +1,7 @@
+* mkchromecast (0.2.9) **unreleased**:
+
+    - Improved stability when using system tray icon.
+
 * mkchromecast (0.2.8) **released**: 2016/06/22
 
     - Preferences and volume windows always on top.
