@@ -30,7 +30,7 @@ brew cask install soundflower
 ```
 
 Or just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases).
+file](https://github.com/mattingalls/Soundflower/releases/latest).
 
 -------------------------
 
