@@ -13,17 +13,14 @@ from mkchromecast.node import *
 import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
-import pychromecast
-from pychromecast.dial import reboot
-import signal
-import os.path
-from os import getpid
-import psutil, pickle, subprocess
-import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
 from PyQt5.QtGui import QPixmap
+import pychromecast
+from pychromecast.dial import reboot
+import signal, os.path, psutil, pickle, subprocess, threading
+from os import getpid
 """
 Configparser is imported differently in Python3
 """
@@ -74,7 +71,7 @@ class menubar(QtWidgets.QMainWindow):
         self.threadupdater = QThread()  # no parent!
 
         self.objup.moveToThread(self.threadupdater)
-        self.objup.upcastready.connect(self.upcastready)
+        self.objup.updateready.connect(self.updateready)
         self.objup.upcastfinished.connect(self.threadupdater.quit)
         self.threadupdater.started.connect(self.objup._updater_)
 
@@ -215,7 +212,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         """
-        This catches the error cause by an empty tmp file
+        This catches the error caused by an empty .tmp file
         """
         if os.path.exists('/tmp/mkchromecast.tmp') == True:
             try:
@@ -374,17 +371,25 @@ class menubar(QtWidgets.QMainWindow):
         if self.stopped == False:
             pass
 
-        if self.cast != None or self.stopped == True:
-            self.ncast.quit_app()
+        if self.cast != None or self.stopped == True or self.pcastfailed == True:
+            try:
+                self.ncast.quit_app()
+            except AttributeError:
+                pass
             self.menuentry.setChecked(False)
             self.reset_audio()
-            self.kill_child()
+            try:
+                self.kill_child()
+            except psutil.NoSuchProcess:
+                pass
             checkmktmp()
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
                     self.ncast.quit_app()
                 except pychromecast.error.NotConnected:
+                    continue
+                except AttributeError:
                     continue
                 break
             self.stopped = True
@@ -494,7 +499,7 @@ class menubar(QtWidgets.QMainWindow):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)
         self.p.show()
 
-    def upcastready(self, message):
+    def updateready(self, message):
         print('update ready ?', message)
         if message == 'None':
             self.upmsg = None
@@ -514,11 +519,10 @@ class menubar(QtWidgets.QMainWindow):
                 updaterBox.setText("New version of mkchromecast available!")
                 updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
             elif self.upmsg == False:
-                updaterBox.setText("You are up to date!")
+                updaterBox.setText("You are up-to-date!")
                 updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
-
 
     def update_show(self):
         self.threadupdater.start()
