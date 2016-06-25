@@ -501,26 +501,25 @@ class menubar(QtWidgets.QMainWindow):
 
     def updateready(self, message):
         print('update ready ?', message)
-        if message == 'None':
-            self.upmsg = None
-        elif message == 'True':
-            self.upmsg = True
-        else:
-            self.upmsg = False
         updaterBox = QMessageBox()
         updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
-        if self.upmsg == None:       # We verify the local IP.
+        if message == 'None':
             updaterBox.setText("No network connection detected!")
             updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
+        elif message == 'False':
+            updaterBox.setText("Your installation is up-to-date!")
+            updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
         else:
-            if self.upmsg == True:
-                updaterBox.setText("New version of mkchromecast available!")
-                updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
-            elif self.upmsg == False:
-                updaterBox.setText("You are up-to-date!")
-                updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
+            updaterBox.setText("New version of mkchromecast available!")
+            if platform == 'Darwin':
+                downloadurl = "<a href='https://github.com/muammar/mkchromecast/releases/download/"+message+"/mkchromecast_v"+message+".dmg'>"
+            elif platform == 'Linux':
+                downloadurl = "<a href='http://github.com/muammar/mkchromecast/releases/latest'>"
+            if debug == True:
+                print('Download URL:', downloadurl)
+            updaterBox.setInformativeText("You can "+downloadurl+"download it by clicking here</a>.")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
