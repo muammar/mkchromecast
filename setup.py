@@ -28,7 +28,7 @@ OPTIONS = {
         'prefer_ppc': True,
     'iconfile': 'images/google.icns',
     'includes': ['google', 'sip', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'Flask', 'configparser'],
-    'packages': [ 'requests' ],
+    'packages': ['requests'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
