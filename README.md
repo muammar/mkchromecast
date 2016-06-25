@@ -21,7 +21,7 @@ average bitrate of `192k`.  These defaults can be changed using the
 your wireless router is not very powerful, or in the case you don't want to
 degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
-[FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ) for more information.
+[FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
 For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
 information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
