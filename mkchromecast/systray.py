@@ -529,7 +529,8 @@ class menubar(QtWidgets.QMainWindow):
     def about_show(self):
         msgBox = QMessageBox()
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setIcon(QMessageBox.Information)
+        #msgBox.setIcon(QMessageBox.Information)
+        msgBox.setIconPixmap(QPixmap("images/google.png").scaledToWidth(100))
         msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
         msgBox.setInformativeText("""Created by: Muammar El Khatib.
                 \nUX design: Claudia Vargas.
