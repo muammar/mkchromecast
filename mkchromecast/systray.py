@@ -530,10 +530,28 @@ class menubar(QtWidgets.QMainWindow):
         msgBox = QMessageBox()
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         #msgBox.setIcon(QMessageBox.Information)
-        msgBox.setIconPixmap(QPixmap("images/google.png").scaledToWidth(100))
-        msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
-        msgBox.setInformativeText("""Created by: Muammar El Khatib.
-                \nUX design: Claudia Vargas.
+        msgBox.setText("""<center><img src="images/google.png" height="98" width="128" align="middle"> <br><br>
+<b>mkchromecast</b> v"""+mkchromecast.__init__.__version__)
+        msgBox.setInformativeText("""
+        <p align='center'>
+        <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
+        <br>
+        <br>
+        <br>
+        Created by: Muammar El Khatib.
+        <br>
+        <br>
+        UX design: Claudia Vargas.
+        <br>
+        <br>
+        <br>
+        Copyright 2016 Muammar El Khatib
+        <br>
+        <br>
+        This program comes with absolutely no warranty.
+        <br>
+        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE">MIT license</a> for details.
+        </p>
                 """)
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
