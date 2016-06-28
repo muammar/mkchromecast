@@ -185,13 +185,29 @@ if tray == True:
             self.qcnotifications.setCurrentIndex(notindex)
             self.qcnotifications.activated[str].connect(self.onActivatednotify)
 
-            #self.lbl.move(50, 150)
+            """
+            Search at launch
+            """
+            atlaunch = ["enabled", "disabled"]
+            #notindex = atlaunch.index(self.atlaunchconf)
+            self.atlaunch = QLabel('Search at launch', self)
+            self.atlaunch.move(20*self.scale_factor, 184*self.scale_factor)
+            self.qcatlaunch = QComboBox(self)
+            self.qcatlaunch.move(180*self.scale_factor, 184*self.scale_factor)
+            self.qcatlaunch.setMinimumContentsLength(7)
+            for item in atlaunch:
+                self.qcatlaunch.addItem(item)
+            self.qcatlaunch.setCurrentIndex(notindex)
+            #self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
             self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
-            self.setFixedSize(300*self.scale_factor, 200*self.scale_factor)     #This is to fix the size of the window
+            self.setFixedSize(300*self.scale_factor, 220*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('mkchromecast Preferences')
 
+            """
+            Methods
+            """
         def onActivatedbk(self, text):
             self.config.read(self.configf)
             self.config.set('settings','backend',text)
