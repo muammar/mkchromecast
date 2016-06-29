@@ -1,3 +1,7 @@
+* mkchromecast (0.2.9.1) **released**: 2016/06/29
+
+    - Fixing `stop` segfault.
+
 * mkchromecast (0.2.9) **released**: 2016/06/29
 
     - Improved stability when using system tray icon.

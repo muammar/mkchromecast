@@ -40,6 +40,7 @@ class menubar(QtWidgets.QMainWindow):
         self.cast = None
         self.stopped = False
         self.played = False
+        self.pcastfailed = False
         self.read_config()
 
         """
