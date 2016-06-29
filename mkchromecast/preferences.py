@@ -46,8 +46,6 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
-
-
 def ConfigSectionMap(section):
     config = ConfigParser.RawConfigParser()
     configurations = config_manager()    # Class from mkchromecast.config
@@ -198,7 +196,7 @@ if tray == True:
             for item in atlaunch:
                 self.qcatlaunch.addItem(item)
             self.qcatlaunch.setCurrentIndex(launchindex)
-            #self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
+            self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
             self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
             self.setFixedSize(300*self.scale_factor, 220*self.scale_factor)     #This is to fix the size of the window
@@ -277,8 +275,13 @@ if tray == True:
             with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)
             self.read_defaults()
-            #self.lbl.setText(text)
-            #self.lbl.adjustSize()
+
+        def onActivatedatlaunch(self, text):
+            self.config.read(self.configf)
+            self.config.set('settings','searchatlaunch',text)
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+            self.read_defaults()
 
         def read_defaults(self):
             self.backendconf = ConfigSectionMap("settings")['backend']
