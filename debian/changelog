@@ -1,3 +1,9 @@
+mkchromecast (0.2.9-2) unstable; urgency=medium
+
+  * This revision fixes a segfault in the system tray.
+
+ -- Muammar El Khatib <muammar@debian.org>  Wed, 29 Jun 2016 21:44:00 +0200
+
 mkchromecast (0.2.9-1) unstable; urgency=medium
 
   * New upstream release.
