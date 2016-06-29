@@ -2,8 +2,8 @@
 
     - Improved stability when using system tray icon.
     - New `search at launch` option. When enabled, the system tray search for 
-      available Google cast devices at launch.
-    - The node streaming has been updated to work with v6.2.2. 
+      available Google cast devices at launch time.
+    - The node streaming server has been updated to work with `node v6.2.2`. 
 
 * mkchromecast (0.2.8) **released**: 2016/06/22
 
