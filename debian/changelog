@@ -1,4 +1,4 @@
-mkchromecast (0.2.9-2) unstable; urgency=medium
+mkchromecast (0.2.9.1-1) unstable; urgency=medium
 
   * This revision fixes a segfault in the system tray.
 
