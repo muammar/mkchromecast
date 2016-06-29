@@ -12,6 +12,7 @@ except ImportError:
 import os, getpass
 
 platform = mkchromecast.__init__.platform
+debug = mkchromecast.__init__.debug
 
 class config_manager(object):
     def __init__(self):
@@ -19,6 +20,18 @@ class config_manager(object):
         self.config = ConfigParser.RawConfigParser()
 
         self.config.add_section('settings')
+        self.defaultconf = {
+                'codec': 'mp3',
+                'bitrate': '192',
+                'samplerate': '44100',
+                'notifications': 'disabled',
+                'searchatlaunch': 'disabled'
+                }
+
+        if platform == 'Darwin':
+            self.defaultconf['backend'] = 'node'
+        else:
+            self.defaultconf['backend'] = 'parec'
 
         # Writing our configuration file
 
@@ -34,13 +47,13 @@ class config_manager(object):
 
     def config_defaults(self):
         """
-        Verify that the directory set before exists.
+        Verify that the directory exists.
         """
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
 
         """
-        Creation of the configuration file.
+        Creation of new configuration file with defaults.
         """
         if not os.path.exists(self.configf):
             if platform == 'Darwin':
@@ -48,13 +61,15 @@ class config_manager(object):
                 self.config.set('settings', 'codec', 'mp3')
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', '44100')
-                self.config.set('settings', 'notifications', 'enabled')
+                self.config.set('settings', 'notifications', 'disabled')
+                self.config.set('settings', 'searchatlaunch', 'disabled')
             else:
-                self.config.set('settings', 'backend', 'ffmpeg')
+                self.config.set('settings', 'backend', 'parec')
                 self.config.set('settings', 'codec', 'mp3')
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', '44100')
-                self.config.set('settings', 'notifications', 'enabled')
+                self.config.set('settings', 'notifications', 'disabled')
+                self.config.set('settings', 'searchatlaunch', 'disabled')
 
             with open(self.configf, 'w') as configfile:
                 self.config.write(configfile)
@@ -62,11 +77,28 @@ class config_manager(object):
     def verify_config(self):
         from mkchromecast.preferences import ConfigSectionMap
         self.config.read(self.configf)
+
+        """
+        We check that configuration file is complete, otherwise the settings
+        are filled from self.defaultconf dictionary.
+        """
+        chkconfig = ['backend', 'codec', 'bitrate', 'samplerate', 'notifications', 'searchatlaunch']
+        for e in chkconfig:
+            try:
+                e = ConfigSectionMap("settings")[str(e)]
+            except KeyError:
+                if debug == True:
+                    print(':::config::: the setting '+e+' is not correctly set. Defaults added.')
+                self.config.set('settings', str(e), self.defaultconf[e])
+                with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+
         backend = ConfigSectionMap("settings")['backend']
         codec= ConfigSectionMap("settings")['codec']
         bitrate = ConfigSectionMap("settings")['bitrate']
         samplerate= ConfigSectionMap("settings")['samplerate']
         notifications = ConfigSectionMap("settings")['notifications']
+
         codecs = ['mp3','ogg', 'aac']
         if os.path.exists(self.configf):
             """
@@ -78,6 +110,7 @@ class config_manager(object):
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', str(samplerate))
                 self.config.set('settings', 'notifications', str(notifications))
+                self.config.set('settings', 'searchatlaunch', str(searchatlaunch))
 
             with open(self.configf, 'w') as configfile:
                 self.config.write(configfile)

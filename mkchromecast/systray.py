@@ -509,8 +509,8 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setText("No network connection detected!")
             updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
         elif message == 'False':
-            updaterBox.setText("Your installation is up-to-date!")
-            updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
+            updaterBox.setText("<b>Your installation is up-to-date!</b>")
+            updaterBox.setInformativeText("<b>mkchromecast</b> v"+mkchromecast.__init__.__version__+" is currently the newest version available.")
         else:
             updaterBox.setText("New version of mkchromecast available!")
             if platform == 'Darwin':
@@ -518,7 +518,7 @@ class menubar(QtWidgets.QMainWindow):
             elif platform == 'Linux':
                 downloadurl = "<a href='http://github.com/muammar/mkchromecast/releases/latest'>"
             if debug == True:
-                print('Download URL:', downloadurl)
+                print("Download URL:", downloadurl)
             updaterBox.setInformativeText("You can "+downloadurl+"download it by clicking here</a>.")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
@@ -529,9 +529,10 @@ class menubar(QtWidgets.QMainWindow):
     def about_show(self):
         msgBox = QMessageBox()
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        #msgBox.setIcon(QMessageBox.Information)
-        msgBox.setText("""<center><img src="images/google.png" height="98" width="128" align="middle"> <br><br>
-<b>mkchromecast</b> v"""+mkchromecast.__init__.__version__)
+        msgBox.setText("""<center><img src="images/google.png" height="98" width="128" align="middle">
+                <br>
+                <br>
+                <b>mkchromecast</b> v"""+mkchromecast.__init__.__version__)
         msgBox.setInformativeText("""
         <p align='center'>
         <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
@@ -545,7 +546,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         <br>
         <br>
-        Copyright 2016 Muammar El Khatib
+        Copyright 2016 Muammar El Khatib.
         <br>
         <br>
         This program comes with absolutely no warranty.

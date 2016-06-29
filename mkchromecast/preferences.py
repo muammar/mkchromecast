@@ -189,7 +189,7 @@ if tray == True:
             Search at launch
             """
             atlaunch = ["enabled", "disabled"]
-            #notindex = atlaunch.index(self.atlaunchconf)
+            launchindex = atlaunch.index(self.searchatlaunchconf)
             self.atlaunch = QLabel('Search at launch', self)
             self.atlaunch.move(20*self.scale_factor, 184*self.scale_factor)
             self.qcatlaunch = QComboBox(self)
@@ -197,7 +197,7 @@ if tray == True:
             self.qcatlaunch.setMinimumContentsLength(7)
             for item in atlaunch:
                 self.qcatlaunch.addItem(item)
-            self.qcatlaunch.setCurrentIndex(notindex)
+            self.qcatlaunch.setCurrentIndex(launchindex)
             #self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
             self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
@@ -292,8 +292,9 @@ if tray == True:
             self.bitrateconf = ConfigSectionMap("settings")['bitrate']
             self.samplerateconf = ConfigSectionMap("settings")['samplerate']
             self.notificationsconf = ConfigSectionMap("settings")['notifications']
+            self.searchatlaunchconf = ConfigSectionMap("settings")['searchatlaunch']
             if debug == True:
-                print(self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
+                print(self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf, self.searchatlaunchconf)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
