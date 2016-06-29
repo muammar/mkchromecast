@@ -138,7 +138,7 @@ class menubar(QtWidgets.QMainWindow):
                     noticon = 'images/google.icns'
                 else:
                     noticon = 'google.icns'
-                searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Cast Devices']
+                searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
                 subprocess.Popen(searching)
                 if debug == True:
                     print(':::systray:::',searching)
@@ -148,7 +148,7 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    found=Notify.Notification.new("mkchromecast", "Searching for Google cast devices!", "dialog-information")
+                    found=Notify.Notification.new("mkchromecast", "Searching for Google Cast Devices...", "dialog-information")
                     found.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
@@ -303,7 +303,7 @@ class menubar(QtWidgets.QMainWindow):
                     noticon = 'images/google.icns'
                 else:
                     noticon = 'google.icns'
-                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
+                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Google Cast Devices Found']
                 subprocess.Popen(found)
                 if debug == True:
                     print(':::systray:::',found)
@@ -313,7 +313,7 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                    found=Notify.Notification.new("mkchromecast", "Google Cast Devices Found!", "dialog-information")
                     found.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
