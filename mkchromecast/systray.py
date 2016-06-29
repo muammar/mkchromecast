@@ -561,10 +561,19 @@ class menubar(QtWidgets.QMainWindow):
     def about_show(self):
         msgBox = QMessageBox()
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setText("""<center><img src="images/google.png" height="98" width="128" align="middle">
-                <br>
-                <br>
-                <b>mkchromecast</b> v"""+mkchromecast.__init__.__version__)
+        if os.path.exists('images/google.icns') == True:    # This is useful when launching from git repo
+            if platform == 'Darwin':
+                self.abouticon='images/google.icns'
+            else:
+                self.abouticon='images/google.png'
+        else:                                               # This is useful for applications
+            if platform == 'Linux':
+                self.abouticon='/usr/share/mkchromecast/images/google.png'
+            else:
+                self.abouticon='google.icns'
+
+        msgsettext = '<center><img src="'+self.abouticon+'" "height="98" width="128" align="middle"> <br> <br> <b>mkchromecast</b> v'+mkchromecast.__init__.__version__
+        msgBox.setText(msgsettext)
         msgBox.setInformativeText("""
         <p align='center'>
         <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
