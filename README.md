@@ -2,6 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
+[![node](https://img.shields.io/badge/node-6.2.2-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -20,7 +21,7 @@ average bitrate of `192k`.  These defaults can be changed using the
 your wireless router is not very powerful, or in the case you don't want to
 degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
-[FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ) for more information.
+[FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
 For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
 information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
@@ -81,7 +82,7 @@ There is a standalone application for **macOS** users. You need to drag it to yo
 `/Applications/` folder.
 
 [Download the latest dmg
-here](https://github.com/muammar/mkchromecast/releases/).
+here](https://github.com/muammar/mkchromecast/releases/latest/).
 You need also to [install
 Soundflower](https://github.com/muammar/mkchromecast#soundflower-macos-users-only).
 
@@ -212,7 +213,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 ```
 apt-get install ffmpeg
 ```
-or
+or `avconv`
 
 ```
 apt-get install libav-tools
@@ -273,14 +274,15 @@ To update **mkchromecast** sources, just get into the cloned directory and:
 git pull
 ```
 
-or if you prefer just pass the `--update` argument to `mkchromecast`:
+or if you prefer it, you can just pass the `--update` argument to
+**mkchromecast**:
 
 ```
 python mkchromecast.py --update
 ```
 
 If you are using the **macOS** application, [download the latest dmg
-here](https://github.com/muammar/mkchromecast/releases/), and replace the
+here](https://github.com/muammar/mkchromecast/releases/latest), and replace the
 `mkchromecast.app` in your `/Applications/` directory.
 
 **Linux** users need to [download the latest deb
@@ -321,8 +323,7 @@ Below an example using `mp3`:
 python mkchromecast.py --encoder-backend ffmpeg
 ```
 
-This is way more stable than the `node` implementation in **macOS**. With `ffmpeg`
-you can modify the codec:
+With `ffmpeg` you can modify the codec:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c aac
@@ -340,11 +341,12 @@ for more about sample rates.
 
 ##### Other examples with **mkchromecast** installed using the debian package
 
+To cast using `parec` and `wav` audio coding format:
 ```
-mkchromecast --encoder-backend ffmpeg -c wav
+mkchromecast -c wav
 ```
 
-There is also an option to change the `bitrate`:
+There is also an option to change the `bitrate`, and in this case with `ffmpeg`:
 
 ```
 mkchromecast --encoder-backend ffmpeg -c ogg -b 128
@@ -411,7 +413,9 @@ Killing the application
 To kill **mkchromecast** when you run it from console, there are two ways of
 doing it: if you didn't use the `--volume` option, just press
 <kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
-<kbd>q</kbd> key to quit. Otherwise, use the `Quit` button in the system tray.
+<kbd>q</kbd> key to quit.
+
+When launching from system tray, use the `Quit` button in the system tray.
 
 Notes
 -----

@@ -13,17 +13,14 @@ from mkchromecast.node import *
 import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
-import pychromecast
-from pychromecast.dial import reboot
-import signal
-import os.path
-from os import getpid
-import psutil, pickle, subprocess
-import threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
 from PyQt5.QtGui import QPixmap
+import pychromecast
+from pychromecast.dial import reboot
+import signal, os.path, psutil, pickle, subprocess, threading
+from os import getpid
 """
 Configparser is imported differently in Python3
 """
@@ -74,7 +71,7 @@ class menubar(QtWidgets.QMainWindow):
         self.threadupdater = QThread()  # no parent!
 
         self.objup.moveToThread(self.threadupdater)
-        self.objup.upcastready.connect(self.upcastready)
+        self.objup.updateready.connect(self.updateready)
         self.objup.upcastfinished.connect(self.threadupdater.quit)
         self.threadupdater.started.connect(self.objup._updater_)
 
@@ -130,7 +127,35 @@ class menubar(QtWidgets.QMainWindow):
         self.exit_menu()
         self.tray.setContextMenu(self.menu)
         self.tray.show()
-        self.app.exec_()
+
+        """
+        This is for the search at launch
+        """
+        if self.searchatlaunch == 'enabled':
+            self.search_cast()
+            if platform == 'Darwin' and self.notifications == 'enabled':
+                if os.path.exists('images/google.icns') == True:
+                    noticon = 'images/google.icns'
+                else:
+                    noticon = 'google.icns'
+                searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
+                subprocess.Popen(searching)
+                if debug == True:
+                    print(':::systray:::',searching)
+            elif platform == 'Linux' and self.notifications == 'enabled':
+                try:
+                    import gi
+                    gi.require_version('Notify', '0.7')
+                    from gi.repository import Notify
+                    Notify.init("mkchromecast")
+                    found=Notify.Notification.new("mkchromecast", "Searching for Google Cast Devices...", "dialog-information")
+                    found.show()
+                except ImportError:
+                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
+        """
+        end
+        """
+        self.app.exec_()    #We start showing the system tray
 
     def read_config(self):
         """
@@ -145,10 +170,13 @@ class menubar(QtWidgets.QMainWindow):
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap("settings")['notifications']
+            self.searchatlaunch = ConfigSectionMap("settings")['searchatlaunch']
         else:
             self.notifications = 'disabled'
+            self.searchatlaunch = 'disabled'
             if debug == True:
                 print(':::systray::: self.notifications '+self.notifications)
+                print(':::systray::: self.searchatlaunch '+self.searchatlaunch)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search For Google Cast Devices")
@@ -215,7 +243,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.tray.setIcon(QtGui.QIcon('google_working.icns'))
 
         """
-        This catches the error cause by an empty tmp file
+        This catches the error caused by an empty .tmp file
         """
         if os.path.exists('/tmp/mkchromecast.tmp') == True:
             try:
@@ -230,6 +258,7 @@ class menubar(QtWidgets.QMainWindow):
         self.thread.start()
 
     def cast_list(self):
+
         if os.path.exists('images/google.icns') == True:
             if platform == 'Darwin':
                 self.tray.setIcon(QtGui.QIcon('images/google.icns'))
@@ -274,7 +303,7 @@ class menubar(QtWidgets.QMainWindow):
                     noticon = 'images/google.icns'
                 else:
                     noticon = 'google.icns'
-                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Cast devices found']
+                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Google Cast Devices Found']
                 subprocess.Popen(found)
                 if debug == True:
                     print(':::systray:::',found)
@@ -284,7 +313,7 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    found=Notify.Notification.new("mkchromecast", "Google cast devices found!", "dialog-information")
+                    found=Notify.Notification.new("mkchromecast", "Google Cast Devices Found!", "dialog-information")
                     found.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
@@ -374,17 +403,25 @@ class menubar(QtWidgets.QMainWindow):
         if self.stopped == False:
             pass
 
-        if self.cast != None or self.stopped == True:
-            self.ncast.quit_app()
+        if self.cast != None or self.stopped == True or self.pcastfailed == True:
+            try:
+                self.ncast.quit_app()
+            except AttributeError:
+                pass
             self.menuentry.setChecked(False)
             self.reset_audio()
-            self.kill_child()
+            try:
+                self.kill_child()
+            except psutil.NoSuchProcess:
+                pass
             checkmktmp()
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
                     self.ncast.quit_app()
                 except pychromecast.error.NotConnected:
+                    continue
+                except AttributeError:
                     continue
                 break
             self.stopped = True
@@ -494,31 +531,29 @@ class menubar(QtWidgets.QMainWindow):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)
         self.p.show()
 
-    def upcastready(self, message):
+    def updateready(self, message):
         print('update ready ?', message)
-        if message == 'None':
-            self.upmsg = None
-        elif message == 'True':
-            self.upmsg = True
-        else:
-            self.upmsg = False
         updaterBox = QMessageBox()
         updaterBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
-        if self.upmsg == None:       # We verify the local IP.
+        if message == 'None':
             updaterBox.setText("No network connection detected!")
             updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
+        elif message == 'False':
+            updaterBox.setText("<b>Your installation is up-to-date!</b>")
+            updaterBox.setInformativeText("<b>mkchromecast</b> v"+mkchromecast.__init__.__version__+" is currently the newest version available.")
         else:
-            if self.upmsg == True:
-                updaterBox.setText("New version of mkchromecast available!")
-                updaterBox.setInformativeText("""You can <a href='http://github.com/muammar/mkchromecast/releases/latest'>download it here</a>.""")
-            elif self.upmsg == False:
-                updaterBox.setText("You are up to date!")
-                updaterBox.setInformativeText('mkchromecast v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
+            updaterBox.setText("New version of mkchromecast available!")
+            if platform == 'Darwin':
+                downloadurl = "<a href='https://github.com/muammar/mkchromecast/releases/download/"+message+"/mkchromecast_v"+message+".dmg'>"
+            elif platform == 'Linux':
+                downloadurl = "<a href='http://github.com/muammar/mkchromecast/releases/latest'>"
+            if debug == True:
+                print("Download URL:", downloadurl)
+            updaterBox.setInformativeText("You can "+downloadurl+"download it by clicking here</a>.")
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
-
 
     def update_show(self):
         self.threadupdater.start()
@@ -526,10 +561,30 @@ class menubar(QtWidgets.QMainWindow):
     def about_show(self):
         msgBox = QMessageBox()
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        msgBox.setIcon(QMessageBox.Information)
-        msgBox.setText("<a href='http://mkchromecast.com'>mkchromecast</a>: v"+mkchromecast.__init__.__version__)
-        msgBox.setInformativeText("""Created by: Muammar El Khatib.
-                \nUX design: Claudia Vargas.
+        msgBox.setText("""<center><img src="images/google.png" height="98" width="128" align="middle">
+                <br>
+                <br>
+                <b>mkchromecast</b> v"""+mkchromecast.__init__.__version__)
+        msgBox.setInformativeText("""
+        <p align='center'>
+        <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
+        <br>
+        <br>
+        <br>
+        Created by: Muammar El Khatib.
+        <br>
+        <br>
+        UX design: Claudia Vargas.
+        <br>
+        <br>
+        <br>
+        Copyright 2016 Muammar El Khatib.
+        <br>
+        <br>
+        This program comes with absolutely no warranty.
+        <br>
+        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE">MIT license</a> for details.
+        </p>
                 """)
         msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()

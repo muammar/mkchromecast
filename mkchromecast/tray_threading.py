@@ -98,7 +98,7 @@ class Player(QObject):
 
 class Updater(QObject):
     upcastfinished = pyqtSignal()
-    upcastready = pyqtSignal(str)
+    updateready = pyqtSignal(str)
 
     def __init__(self):
         QObject.__init__(self)
@@ -107,11 +107,22 @@ class Updater(QObject):
     def _updater_(self):
         chk = casting()
         if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
-            self.upcastready.emit('None')
+            self.updateready.emit('None')
         else:
-            from mkchromecast.version import updater
-            if updater() == True:
-                self.upcastready.emit('True')
+            from mkchromecast.version import __version__
+            import requests
+            url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
+            response = requests.get(url).text.split(',')
+
+            for e in response:
+                if 'tag_name' in e:
+                    version = e.strip('"tag_name":')
+                    break
+
+            if version > __version__:
+                print ('Version ' + version + ' is available to download')
+                self.updateready.emit(version)
             else:
-                self.upcastready.emit('False')
+                print ('You are up to date')
+                self.updateready.emit('False')
         self.upcastfinished.emit()
