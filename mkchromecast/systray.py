@@ -127,34 +127,11 @@ class menubar(QtWidgets.QMainWindow):
         self.exit_menu()
         self.tray.setContextMenu(self.menu)
         self.tray.show()
-
         """
         This is for the search at launch
         """
         if self.searchatlaunch == 'enabled':
             self.search_cast()
-            if platform == 'Darwin' and self.notifications == 'enabled':
-                if os.path.exists('images/google.icns') == True:
-                    noticon = 'images/google.icns'
-                else:
-                    noticon = 'google.icns'
-                searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
-                subprocess.Popen(searching)
-                if debug == True:
-                    print(':::systray:::',searching)
-            elif platform == 'Linux' and self.notifications == 'enabled':
-                try:
-                    import gi
-                    gi.require_version('Notify', '0.7')
-                    from gi.repository import Notify
-                    Notify.init("mkchromecast")
-                    found=Notify.Notification.new("mkchromecast", "Searching for Google Cast Devices...", "dialog-information")
-                    found.show()
-                except ImportError:
-                    print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
-        """
-        end
-        """
         self.app.exec_()    #We start showing the system tray
 
     def read_config(self):
@@ -231,6 +208,9 @@ class menubar(QtWidgets.QMainWindow):
         self.cast_list()
 
     def search_cast(self):
+        self.read_config()
+        if self.notifications == 'enabled':
+            self.search_notification()
         if os.path.exists('images/google_working.icns') == True:
             if platform == 'Darwin':
                 self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
@@ -258,7 +238,6 @@ class menubar(QtWidgets.QMainWindow):
         self.thread.start()
 
     def cast_list(self):
-
         if os.path.exists('images/google.icns') == True:
             if platform == 'Darwin':
                 self.tray.setIcon(QtGui.QIcon('images/google.icns'))
@@ -614,6 +593,30 @@ class menubar(QtWidgets.QMainWindow):
             self.app.quit()
         else:
             self.app.quit()
+
+    """
+    Notifications
+    """
+    def search_notification(self):
+        if platform == 'Darwin' and self.notifications == 'enabled':
+            if os.path.exists('images/google.icns') == True:
+                noticon = 'images/google.icns'
+            else:
+                noticon = 'google.icns'
+            searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
+            subprocess.Popen(searching)
+            if debug == True:
+                print(':::systray:::',searching)
+        elif platform == 'Linux' and self.notifications == 'enabled':
+            try:
+                import gi
+                gi.require_version('Notify', '0.7')
+                from gi.repository import Notify
+                Notify.init("mkchromecast")
+                found=Notify.Notification.new("mkchromecast", "Searching for Google Cast Devices...", "dialog-information")
+                found.show()
+            except ImportError:
+                print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
 def main():
     menubar()
