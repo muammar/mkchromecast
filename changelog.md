@@ -1,6 +1,8 @@
 * mkchromecast (0.3.0) **unreleased**:
 
     - Youtube URLs can be played piping the audio using `youtube-dl`.
+    - New method for discovering local IP in macOS. This will improve the
+      stability of the system tray application.
 
 * mkchromecast (0.2.9.1) **released**: 2016/06/29
 

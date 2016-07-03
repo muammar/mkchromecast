@@ -40,6 +40,8 @@ class casting(object):
         else:
             try:
                 self.ip = socket.gethostbyname(socket.gethostname())
+                if self.debug == True:
+                    print(':::cast::: sockets method', self.ip)
             except socket.gaierror:
                 import netifaces
                 interfaces = netifaces.interfaces()

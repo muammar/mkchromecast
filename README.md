@@ -377,6 +377,10 @@ You can play Youtube URLs headlessly from the command line:
 python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 ```
 
+To use this function, you need to install `youtube-dl`. In macOS, this can be
+done with homebrew: `brew install youtube-dl`. In Debian based distros:
+`apt-get install youtube-dl`.
+
 **Note**: you may need to enclose the URL between quotation marks. This does
 not work in Google Cast audio.
 
