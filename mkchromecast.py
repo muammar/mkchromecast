@@ -43,6 +43,9 @@ if args.tray == False:
         if args.encoder_backend in backends:
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
+    else: # When casting youtube url, we do it throught the ffmpeg module
+        import mkchromecast.ffmpeg
+        mkchromecast.ffmpeg.main()
 
     cc.initialize_cast()
 
@@ -58,7 +61,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin':
+        if platform == 'Darwin' and args.youtube == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()

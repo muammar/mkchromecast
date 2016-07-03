@@ -38,7 +38,20 @@ class casting(object):
             hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
             self.ip = hostname.stdout.read().decode('utf-8').strip()
         else:
-            self.ip = socket.gethostbyname(socket.gethostname())
+            try:
+                self.ip = socket.gethostbyname(socket.gethostname())
+            except socket.gaierror:
+                import netifaces
+                interfaces = netifaces.interfaces()
+                for interface in interfaces:
+                    if interface == 'lo':
+                        continue
+                    iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+                    if iface != None and iface[0]['addr'] != '127.0.0.1':
+                        for e in iface:
+                            self.ip = str(e['addr'])
+                            if self.debug == True:
+                                print(':::cast::: netifaces method', self.ip)
 
     def initialize_cast(self):
         import mkchromecast.__init__        # This is to verify against some needed variables
@@ -47,10 +60,15 @@ class casting(object):
         if self.debug == True:
             print('self.cclist', self.cclist)
 
+        """
+        This block was used for casting youtube with pychromecast, but it does not work
+        """
+        """
         try:
             self.youtubeurl = mkchromecast.__init__.youtubeurl
         except AttributeError:
             self.youtubeurl = None
+        """
 
         if len(self.cclist) != 0 and self.select_cc == False:
             if self.debug == True:
@@ -208,6 +226,7 @@ class casting(object):
         print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
         print(colors.options('Your local IP is:')+' '+localip)
 
+        """
         if self.youtubeurl != None:
             print(colors.options('The Youtube URL chosen:')+' '+self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
@@ -226,35 +245,36 @@ class casting(object):
             print(colors.options('Playing video:')+' '+video)
             yt.play_video(video)
         else:
-            ncast = self.cast
+        """
+        ncast = self.cast
 
-            if self.tray == True:
-                config = ConfigParser.RawConfigParser()
-                configurations = config_manager()    # Class from mkchromecast.config
-                configf = configurations.configf
+        if self.tray == True:
+            config = ConfigParser.RawConfigParser()
+            configurations = config_manager()    # Class from mkchromecast.config
+            configf = configurations.configf
 
-                if os.path.exists(configf) and self.tray == True:
-                    print(tray)
-                    print(colors.warning('Configuration file exist'))
-                    print(colors.warning('Using defaults set there'))
-                    config.read(configf)
-                    self.backend = ConfigSectionMap("settings")['backend']
+            if os.path.exists(configf) and self.tray == True:
+                print(tray)
+                print(colors.warning('Configuration file exist'))
+                print(colors.warning('Using defaults set there'))
+                config.read(configf)
+                self.backend = ConfigSectionMap("settings")['backend']
 
-            if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
-                import mkchromecast.ffmpeg
-                mtype = mkchromecast.ffmpeg.mtype
-                print(' ')
-                print(colors.options('The media type string used is:')+' '+mtype)
-                ncast.play_media('http://'+localip+':5000/stream', mtype)
-            else:
-                print(' ')
-                print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
-                ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
+            import mkchromecast.ffmpeg
+            mtype = mkchromecast.ffmpeg.mtype
             print(' ')
-            print(colors.important('Cast media controller status'))
+            print(colors.options('The media type string used is:')+' '+mtype)
+            ncast.play_media('http://'+localip+':5000/stream', mtype)
+        else:
             print(' ')
-            print(ncast.status)
-            print(' ')
+            print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
+            ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print(' ')
+        print(colors.important('Cast media controller status'))
+        print(' ')
+        print(ncast.status)
+        print(' ')
 
     def stop_cast(self):
         ncast = self.cast

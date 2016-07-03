@@ -28,11 +28,34 @@ except ImportError:
 
 backends_dict = {}
 
+
+"""
+In this block we check variables from __init__.py
+"""
 tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
+try:
+    youtubeurl = mkchromecast.__init__.youtubeurl
+except AttributeError:
+    youtubeurl = None
+
+# This is to take the youtube URL
+if youtubeurl != None:
+    print(colors.options('The Youtube URL chosen:')+' '+youtubeurl)
+
+    try:
+        import urlparse
+        url_data = urlparse.urlparse(youtubeurl)
+        query = urlparse.parse_qs(url_data.query)
+    except ImportError:
+        import urllib.parse
+        url_data = urllib.parse.urlparse(youtubeurl)
+        query = urllib.parse.parse_qs(url_data.query)
+    video = query["v"][0]
+    print(colors.options('Playing video:')+' '+video)
 
 if os.path.exists(configf) and tray == True:
     configurations.verify_config()
@@ -230,6 +253,9 @@ if  codec == 'flac':
                     '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
     if debug == False and backends_dict[backend] != 'parec':
         debug_command()
+
+if youtubeurl != None:
+    command = ['youtube-dl', '-o', '-', youtubeurl]
 
 app = Flask(__name__)
 

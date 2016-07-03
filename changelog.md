@@ -1,3 +1,7 @@
+* mkchromecast (0.3.0) **unreleased**:
+
+    - Youtube URLs can be played piping the audio using `youtube-dl`.
+
 * mkchromecast (0.2.9.1) **released**: 2016/06/29
 
     - Fixing `stop` segfault.

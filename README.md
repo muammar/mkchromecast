@@ -48,6 +48,7 @@ following:
 
 * flask (optional).
 * ffmpeg (optional).
+* youtube-dl (option if you plan to cast youtube URLs).
 
 #### Linux
 
@@ -65,6 +66,7 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
+* youtube-dl (option if you plan to cast youtube URLs).
 
 Install
 -------

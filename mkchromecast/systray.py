@@ -575,7 +575,6 @@ class menubar(QtWidgets.QMainWindow):
         See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE">MIT license</a> for details.
         </p>
                 """)
-        msgBox.setStandardButtons(QMessageBox.Ok)
         msgBox.exec_()
 
     def kill_child(self):       # Not a beautiful name, I know...

@@ -330,10 +330,11 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print(colors.error('You need to provide the youtube URL'))
+        print(colors.error('You need to provide a youtube URL'))
         sys.exit(0)
     else:
         youtubeurl = args.youtube
+        backend = 'ffmpeg'
 
 """
 This is to write a PID file
