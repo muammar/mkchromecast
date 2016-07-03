@@ -2,7 +2,7 @@
 
     - Youtube URLs can be played piping the audio using `youtube-dl`.
     - New method for discovering local IP in macOS. This will improve the
-      stability of the system tray application.
+      stability of the system tray application. See [#5](https://github.com/muammar/mkchromecast/issues/5).
 
 * mkchromecast (0.2.9.1) **released**: 2016/06/29
 
