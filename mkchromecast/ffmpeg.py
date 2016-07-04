@@ -98,7 +98,6 @@ else:
                     print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
                     print(':::ffmpeg::: backend dictionary '+str(backends_dict))
 
-
     if  codec == 'mp3':
         appendmtype = 'mpeg'
     elif codec == 'aac':
@@ -290,7 +289,7 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    if platform == 'Linux' and backends_dict[backend] == 'parec':
+    if platform == 'Linux' and bool(backends_dict) == True and backends_dict[backend] == 'parec':
         c_parec = [backend, '--format=s16le', '-d', 'mkchromecast.monitor']
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
