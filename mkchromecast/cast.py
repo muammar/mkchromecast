@@ -308,4 +308,3 @@ class casting(object):
             reboot(self.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
-
