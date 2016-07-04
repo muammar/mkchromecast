@@ -10,16 +10,20 @@ To call them:
 """
 
 import mkchromecast.__init__
-import argparse
-import subprocess
-import multiprocessing
-import time, sys, os, signal
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
 from mkchromecast.cast import *
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
-import psutil, pickle
+import argparse
+import subprocess
+import multiprocessing
+import time
+import sys
+import signal
+import psutil
+import pickle
+import os
 from os import getpid
 import os.path
 """
@@ -90,24 +94,49 @@ def streaming():
             else:
                 codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
                 if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '
+                        +str(22050)+'Hz, '
+                        +str(32000)+'Hz, '
+                        +str(44100)+'Hz or '
+                        +str(44800)+'Hz')
+                        )
                     samplerate = '44100'
                     print(colors.warning('Sample rate has been set to default!'))
 
                 elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '
+                        +str(22050)+'Hz, '
+                        +str(32000)+'Hz, '
+                        +str(44100)+'Hz or '
+                        +str(44800)+'Hz')
+                        )
                     samplerate = '32000'
 
                 elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '
+                        +str(22050)+'Hz, '
+                        +str(32000)+'Hz, '
+                        +str(44100)+'Hz or '
+                        +str(44800)+'Hz')
+                        )
                     samplerate = '32000'
 
                 elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '
+                        +str(22050)+'Hz, '
+                        +str(32000)+'Hz, '
+                        +str(44100)+'Hz or '
+                        +str(44800)+'Hz')
+                        )
                     samplerate = '22050'
 
                 elif codec in codecs_sr and int(samplerate) > 41000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
+                    print(colors.warning('Sample rates supported by '+codec+' are: '
+                        +str(22050)+'Hz, '
+                        +str(32000)+'Hz, '
+                        +str(44100)+'Hz or '
+                        +str(44800)+'Hz')
+                        )
                     samplerate = '44800'
                     print(colors.warning('Sample rate has been set to maximum!'))
                 print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
@@ -116,9 +145,23 @@ def streaming():
     Node section
     """
     if os.path.exists('./bin/node') == True:
-        webcast = ['./bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
+        webcast = [
+            './bin/node',
+            './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
+            '-b',
+            bitrate,
+            '-s',
+            samplerate
+            ]
     else:
-        webcast = ['./nodejs/bin/node', './nodejs/node_modules/webcast-osx-audio/bin/webcast.js', '-b', bitrate, '-s', samplerate]
+        webcast = [
+            './nodejs/bin/node',
+            './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
+            '-b',
+            bitrate,
+            '-s',
+            samplerate
+            ]
     p = subprocess.Popen(webcast)
     if debug == True:
         print(':::node::: node command', webcast)
@@ -160,7 +203,19 @@ def streaming():
             print(':::node::: platform, tray, notifications', platform, tray, notifications)
 
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
-            reconnecting = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-subtitle', 'node server failed', '-message', 'Reconnecting...']
+            reconnecting = [
+                './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                '-group',
+                'cast',
+                '-contentImage',
+                noticon,
+                '-title',
+                'mkchromecast',
+                '-subtitle',
+                'node server failed',
+                '-message',
+                'Reconnecting...'
+                ]
             subprocess.Popen(reconnecting)
 
             if debug == True:
