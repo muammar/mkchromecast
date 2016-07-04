@@ -381,8 +381,7 @@ To use this function, you need to install `youtube-dl`. In macOS, this can be
 done with homebrew: `brew install youtube-dl`. In Debian based distros:
 `apt-get install youtube-dl`.
 
-**Note**: you may need to enclose the URL between quotation marks. This does
-not work in Google Cast audio.
+**Note**: you may need to enclose the URL between quotation marks.
 
 #### Controlling the Google Cast's volume
 
