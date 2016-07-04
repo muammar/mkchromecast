@@ -95,7 +95,11 @@ else:
         import os, getpass
         import subprocess
         USER = getpass.getuser()
-        PATH = './bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+        PATH = './bin:./nodejs/bin:/Users/' \
+        +str(USER) \
+        +'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' \
+        +os.environ['PATH']
+
         iterate = PATH.split(':')
         for item in iterate:
             verifyif = str(item+'/'+backend)
