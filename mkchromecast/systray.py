@@ -121,7 +121,6 @@ class menubar(QtWidgets.QMainWindow):
             if platform == 'Darwin':
                 self.icon.addFile('images/'+self.google[self.colors]+'.icns')
             else:
-                print 'images/'+self.google[self.colors]+'.png'
                 self.icon.addFile('images/'+self.google[self.colors]+'.png')
         else:                                               # This is useful for applications
             self.icon = QtGui.QIcon()
