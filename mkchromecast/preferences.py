@@ -88,7 +88,12 @@ if tray == True:
             """
             Backend
             """
-            backends_supported = ['node', 'ffmpeg', 'avconv', 'parec']
+            backends_supported = [
+                'node',
+                'ffmpeg',
+                'avconv',
+                'parec'
+                ]
             backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
@@ -119,7 +124,13 @@ if tray == True:
             if self.backendconf == 'node':
                 codecs = ['mp3']
             else:
-                codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+                codecs = [
+                    'mp3',
+                    'ogg',
+                    'aac',
+                    'wav',
+                    'flac'
+                    ]
             if debug == True:
                 print(codecs)
             codecindex = codecs.index(self.codecconf)
@@ -146,7 +157,15 @@ if tray == True:
                 bitrates = ["None"]
                 bitrateindex = 0
             else:
-                bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
+                bitrates = [
+                    "128",
+                    "160",
+                    "192",
+                    "224",
+                    "256",
+                    "320",
+                    "500"
+                    ]
                 bitrateindex = bitrates.index(self.bitrateconf)
             for item in bitrates:
                 self.qcbitrate.addItem(item)
@@ -156,7 +175,12 @@ if tray == True:
             """
             Sample rate
             """
-            samplerates = ["48000", "44100", "32000", "22050"]
+            samplerates = [
+                "48000",
+                "44100",
+                "32000",
+                "22050"
+                ]
             sampleratesindex = samplerates.index(self.samplerateconf)
             self.samplerate = QLabel('Sample rate (Hz)', self)
             self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
@@ -169,14 +193,35 @@ if tray == True:
             self.qcsamplerate.activated[str].connect(self.onActivatedsr)
 
             """
+            Icon colors
+            """
+            colors = [
+                "black",
+                "blue"
+                ]
+            colorsindex = colors.index(self.searchcolorsconf)
+            self.colors = QLabel('Icon colors', self)
+            self.colors.move(20*self.scale_factor, 152*self.scale_factor)
+            self.qccolors = QComboBox(self)
+            self.qccolors.move(180*self.scale_factor, 152*self.scale_factor)
+            self.qccolors.setMinimumContentsLength(7)
+            for item in colors:
+                self.qccolors.addItem(item)
+            self.qccolors.setCurrentIndex(colorsindex)
+            self.qccolors.activated[str].connect(self.onActivatedcolors)
+
+            """
             Notifications
             """
-            notifications = ["enabled", "disabled"]
+            notifications = [
+                "enabled",
+                "disabled"
+                ]
             notindex = notifications.index(self.notificationsconf)
             self.notifications = QLabel('Notifications', self)
-            self.notifications.move(20*self.scale_factor, 152*self.scale_factor)
+            self.notifications.move(20*self.scale_factor, 184*self.scale_factor)
             self.qcnotifications = QComboBox(self)
-            self.qcnotifications.move(180*self.scale_factor, 152*self.scale_factor)
+            self.qcnotifications.move(180*self.scale_factor, 184*self.scale_factor)
             self.qcnotifications.setMinimumContentsLength(7)
             for item in notifications:
                 self.qcnotifications.addItem(item)
@@ -186,12 +231,15 @@ if tray == True:
             """
             Search at launch
             """
-            atlaunch = ["enabled", "disabled"]
+            atlaunch = [
+                "enabled",
+                "disabled"
+                ]
             launchindex = atlaunch.index(self.searchatlaunchconf)
             self.atlaunch = QLabel('Search at launch', self)
-            self.atlaunch.move(20*self.scale_factor, 184*self.scale_factor)
+            self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
             self.qcatlaunch = QComboBox(self)
-            self.qcatlaunch.move(180*self.scale_factor, 184*self.scale_factor)
+            self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)
             self.qcatlaunch.setMinimumContentsLength(7)
             for item in atlaunch:
                 self.qcatlaunch.addItem(item)
@@ -199,7 +247,7 @@ if tray == True:
             self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
             self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
-            self.setFixedSize(300*self.scale_factor, 220*self.scale_factor)     #This is to fix the size of the window
+            self.setFixedSize(300*self.scale_factor, 250*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('mkchromecast Preferences')
 
@@ -276,6 +324,13 @@ if tray == True:
                     self.config.write(configfile)
             self.read_defaults()
 
+        def onActivatedcolors(self, text):
+            self.config.read(self.configf)
+            self.config.set('settings','colors',text)
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+            self.read_defaults()
+
         def onActivatedatlaunch(self, text):
             self.config.read(self.configf)
             self.config.set('settings','searchatlaunch',text)
@@ -296,8 +351,11 @@ if tray == True:
             self.samplerateconf = ConfigSectionMap("settings")['samplerate']
             self.notificationsconf = ConfigSectionMap("settings")['notifications']
             self.searchatlaunchconf = ConfigSectionMap("settings")['searchatlaunch']
+            self.searchcolorsconf = ConfigSectionMap("settings")['colors']
             if debug == True:
-                print(self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf, self.searchatlaunchconf)
+                print(self.backendconf, self.codecconf, self.bitrateconf, \
+                        self.samplerateconf, self.notificationsconf, \
+                        self.searchatlaunchconf, self.searchcolorsconf)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

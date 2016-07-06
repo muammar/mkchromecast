@@ -19,7 +19,12 @@ from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox,
 from PyQt5.QtGui import QPixmap
 import pychromecast
 from pychromecast.dial import reboot
-import signal, os.path, psutil, pickle, subprocess, threading
+import signal
+import os.path
+import psutil
+import pickle
+import subprocess
+import threading
 from os import getpid
 """
 Configparser is imported differently in Python3
@@ -42,6 +47,22 @@ class menubar(QtWidgets.QMainWindow):
         self.played = False
         self.pcastfailed = False
         self.read_config()
+
+        """
+        These dictionaries are used to set the icons' colors
+        """
+        self.google = {
+                'black': 'google',
+                'blue': 'google_b'
+                }
+        self.google_working = {
+                'black': 'google_working',
+                'blue': 'google_working_b',
+                }
+        self.google_nodev = {
+                'black': 'google_nodev',
+                'blue': 'google_nodev_b'
+                }
 
         """
         This is used when searching for cast devices
@@ -95,18 +116,19 @@ class menubar(QtWidgets.QMainWindow):
                     self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
         self.w = QWidget()
 
-        if os.path.exists('images/google.icns') == True:    # This is useful when launching from git repo
+        if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:    # This is useful when launching from git repo
             self.icon = QtGui.QIcon()
             if platform == 'Darwin':
-                self.icon.addFile('images/google.icns')
+                self.icon.addFile('images/'+self.google[self.colors]+'.icns')
             else:
-                self.icon.addFile('images/google.png')
+                print 'images/'+self.google[self.colors]+'.png'
+                self.icon.addFile('images/'+self.google[self.colors]+'.png')
         else:                                               # This is useful for applications
             self.icon = QtGui.QIcon()
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/google.png')
+                self.icon.addFile('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png')
             else:
-                self.icon.addFile('google.icns')
+                self.icon.addFile(self.google[self.colors]+'.icns')
         super(QtWidgets.QMainWindow,self).__init__()
         self.createUI()
 
@@ -149,6 +171,7 @@ class menubar(QtWidgets.QMainWindow):
             config.read(configf)
             self.notifications = ConfigSectionMap("settings")['notifications']
             self.searchatlaunch = ConfigSectionMap("settings")['searchatlaunch']
+            self.colors = ConfigSectionMap("settings")['colors']
         else:
             self.notifications = 'disabled'
             self.searchatlaunch = 'disabled'
@@ -212,16 +235,16 @@ class menubar(QtWidgets.QMainWindow):
         self.read_config()
         if self.notifications == 'enabled':
             self.search_notification()
-        if os.path.exists('images/google_working.icns') == True:
+        if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.icns'))
             else:
-                self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.png'))
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_working.png'))
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_working[self.colors]+'.png'))
             else:
-                self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+                self.tray.setIcon(QtGui.QIcon(self.google_working[self.colors]+'.icns'))
 
         """
         This catches the error caused by an empty .tmp file
@@ -239,32 +262,32 @@ class menubar(QtWidgets.QMainWindow):
         self.thread.start()
 
     def cast_list(self):
-        if os.path.exists('images/google.icns') == True:
+        if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.icns'))
             else:
-                self.tray.setIcon(QtGui.QIcon('images/google.png'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.png'))
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google.png'))
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png'))
             else:
-                self.tray.setIcon(QtGui.QIcon('google.icns'))
+                self.tray.setIcon(QtGui.QIcon(self.google[self.colors]+'.icns'))
 
         if len(self.availablecc) == 0:
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
             self.NodevAction = self.menu.addAction("No Cast Devices Found.")
-            if os.path.exists('images/google_nodev.icns') == True:
+            if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.icns'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.png'))
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_nodev.png'))
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_nodev[self.colors]+'.png'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
+                    self.tray.setIcon(QtGui.QIcon(self.google_nodev[self.colors]+'.icns'))
 
             self.separator_menu()
             self.stop_menu()
@@ -279,10 +302,10 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.read_config()
             if platform == 'Darwin' and self.notifications == 'enabled':
-                if os.path.exists('images/google.icns') == True:
-                    noticon = 'images/google.icns'
+                if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
+                    noticon = 'images/'+self.google[self.colors]+'.icns'
                 else:
-                    noticon = 'google.icns'
+                    noticon = self.google[self.colors]+'.icns'
                 found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Google Cast Devices Found']
                 subprocess.Popen(found)
                 if debug == True:
@@ -324,28 +347,28 @@ class menubar(QtWidgets.QMainWindow):
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
                 self.ncast = self.cast
-            if os.path.exists('images/google.icns') == True:
+            if os.path.exists('images/'+self.google[colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/google.icns'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[colors]+'.icns'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/google.png'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[colors]+'.png'))
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google.png'))
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[colors]+'.png'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('google.icns'))
+                    self.tray.setIcon(QtGui.QIcon(self.google[colors]+'.icns'))
         else:
             self.pcastfailed = True
-            if os.path.exists('images/google_nodev.icns') == True:
+            if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.icns'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.icns'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/google_nodev.png'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.png'))
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_nodev.png'))
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_nodev[self.colors]+'.png'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('google_nodev.icns'))
+                    self.tray.setIcon(QtGui.QIcon(self.google_nodev[self.colors]+'.icns'))
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
@@ -353,16 +376,16 @@ class menubar(QtWidgets.QMainWindow):
         if self.played == True:
             self.kill_child()
         self.menuentry.setChecked(True)
-        if os.path.exists('images/google_working.icns') == True:
+        if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/google_working.icns'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.icns'))
             else:
-                self.tray.setIcon(QtGui.QIcon('images/google_working.png'))
+                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.png'))
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/google_working.png'))
+                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_working[self.colors]+'.png'))
             else:
-                self.tray.setIcon(QtGui.QIcon('google_working.icns'))
+                self.tray.setIcon(QtGui.QIcon(self.google_working[self.colors]+'.icns'))
 
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
@@ -599,10 +622,10 @@ class menubar(QtWidgets.QMainWindow):
     """
     def search_notification(self):
         if platform == 'Darwin' and self.notifications == 'enabled':
-            if os.path.exists('images/google.icns') == True:
-                noticon = 'images/google.icns'
+            if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
+                noticon = 'images/'+self.google[self.colors]+'.icns'
             else:
-                noticon = 'google.icns'
+                noticon = self.google[self.colors]+'.icns'
             searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
             subprocess.Popen(searching)
             if debug == True:

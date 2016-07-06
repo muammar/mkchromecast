@@ -25,6 +25,7 @@ class config_manager(object):
                 'bitrate': '192',
                 'samplerate': '44100',
                 'notifications': 'disabled',
+                'colors': 'black',
                 'searchatlaunch': 'disabled'
                 }
 
@@ -62,6 +63,7 @@ class config_manager(object):
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', '44100')
                 self.config.set('settings', 'notifications', 'disabled')
+                self.config.set('settings', 'colors', 'black')
                 self.config.set('settings', 'searchatlaunch', 'disabled')
             else:
                 self.config.set('settings', 'backend', 'parec')
@@ -69,6 +71,7 @@ class config_manager(object):
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', '44100')
                 self.config.set('settings', 'notifications', 'disabled')
+                self.config.set('settings', 'colors', 'black')
                 self.config.set('settings', 'searchatlaunch', 'disabled')
 
             with open(self.configf, 'w') as configfile:
@@ -82,7 +85,15 @@ class config_manager(object):
         We check that configuration file is complete, otherwise the settings
         are filled from self.defaultconf dictionary.
         """
-        chkconfig = ['backend', 'codec', 'bitrate', 'samplerate', 'notifications', 'searchatlaunch']
+        chkconfig = [
+            'backend',
+            'codec',
+            'bitrate',
+            'samplerate',
+            'notifications',
+            'colors',
+            'searchatlaunch'
+            ]
         for e in chkconfig:
             try:
                 e = ConfigSectionMap("settings")[str(e)]
@@ -99,7 +110,12 @@ class config_manager(object):
         samplerate= ConfigSectionMap("settings")['samplerate']
         notifications = ConfigSectionMap("settings")['notifications']
 
-        codecs = ['mp3','ogg', 'aac']
+        codecs = [
+            'mp3',
+            'ogg',
+            'aac'
+            ]
+
         if os.path.exists(self.configf):
             """
             Reading the codec from config file
@@ -110,6 +126,7 @@ class config_manager(object):
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', str(samplerate))
                 self.config.set('settings', 'notifications', str(notifications))
+                self.config.set('settings', 'colors', str(colors))
                 self.config.set('settings', 'searchatlaunch', str(searchatlaunch))
 
             with open(self.configf, 'w') as configfile:
