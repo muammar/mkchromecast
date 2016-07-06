@@ -32,28 +32,30 @@ class casting(object):
         self.tray = mkchromecast.__init__.tray
         self.select_cc = mkchromecast.__init__.select_cc
         self.debug = mkchromecast.__init__.debug
-
         self.backend = mkchromecast.__init__.backend
+
         if self.platform == 'Linux':
-            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
-            self.ip = hostname.stdout.read().decode('utf-8').strip()
+            self.netifaces_ip()
         else:
             try:
                 self.ip = socket.gethostbyname(socket.gethostname())
                 if self.debug == True:
                     print(':::cast::: sockets method', self.ip)
             except socket.gaierror:
-                import netifaces
-                interfaces = netifaces.interfaces()
-                for interface in interfaces:
-                    if interface == 'lo':
-                        continue
-                    iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
-                    if iface != None and iface[0]['addr'] != '127.0.0.1':
-                        for e in iface:
-                            self.ip = str(e['addr'])
-                            if self.debug == True:
-                                print(':::cast::: netifaces method', self.ip)
+                self.netifaces_ip()
+
+    def netifaces_ip(self):
+        import netifaces
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            if interface == 'lo':
+                continue
+            iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+            if iface != None and iface[0]['addr'] != '127.0.0.1':
+                for e in iface:
+                    self.ip = str(e['addr'])
+                    if self.debug == True:
+                        print(':::cast::: netifaces method', self.ip)
 
     def initialize_cast(self):
         import mkchromecast.__init__        # This is to verify against some needed variables
