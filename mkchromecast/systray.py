@@ -174,9 +174,11 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.notifications = 'disabled'
             self.searchatlaunch = 'disabled'
+            self.colors= 'black'
             if debug == True:
                 print(':::systray::: self.notifications '+self.notifications)
                 print(':::systray::: self.searchatlaunch '+self.searchatlaunch)
+                print(':::systray::: self.colors '+self.colors)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search For Google Cast Devices")
