@@ -244,7 +244,11 @@ if args.update is True:
 """
 Check that encoders exist in the list
 """
-backends = ['node', 'ffmpeg', 'avconv']
+backends = [
+    'node',
+    'ffmpeg',
+    'avconv'
+    ]
 if platform == 'Darwin':
     backends.remove('avconv')
 else:
@@ -273,7 +277,13 @@ elif args.encoder_backend  == None:     #This is to define defaults
 """
 Codecs
 """
-codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+codecs = [
+    'mp3',
+    'ogg',
+    'aac',
+    'wav',
+    'flac'
+    ]
 
 if backend == 'node' and args.codec != 'mp3':
     rcodec = args.codec
@@ -295,7 +305,11 @@ else:
 """
 Bitrate
 """
-codecs_br = ['mp3', 'ogg', 'aac']
+codecs_br = [
+    'mp3',
+    'ogg',
+    'aac'
+    ]
 
 if codec in codecs_br:
     if args.bitrate != 0:
