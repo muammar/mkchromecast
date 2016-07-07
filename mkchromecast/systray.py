@@ -348,16 +348,16 @@ class menubar(QtWidgets.QMainWindow):
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
                 self.ncast = self.cast
-            if os.path.exists('images/'+self.google[colors]+'.icns') == True:
+            if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[colors]+'.icns'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.icns'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[colors]+'.png'))
+                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.png'))
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[colors]+'.png'))
+                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png'))
                 else:
-                    self.tray.setIcon(QtGui.QIcon(self.google[colors]+'.icns'))
+                    self.tray.setIcon(QtGui.QIcon(self.google[self.colors]+'.icns'))
         else:
             self.pcastfailed = True
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
