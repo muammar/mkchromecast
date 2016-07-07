@@ -38,7 +38,7 @@ def color(text, **user_styles):
         'bg_purple': '\033[45m',
         'bg_cyan': '\033[46m',
         'bg_light_grey': '\033[47m'
-    }
+        }
 
     color_text = ''
     for style in user_styles:

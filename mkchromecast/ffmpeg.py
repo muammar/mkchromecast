@@ -112,7 +112,7 @@ else:
                     print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
                     print(':::ffmpeg::: backend dictionary '+str(backends_dict))
 
-    if  codec == 'mp3':
+    if codec == 'mp3':
         appendmtype = 'mpeg'
     elif codec == 'aac':
         appendmtype = 'mp4' #This is the container used for aac

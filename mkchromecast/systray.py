@@ -307,7 +307,18 @@ class menubar(QtWidgets.QMainWindow):
                     noticon = 'images/'+self.google[self.colors]+'.icns'
                 else:
                     noticon = self.google[self.colors]+'.icns'
-                found = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Google Cast Devices Found']
+
+                found = [
+                    './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                    '-group',
+                    'cast',
+                    '-contentImage',
+                    noticon,
+                    '-title',
+                    'mkchromecast',
+                    '-message',
+                    'Google Cast Devices Found'
+                    ]
                 subprocess.Popen(found)
                 if debug == True:
                     print(':::systray:::',found)
@@ -317,7 +328,11 @@ class menubar(QtWidgets.QMainWindow):
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
-                    found=Notify.Notification.new("mkchromecast", "Google Cast Devices Found!", "dialog-information")
+                    found=Notify.Notification.new(
+                        "mkchromecast",
+                        "Google Cast Devices Found!",
+                        "dialog-information"
+                        )
                     found.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
@@ -428,16 +443,34 @@ class menubar(QtWidgets.QMainWindow):
                 except AttributeError:
                     continue
                 break
+
             self.stopped = True
             self.read_config()
             if platform == 'Darwin' and self.notifications == 'enabled':
                 if self.pcastfailed == True:
-                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Casting process failed. Try again...']
+                    stop = [
+                        './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                        '-group',
+                        'cast',
+                        '-title',
+                        'mkchromecast',
+                        '-message',
+                        'Casting process failed. Try again...'
+                        ]
                 else:
-                    stop = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-title', 'mkchromecast', '-message', 'Cast stopped!']
+                    stop = [
+                        './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                        '-group',
+                        'cast',
+                        '-title',
+                        'mkchromecast',
+                        '-message',
+                        'Cast stopped!'
+                        ]
                 subprocess.Popen(stop)
                 if debug == True:
                     print(':::systray::: stop', stop)
+
             elif platform == 'Linux' and self.notifications == 'enabled':
                 try:
                     import gi
@@ -445,9 +478,17 @@ class menubar(QtWidgets.QMainWindow):
                     from gi.repository import Notify
                     Notify.init("mkchromecast")
                     if self.pcastfailed == True:
-                        stop=Notify.Notification.new("mkchromecast", "Casting process failed. Try again...", "dialog-information")
+                        stop=Notify.Notification.new(
+                            "mkchromecast",
+                            "Casting process failed. Try again...",
+                            "dialog-information"
+                            )
                     else:
-                        stop=Notify.Notification.new("mkchromecast", "Cast stopped!", "dialog-information")
+                        stop=Notify.Notification.new(
+                            "mkchromecast",
+                            "Cast stopped!",
+                            "dialog-information"
+                            )
                     stop.show()
                 except ImportError:
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
@@ -627,7 +668,17 @@ class menubar(QtWidgets.QMainWindow):
                 noticon = 'images/'+self.google[self.colors]+'.icns'
             else:
                 noticon = self.google[self.colors]+'.icns'
-            searching = ['./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier', '-group', 'cast', '-contentImage', noticon, '-title', 'mkchromecast', '-message', 'Searching for Google Cast Devices...']
+            searching = [
+                './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                '-group',
+                'cast',
+                '-contentImage',
+                noticon,
+                '-title',
+                'mkchromecast',
+                '-message',
+                'Searching for Google Cast Devices...'
+                ]
             subprocess.Popen(searching)
             if debug == True:
                 print(':::systray:::',searching)
@@ -637,7 +688,11 @@ class menubar(QtWidgets.QMainWindow):
                 gi.require_version('Notify', '0.7')
                 from gi.repository import Notify
                 Notify.init("mkchromecast")
-                found=Notify.Notification.new("mkchromecast", "Searching for Google Cast Devices...", "dialog-information")
+                found=Notify.Notification.new(
+                    "mkchromecast",
+                    "Searching for Google Cast Devices...",
+                    "dialog-information"
+                    )
                 found.show()
             except ImportError:
                 print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
