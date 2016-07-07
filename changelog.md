@@ -6,7 +6,7 @@
       [#5](https://github.com/muammar/mkchromecast/issues/5).
     - Now it is possible to select a different color for the system tray icon.
       This is useful when using dark themes.
-    - The node streaming has been updated to work with v6.3.0.
+    - The node streaming has been updated to work with `node v6.3.0`.
 
 * mkchromecast (0.2.9.1) **released**: 2016/06/29
 
