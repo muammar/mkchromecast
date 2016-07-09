@@ -453,6 +453,7 @@ Check these images:
 * [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
+* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 **Note**: you can set all options described above using the `preferences` in
 the system tray.
