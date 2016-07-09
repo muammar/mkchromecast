@@ -103,11 +103,14 @@ class casting(object):
                 print(' ')
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
+                self.availablecc()
+                """
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
+                """
                 #print('Array')
                 #print(availablecc)
 
@@ -132,11 +135,14 @@ class casting(object):
                 print(' ')
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
+                self.availablecc()
+                """
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
+                """
                 #print('Array')
                 #print(availablecc)
 
@@ -146,6 +152,7 @@ class casting(object):
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
+                self.availablecc()
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.castto))
                 print(' ')
@@ -310,3 +317,14 @@ class casting(object):
             reboot(self.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
+
+    def availablecc(self):
+        """This method is used for populating the self.availablecc array
+        need for the system tray.
+        """
+        self.availablecc=[]
+        for self.index,device in enumerate(self.cclist):
+            print(str(self.index)+'      ',str(device))
+            toappend = [self.index,device]
+            self.availablecc.append(toappend)
+
