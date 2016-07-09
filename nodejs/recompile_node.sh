@@ -29,6 +29,7 @@ echo
 rm -r ../node-v$VER/
 
 echo "Creating symlinks"
+
 cd $localpwd/bin/
 rm *
 ln -s ../node-$VER/bin/npm
@@ -37,5 +38,6 @@ ln -s ../node-$VER/bin/node
 cd ../../bin/
 rm node
 ln -s ../nodejs/node-$VER/bin/node
+
 echo
 echo "Done"
