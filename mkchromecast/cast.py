@@ -327,4 +327,3 @@ class casting(object):
             print(str(self.index)+'      ',str(device))
             toappend = [self.index,device]
             self.availablecc.append(toappend)
-
