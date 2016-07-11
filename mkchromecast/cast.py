@@ -269,7 +269,7 @@ class casting(object):
                 print(colors.warning('Configuration file exist'))
                 print(colors.warning('Using defaults set there'))
                 config.read(configf)
-                self.backend = ConfigSectionMap("settings")['backend']
+                self.backend = ConfigSectionMap('settings')['backend']
 
         if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
             import mkchromecast.ffmpeg

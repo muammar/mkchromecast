@@ -168,9 +168,9 @@ class menubar(QtWidgets.QMainWindow):
             print(colors.warning('Configuration file exist'))
             print(colors.warning('Using defaults set there'))
             config.read(configf)
-            self.notifications = ConfigSectionMap("settings")['notifications']
-            self.searchatlaunch = ConfigSectionMap("settings")['searchatlaunch']
-            self.colors = ConfigSectionMap("settings")['colors']
+            self.notifications = ConfigSectionMap('settings')['notifications']
+            self.searchatlaunch = ConfigSectionMap('settings')['searchatlaunch']
+            self.colors = ConfigSectionMap('settings')['colors']
         else:
             self.notifications = 'disabled'
             self.searchatlaunch = 'disabled'
@@ -181,15 +181,15 @@ class menubar(QtWidgets.QMainWindow):
                 print(':::systray::: self.colors '+self.colors)
 
     def search_menu(self):
-        self.SearchAction = self.menu.addAction("Search For Google Cast Devices")
+        self.SearchAction = self.menu.addAction('Search For Google Cast Devices')
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
-        self.StopCastAction = self.menu.addAction("Stop Casting")
+        self.StopCastAction = self.menu.addAction('Stop Casting')
         self.StopCastAction.triggered.connect(self.stop_cast)
 
     def volume_menu(self):
-        self.VolumeCastAction = self.menu.addAction("Volume")
+        self.VolumeCastAction = self.menu.addAction('Volume')
         self.VolumeCastAction.triggered.connect(self.volume_cast)
 
     def separator_menu(self):
@@ -200,27 +200,27 @@ class menubar(QtWidgets.QMainWindow):
             self.cast_list()
 
     def resetaudio_menu(self):
-        self.ResetAudioAction = self.menu.addAction("Reset Audio")
+        self.ResetAudioAction = self.menu.addAction('Reset Audio')
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Cast Device")
+        self.rebootAction = self.menu.addAction('Reboot Cast Device')
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
-        self.preferencesAction = self.menu.addAction("Preferences...")
+        self.preferencesAction = self.menu.addAction('Preferences...')
         self.preferencesAction.triggered.connect(self.preferences_show)
 
     def update_menu(self):
-        self.updateAction = self.menu.addAction("Check for Updates...")
+        self.updateAction = self.menu.addAction('Check for Updates...')
         self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
-        self.AboutAction = self.menu.addAction("About mkchromecast")
+        self.AboutAction = self.menu.addAction('About mkchromecast')
         self.AboutAction.triggered.connect(self.about_show)
 
     def exit_menu(self):
-        exitAction = self.menu.addAction("Quit")
+        exitAction = self.menu.addAction('Quit')
         exitAction.triggered.connect(self.exit_all)
 
     """
@@ -278,7 +278,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            self.NodevAction = self.menu.addAction("No Cast Devices Found.")
+            self.NodevAction = self.menu.addAction('No Cast Devices Found.')
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.icns'))
@@ -327,11 +327,11 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init("mkchromecast")
+                    Notify.init('mkchromecast')
                     found=Notify.Notification.new(
-                        "mkchromecast",
-                        "Google Cast Devices Found!",
-                        "dialog-information"
+                        'mkchromecast',
+                        'Google Cast Devices Found!',
+                        'dialog-information'
                         )
                     found.show()
                 except ImportError:
@@ -476,18 +476,18 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init("mkchromecast")
+                    Notify.init('mkchromecast')
                     if self.pcastfailed == True:
                         stop=Notify.Notification.new(
-                            "mkchromecast",
-                            "Casting process failed. Try again...",
-                            "dialog-information"
+                            'mkchromecast',
+                            'Casting process failed. Try again...',
+                            'dialog-information'
                             )
                     else:
                         stop=Notify.Notification.new(
-                            "mkchromecast",
-                            "Cast stopped!",
-                            "dialog-information"
+                            'mkchromecast',
+                            'Cast stopped!',
+                            'dialog-information'
                             )
                     stop.show()
                 except ImportError:
@@ -505,7 +505,7 @@ class menubar(QtWidgets.QMainWindow):
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
-        self.sl.setWindowTitle("Google Cast Volume")
+        self.sl.setWindowTitle('Google Cast Volume')
         self.sl.show()
 
         """
@@ -583,20 +583,20 @@ class menubar(QtWidgets.QMainWindow):
         updaterBox.setIcon(QMessageBox.Information)
         updaterBox.setTextFormat(Qt.RichText)   # This option let you write rich text in pyqt5.
         if message == 'None':
-            updaterBox.setText("No network connection detected!")
+            updaterBox.setText('No network connection detected!')
             updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
         elif message == 'False':
-            updaterBox.setText("<b>Your installation is up-to-date!</b>")
-            updaterBox.setInformativeText("<b>mkchromecast</b> v"+mkchromecast.__init__.__version__+" is currently the newest version available.")
+            updaterBox.setText('<b>Your installation is up-to-date!</b>')
+            updaterBox.setInformativeText('<b>mkchromecast</b> v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
         else:
-            updaterBox.setText("New version of mkchromecast available!")
+            updaterBox.setText('New version of mkchromecast available!')
             if platform == 'Darwin':
-                downloadurl = "<a href='https://github.com/muammar/mkchromecast/releases/download/"+message+"/mkchromecast_v"+message+".dmg'>"
+                downloadurl = '<a href="https://github.com/muammar/mkchromecast/releases/download/'+message+'/mkchromecast_v'+message+'.dmg">'
             elif platform == 'Linux':
-                downloadurl = "<a href='http://github.com/muammar/mkchromecast/releases/latest'>"
+                downloadurl = '<a href="http://github.com/muammar/mkchromecast/releases/latest">'
             if debug == True:
-                print("Download URL:", downloadurl)
-            updaterBox.setInformativeText("You can "+downloadurl+"download it by clicking here</a>.")
+                print('Download URL:', downloadurl)
+            updaterBox.setInformativeText('You can '+downloadurl+'download it by clicking here</a>.')
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
@@ -632,7 +632,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         <br>
         <br>
-        Copyright 2016 Muammar El Khatib.
+        Copyright (c) 2016, Muammar El Khatib.
         <br>
         <br>
         This program comes with absolutely no warranty.
@@ -687,11 +687,11 @@ class menubar(QtWidgets.QMainWindow):
                 import gi
                 gi.require_version('Notify', '0.7')
                 from gi.repository import Notify
-                Notify.init("mkchromecast")
+                Notify.init('mkchromecast')
                 found=Notify.Notification.new(
-                    "mkchromecast",
-                    "Searching for Google Cast Devices...",
-                    "dialog-information"
+                    'mkchromecast',
+                    'Searching for Google Cast Devices...',
+                    'dialog-information'
                     )
                 found.show()
             except ImportError:

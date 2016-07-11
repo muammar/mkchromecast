@@ -39,7 +39,11 @@ if args.tray == False:
             from mkchromecast.node import *
             stream()
 
-        backends = ['ffmpeg', 'avconv', 'parec']
+        backends = [
+            'ffmpeg',
+            'avconv',
+            'parec'
+            ]
         if args.encoder_backend in backends:
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()

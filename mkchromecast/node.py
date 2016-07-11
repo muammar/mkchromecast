@@ -51,11 +51,11 @@ def streaming():
         print(colors.warning('Configuration file exist'))
         print(colors.warning('Using defaults set there'))
         config.read(configf)
-        backend = ConfigSectionMap("settings")['backend']
-        rcodec= ConfigSectionMap("settings")['codec']
-        bitrate = ConfigSectionMap("settings")['bitrate']
-        samplerate= ConfigSectionMap("settings")['samplerate']
-        notifications = ConfigSectionMap("settings")['notifications']
+        backend = ConfigSectionMap('settings')['backend']
+        rcodec= ConfigSectionMap('settings')['codec']
+        bitrate = ConfigSectionMap('settings')['bitrate']
+        samplerate= ConfigSectionMap('settings')['samplerate']
+        notifications = ConfigSectionMap('settings')['notifications']
     else:
         backend = mkchromecast.__init__.backend
         rcodec = mkchromecast.__init__.rcodec
@@ -184,13 +184,13 @@ def streaming():
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
-            print("Ctrl-c was requested")
+            print('Ctrl-c was requested')
             sys.exit(0)
         except IOError:
-            print("I/O Error")
+            print('I/O Error')
             sys.exit(0)
         except OSError:
-            print("OSError")
+            print('OSError')
             sys.exit(0)
     else:
         print(colors.warning('Reconnecting node streaming...'))

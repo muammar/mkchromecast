@@ -19,7 +19,7 @@ import pychromecast
 
 pychromecast.get_chromecasts_as_dict().keys()
 
-cast = pychromecast.get_chromecast(friendly_name="Harman Kardon")
+cast = pychromecast.get_chromecast(friendly_name='Harman Kardon')
 cast.wait()
 print(cast.device)
 

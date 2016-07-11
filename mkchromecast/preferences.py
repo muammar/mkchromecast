@@ -57,14 +57,14 @@ def ConfigSectionMap(section):
         try:
             dict1[option] = config.get(section, option)
             if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
+                DebugPrint('skip: %s' % option)
         except:
-            print("exception on %s!" % option)
+            print('exception on %s!' % option)
             dict1[option] = None
     return dict1
 
 if tray == True:
-    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
+    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication, QFrame
     from PyQt5 import QtCore
 
     class preferences(QWidget):
@@ -151,20 +151,20 @@ if tray == True:
             self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             self.qcbitrate.setMinimumContentsLength(7)
             if self.codecconf == 'wav':
-                bitrates = ["None"]
+                bitrates = ['None']
                 bitrateindex = 0
             elif self.codecconf == 'flac':
-                bitrates = ["None"]
+                bitrates = ['None']
                 bitrateindex = 0
             else:
                 bitrates = [
-                    "128",
-                    "160",
-                    "192",
-                    "224",
-                    "256",
-                    "320",
-                    "500"
+                    '128',
+                    '160',
+                    '192',
+                    '224',
+                    '256',
+                    '320',
+                    '500'
                     ]
                 bitrateindex = bitrates.index(self.bitrateconf)
             for item in bitrates:
@@ -176,10 +176,10 @@ if tray == True:
             Sample rate
             """
             samplerates = [
-                "48000",
-                "44100",
-                "32000",
-                "22050"
+                '48000',
+                '44100',
+                '32000',
+                '22050'
                 ]
             sampleratesindex = samplerates.index(self.samplerateconf)
             self.samplerate = QLabel('Sample rate (Hz)', self)
@@ -196,8 +196,8 @@ if tray == True:
             Icon colors
             """
             colors = [
-                "black",
-                "blue"
+                'black',
+                'blue'
                 ]
             colorsindex = colors.index(self.searchcolorsconf)
             self.colors = QLabel('Icon colors', self)
@@ -214,8 +214,8 @@ if tray == True:
             Notifications
             """
             notifications = [
-                "enabled",
-                "disabled"
+                'enabled',
+                'disabled'
                 ]
             notindex = notifications.index(self.notificationsconf)
             self.notifications = QLabel('Notifications', self)
@@ -232,8 +232,8 @@ if tray == True:
             Search at launch
             """
             atlaunch = [
-                "enabled",
-                "disabled"
+                'enabled',
+                'disabled'
                 ]
             launchindex = atlaunch.index(self.searchatlaunchconf)
             self.atlaunch = QLabel('Search at launch', self)
@@ -268,7 +268,13 @@ if tray == True:
                 with open(self.configf, 'w') as configfile:
                         self.config.write(configfile)
             else:
-                codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+                codecs = [
+                    'mp3',
+                    'ogg',
+                    'aac',
+                    'wav',
+                    'flac'
+                    ]
             if debug == True:
                 print(codecs)
             codecindex = codecs.index(self.codecconf)
@@ -287,15 +293,23 @@ if tray == True:
             self.read_defaults()
             self.qcbitrate.clear()
             if self.codecconf == 'wav':
-                bitrates = ["None"]
+                bitrates = ['None']
                 bitrateindex = 0
             elif self.codecconf == 'flac':
                 bitrateindex = 0
-                bitrates = ["None"]
+                bitrates = ['None']
             else:
                 self.configurations.verify_config()
                 self.read_defaults()
-                bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
+                bitrates = [
+                    '128',
+                    '160',
+                    '192',
+                    '224',
+                    '256',
+                    '320',
+                    '500'
+                    ]
                 bitrateindex = bitrates.index(self.bitrateconf)
             self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             for item in bitrates:
@@ -339,19 +353,19 @@ if tray == True:
             self.read_defaults()
 
         def read_defaults(self):
-            self.backendconf = ConfigSectionMap("settings")['backend']
-            self.codecconf = ConfigSectionMap("settings")['codec']
+            self.backendconf = ConfigSectionMap('settings')['backend']
+            self.codecconf = ConfigSectionMap('settings')['codec']
             if self.backendconf == 'node' and self.codecconf != 'mp3':
                 self.config.read(self.configf)
                 self.config.set('settings','codec','mp3')
                 with open(self.configf, 'w') as configfile:
                         self.config.write(configfile)
-                self.codecconf = ConfigSectionMap("settings")['codec']
-            self.bitrateconf = ConfigSectionMap("settings")['bitrate']
-            self.samplerateconf = ConfigSectionMap("settings")['samplerate']
-            self.notificationsconf = ConfigSectionMap("settings")['notifications']
-            self.searchatlaunchconf = ConfigSectionMap("settings")['searchatlaunch']
-            self.searchcolorsconf = ConfigSectionMap("settings")['colors']
+                self.codecconf = ConfigSectionMap('settings')['codec']
+            self.bitrateconf = ConfigSectionMap('settings')['bitrate']
+            self.samplerateconf = ConfigSectionMap('settings')['samplerate']
+            self.notificationsconf = ConfigSectionMap('settings')['notifications']
+            self.searchatlaunchconf = ConfigSectionMap('settings')['searchatlaunch']
+            self.searchcolorsconf = ConfigSectionMap('settings')['colors']
             if debug == True:
                 print(self.backendconf, self.codecconf, self.bitrateconf, \
                         self.samplerateconf, self.notificationsconf, \

@@ -60,7 +60,7 @@ if youtubeurl != None:
         import urllib.parse
         url_data = urllib.parse.urlparse(youtubeurl)
         query = urllib.parse.parse_qs(url_data.query)
-    video = query["v"][0]
+    video = query['v'][0]
     print(colors.options('Playing video:')+' '+video)
     command = [
         'youtube-dl',
@@ -73,11 +73,11 @@ else:
     if os.path.exists(configf) and tray == True:
         configurations.verify_config()
         config.read(configf)
-        backend = ConfigSectionMap("settings")['backend']
+        backend = ConfigSectionMap('settings')['backend']
         backends_dict[backend] = backend
-        codec= ConfigSectionMap("settings")['codec']
-        bitrate = ConfigSectionMap("settings")['bitrate']
-        samplerate= ConfigSectionMap("settings")['samplerate']
+        codec= ConfigSectionMap('settings')['codec']
+        bitrate = ConfigSectionMap('settings')['bitrate']
+        samplerate= ConfigSectionMap('settings')['samplerate']
         if debug == True:
             print(':::ffmpeg::: tray ='+str(tray))
             print(colors.warning('Configuration file exist'))
@@ -548,13 +548,13 @@ def monitor_daemon():
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
-            print("Ctrl-c was requested")
+            print('Ctrl-c was requested')
             sys.exit(0)
         except IOError:
-            print("I/O Error")
+            print('I/O Error')
             sys.exit(0)
         except OSError:
-            print("OSError")
+            print('OSError')
             sys.exit(0)
 
 def main():

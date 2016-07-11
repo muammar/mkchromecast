@@ -96,7 +96,7 @@ class config_manager(object):
             ]
         for e in chkconfig:
             try:
-                e = ConfigSectionMap("settings")[str(e)]
+                e = ConfigSectionMap('settings')[str(e)]
             except KeyError:
                 if debug == True:
                     print(':::config::: the setting '+e+' is not correctly set. Defaults added.')
@@ -104,11 +104,11 @@ class config_manager(object):
                 with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)
 
-        backend = ConfigSectionMap("settings")['backend']
-        codec= ConfigSectionMap("settings")['codec']
-        bitrate = ConfigSectionMap("settings")['bitrate']
-        samplerate= ConfigSectionMap("settings")['samplerate']
-        notifications = ConfigSectionMap("settings")['notifications']
+        backend = ConfigSectionMap('settings')['backend']
+        codec= ConfigSectionMap('settings')['codec']
+        bitrate = ConfigSectionMap('settings')['bitrate']
+        samplerate= ConfigSectionMap('settings')['samplerate']
+        notifications = ConfigSectionMap('settings')['notifications']
 
         codecs = [
             'mp3',

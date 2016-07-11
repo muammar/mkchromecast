@@ -17,10 +17,10 @@ You need to install using pip3 the following:
 """
 from setuptools import setup
 
-version=open("mkchromecast/version.py").readlines()[-1].split()[-1].strip("\"'")
+version=open('mkchromecast/version.py').readlines()[-1].split()[-1].strip("\"'")
 
 APP = ['start_tray.py']
-APP_NAME = "mkchromecast"
+APP_NAME = 'mkchromecast'
 DATA_FILES = [
         'images/google.icns',
         'images/google_working.icns',
@@ -51,11 +51,11 @@ OPTIONS = {
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString': "Cast macOS audio to your Google cast devices",
-        'CFBundleIdentifier': "com.mkchromecast.osx",
+        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices',
+        'CFBundleIdentifier': 'com.mkchromecast.osx',
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
-        'NSHumanReadableCopyright': u"Copyright (c) 2016, Muammar El Khatib, All Rights Reserved",
+        'NSHumanReadableCopyright': u'Copyright (c) 2016, Muammar El Khatib, All Rights Reserved',
         'LSPrefersPPC': True
     }
 }
