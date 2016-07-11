@@ -71,7 +71,7 @@ if youtubeurl != None:
     mtype = 'audio/mp4'
 else:
     if os.path.exists(configf) and tray == True:
-        configurations.verify_config()
+        configurations.chk_config()
         config.read(configf)
         backend = ConfigSectionMap('settings')['backend']
         backends_dict[backend] = backend
