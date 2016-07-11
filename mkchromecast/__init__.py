@@ -73,9 +73,9 @@ Possible codecs:
 This option only works for the ffmpeg, avconv and parec backends.
 
 ''')
-parser.add_argument('--config', action="store_true", help='Use this option to connect from configuration file')
-parser.add_argument('--debug', action="store_true", help='Option for debugging purposes')
-parser.add_argument('-d', '--discover', action="store_true", help='Use this option if you want to know the friendly name of a Google Cast device')
+parser.add_argument('--config', action='store_true', help='Use this option to connect from configuration file')
+parser.add_argument('--debug', action='store_true', help='Option for debugging purposes')
+parser.add_argument('-d', '--discover', action='store_true', help='Use this option if you want to know the friendly name of a Google Cast device')
 parser.add_argument('--encoder-backend', type=str, default=None, help=
 '''
 Set the backend for all encoders.
@@ -89,18 +89,18 @@ Example:
     python mkchromecast.py --encoder-backend ffmpeg
 
 ''')
-parser.add_argument('-n', '--name', action="store_true", help='Use this option if you know the name of the Google Cast you want to connect')
-parser.add_argument('--notifications', action="store_true", help='''
+parser.add_argument('-n', '--name', action='store_true', help='Use this option if you know the name of the Google Cast you want to connect')
+parser.add_argument('--notifications', action='store_true', help='''
 Use this flag to enable the notifications.
 ''')
-parser.add_argument('-r', '--reset', action="store_true", help='''
+parser.add_argument('-r', '--reset', action='store_true', help='''
 When the application fails, and you have no audio in your computer, use this
 option to reset the computer's audio
 ''')
-parser.add_argument('--reboot', action="store_true", help='''
+parser.add_argument('--reboot', action='store_true', help='''
 Reboot the Google Cast device
 ''')
-parser.add_argument('-s', '--select-cc', action="store_true", help='If you have more than one Google Cast device use this option')
+parser.add_argument('-s', '--select-cc', action='store_true', help='If you have more than one Google Cast device use this option')
 parser.add_argument('--sample-rate', type=int, default='44100', help=
 '''
 Set the sample rate. The default sample rate obtained from avfoundation audio
@@ -133,11 +133,11 @@ Which sample rate to use?
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 
 ''')
-parser.add_argument('-t', '--tray', action="store_true", help=
+parser.add_argument('-t', '--tray', action='store_true', help=
 '''
 This option let you launch mkchromecast as a systray menu (beta)
 ''')
-parser.add_argument('--update', action="store_true", help="""
+parser.add_argument('--update', action='store_true', help="""
 Update mkchromecast git repository.
 
 Example:
@@ -150,8 +150,8 @@ This will execute for you:
 
 """
 )
-parser.add_argument('-v', '--version', action="store_true", help='Show the version')
-parser.add_argument('--volume', action="store_true", default=False, help=
+parser.add_argument('-v', '--version', action='store_true', help='Show the version')
+parser.add_argument('--volume', action='store_true', default=False, help=
 '''
 This option lets you control the volume of your Google Cast Devices. Use the
 'u' and 'd' keys to perform volume up and volume down actions respectively. Note
@@ -244,7 +244,11 @@ if args.update is True:
 """
 Check that encoders exist in the list
 """
-backends = ['node', 'ffmpeg', 'avconv']
+backends = [
+    'node',
+    'ffmpeg',
+    'avconv'
+    ]
 if platform == 'Darwin':
     backends.remove('avconv')
 else:
@@ -273,7 +277,13 @@ elif args.encoder_backend  == None:     #This is to define defaults
 """
 Codecs
 """
-codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+codecs = [
+    'mp3',
+    'ogg',
+    'aac',
+    'wav',
+    'flac'
+    ]
 
 if backend == 'node' and args.codec != 'mp3':
     rcodec = args.codec
@@ -295,7 +305,11 @@ else:
 """
 Bitrate
 """
-codecs_br = ['mp3', 'ogg', 'aac']
+codecs_br = [
+    'mp3',
+    'ogg',
+    'aac'
+    ]
 
 if codec in codecs_br:
     if args.bitrate != 0:
@@ -330,10 +344,11 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print(colors.error('You need to provide the youtube URL'))
+        print(colors.error('You need to provide a youtube URL'))
         sys.exit(0)
     else:
         youtubeurl = args.youtube
+        backend = 'ffmpeg'
 
 """
 This is to write a PID file

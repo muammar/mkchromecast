@@ -18,6 +18,8 @@ node_js:
   - "iojs-v1"
   - "iojs-v2"
   - "iojs-v3"
+  - "4"
+  - "6"
 
 install:
   - PATH="`npm bin`:`npm bin -g`:$PATH"

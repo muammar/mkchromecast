@@ -11,13 +11,18 @@ from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
-import os, sys, time
+import psutil
+import pickle
+import sys
+import time
 from functools import partial
 from subprocess import Popen, PIPE
 from flask import Flask, Response, request
-import multiprocessing, threading
-import psutil, pickle
+import multiprocessing
+import threading
+import os
 from os import getpid
+
 """
 Configparser is imported differently in Python3
 """
@@ -28,208 +33,427 @@ except ImportError:
 
 backends_dict = {}
 
+
+"""
+In this block we check variables from __init__.py
+"""
 tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
-
-if os.path.exists(configf) and tray == True:
-    configurations.verify_config()
-    config.read(configf)
-    backend = ConfigSectionMap("settings")['backend']
-    backends_dict[backend] = backend
-    codec= ConfigSectionMap("settings")['codec']
-    bitrate = ConfigSectionMap("settings")['bitrate']
-    samplerate= ConfigSectionMap("settings")['samplerate']
-    if debug == True:
-        print(':::ffmpeg::: tray ='+str(tray))
-        print(colors.warning('Configuration file exist'))
-        print(colors.warning('Using defaults set there'))
-        print(backend,codec,bitrate,samplerate)
-else:
-    backend = mkchromecast.__init__.backend
-    backends_dict[backend] = backend
-    codec = mkchromecast.__init__.codec
-    bitrate = str(mkchromecast.__init__.bitrate)
-    samplerate = str(mkchromecast.__init__.samplerate)
-
-backends = ['ffmpeg', 'avconv', 'parec']
-if tray == True and backend in backends:
-    import os, getpass
-    import subprocess
-    USER = getpass.getuser()
-    PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
-    iterate = PATH.split(':')
-    for item in iterate:
-        verifyif = str(item+'/'+backend)
-        if os.path.exists(verifyif) == False:
-            continue
-        else:
-            backends_dict[verifyif] = backend
-            backend = verifyif
-            if debug == True:
-                print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
-                print(':::ffmpeg::: backend dictionary '+str(backends_dict))
-
 appendtourl = 'stream'
+try:
+    youtubeurl = mkchromecast.__init__.youtubeurl
+except AttributeError:
+    youtubeurl = None
 
-if  codec == 'mp3':
-    appendmtype = 'mpeg'
-elif codec == 'aac':
-    appendmtype = 'mp4' #This is the container used for aac
+# This is to take the youtube URL
+if youtubeurl != None:
+    print(colors.options('The Youtube URL chosen:')+' '+youtubeurl)
+
+    try:
+        import urlparse
+        url_data = urlparse.urlparse(youtubeurl)
+        query = urlparse.parse_qs(url_data.query)
+    except ImportError:
+        import urllib.parse
+        url_data = urllib.parse.urlparse(youtubeurl)
+        query = urllib.parse.parse_qs(url_data.query)
+    video = query['v'][0]
+    print(colors.options('Playing video:')+' '+video)
+    command = [
+        'youtube-dl',
+        '-o',
+        '-',
+        youtubeurl
+        ]
+    mtype = 'audio/mp4'
 else:
-    appendmtype = codec
-
-mtype = 'audio/'+appendmtype
-
-print(colors.options('Selected backend:')+' '+ backend)
-print(colors.options('Selected audio codec:')+' '+ codec)
-
-if backend != 'node':
-    if bitrate == '192':
-        bitrate = bitrate+'k'
-        print(colors.options('Default bitrate used:')+' '+ bitrate)
-    elif bitrate == 'None':
-        print(colors.warning('The '+codec+' codec does not require the bitrate argument.'))
+    if os.path.exists(configf) and tray == True:
+        configurations.chk_config()
+        config.read(configf)
+        backend = ConfigSectionMap('settings')['backend']
+        backends_dict[backend] = backend
+        codec= ConfigSectionMap('settings')['codec']
+        bitrate = ConfigSectionMap('settings')['bitrate']
+        samplerate= ConfigSectionMap('settings')['samplerate']
+        if debug == True:
+            print(':::ffmpeg::: tray ='+str(tray))
+            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Using defaults set there'))
+            print(backend,codec,bitrate,samplerate)
     else:
-        if codec == 'mp3' and int(bitrate) > 320:
-            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
-            print(colors.warning('You may try lossless audio coding formats.'))
-            bitrate = '320'
-            print(colors.warning('Bitrate has been set to maximum!'))
+        backend = mkchromecast.__init__.backend
+        backends_dict[backend] = backend
+        codec = mkchromecast.__init__.codec
+        bitrate = str(mkchromecast.__init__.bitrate)
+        samplerate = str(mkchromecast.__init__.samplerate)
 
-        if codec == 'ogg' and int(bitrate) > 500:
-            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-            print(colors.warning('You may try lossless audio coding formats.'))
-            bitrate = '500'
-            print(colors.warning('Bitrate has been set to maximum!'))
+    backends = ['ffmpeg', 'avconv', 'parec']
+    if tray == True and backend in backends:
+        import os, getpass
+        import subprocess
+        USER = getpass.getuser()
+        PATH = './bin:./nodejs/bin:/Users/' \
+        +str(USER) \
+        +'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' \
+        +os.environ['PATH']
 
-        if codec == 'aac' and int(bitrate) > 500:
-            print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-            print(colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
-            print(colors.warning('You may try lossless audio coding formats.'))
-            bitrate = '500'
-            print(colors.warning('Bitrate has been set to maximum!'))
+        iterate = PATH.split(':')
+        for item in iterate:
+            verifyif = str(item+'/'+backend)
+            if os.path.exists(verifyif) == False:
+                continue
+            else:
+                backends_dict[verifyif] = backend
+                backend = verifyif
+                if debug == True:
+                    print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
+                    print(':::ffmpeg::: backend dictionary '+str(backends_dict))
 
-        bitrate = bitrate+'k'
-        print(colors.options('Selected bitrate:')+' '+ bitrate)
-
-    if samplerate == '44100':
-        print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+    if codec == 'mp3':
+        appendmtype = 'mpeg'
+    elif codec == 'aac':
+        appendmtype = 'mp4' #This is the container used for aac
     else:
-        codecs_sr = ['mp3', 'ogg', 'aac', 'wav', 'flac']
-        if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
-            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
-            samplerate = '44100'
-            print(colors.warning('Sample rate has been set to default!'))
+        appendmtype = codec
 
-        elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
-            samplerate = '32000'
+    mtype = 'audio/'+appendmtype
 
-        elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
-            samplerate = '32000'
+    print(colors.options('Selected backend:')+' '+ backend)
+    print(colors.options('Selected audio codec:')+' '+ codec)
 
-        elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
-            samplerate = '22050'
+    if backend != 'node':
+        if bitrate == '192':
+            bitrate = bitrate+'k'
+            print(colors.options('Default bitrate used:')+' '+ bitrate)
+        elif bitrate == 'None':
+            print(colors.warning('The '+codec+' codec does not require the bitrate argument.'))
+        else:
+            if codec == 'mp3' and int(bitrate) > 320:
+                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
+                print(colors.warning('You may try lossless audio coding formats.'))
+                bitrate = '320'
+                print(colors.warning('Bitrate has been set to maximum!'))
 
-        elif codec in codecs_sr and int(samplerate) > 41000:
-            print(colors.warning('Sample rates supported by '+codec+' are: '+str(22050)+'Hz, '+str(32000)+'Hz, '+str(44100)+'Hz or '+str(44800)+'Hz'))
-            samplerate = '44800'
-            print(colors.warning('Sample rate has been set to maximum!'))
+            if codec == 'ogg' and int(bitrate) > 500:
+                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+                print(colors.warning('You may try lossless audio coding formats.'))
+                bitrate = '500'
+                print(colors.warning('Bitrate has been set to maximum!'))
 
-        print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+            if codec == 'aac' and int(bitrate) > 500:
+                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
+                print(colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
+                print(colors.warning('You may try lossless audio coding formats.'))
+                bitrate = '500'
+                print(colors.warning('Bitrate has been set to maximum!'))
 
-"""
-We verify platform and other options
-"""
-platform = mkchromecast.__init__.platform
+            bitrate = bitrate+'k'
+            print(colors.options('Selected bitrate:')+' '+ bitrate)
 
-def debug_command():                # This function add some more flags to the ffmpeg command
-    command.insert(1, '-loglevel')  # when user passes --debug option.
-    command.insert(2, 'panic')
-    return
+        if samplerate == '44100':
+            print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+        else:
+            codecs_sr = [
+                'mp3',
+                'ogg',
+                'aac',
+                'wav',
+                'flac'
+                ]
+            if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz or '
+                    +str(44800)+'Hz')
+                    )
+                samplerate = '44100'
+                print(colors.warning('Sample rate has been set to default!'))
 
-"""
-MP3 192k
-"""
-if  codec == 'mp3':
+            elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz or '
+                    +str(44800)+'Hz')
+                    )
+                samplerate = '32000'
 
-    if platform == 'Linux' and backends_dict[backend] != 'parec':
-        command = [backend, '-re', '-ac', '2', '-ar', '44100', '-f', 'pulse', '-i', 'mkchromecast.monitor', \
-                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
-    elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['lame', '-b', bitrate[:-1], '-r', '-']
-    else:
-        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                    '-acodec', 'libmp3lame', '-f', 'mp3', '-ac', '2', '-ar', samplerate, '-b:a', bitrate,'pipe:']
-    if debug == False and backends_dict[backend] != 'parec':
-        debug_command()
+            elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz or '
+                    +str(44800)+'Hz')
+                    )
+                samplerate = '32000'
 
-"""
-OGG 192k
-"""
-if  codec == 'ogg':
-    if platform == 'Linux' and backends_dict[backend] != 'parec':
-        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
-                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
-    elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['oggenc', '-b', bitrate[:-1], '-Q', '-r', '--ignorelength', '-']
-    else:
-        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                    '-acodec', 'libvorbis', '-f', 'ogg', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'pipe:']
-    if debug == False and backends_dict[backend] != 'parec':
-        debug_command()
+            elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz or '
+                    +str(44800)+'Hz')
+                    )
+                samplerate = '22050'
 
-"""
-AAC > 128k for Stereo, Default sample rate: 44100kHz
-"""
-if  codec == 'aac':
-    if platform == 'Linux' and backends_dict[backend] != 'parec':
-        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
-                    '-acodec', 'aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
-    elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['faac', '-b', bitrate[:-1], '-X', '-P', '-c','18000','-o', '-', '-']
-    else:
-        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                    '-acodec', 'libfdk_aac', '-f', 'adts', '-ac', '2', '-ar', samplerate,'-b:a', bitrate,'-cutoff', '18000', 'pipe:']
-    if debug == False and backends_dict[backend] != 'parec':
-        debug_command()
+            elif codec in codecs_sr and int(samplerate) > 41000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz or '
+                    +str(44800)+'Hz')
+                    )
+                samplerate = '44800'
+                print(colors.warning('Sample rate has been set to maximum!'))
 
-"""
-WAV 24-Bit
-"""
-if  codec == 'wav':
-    if platform == 'Linux' and backends_dict[backend] != 'parec':
-        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
-                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
-    elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['sox', '-t', 'raw', '-b', '16', '-e', 'signed', '-c', '2', '-r', samplerate, '-', '-t', 'wav', \
-                    '-b', '16', '-e', 'signed', '-c', '2', '-r', samplerate, '-L', '-']
-    else:
-        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                    '-acodec', 'pcm_s24le', '-f', 'wav', '-ac', '2', '-ar', samplerate, 'pipe:']
-    if debug == False and backends_dict[backend] != 'parec':
-        debug_command()
+            print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
-"""
-FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
-"""
-if  codec == 'flac':
-    if platform == 'Linux' and backends_dict[backend] != 'parec':
-        command = [backend, '-re', '-ac', '2', '-ar', '44100','-f', 'pulse', '-i', 'mkchromecast.monitor', \
-                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-    elif platform == 'Linux' and backends_dict[backend] == 'parec':
-        command = ['flac', '-', '-c', '--channels', '2', '--bps', '16', '--sample-rate', samplerate, \
-                    '--endian', 'little', '--sign', 'signed', '-s']
-    else:
-        command = [backend, '-re', '-f', 'avfoundation', '-audio_device_index', '0', '-i', '', \
-                    '-acodec', 'flac', '-f', 'flac','-ac', '2', '-ar', samplerate, 'pipe:']
-    if debug == False and backends_dict[backend] != 'parec':
-        debug_command()
+    """
+    We verify platform and other options
+    """
+    platform = mkchromecast.__init__.platform
+
+    def debug_command():                # This function add some more flags to the ffmpeg command
+        command.insert(1, '-loglevel')  # when user passes --debug option.
+        command.insert(2, 'panic')
+        return
+
+    """
+    MP3 192k
+    """
+    if  codec == 'mp3':
+
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend,
+                '-re',
+                '-ac', '2',
+                '-ar', '44100',
+                '-f', 'pulse',
+                '-i', 'mkchromecast.monitor',
+                '-acodec', 'libmp3lame',
+                '-f', 'mp3',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+            command = [
+                'lame',
+                '-b', bitrate[:-1],
+                '-r',
+                '-'
+                ]
+        else:
+            command = [
+                backend,
+                '-re',
+                '-f', 'avfoundation',
+                '-audio_device_index', '0',
+                '-i', '',
+                '-acodec', 'libmp3lame',
+                '-f', 'mp3',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+        if debug == False and backends_dict[backend] != 'parec':
+            debug_command()
+
+    """
+    OGG 192k
+    """
+    if  codec == 'ogg':
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend,
+                '-re',
+                '-ac', '2',
+                '-ar', '44100',
+                '-f', 'pulse',
+                '-i', 'mkchromecast.monitor',
+                '-acodec', 'libvorbis',
+                '-f', 'ogg',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+            command = [
+                'oggenc',
+                '-b', bitrate[:-1],
+                '-Q',
+                '-r',
+                '--ignorelength',
+                '-'
+                ]
+        else:
+            command = [
+                backend,
+                '-re',
+                '-f', 'avfoundation',
+                '-audio_device_index', '0',
+                '-i', '',
+                '-acodec', 'libvorbis',
+                '-f', 'ogg',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+        if debug == False and backends_dict[backend] != 'parec':
+            debug_command()
+
+    """
+    AAC > 128k for Stereo, Default sample rate: 44100kHz
+    """
+    if  codec == 'aac':
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend,
+                '-re',
+                '-ac', '2',
+                '-ar', '44100',
+                '-f', 'pulse',
+                '-i', 'mkchromecast.monitor',
+                '-acodec', 'aac',
+                '-f', 'adts',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                '-cutoff', '18000',
+                'pipe:'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+            command = [
+                'faac',
+                '-b', bitrate[:-1],
+                '-X',
+                '-P',
+                '-c','18000',
+                '-o',
+                '-',
+                '-'
+                ]
+        else:
+            command = [
+                backend,
+                '-re',
+                '-f', 'avfoundation',
+                '-audio_device_index', '0',
+                '-i', '',
+                '-acodec', 'libfdk_aac',
+                '-f', 'adts',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                '-cutoff', '18000',
+                'pipe:'
+                ]
+        if debug == False and backends_dict[backend] != 'parec':
+            debug_command()
+
+    """
+    WAV 24-Bit
+    """
+    if  codec == 'wav':
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend, '-re',
+                '-ac', '2',
+                '-ar', '44100',
+                '-f', 'pulse',
+                '-i', 'mkchromecast.monitor',
+                '-acodec', 'pcm_s24le',
+                '-f', 'wav',
+                '-ac', '2',
+                '-ar', samplerate,
+                'pipe:'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+            command = [
+                'sox',
+                '-t', 'raw',
+                '-b', '16',
+                '-e', 'signed',
+                '-c', '2',
+                '-r', samplerate,
+                '-',
+                '-t', 'wav',
+                '-b', '16',
+                '-e', 'signed',
+                '-c', '2',
+                '-r', samplerate,
+                '-L', '-'
+                ]
+        else:
+            command = [
+                backend,
+                '-re',
+                '-f', 'avfoundation',
+                '-audio_device_index', '0',
+                '-i', '',
+                '-acodec', 'pcm_s24le',
+                '-f', 'wav',
+                '-ac', '2',
+                '-ar', samplerate,
+                'pipe:'
+                ]
+        if debug == False and backends_dict[backend] != 'parec':
+            debug_command()
+
+    """
+    FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
+    """
+    if  codec == 'flac':
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend,
+                '-re',
+                '-ac', '2',
+                '-ar', '44100',
+                '-f', 'pulse',
+                '-i', 'mkchromecast.monitor',
+                '-acodec', 'flac',
+                '-f', 'flac',
+                '-ac', '2',
+                '-ar', samplerate,
+                'pipe:'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+            command = [
+                'flac',
+                '-',
+                '-c',
+                '--channels', '2',
+                '--bps', '16',
+                '--sample-rate', samplerate,
+                '--endian', 'little',
+                '--sign', 'signed',
+                '-s'
+                ]
+        else:
+            command = [
+                backend,
+                '-re',
+                '-f', 'avfoundation',
+                '-audio_device_index', '0',
+                '-i', '',
+                '-acodec', 'flac',
+                '-f', 'flac',
+                '-ac', '2',
+                '-ar', samplerate,
+                'pipe:'
+                ]
+        if debug == False and backends_dict[backend] != 'parec':
+            debug_command()
 
 app = Flask(__name__)
 
@@ -265,8 +489,13 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    if platform == 'Linux' and backends_dict[backend] == 'parec':
-        c_parec = [backend, '--format=s16le', '-d', 'mkchromecast.monitor']
+    if platform == 'Linux' and bool(backends_dict) == True \
+            and backends_dict[backend] == 'parec':
+        c_parec = [
+            backend,
+            '--format=s16le',
+            '-d', 'mkchromecast.monitor'
+            ]
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
     else:
@@ -319,13 +548,13 @@ def monitor_daemon():
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
-            print("Ctrl-c was requested")
+            print('Ctrl-c was requested')
             sys.exit(0)
         except IOError:
-            print("I/O Error")
+            print('I/O Error')
             sys.exit(0)
         except OSError:
-            print("OSError")
+            print('OSError')
             sys.exit(0)
 
 def main():

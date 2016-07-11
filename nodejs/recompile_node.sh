@@ -4,13 +4,40 @@
 
 localpwd=`pwd`
 
-tar zxvf ../archive/node-v6.2.2.tar.gz
-cd node-v6.2.2/
+VER="$@"
+
+echo "Deleting old node version"
+rm -R node-*
+
+echo
+echo "Untar new version"
+echo
+
+tar zxvf ../archive/node-v$VER.tar.gz
+cd node-v$VER/
 ./configure
-./configure --prefix=$localpwd/node-6.2.2/
+./configure --prefix=$localpwd/node-$VER/
 
 make -j8
 
 make install
 
-rm -r ../node-v6.2.2/
+echo
+echo "Deleting building directory"
+echo
+
+rm -r ../node-v$VER/
+
+echo "Creating symlinks"
+
+cd $localpwd/bin/
+rm *
+ln -s ../node-$VER/bin/npm
+ln -s ../node-$VER/bin/node
+
+cd ../../bin/
+rm node
+ln -s ../nodejs/node-$VER/bin/node
+
+echo
+echo "Done"

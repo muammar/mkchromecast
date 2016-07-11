@@ -66,7 +66,7 @@ class Player(QObject):
             print(colors.warning(':::Threading::: Configuration file exist'))
             print(colors.warning(':::Threading::: Using defaults set there'))
             config.read(configf)
-            backend = ConfigSectionMap("settings")['backend']
+            backend = ConfigSectionMap('settings')['backend']
             print(':::Threading backend::: '+backend)
         else:
             backend = mkchromecast.__init__.backend

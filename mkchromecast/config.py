@@ -25,6 +25,7 @@ class config_manager(object):
                 'bitrate': '192',
                 'samplerate': '44100',
                 'notifications': 'disabled',
+                'colors': 'black',
                 'searchatlaunch': 'disabled'
                 }
 
@@ -56,25 +57,30 @@ class config_manager(object):
         Creation of new configuration file with defaults.
         """
         if not os.path.exists(self.configf):
-            if platform == 'Darwin':
-                self.config.set('settings', 'backend', 'node')
-                self.config.set('settings', 'codec', 'mp3')
-                self.config.set('settings', 'bitrate', '192')
-                self.config.set('settings', 'samplerate', '44100')
-                self.config.set('settings', 'notifications', 'disabled')
-                self.config.set('settings', 'searchatlaunch', 'disabled')
-            else:
-                self.config.set('settings', 'backend', 'parec')
-                self.config.set('settings', 'codec', 'mp3')
-                self.config.set('settings', 'bitrate', '192')
-                self.config.set('settings', 'samplerate', '44100')
-                self.config.set('settings', 'notifications', 'disabled')
-                self.config.set('settings', 'searchatlaunch', 'disabled')
+            self.write_defaults()
 
-            with open(self.configf, 'w') as configfile:
-                self.config.write(configfile)
+    def write_defaults(self):
+        if platform == 'Darwin':
+            self.config.set('settings', 'backend', 'node')
+            self.config.set('settings', 'codec', 'mp3')
+            self.config.set('settings', 'bitrate', '192')
+            self.config.set('settings', 'samplerate', '44100')
+            self.config.set('settings', 'notifications', 'disabled')
+            self.config.set('settings', 'colors', 'black')
+            self.config.set('settings', 'searchatlaunch', 'disabled')
+        else:
+            self.config.set('settings', 'backend', 'parec')
+            self.config.set('settings', 'codec', 'mp3')
+            self.config.set('settings', 'bitrate', '192')
+            self.config.set('settings', 'samplerate', '44100')
+            self.config.set('settings', 'notifications', 'disabled')
+            self.config.set('settings', 'colors', 'black')
+            self.config.set('settings', 'searchatlaunch', 'disabled')
 
-    def verify_config(self):
+        with open(self.configf, 'w') as configfile:
+            self.config.write(configfile)
+
+    def chk_config(self):
         from mkchromecast.preferences import ConfigSectionMap
         self.config.read(self.configf)
 
@@ -82,10 +88,18 @@ class config_manager(object):
         We check that configuration file is complete, otherwise the settings
         are filled from self.defaultconf dictionary.
         """
-        chkconfig = ['backend', 'codec', 'bitrate', 'samplerate', 'notifications', 'searchatlaunch']
+        chkconfig = [
+            'backend',
+            'codec',
+            'bitrate',
+            'samplerate',
+            'notifications',
+            'colors',
+            'searchatlaunch'
+            ]
         for e in chkconfig:
             try:
-                e = ConfigSectionMap("settings")[str(e)]
+                e = ConfigSectionMap('settings')[str(e)]
             except KeyError:
                 if debug == True:
                     print(':::config::: the setting '+e+' is not correctly set. Defaults added.')
@@ -93,13 +107,20 @@ class config_manager(object):
                 with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)
 
-        backend = ConfigSectionMap("settings")['backend']
-        codec= ConfigSectionMap("settings")['codec']
-        bitrate = ConfigSectionMap("settings")['bitrate']
-        samplerate= ConfigSectionMap("settings")['samplerate']
-        notifications = ConfigSectionMap("settings")['notifications']
+        backend = ConfigSectionMap('settings')['backend']
+        codec= ConfigSectionMap('settings')['codec']
+        bitrate = ConfigSectionMap('settings')['bitrate']
+        samplerate= ConfigSectionMap('settings')['samplerate']
+        notifications = ConfigSectionMap('settings')['notifications']
+        colors = ConfigSectionMap('settings')['colors']
+        searchatlaunch = ConfigSectionMap('settings')['searchatlaunch']
 
-        codecs = ['mp3','ogg', 'aac']
+        codecs = [
+            'mp3',
+            'ogg',
+            'aac'
+            ]
+
         if os.path.exists(self.configf):
             """
             Reading the codec from config file
@@ -110,6 +131,7 @@ class config_manager(object):
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', str(samplerate))
                 self.config.set('settings', 'notifications', str(notifications))
+                self.config.set('settings', 'colors', str(colors))
                 self.config.set('settings', 'searchatlaunch', str(searchatlaunch))
 
             with open(self.configf, 'w') as configfile:

@@ -48,6 +48,7 @@ following:
 
 * flask (optional).
 * ffmpeg (optional).
+* youtube-dl (option if you plan to cast youtube URLs).
 
 #### Linux
 
@@ -65,6 +66,7 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
+* youtube-dl (option if you plan to cast youtube URLs).
 
 Install
 -------
@@ -375,8 +377,11 @@ You can play Youtube URLs headlessly from the command line:
 python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 ```
 
-**Note**: you may need to enclose the URL between quotation marks. This does
-not work in Google Cast audio.
+To use this function, you need to install `youtube-dl`. In macOS, this can be
+done with homebrew: `brew install youtube-dl`. In Debian based distros:
+`apt-get install youtube-dl`.
+
+**Note**: you may need to enclose the URL between quotation marks.
 
 #### Controlling the Google Cast's volume
 
@@ -448,6 +453,7 @@ Check these images:
 * [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
+* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 **Note**: you can set all options described above using the `preferences` in
 the system tray.

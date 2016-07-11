@@ -32,13 +32,30 @@ class casting(object):
         self.tray = mkchromecast.__init__.tray
         self.select_cc = mkchromecast.__init__.select_cc
         self.debug = mkchromecast.__init__.debug
-
         self.backend = mkchromecast.__init__.backend
+
         if self.platform == 'Linux':
-            hostname = subprocess.Popen(['hostname', '-I'], stdout=subprocess.PIPE)
-            self.ip = hostname.stdout.read().decode('utf-8').strip()
+            self.netifaces_ip()
         else:
-            self.ip = socket.gethostbyname(socket.gethostname())
+            try:
+                self.ip = socket.gethostbyname(socket.gethostname())
+                if self.debug == True:
+                    print(':::cast::: sockets method', self.ip)
+            except socket.gaierror:
+                self.netifaces_ip()
+
+    def netifaces_ip(self):
+        import netifaces
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            if interface == 'lo':
+                continue
+            iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+            if iface != None and iface[0]['addr'] != '127.0.0.1':
+                for e in iface:
+                    self.ip = str(e['addr'])
+                    if self.debug == True:
+                        print(':::cast::: netifaces method', self.ip)
 
     def initialize_cast(self):
         import mkchromecast.__init__        # This is to verify against some needed variables
@@ -47,10 +64,15 @@ class casting(object):
         if self.debug == True:
             print('self.cclist', self.cclist)
 
+        """
+        This block was used for casting youtube with pychromecast, but it does not work
+        """
+        """
         try:
             self.youtubeurl = mkchromecast.__init__.youtubeurl
         except AttributeError:
             self.youtubeurl = None
+        """
 
         if len(self.cclist) != 0 and self.select_cc == False:
             if self.debug == True:
@@ -81,11 +103,14 @@ class casting(object):
                 print(' ')
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
+                self.availablecc()
+                """
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
+                """
                 #print('Array')
                 #print(availablecc)
 
@@ -110,11 +135,14 @@ class casting(object):
                 print(' ')
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
+                self.availablecc()
+                """
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
+                """
                 #print('Array')
                 #print(availablecc)
 
@@ -124,6 +152,7 @@ class casting(object):
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
                 self.castto = self.cclist[int(self.index)]
+                self.availablecc()
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.castto))
                 print(' ')
@@ -208,6 +237,7 @@ class casting(object):
         print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
         print(colors.options('Your local IP is:')+' '+localip)
 
+        """
         if self.youtubeurl != None:
             print(colors.options('The Youtube URL chosen:')+' '+self.youtubeurl)
             import pychromecast.controllers.youtube as youtube
@@ -226,35 +256,36 @@ class casting(object):
             print(colors.options('Playing video:')+' '+video)
             yt.play_video(video)
         else:
-            ncast = self.cast
+        """
+        ncast = self.cast
 
-            if self.tray == True:
-                config = ConfigParser.RawConfigParser()
-                configurations = config_manager()    # Class from mkchromecast.config
-                configf = configurations.configf
+        if self.tray == True:
+            config = ConfigParser.RawConfigParser()
+            configurations = config_manager()    # Class from mkchromecast.config
+            configf = configurations.configf
 
-                if os.path.exists(configf) and self.tray == True:
-                    print(tray)
-                    print(colors.warning('Configuration file exist'))
-                    print(colors.warning('Using defaults set there'))
-                    config.read(configf)
-                    self.backend = ConfigSectionMap("settings")['backend']
+            if os.path.exists(configf) and self.tray == True:
+                print(tray)
+                print(colors.warning('Configuration file exist'))
+                print(colors.warning('Using defaults set there'))
+                config.read(configf)
+                self.backend = ConfigSectionMap('settings')['backend']
 
-            if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
-                import mkchromecast.ffmpeg
-                mtype = mkchromecast.ffmpeg.mtype
-                print(' ')
-                print(colors.options('The media type string used is:')+' '+mtype)
-                ncast.play_media('http://'+localip+':5000/stream', mtype)
-            else:
-                print(' ')
-                print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
-                ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
+            import mkchromecast.ffmpeg
+            mtype = mkchromecast.ffmpeg.mtype
             print(' ')
-            print(colors.important('Cast media controller status'))
+            print(colors.options('The media type string used is:')+' '+mtype)
+            ncast.play_media('http://'+localip+':5000/stream', mtype)
+        else:
             print(' ')
-            print(ncast.status)
-            print(' ')
+            print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
+            ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+        print(' ')
+        print(colors.important('Cast media controller status'))
+        print(' ')
+        print(ncast.status)
+        print(' ')
 
     def stop_cast(self):
         ncast = self.cast
@@ -287,3 +318,12 @@ class casting(object):
         else:
             print(colors.error('This method is not supported in Linux yet.'))
 
+    def availablecc(self):
+        """This method is used for populating the self.availablecc array
+        need for the system tray.
+        """
+        self.availablecc=[]
+        for self.index,device in enumerate(self.cclist):
+            print(str(self.index)+'      ',str(device))
+            toappend = [self.index,device]
+            self.availablecc.append(toappend)
