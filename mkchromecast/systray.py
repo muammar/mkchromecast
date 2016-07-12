@@ -339,7 +339,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print('Available Google Cast devices', self.availablecc)
+            print('Available Google Cast Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 self.entries = menuentry
                 self.menuentry = self.menu.addAction(str(menuentry[1]))
