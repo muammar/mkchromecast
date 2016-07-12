@@ -85,6 +85,17 @@ if tray == True:
             self.initUI()
 
         def initUI(self):
+            self.backend()
+            self.codec()
+            self.bitrate()
+            self.samplerates()
+            self.iconcolors()
+            self.notifications()
+            self.searchatlaunch()
+            self.buttons()
+            self.window()
+
+        def backend(self):
             """
             Backend
             """
@@ -114,6 +125,7 @@ if tray == True:
             self.qcbackend.setCurrentIndex(backendindex)
             self.qcbackend.activated[str].connect(self.onActivatedbk)
 
+        def codec(self):
             """
             Codec
             """
@@ -141,6 +153,7 @@ if tray == True:
             self.qccodec.setCurrentIndex(codecindex)
             self.qccodec.activated[str].connect(self.onActivatedcc)
 
+        def bitrate(self):
             """
             Bitrate
             """
@@ -172,6 +185,7 @@ if tray == True:
             self.qcbitrate.setCurrentIndex(bitrateindex)
             self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
+        def samplerates(self):
             """
             Sample rate
             """
@@ -192,6 +206,7 @@ if tray == True:
             self.qcsamplerate.setCurrentIndex(sampleratesindex)
             self.qcsamplerate.activated[str].connect(self.onActivatedsr)
 
+        def iconcolors(self):
             """
             Icon colors
             """
@@ -210,6 +225,7 @@ if tray == True:
             self.qccolors.setCurrentIndex(colorsindex)
             self.qccolors.activated[str].connect(self.onActivatedcolors)
 
+        def notifications(self):
             """
             Notifications
             """
@@ -228,6 +244,7 @@ if tray == True:
             self.qcnotifications.setCurrentIndex(notindex)
             self.qcnotifications.activated[str].connect(self.onActivatednotify)
 
+        def searchatlaunch(self):
             """
             Search at launch
             """
@@ -246,6 +263,7 @@ if tray == True:
             self.qcatlaunch.setCurrentIndex(launchindex)
             self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
+        def buttons(self):
             """
             Buttons
             """
@@ -253,6 +271,7 @@ if tray == True:
             resetbtn.move(20*self.scale_factor, 252*self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
 
+        def window(self):
             """
             Geometry and window's title
             """
@@ -269,9 +288,12 @@ if tray == True:
             """
         def reset_configuration(self):
             self.configurations.write_defaults()
+            self.reset_indexes()
+
+        def reset_indexes(self):
             self.read_defaults()
             """
-            Index of boxes are resetted
+            Indexes of QCombo boxes are reset
             """
             backendindex = self.backends.index(self.backendconf)
             codecindex = self.codecs.index(self.codecconf)
