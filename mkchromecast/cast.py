@@ -162,8 +162,8 @@ class casting(object):
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
             if self.platform == 'Linux':
-                import mkchromecast.pulseaudio
-                mkchromecast.pulseaudio.remove_sink()
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
             else:
                 inputint()
                 outputint()
@@ -217,8 +217,8 @@ class casting(object):
                 inputint()
                 outputint()
             elif self.platform == 'Linux':
-                import mkchromecast.pulseaudio
-                mkchromecast.pulseaudio.remove_sink()
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
             if self.tray == False:  # In the case that the tray is used, we don't kill the application
                 print(colors.error('Finishing the application...'))
                 terminate()

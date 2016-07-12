@@ -541,8 +541,12 @@ def monitor_daemon():
         try:
             time.sleep(0.5)
             if psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
-                inputint()                              # will get back to normal
-                outputint()
+                if platform == 'Darwin':                # will get back to normal
+                    inputint()
+                    outputint()
+                else:
+                    from mkchromecast.pulseaudio import remove_sink
+                    remove_sink()
                 parent = psutil.Process(localpid)
                 for child in parent.children(recursive=True):  # or parent.children() for recursive=False
                     child.kill()
