@@ -22,7 +22,7 @@ if args.tray == False:
     checkmktmp()
     writePidFile()
 
-    if cc.ip == '127.0.0.1' or None:        # We verify the local IP.
+    if cc.ip == '127.0.0.1':        # We verify the local IP.
         print(colors.error('Your computer is not connected to any network'))
         terminate()
 

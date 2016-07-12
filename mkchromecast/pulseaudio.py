@@ -2,7 +2,8 @@
 
 # This file is part of mkchromecast.
 
-import subprocess, time
+import subprocess
+import time
 
 def create_sink():
     sink_name = 'mkchromecast'

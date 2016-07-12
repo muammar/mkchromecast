@@ -36,6 +36,10 @@ class casting(object):
 
         if self.platform == 'Linux':
             self.netifaces_ip()
+            try:
+                self.ip = self.discovered_ip
+            except AttributeError:
+                self.ip = '127.0.0.1'
         else:
             try:
                 self.ip = socket.gethostbyname(socket.gethostname())
@@ -43,6 +47,10 @@ class casting(object):
                     print(':::cast::: sockets method', self.ip)
             except socket.gaierror:
                 self.netifaces_ip()
+                try:
+                    self.ip = self.discovered_ip
+                except AttributeError:
+                    self.ip = '127.0.0.1'
 
     def netifaces_ip(self):
         import netifaces
@@ -53,9 +61,9 @@ class casting(object):
             iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
             if iface != None and iface[0]['addr'] != '127.0.0.1':
                 for e in iface:
-                    self.ip = str(e['addr'])
+                    self.discovered_ip = str(e['addr'])
                     if self.debug == True:
-                        print(':::cast::: netifaces method', self.ip)
+                        print(':::cast::: netifaces method', self.discovered_ip)
 
     def initialize_cast(self):
         import mkchromecast.__init__        # This is to verify against some needed variables
@@ -162,8 +170,8 @@ class casting(object):
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
             if self.platform == 'Linux':
-                import mkchromecast.pulseaudio
-                mkchromecast.pulseaudio.remove_sink()
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
             else:
                 inputint()
                 outputint()
@@ -217,8 +225,8 @@ class casting(object):
                 inputint()
                 outputint()
             elif self.platform == 'Linux':
-                import mkchromecast.pulseaudio
-                mkchromecast.pulseaudio.remove_sink()
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
             if self.tray == False:  # In the case that the tray is used, we don't kill the application
                 print(colors.error('Finishing the application...'))
                 terminate()
