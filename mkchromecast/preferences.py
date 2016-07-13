@@ -253,7 +253,7 @@ if tray == True:
                 'disabled'
                 ]
             launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
-            self.atlaunch = QLabel('Search at Launch', self)
+            self.atlaunch = QLabel('Search At Launch', self)
             self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
             self.qcatlaunch = QComboBox(self)
             self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)

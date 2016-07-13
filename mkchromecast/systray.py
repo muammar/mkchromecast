@@ -212,7 +212,7 @@ class menubar(QtWidgets.QMainWindow):
         self.preferencesAction.triggered.connect(self.preferences_show)
 
     def update_menu(self):
-        self.updateAction = self.menu.addAction('Check for Updates...')
+        self.updateAction = self.menu.addAction('Check For Updates...')
         self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
