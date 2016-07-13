@@ -129,7 +129,7 @@ if tray == True:
             """
             Codec
             """
-            self.codec = QLabel('Audio coding format', self)
+            self.codec = QLabel('Audio Coding Format', self)
             self.codec.move(20*self.scale_factor, 56*self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
@@ -196,7 +196,7 @@ if tray == True:
                 '22050'
                 ]
             sampleratesindex = self.samplerates.index(self.samplerateconf)
-            self.samplerate = QLabel('Sample rate (Hz)', self)
+            self.samplerate = QLabel('Sample Rate (Hz)', self)
             self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate = QComboBox(self)
             self.qcsamplerate.move(180*self.scale_factor, 120*self.scale_factor)
@@ -215,7 +215,7 @@ if tray == True:
                 'blue'
                 ]
             colorsindex = self.colors_list.index(self.searchcolorsconf)
-            self.colors = QLabel('Icon colors', self)
+            self.colors = QLabel('Icon Colors', self)
             self.colors.move(20*self.scale_factor, 152*self.scale_factor)
             self.qccolors = QComboBox(self)
             self.qccolors.move(180*self.scale_factor, 152*self.scale_factor)
@@ -253,7 +253,7 @@ if tray == True:
                 'disabled'
                 ]
             launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
-            self.atlaunch = QLabel('Search at launch', self)
+            self.atlaunch = QLabel('Search at Launch', self)
             self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
             self.qcatlaunch = QComboBox(self)
             self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)
