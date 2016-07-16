@@ -112,8 +112,12 @@ class menubar(QtWidgets.QMainWindow):
         if debug == True:
             print(':::systray::: Screen resolution: ', self.width, self.height)
         self.app.setQuitOnLastWindowClosed(False) # This avoid the QMessageBox to close parent processes.
+
         if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
-                    self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+            self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
+            if debug == True:
+                print(':::systray::: High-DPI screen detected...')
+
         self.w = QWidget()
 
         if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:    # This is useful when launching from git repo
