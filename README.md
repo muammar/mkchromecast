@@ -73,8 +73,8 @@ Install
 
 There are two ways of installing this application:
 
-1. Using the binaries.
-2. From sources.
+1. Using the [binaries](https://github.com/muammar/mkchromecast#binaries).
+2. From [sources](https://github.com/muammar/mkchromecast#from-sources).
 
 #### Binaries
 
