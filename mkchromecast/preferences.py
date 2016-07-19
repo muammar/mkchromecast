@@ -5,8 +5,10 @@
 import sys
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
-import os, getpass
+import os
+import getpass
 import subprocess
+import webbrowser
 
 """
 Check if external programs are available to build the preferences
@@ -268,8 +270,12 @@ if tray == True:
             Buttons
             """
             resetbtn = QPushButton("Reset to default", self)
-            resetbtn.move(20*self.scale_factor, 252*self.scale_factor)
+            resetbtn.move(10*self.scale_factor, 252*self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
+
+            faqbtn = QPushButton("FAQ", self)
+            faqbtn.move(142*self.scale_factor, 252*self.scale_factor)
+            faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
 
         def window(self):
             """
