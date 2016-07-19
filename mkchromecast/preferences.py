@@ -277,6 +277,10 @@ if tray == True:
             faqbtn.move(142*self.scale_factor, 252*self.scale_factor)
             faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
 
+            donbtn = QPushButton("Donate :)", self)
+            donbtn.move(204*self.scale_factor, 252*self.scale_factor)
+            donbtn.clicked.connect(lambda: webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U'))
+
         def window(self):
             """
             Geometry and window's title
