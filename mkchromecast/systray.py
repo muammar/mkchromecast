@@ -220,7 +220,7 @@ class menubar(QtWidgets.QMainWindow):
         self.updateAction.triggered.connect(self.update_show)
 
     def about_menu(self):
-        self.AboutAction = self.menu.addAction('About mkchromecast')
+        self.AboutAction = self.menu.addAction('About Mkchromecast')
         self.AboutAction.triggered.connect(self.about_show)
 
     def exit_menu(self):
