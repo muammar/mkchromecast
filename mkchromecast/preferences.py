@@ -269,12 +269,12 @@ if tray == True:
             """
             Buttons
             """
-            resetbtn = QPushButton("Reset to default", self)
+            resetbtn = QPushButton("Reset Settings", self)
             resetbtn.move(10*self.scale_factor, 252*self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
 
             faqbtn = QPushButton("FAQ", self)
-            faqbtn.move(142*self.scale_factor, 252*self.scale_factor)
+            faqbtn.move(138*self.scale_factor, 252*self.scale_factor)
             faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
 
             donbtn = QPushButton("Donate :)", self)
@@ -291,7 +291,7 @@ if tray == True:
             else:
                 self.setFixedSize(300*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
-            self.setWindowTitle('mkchromecast Preferences')
+            self.setWindowTitle('Mkchromecast Preferences')
 
             """
             Methods
