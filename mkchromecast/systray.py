@@ -123,15 +123,29 @@ class menubar(QtWidgets.QMainWindow):
         if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:    # This is useful when launching from git repo
             self.icon = QtGui.QIcon()
             if platform == 'Darwin':
-                self.icon.addFile('images/'+self.google[self.colors]+'.icns')
+                self.icon.addFile(
+                    'images/'
+                    + self.google[self.colors]
+                    + '.icns'
+                    )
             else:
-                self.icon.addFile('images/'+self.google[self.colors]+'.png')
+                self.icon.addFile(
+                    'images/'
+                    + self.google[self.colors]
+                    + '.png'
+                    )
         else:                                               # This is useful for applications
             self.icon = QtGui.QIcon()
             if platform == 'Linux':
-                self.icon.addFile('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png')
+                self.icon.addFile(
+                    '/usr/share/mkchromecast/images/'
+                    + self.google[self.colors]
+                    + '.png'
+                    )
             else:
-                self.icon.addFile(self.google[self.colors]+'.icns')
+                self.icon.addFile(
+                      self.google[self.colors]
+                    + '.icns')
         super(QtWidgets.QMainWindow,self).__init__()
         self.createUI()
 
@@ -242,14 +256,37 @@ class menubar(QtWidgets.QMainWindow):
             self.search_notification()
         if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google_working[self.colors]
+                        + '.icns'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google_working[self.colors]
+                        + '.png'
+                        )
+                    )
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_working[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        '/usr/share/mkchromecast/images/'
+                        + self.google_working[self.colors]
+                        + '.png'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon(self.google_working[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        self.google_working[self.colors]
+                        + '.icns'
+                        )
+                    )
 
         """
         This catches the error caused by an empty .tmp file
@@ -269,14 +306,37 @@ class menubar(QtWidgets.QMainWindow):
     def cast_list(self):
         if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google[self.colors]
+                        + '.icns'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google[self.colors]
+                        + '.png'
+                        )
+                    )
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        '/usr/share/mkchromecast/images/'
+                        + self.google[self.colors]
+                        + '.png'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon(self.google[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                          self.google[self.colors]
+                        + '.icns'
+                        )
+                    )
 
         if len(self.availablecc) == 0:
             self.menu.clear()
@@ -285,14 +345,37 @@ class menubar(QtWidgets.QMainWindow):
             self.NodevAction = self.menu.addAction('No Cast Devices Found.')
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            'images/'
+                            + self.google_nodev[self.colors]
+                            + '.icns'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.png'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            'images/'
+                            + self.google_nodev[self.colors]
+                            + '.png'
+                            )
+                        )
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_nodev[self.colors]+'.png'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            '/usr/share/mkchromecast/images/'
+                            + self.google_nodev[self.colors]
+                            + '.png'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon(self.google_nodev[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            self.google_nodev[self.colors]
+                            +'.icns'
+                            )
+                        )
 
             self.separator_menu()
             self.stop_menu()
@@ -369,26 +452,72 @@ class menubar(QtWidgets.QMainWindow):
                 self.ncast = self.cast
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            'images/'
+                            + self.google[self.colors]
+                            + '.icns'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google[self.colors]+'.png'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            'images/'
+                            + self.google[self.colors]
+                            + '.png'
+                            )
+                        )
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google[self.colors]+'.png'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            '/usr/share/mkchromecast/images/'
+                            + self.google[self.colors]
+                            + '.png'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon(self.google[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            self.google[self.colors]
+                            +'.icns'
+                            )
+                        )
         else:
             self.pcastfailed = True
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            'images/'
+                            + self.google_nodev[self.colors]
+                            + '.icns'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon('images/'+self.google_nodev[self.colors]+'.png'))
+                    self.tray.setIcon(
+                            QtGui.QIcon(
+                                'images/'
+                                + self.google_nodev[self.colors]
+                                + '.png'
+                                )
+                            )
             else:
                 if platform == 'Linux':
-                    self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_nodev[self.colors]+'.png'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            '/usr/share/mkchromecast/images/'
+                            + self.google_nodev[self.colors]
+                            + '.png'
+                            )
+                        )
                 else:
-                    self.tray.setIcon(QtGui.QIcon(self.google_nodev[self.colors]+'.icns'))
+                    self.tray.setIcon(
+                        QtGui.QIcon(
+                            self.google_nodev[self.colors]
+                            + '.icns'
+                            )
+                        )
             self.stop_cast()
             pass                # This should stop the play process when there is an error in the threading _play_cast_
 
@@ -398,14 +527,37 @@ class menubar(QtWidgets.QMainWindow):
         self.menuentry.setChecked(True)
         if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google_working[self.colors]
+                        + '.icns'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon('images/'+self.google_working[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        'images/'
+                        + self.google_working[self.colors]
+                        + '.png'
+                        )
+                    )
         else:
             if platform == 'Linux':
-                self.tray.setIcon(QtGui.QIcon('/usr/share/mkchromecast/images/'+self.google_working[self.colors]+'.png'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        '/usr/share/mkchromecast/images/'
+                        + self.google_working[self.colors]
+                        + '.png'
+                        )
+                    )
             else:
-                self.tray.setIcon(QtGui.QIcon(self.google_working[self.colors]+'.icns'))
+                self.tray.setIcon(
+                    QtGui.QIcon(
+                        self.google_working[self.colors]
+                        + '.icns'
+                        )
+                    )
 
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
@@ -591,16 +743,30 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setInformativeText("""Verify that your computer is connected to your router, and try again.""")
         elif message == 'False':
             updaterBox.setText('<b>Your installation is up-to-date!</b>')
-            updaterBox.setInformativeText('<b>mkchromecast</b> v'+mkchromecast.__init__.__version__+' is currently the newest version available.')
+            updaterBox.setInformativeText(
+                '<b>mkchromecast</b> v'
+                + mkchromecast.__init__.__version__
+                + ' is currently the newest version available.'
+                )
         else:
             updaterBox.setText('New version of mkchromecast available!')
             if platform == 'Darwin':
-                downloadurl = '<a href="https://github.com/muammar/mkchromecast/releases/download/'+message+'/mkchromecast_v'+message+'.dmg">'
+                downloadurl = (
+                    '<a href="https://github.com/muammar/mkchromecast/releases/download/'
+                    + message
+                    + '/mkchromecast_v'
+                    + message
+                    + '.dmg">'
+                    )
             elif platform == 'Linux':
                 downloadurl = '<a href="http://github.com/muammar/mkchromecast/releases/latest">'
             if debug == True:
                 print('Download URL:', downloadurl)
-            updaterBox.setInformativeText('You can '+downloadurl+'download it by clicking here</a>.')
+            updaterBox.setInformativeText(
+                'You can '
+                + downloadurl
+                + 'download it by clicking here</a>.'
+                )
         updaterBox.setStandardButtons(QMessageBox.Ok)
         updaterBox.exec_()
 
@@ -621,7 +787,12 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.abouticon='google.icns'
 
-        msgsettext = '<center><img src="'+self.abouticon+'" "height="98" width="128" align="middle"> <br> <br> <b>mkchromecast</b> v'+mkchromecast.__init__.__version__
+        msgsettext = (
+            '<center><img src="'
+            + self.abouticon
+            + '" "height="98" width="128" align="middle"> <br> <br> <b>mkchromecast</b> v'
+            + mkchromecast.__init__.__version__
+            )
         msgBox.setText(msgsettext)
         msgBox.setInformativeText("""
         <p align='center'>
@@ -669,9 +840,16 @@ class menubar(QtWidgets.QMainWindow):
     def search_notification(self):
         if platform == 'Darwin' and self.notifications == 'enabled':
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
-                noticon = 'images/'+self.google[self.colors]+'.icns'
+                noticon = (
+                    'images/'
+                    + self.google[self.colors]
+                    + '.icns'
+                    )
             else:
-                noticon = self.google[self.colors]+'.icns'
+                noticon = (
+                    self.google[self.colors]
+                    + '.icns'
+                    )
             searching = [
                 './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
                 '-group',

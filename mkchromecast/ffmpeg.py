@@ -90,7 +90,11 @@ else:
         bitrate = str(mkchromecast.__init__.bitrate)
         samplerate = str(mkchromecast.__init__.samplerate)
 
-    backends = ['ffmpeg', 'avconv', 'parec']
+    backends = [
+        'ffmpeg',
+        'avconv',
+        'parec'
+        ]
     if tray == True and backend in backends:
         import os, getpass
         import subprocess

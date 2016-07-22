@@ -2,16 +2,20 @@
 
 # This file is part of mkchromecast.
 
-import argparse
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 from mkchromecast.version import __version__
-import os.path, sys, platform
-import pickle, subprocess
+import argparse
+import os.path
+import sys
+import platform
+import pickle
+import subprocess
 from argparse import RawTextHelpFormatter
 
-parser = argparse.ArgumentParser(description='''
+parser = argparse.ArgumentParser(
+description='''
 This is a program to cast your macOS audio, or Linux audio to your Google Cast
 devices.
 
@@ -39,8 +43,16 @@ the sound quality. For more information visit the wiki and the FAQ
 https://github.com/muammar/mkchromecast/wiki/.
 
 
-''', formatter_class=RawTextHelpFormatter)
-parser.add_argument('-b', '--bitrate', type=int, default='192', help=
+''',
+formatter_class=RawTextHelpFormatter
+)
+
+parser.add_argument(
+'-b',
+'--bitrate',
+type=int,
+default='192',
+help=
 '''
 Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
 
@@ -55,8 +67,15 @@ node:
 This option works with all backends. The example above sets the average
 bitrate to 128k.
 
-''')
-parser.add_argument('-c', '--codec', type=str, default='mp3', help=
+'''
+)
+
+parser.add_argument(
+'-c',
+'--codec',
+type=str,
+default='mp3',
+help=
 '''
 Set the audio codec.
 
@@ -72,11 +91,39 @@ Possible codecs:
 
 This option only works for the ffmpeg, avconv and parec backends.
 
-''')
-parser.add_argument('--config', action='store_true', help='Use this option to connect from configuration file')
-parser.add_argument('--debug', action='store_true', help='Option for debugging purposes')
-parser.add_argument('-d', '--discover', action='store_true', help='Use this option if you want to know the friendly name of a Google Cast device')
-parser.add_argument('--encoder-backend', type=str, default=None, help=
+'''
+)
+
+parser.add_argument(
+'--config',
+action='store_true',
+help='''
+Use this option to connect from configuration file
+'''
+)
+
+parser.add_argument(
+'--debug',
+action='store_true',
+help='''
+Option for debugging purposes
+'''
+)
+
+parser.add_argument(
+'-d',
+'--discover',
+action='store_true',
+help='''
+Use this option if you want to know the friendly name of a Google Cast device
+'''
+)
+
+parser.add_argument(
+'--encoder-backend',
+type=str,
+default=None,
+help=
 '''
 Set the backend for all encoders.
 Possible backends:
@@ -88,21 +135,58 @@ Possible backends:
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
 
-''')
-parser.add_argument('-n', '--name', action='store_true', help='Use this option if you know the name of the Google Cast you want to connect')
-parser.add_argument('--notifications', action='store_true', help='''
+'''
+)
+
+parser.add_argument(
+'-n',
+'--name',
+action='store_true',
+help='''
+Use this option if you know the name of the Google Cast you want to connect
+'''
+)
+
+parser.add_argument(
+'--notifications',
+action='store_true',
+help='''
 Use this flag to enable the notifications.
-''')
-parser.add_argument('-r', '--reset', action='store_true', help='''
+'''
+)
+
+parser.add_argument(
+'-r',
+'--reset',
+action='store_true',
+help='''
 When the application fails, and you have no audio in your computer, use this
 option to reset the computer's audio
-''')
-parser.add_argument('--reboot', action='store_true', help='''
-Reboot the Google Cast device
-''')
-parser.add_argument('-s', '--select-cc', action='store_true', help='If you have more than one Google Cast device use this option')
-parser.add_argument('--sample-rate', type=int, default='44100', help=
 '''
+)
+
+parser.add_argument(
+'--reboot',
+action='store_true',
+help='''
+Reboot the Google Cast device
+'''
+)
+
+parser.add_argument(
+'-s',
+'--select-cc',
+action='store_true',
+help='''
+If you have more than one Google Cast device use this option
+'''
+)
+
+parser.add_argument(
+'--sample-rate',
+type=int,
+default='44100',
+help='''
 Set the sample rate. The default sample rate obtained from avfoundation audio
 device input in ffmpeg using soundflower is 44100Hz. You can change this in the
 Audio MIDI Setup in the "Soundflower (2ch)" audio device. You need to change
@@ -132,12 +216,22 @@ Which sample rate to use?
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 
-''')
-parser.add_argument('-t', '--tray', action='store_true', help=
 '''
+)
+
+parser.add_argument(
+'-t',
+'--tray',
+action='store_true',
+help='''
 This option let you launch mkchromecast as a systray menu (beta)
-''')
-parser.add_argument('--update', action='store_true', help="""
+'''
+)
+
+parser.add_argument(
+'--update',
+action='store_true',
+help="""
 Update mkchromecast git repository.
 
 Example:
@@ -150,15 +244,32 @@ This will execute for you:
 
 """
 )
-parser.add_argument('-v', '--version', action='store_true', help='Show the version')
-parser.add_argument('--volume', action='store_true', default=False, help=
-'''
+
+parser.add_argument(
+'-v',
+'--version',
+action='store_true',
+help='''
+Show the version'''
+)
+
+parser.add_argument(
+'--volume',
+action='store_true',
+default=False,
+help='''
 This option lets you control the volume of your Google Cast Devices. Use the
 'u' and 'd' keys to perform volume up and volume down actions respectively. Note
 that to kill the application using this option, you need to press the 'q' key.
-''')
-parser.add_argument('-y', '--youtube', type=str, default=None, help=
 '''
+)
+
+parser.add_argument(
+'-y',
+'--youtube',
+type=str,
+default=None,
+help='''
 Stream from Youtube URL. This option only works for Google Casts in TV.
 
 Example:
@@ -167,7 +278,9 @@ Example:
 As I don't own a Google Cast for TVs, I cannot test this correctly. But in
 principle it should work.
 
-''')
+'''
+)
+
 args = parser.parse_args()
 
 """
@@ -234,10 +347,19 @@ if args.update is True:
 
     print(colors.warning('Updating mkchromecast'))
     print(colors.important('git pull --all'))
-    pull = subprocess.Popen(['git', 'pull', '--all'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    pull = subprocess.Popen(
+        ['git', 'pull', '--all'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+        )
+
     print(pull.stdout.read().decode('utf-8').strip())
     print(colors.important('git fetch -p'))
-    prune = subprocess.Popen(['git', 'fetch', '-p'], stdout=subprocess.PIPE, stderr=subprocess.PIPE  )
+    prune = subprocess.Popen(
+        ['git', 'fetch', '-p'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+        )
     print(prune.stdout.read().decode('utf-8').strip())
     sys.exit(0)
 

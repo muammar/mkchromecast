@@ -8,7 +8,8 @@ from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.pulseaudio import *
 from mkchromecast.terminate import *
-import os.path, time
+import os.path
+import time
 import atexit
 import mkchromecast.colors as colors
 
