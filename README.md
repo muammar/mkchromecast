@@ -35,7 +35,7 @@ Tell me more about it
 install `PyQt5`. For more information check the [Requirements](#Requirements)
 and [Install](#Install) sections.
 
-It looks like:
+The system tray menu looks like:
 
 ##### macOS
 
@@ -50,6 +50,8 @@ Check these images:
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
+
+When using it from console [check this gif](https://github.com/muammar/mkchromecast#usage).
 
 Requirements:
 ------------
@@ -401,7 +403,7 @@ mkchromecast -t
 
 The system tray application can perform all the actions from the aforementioned
 commands. To get an idea, please check the [Youtube video
-here](https://github.com/muammar/mkchromecast#macos-4).
+here](https://github.com/muammar/mkchromecast#macos).
 
 #### Playing Youtube URLs in Google Cast TV
 
