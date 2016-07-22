@@ -28,6 +28,29 @@ information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
 that sometimes the lag between playing a song and hearing may be up to
 8 seconds for certain backends.
 
+Tell me more about it
+----------------------
+
+**mkchromecast** provides a **beta** system tray menu. It requires you to
+install `PyQt5`. For more information check the [Requirements](#Requirements)
+and [Install](#Install) sections.
+
+It looks like:
+
+##### macOS
+
+[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
+
+##### Linux
+
+Check these images:
+
+* [Gnome 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome1.png)
+* [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
+* [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
+* [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
+* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
+
 Requirements:
 ------------
 
@@ -365,6 +388,17 @@ commands above.
 
 ##### Using **mkchromecast** from the system tray
 
+To launch it:
+
+```
+python mkchromecast.py -t
+```
+or
+
+```
+mkchromecast -t
+```
+
 The system tray application can perform all the actions from the aforementioned
 commands. To get an idea, please check the [Youtube video
 here](https://github.com/muammar/mkchromecast#macos-4).
@@ -421,42 +455,6 @@ doing it: if you didn't use the `--volume` option, just press
 <kbd>q</kbd> key to quit.
 
 When launching from system tray, use the `Quit` button in the system tray.
-
-Notes
------
-
-A **beta** system tray menu is provided. It requires you to install
-`PyQt5`. To launch it:
-
-```
-python mkchromecast.py -t
-```
-or
-
-```
-mkchromecast -t
-```
-
-Additionally, **macOS** users can install the standalone app.
-
-It looks like:
-
-##### macOS
-
-[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
-
-##### Linux
-
-Check these images:
-
-* [Gnome 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome1.png)
-* [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
-* [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
-* [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
-* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
-
-**Note**: you can set all options described above using the `preferences` in
-the system tray.
 
 Known issues
 ------------
