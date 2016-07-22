@@ -30,6 +30,7 @@ that sometimes the lag between playing a song and hearing may be up to
 
 Tell me more about it
 ----------------------
+To have an idea of using **mkchromecast** from console [check this gif](https://github.com/muammar/mkchromecast#usage).
 
 **mkchromecast** provides a **beta** system tray menu. It requires you to
 install `PyQt5`. For more information check the [Requirements](#Requirements)
@@ -50,8 +51,6 @@ Check these images:
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
-
-When using it from console [check this gif](https://github.com/muammar/mkchromecast#usage).
 
 Requirements:
 ------------
