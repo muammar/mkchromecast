@@ -748,6 +748,9 @@ class menubar(QtWidgets.QMainWindow):
                 + mkchromecast.__init__.__version__
                 + ' is currently the newest version available.'
                 )
+        elif message == 'error1':
+            updaterBox.setText('Problems connecting to remote file server!')
+            updaterBox.setInformativeText("""Try again later.""")
         else:
             updaterBox.setText('New version of mkchromecast available!')
             if platform == 'Darwin':

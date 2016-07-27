@@ -111,20 +111,24 @@ class Updater(QObject):
         if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
             self.updateready.emit('None')
         else:
-            from mkchromecast.version import __version__
-            import requests
-            url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
-            response = requests.get(url).text.split(',')
+            try:
+                from mkchromecast.version import __version__
+                import requests
+                url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
+                response = requests.get(url).text.split(',')
 
-            for e in response:
-                if 'tag_name' in e:
-                    version = e.strip('"tag_name":')
-                    break
+                for e in response:
+                    if 'tag_name' in e:
+                        version = e.strip('"tag_name":')
+                        break
 
-            if version > __version__:
-                print ('Version ' + version + ' is available to download')
-                self.updateready.emit(version)
-            else:
-                print ('You are up to date')
-                self.updateready.emit('False')
+                if version > __version__:
+                    print ('Version ' + version + ' is available to download')
+                    self.updateready.emit(version)
+                else:
+                    print ('You are up to date')
+                    self.updateready.emit('False')
+            except UnboundLocalError:
+                self.updateready.emit('error1')
+
         self.upcastfinished.emit()
