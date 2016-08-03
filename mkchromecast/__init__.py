@@ -71,6 +71,25 @@ bitrate to 128k.
 )
 
 parser.add_argument(
+'--chunk-size',
+type=int,
+default='1024',
+help=
+'''
+Set the chunk size for streaming in the Flask server. Default to 1024. This
+option only works when using the ffmpeg or avconv backends.
+
+Example:
+
+ffmpeg:
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --chunk-size 2048
+
+avconv:
+    python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 512
+'''
+)
+
+parser.add_argument(
 '-c',
 '--codec',
 type=str,
@@ -438,6 +457,18 @@ if codec in codecs_br:
         bitrate = args.bit_rate
 else:
     bitrate = None      #When the codec does not require bitrate I set it to None
+
+"""
+Chunk size
+"""
+if args.chunk_size <= 0:
+    print(colors.warning('Chunk size set to default: 1024.'))
+    chunk_size = 1024
+elif args.chunk_size < 512:
+    print(colors.warning('Chunk size not recommended. Using 512 instead.'))
+    chunk_size = 512
+else:
+    chunk_size = abs(args.chunk_size)
 
 """
 Sample rate

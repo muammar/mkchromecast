@@ -5,6 +5,8 @@
     - Improvements in pulseaudio.py for preventing subprocess.Popen from
       displaying output.
     - Improvements in `Check For Updates` method.
+    - Added new option `--chunk-size` to control chunk's size of flask server
+      when streaming using `ffmpeg` or `avconv`.
 
 * mkchromecast (0.3.0) **released**: 2016/07/12
 
