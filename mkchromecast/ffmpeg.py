@@ -39,7 +39,8 @@ In this block we check variables from __init__.py
 """
 tray = mkchromecast.__init__.tray
 chunk_size = mkchromecast.__init__.chunk_size
-print('::ffmpeg:: chunk_size: ', chunk_size)
+if debug == True:
+    print(':::ffmpeg::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
