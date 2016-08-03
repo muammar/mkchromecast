@@ -315,10 +315,6 @@ if args.reset == True:
         remove_sink()
     terminate()
 
-if args.config == True or args.discover == True or args.name == True:
-    print(colors.error('This option is not implemented yet.'))
-    sys.exit(0)
-
 """
 Reboot
 """
