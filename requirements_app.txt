@@ -4,5 +4,5 @@ netifaces==0.10.4
 psutil==4.3.0
 PyChromecast==0.7.3
 requests==2.10.0
-setuptools==25.1.4
+setuptools==25.1.6
 gi==1.2
