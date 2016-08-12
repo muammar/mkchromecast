@@ -5,8 +5,10 @@
 import sys
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
-import os, getpass
+import os
+import getpass
 import subprocess
+import webbrowser
 
 """
 Check if external programs are available to build the preferences
@@ -129,7 +131,7 @@ if tray == True:
             """
             Codec
             """
-            self.codec = QLabel('Audio coding format', self)
+            self.codec = QLabel('Audio Coding Format', self)
             self.codec.move(20*self.scale_factor, 56*self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
@@ -196,7 +198,7 @@ if tray == True:
                 '22050'
                 ]
             sampleratesindex = self.samplerates.index(self.samplerateconf)
-            self.samplerate = QLabel('Sample rate (Hz)', self)
+            self.samplerate = QLabel('Sample Rate (Hz)', self)
             self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate = QComboBox(self)
             self.qcsamplerate.move(180*self.scale_factor, 120*self.scale_factor)
@@ -215,7 +217,7 @@ if tray == True:
                 'blue'
                 ]
             colorsindex = self.colors_list.index(self.searchcolorsconf)
-            self.colors = QLabel('Icon colors', self)
+            self.colors = QLabel('Icon Colors', self)
             self.colors.move(20*self.scale_factor, 152*self.scale_factor)
             self.qccolors = QComboBox(self)
             self.qccolors.move(180*self.scale_factor, 152*self.scale_factor)
@@ -253,7 +255,7 @@ if tray == True:
                 'disabled'
                 ]
             launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
-            self.atlaunch = QLabel('Search at launch', self)
+            self.atlaunch = QLabel('Search At Launch', self)
             self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
             self.qcatlaunch = QComboBox(self)
             self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)
@@ -267,9 +269,17 @@ if tray == True:
             """
             Buttons
             """
-            resetbtn = QPushButton("Reset to default", self)
-            resetbtn.move(20*self.scale_factor, 252*self.scale_factor)
+            resetbtn = QPushButton("Reset Settings", self)
+            resetbtn.move(10*self.scale_factor, 252*self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
+
+            faqbtn = QPushButton("FAQ", self)
+            faqbtn.move(138*self.scale_factor, 252*self.scale_factor)
+            faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
+
+            donbtn = QPushButton("Donate :)", self)
+            donbtn.move(204*self.scale_factor, 252*self.scale_factor)
+            donbtn.clicked.connect(lambda: webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U'))
 
         def window(self):
             """
@@ -279,9 +289,9 @@ if tray == True:
             if platform == 'Darwin':
                 self.setFixedSize(310*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
             else:
-                self.setFixedSize(300*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
+                self.setFixedSize(282*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
-            self.setWindowTitle('mkchromecast Preferences')
+            self.setWindowTitle('Mkchromecast Preferences')
 
             """
             Methods
@@ -325,16 +335,14 @@ if tray == True:
         def onActivatedbk(self, text):
             self.config.read(self.configf)
             self.config.set('settings','backend',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
             self.qccodec.clear()
             if self.backendconf == 'node':
                 codecs = ['mp3']
                 self.config.read(self.configf)
                 self.config.set('settings','codec','mp3')
-                with open(self.configf, 'w') as configfile:
-                        self.config.write(configfile)
+                self.write_config()
             else:
                 codecs = [
                     'mp3',
@@ -356,8 +364,7 @@ if tray == True:
         def onActivatedcc(self, text):
             self.config.read(self.configf)
             self.config.set('settings','codec',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
             self.qcbitrate.clear()
             if self.codecconf == 'wav':
@@ -388,36 +395,31 @@ if tray == True:
         def onActivatedbt(self, text):
             self.config.read(self.configf)
             self.config.set('settings','bitrate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
 
         def onActivatedsr(self, text):
             self.config.read(self.configf)
             self.config.set('settings','samplerate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
 
         def onActivatednotify(self, text):
             self.config.read(self.configf)
             self.config.set('settings','notifications',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
 
         def onActivatedcolors(self, text):
             self.config.read(self.configf)
             self.config.set('settings','colors',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
 
         def onActivatedatlaunch(self, text):
             self.config.read(self.configf)
             self.config.set('settings','searchatlaunch',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config()
             self.read_defaults()
 
         def read_defaults(self):
@@ -426,8 +428,7 @@ if tray == True:
             if self.backendconf == 'node' and self.codecconf != 'mp3':
                 self.config.read(self.configf)
                 self.config.set('settings','codec','mp3')
-                with open(self.configf, 'w') as configfile:
-                        self.config.write(configfile)
+                self.write_config()
                 self.codecconf = ConfigSectionMap('settings')['codec']
             self.bitrateconf = ConfigSectionMap('settings')['bitrate']
             self.samplerateconf = ConfigSectionMap('settings')['samplerate']
@@ -438,6 +439,12 @@ if tray == True:
                 print(self.backendconf, self.codecconf, self.bitrateconf, \
                         self.samplerateconf, self.notificationsconf, \
                         self.searchatlaunchconf, self.searchcolorsconf)
+
+        def write_config(self):
+            """This method writes to configfile"""
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -38,11 +38,15 @@ backends_dict = {}
 In this block we check variables from __init__.py
 """
 tray = mkchromecast.__init__.tray
+chunk_size = mkchromecast.__init__.chunk_size
+if debug == True:
+    print(':::ffmpeg::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
 appendtourl = 'stream'
+
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
 except AttributeError:
@@ -90,7 +94,11 @@ else:
         bitrate = str(mkchromecast.__init__.bitrate)
         samplerate = str(mkchromecast.__init__.samplerate)
 
-    backends = ['ffmpeg', 'avconv', 'parec']
+    backends = [
+        'ffmpeg',
+        'avconv',
+        'parec'
+        ]
     if tray == True and backend in backends:
         import os, getpass
         import subprocess
@@ -500,7 +508,7 @@ def stream():
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
     else:
         process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), 1024)
+    read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():

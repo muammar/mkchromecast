@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-6.3.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-6.3.1-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -27,6 +27,30 @@ For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
 information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
 that sometimes the lag between playing a song and hearing may be up to
 8 seconds for certain backends.
+
+Tell me more about it
+----------------------
+To have an idea of using **mkchromecast** from console [check this gif](https://github.com/muammar/mkchromecast#usage).
+
+**mkchromecast** provides a **beta** system tray menu. It requires you to
+install `PyQt5`. For more information check the [Requirements](#Requirements)
+and [Install](#Install) sections.
+
+The system tray menu looks like:
+
+##### macOS
+
+[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
+
+##### Linux
+
+Check these images:
+
+* [Gnome 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome1.png)
+* [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
+* [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
+* [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
+* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 Requirements:
 ------------
@@ -73,8 +97,8 @@ Install
 
 There are two ways of installing this application:
 
-1. Using the binaries.
-2. From sources.
+1. Using the [binaries](https://github.com/muammar/mkchromecast#binaries).
+2. From [sources](https://github.com/muammar/mkchromecast#from-sources).
 
 #### Binaries
 
@@ -365,9 +389,20 @@ commands above.
 
 ##### Using **mkchromecast** from the system tray
 
+To launch it:
+
+```
+python mkchromecast.py -t
+```
+or
+
+```
+mkchromecast -t
+```
+
 The system tray application can perform all the actions from the aforementioned
 commands. To get an idea, please check the [Youtube video
-here](https://github.com/muammar/mkchromecast#macos-4).
+here](https://github.com/muammar/mkchromecast#macos).
 
 #### Playing Youtube URLs in Google Cast TV
 
@@ -421,42 +456,6 @@ doing it: if you didn't use the `--volume` option, just press
 <kbd>q</kbd> key to quit.
 
 When launching from system tray, use the `Quit` button in the system tray.
-
-Notes
------
-
-A **beta** system tray menu is provided. It requires you to install
-`PyQt5`. To launch it:
-
-```
-python mkchromecast.py -t
-```
-or
-
-```
-mkchromecast -t
-```
-
-Additionally, **macOS** users can install the standalone app.
-
-It looks like:
-
-##### macOS
-
-[![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
-
-##### Linux
-
-Check these images:
-
-* [Gnome 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome1.png)
-* [Gnome 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Gnome2.png)
-* [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
-* [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
-* [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
-
-**Note**: you can set all options described above using the `preferences` in
-the system tray.
 
 Known issues
 ------------

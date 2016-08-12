@@ -3,7 +3,6 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.__init__
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
@@ -12,7 +11,10 @@ from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
 from mkchromecast.systray import *
-import os.path, pickle, pychromecast
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+import os.path
+import pickle
+import pychromecast
 """
 Configparser is imported differently in Python3
 """
@@ -26,7 +28,6 @@ debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
-
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -97,6 +98,7 @@ class Player(QObject):
         self.pcastfinished.emit()
 
 class Updater(QObject):
+    """This class is employed to check for new mkchromecast versions"""
     upcastfinished = pyqtSignal()
     updateready = pyqtSignal(str)
 
@@ -109,20 +111,24 @@ class Updater(QObject):
         if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
             self.updateready.emit('None')
         else:
-            from mkchromecast.version import __version__
-            import requests
-            url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
-            response = requests.get(url).text.split(',')
+            try:
+                from mkchromecast.version import __version__
+                import requests
+                url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
+                response = requests.get(url).text.split(',')
 
-            for e in response:
-                if 'tag_name' in e:
-                    version = e.strip('"tag_name":')
-                    break
+                for e in response:
+                    if 'tag_name' in e:
+                        version = e.strip('"tag_name":')
+                        break
 
-            if version > __version__:
-                print ('Version ' + version + ' is available to download')
-                self.updateready.emit(version)
-            else:
-                print ('You are up to date')
-                self.updateready.emit('False')
+                if version > __version__:
+                    print ('Version ' + version + ' is available to download')
+                    self.updateready.emit(version)
+                else:
+                    print ('You are up to date')
+                    self.updateready.emit('False')
+            except UnboundLocalError:
+                self.updateready.emit('error1')
+
         self.upcastfinished.emit()
