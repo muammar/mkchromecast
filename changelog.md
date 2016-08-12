@@ -1,4 +1,4 @@
-* mkchromecast (0.3.1) **unreleased**:
+* mkchromecast (0.3.1) **released**: 2016/08/12
 
     - Improved Preferences window.
     - The node streaming has been updated to work with `node v6.3.1`.
