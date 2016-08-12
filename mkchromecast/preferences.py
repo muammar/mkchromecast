@@ -335,8 +335,7 @@ if tray == True:
         def onActivatedbk(self, text):
             self.config.read(self.configf)
             self.config.set('settings','backend',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
             self.qccodec.clear()
             if self.backendconf == 'node':
@@ -366,8 +365,7 @@ if tray == True:
         def onActivatedcc(self, text):
             self.config.read(self.configf)
             self.config.set('settings','codec',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
             self.qcbitrate.clear()
             if self.codecconf == 'wav':
@@ -398,36 +396,31 @@ if tray == True:
         def onActivatedbt(self, text):
             self.config.read(self.configf)
             self.config.set('settings','bitrate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
 
         def onActivatedsr(self, text):
             self.config.read(self.configf)
             self.config.set('settings','samplerate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
 
         def onActivatednotify(self, text):
             self.config.read(self.configf)
             self.config.set('settings','notifications',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
 
         def onActivatedcolors(self, text):
             self.config.read(self.configf)
             self.config.set('settings','colors',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
 
         def onActivatedatlaunch(self, text):
             self.config.read(self.configf)
             self.config.set('settings','searchatlaunch',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.write_config())
             self.read_defaults()
 
         def read_defaults(self):
@@ -448,6 +441,12 @@ if tray == True:
                 print(self.backendconf, self.codecconf, self.bitrateconf, \
                         self.samplerateconf, self.notificationsconf, \
                         self.searchatlaunchconf, self.searchcolorsconf)
+
+        def write_config(self):
+            """This method writes to configfile"""
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
