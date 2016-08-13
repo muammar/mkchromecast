@@ -1,3 +1,5 @@
+* mkchromecast (0.3.2) **ureleased**:
+
 * mkchromecast (0.3.1) **released**: 2016/08/12
 
     - Improved Preferences window.
