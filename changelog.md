@@ -1,4 +1,4 @@
-* mkchromecast (0.3.2) **ureleased**:
+* mkchromecast (0.3.2) **released**: 2016/06/15
 
     - Improvements for cases where chromecasts have non-ascii characters in
       their names.
