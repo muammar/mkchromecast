@@ -1,7 +1,9 @@
 * mkchromecast (0.3.2) **released**: 2016/06/15
 
     - Improvements for cases where chromecasts have non-ascii characters in
-      their names.
+      their names. Closes
+      [#7](https://github.com/muammar/mkchromecast/issues/7).
+
 
 * mkchromecast (0.3.1) **released**: 2016/08/12
 
