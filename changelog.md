@@ -1,5 +1,8 @@
 * mkchromecast (0.3.2) **ureleased**:
 
+    - Improvements for cases where chromecasts have non-ascii characters in
+      their names.
+
 * mkchromecast (0.3.1) **released**: 2016/08/12
 
     - Improved Preferences window.
