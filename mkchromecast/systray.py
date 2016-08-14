@@ -429,7 +429,10 @@ class menubar(QtWidgets.QMainWindow):
             print('Available Google Cast Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 self.entries = menuentry
-                self.menuentry = self.menu.addAction(str(menuentry[1]))
+                try:
+                    self.menuentry = self.menu.addAction(str(menuentry[1]))
+                except UnicodeEncodeError:
+                    self.menuentry = self.menu.addAction(str(unicode(menuentry[1]).encode("utf-8")))
                 self.menuentry.triggered.connect(self.play_cast)
                 self.menuentry.setCheckable(True)
             self.separator_menu()

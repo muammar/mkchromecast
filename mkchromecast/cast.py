@@ -92,7 +92,10 @@ class casting(object):
             print(colors.important('Index   Friendly name'))
             print(colors.important('=====   ============= '))
             for self.index,device in enumerate(self.cclist):
-                print(str(self.index)+'      ', str(device))
+                try:
+                    print(str(self.index)+'      ', str(device))
+                except UnicodeEncodeError:
+                    print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
             print(' ')
             print(colors.important('We will cast to first device in the list above!'))
             print(' ')
@@ -332,6 +335,9 @@ class casting(object):
         """
         self.availablecc=[]
         for self.index,device in enumerate(self.cclist):
-            print(str(self.index)+'      ',str(device))
+            try:
+                print(str(self.index)+'      ', str(device))
+            except UnicodeEncodeError:
+                print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
             toappend = [self.index,device]
             self.availablecc.append(toappend)
