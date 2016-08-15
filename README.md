@@ -459,6 +459,10 @@ When launching from system tray, use the `Quit` button in the system tray.
 
 Known issues
 ------------
+##### General
+
+`MultipleChromecastsFoundError` affecting users with one than more google cast
+device online.
 
 ##### macOS
 
