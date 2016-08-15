@@ -1,6 +1,10 @@
 #!/usr/bin/make -f
 # See debhelper(7) (uncomment to enable)
 # output every command that modifies files on the build system.
+
+GIT='https://github.com/muammar/mkchromecast'
+# The full changelog version number, used for the orig.tar.gz
+VER=$(shell dpkg-parsechangelog -ldebian/changelog -SVersion | cut -d- -f1)
 export DH_VERBOSE = 1
 
 export PYBUILD_NAME=mkchromecast
@@ -22,3 +26,10 @@ override_dh_install:
 override_dh_auto_clean:
 	echo 'Cleaning *.pyc'
 	find . -name \*.pyc -exec rm {} \;
+
+get-orig-source:
+	rm -rf mkchromecast-$(VER)
+	git clone $(GIT) mkchromecast-$(VER)
+	GZIP=--best tar --owner=root --group=root --mode a+rX -czf mkchromecast_$(VER).orig.tar.gz  mkchromecast-$(VER)
+	rm -rf mkchromecast-$(VER)
+	mv mkchromecast_$(VER).orig.tar.gz ../
