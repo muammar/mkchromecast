@@ -210,7 +210,9 @@ class casting(object):
         if self.debug == True:
             print('def get_cc(self):')
         try:
-            self.cast = pychromecast.get_chromecast(self.castto)
+            self.cast = pychromecast.get_chromecast('friendly_name="'+self.castto+'"')
+            print ('self.cast')
+            print('friendly_name="'+self.castto+'"')
             # Wait for cast device to be ready
             self.cast.wait()
             print(' ')
