@@ -2,4 +2,4 @@
 
 # This file is part of mkchromecast.
 
-__version__ = '0.3.2'
+__version__ = '0.3.3'
