@@ -30,6 +30,8 @@ override_dh_auto_clean:
 get-orig-source:
 	rm -rf mkchromecast-$(VER)
 	git clone $(GIT) mkchromecast-$(VER)
-	GZIP=--best tar --owner=root --group=root --mode a+rX -czf mkchromecast_$(VER).orig.tar.gz  mkchromecast-$(VER)
+	cd mkchromecast-$(VER)
+	git archive --format=tar --prefix=mkchromecast-$(VER)/ HEAD > mkchromecast_$(VER).orig.tar
+	gzip --best mkchromecast_$(VER).orig.tar
+	mv mkchromecast_$(VER).orig.tar.gz ..
 	rm -rf mkchromecast-$(VER)
-	mv mkchromecast_$(VER).orig.tar.gz ../
