@@ -147,6 +147,8 @@ This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
 here](https://github.com/muammar/mkchromecast/issues).
 
+If you experience other problems related to dependecies, please [discuss it here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
+
 #### From sources
 
 To install **mkchromecast**, clone this repository:
