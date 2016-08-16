@@ -473,7 +473,8 @@ No new issues reported.
 
 ##### Linux
 
-When using `parec` and `lame` encoder, the delay between audio played and
+* The system tray is not working in Unity.
+* When using `parec` and `lame` encoder, the delay between audio played and
 listened can be up to 8 seconds. I suggest you to use something different than
 mp3.
 
