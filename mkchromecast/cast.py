@@ -26,7 +26,7 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 class casting(object):
-    def __init__(self): ## __init__ to call the self.ip
+    def __init__(self):                     # __init__ to call the self.ip
         import mkchromecast.__init__        # This is to verify against some needed variables
         self.platform = mkchromecast.__init__.platform
         self.tray = mkchromecast.__init__.tray
@@ -66,8 +66,9 @@ class casting(object):
                         print(':::cast::: netifaces method', self.discovered_ip)
 
     def initialize_cast(self):
-        import mkchromecast.__init__        # This is to verify against some needed variables
-        from pychromecast import socket_client
+        import mkchromecast.__init__            # This is to verify against some needed variables.
+        from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
+                                                # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
         if self.debug == True:
             print('self.cclist', self.cclist)
@@ -122,9 +123,6 @@ class casting(object):
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 """
-                #print('Array')
-                #print(availablecc)
-
             else:
                 if self.debug == True:
                     print('else:')
@@ -154,9 +152,6 @@ class casting(object):
                     toappend = [self.index,device]
                     self.availablecc.append(toappend)
                 """
-                #print('Array')
-                #print(availablecc)
-
             else:
                 if self.debug == True:
                     print('else:')
