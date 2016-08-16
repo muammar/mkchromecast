@@ -1,6 +1,7 @@
 * mkchromecast (0.3.3) **released**: 2016/08/16
 
-    - Improved MultiRoom support.
+    - Improved MultiRoom support. Closes
+      [#8](https://github.com/muammar/mkchromecast/issues/8).
 
 * mkchromecast (0.3.2) **released**: 2016/06/15
 
