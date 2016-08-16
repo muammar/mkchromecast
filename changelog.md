@@ -1,3 +1,5 @@
+* mkchromecast (0.3.4) **unreleased**
+
 * mkchromecast (0.3.3) **released**: 2016/08/16
 
     - Improved MultiRoom support. Closes
