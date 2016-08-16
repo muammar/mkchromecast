@@ -463,8 +463,7 @@ Known issues
 ------------
 ##### General
 
-`MultipleChromecastsFoundError` affecting users with one than more google cast
-device online.
+No new issues reported.
 
 ##### macOS
 
