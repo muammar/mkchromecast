@@ -98,7 +98,7 @@ def streaming():
                         +str(22050)+'Hz, '
                         +str(32000)+'Hz, '
                         +str(44100)+'Hz or '
-                        +str(44800)+'Hz')
+                        +str(48000)+'Hz')
                         )
                     samplerate = '44100'
                     print(colors.warning('Sample rate has been set to default!'))
@@ -108,7 +108,7 @@ def streaming():
                         +str(22050)+'Hz, '
                         +str(32000)+'Hz, '
                         +str(44100)+'Hz or '
-                        +str(44800)+'Hz')
+                        +str(48000)+'Hz')
                         )
                     samplerate = '32000'
 
@@ -117,7 +117,7 @@ def streaming():
                         +str(22050)+'Hz, '
                         +str(32000)+'Hz, '
                         +str(44100)+'Hz or '
-                        +str(44800)+'Hz')
+                        +str(48000)+'Hz')
                         )
                     samplerate = '32000'
 
@@ -126,7 +126,7 @@ def streaming():
                         +str(22050)+'Hz, '
                         +str(32000)+'Hz, '
                         +str(44100)+'Hz or '
-                        +str(44800)+'Hz')
+                        +str(48000)+'Hz')
                         )
                     samplerate = '22050'
 
@@ -135,9 +135,9 @@ def streaming():
                         +str(22050)+'Hz, '
                         +str(32000)+'Hz, '
                         +str(44100)+'Hz or '
-                        +str(44800)+'Hz')
+                        +str(48000)+'Hz')
                         )
-                    samplerate = '44800'
+                    samplerate = '48000'
                     print(colors.warning('Sample rate has been set to maximum!'))
                 print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
