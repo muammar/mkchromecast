@@ -2,7 +2,7 @@
 
     - New white icons.
     - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends.
-    - Fixed case 48000Hz sample rate case.
+    - Fixed 48000Hz sample rate case.
 
 * mkchromecast (0.3.3) **released**: 2016/08/16
 
