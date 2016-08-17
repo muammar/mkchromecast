@@ -1,5 +1,7 @@
 * mkchromecast (0.3.4) **unreleased**
 
+    - New white icons.
+
 * mkchromecast (0.3.3) **released**: 2016/08/16
 
     - Improved MultiRoom support. Closes
