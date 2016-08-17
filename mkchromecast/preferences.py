@@ -214,7 +214,8 @@ if tray == True:
             """
             self.colors_list = [
                 'black',
-                'blue'
+                'blue',
+                'white'
                 ]
             colorsindex = self.colors_list.index(self.searchcolorsconf)
             self.colors = QLabel('Icon Colors', self)

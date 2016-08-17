@@ -53,15 +53,18 @@ class menubar(QtWidgets.QMainWindow):
         """
         self.google = {
                 'black': 'google',
-                'blue': 'google_b'
+                'blue': 'google_b',
+                'white': 'google_w'
                 }
         self.google_working = {
                 'black': 'google_working',
                 'blue': 'google_working_b',
+                'white': 'google_working_w'
                 }
         self.google_nodev = {
                 'black': 'google_nodev',
-                'blue': 'google_nodev_b'
+                'blue': 'google_nodev_b',
+                'white': 'google_nodev_w'
                 }
 
         """
