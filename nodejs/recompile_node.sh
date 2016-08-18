@@ -6,6 +6,10 @@ localpwd=`pwd`
 
 VER="$@"
 
+echo "Deleting old node version"
+
+rm -R node-*
+
 echo
 echo "Downloading new version from https://nodejs.org..."
 echo
@@ -13,10 +17,6 @@ echo
 wget https://nodejs.org/dist/v$VER/node-v$VER.tar.gz
 
 echo
-echo "Deleting old node version"
-
-rm -R node-*
-
 echo
 echo "Untar new version"
 echo
