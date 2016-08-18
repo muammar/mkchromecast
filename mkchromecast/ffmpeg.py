@@ -179,7 +179,38 @@ else:
                 'mp3',
                 'ogg'
                 ]
-            if codec in codecs_sr and int(samplerate) < 41000 and int(samplerate) > 36000:
+
+            if codec in codecs_sr and int(samplerate) > 22000 and int(samplerate) <= 27050:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz, '
+                    +str(48000)+'Hz or '
+                    +str(96000)+'Hz')
+                    )
+                samplerate = '22050'
+
+            if codec in codecs_sr and int(samplerate) > 27050 and int(samplerate) <= 32000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz, '
+                    +str(48000)+'Hz or '
+                    +str(96000)+'Hz')
+                    )
+                samplerate = '32000'
+
+            elif codec in codecs_sr and int(samplerate) > 32000 and int(samplerate) <= 36000:
+                print(colors.warning('Sample rates supported by '+codec+' are: '
+                    +str(22050)+'Hz, '
+                    +str(32000)+'Hz, '
+                    +str(44100)+'Hz, '
+                    +str(48000)+'Hz or '
+                    +str(96000)+'Hz')
+                    )
+                samplerate = '32000'
+
+            elif codec in codecs_sr and int(samplerate) > 36000 and int(samplerate) <= 43000:
                 print(colors.warning('Sample rates supported by '+codec+' are: '
                     +str(22050)+'Hz, '
                     +str(32000)+'Hz, '
@@ -190,37 +221,7 @@ else:
                 samplerate = '44100'
                 print(colors.warning('Sample rate has been set to default!'))
 
-            elif codec in codecs_sr and int(samplerate) < 36000 and int(samplerate) > 32000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
-                samplerate = '32000'
-
-            elif codec in codecs_sr and int(samplerate) < 32000 and int(samplerate) > 27050:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
-                samplerate = '32000'
-
-            elif codec in codecs_sr and int(samplerate) < 27050 and int(samplerate) > 22000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
-                samplerate = '22050'
-
-            elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) < 71999:
+            elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
                 print(colors.warning('Sample rates supported by '+codec+' are: '
                     +str(22050)+'Hz, '
                     +str(32000)+'Hz, '
