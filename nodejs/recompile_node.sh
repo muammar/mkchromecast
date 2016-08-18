@@ -6,14 +6,23 @@ localpwd=`pwd`
 
 VER="$@"
 
+echo
+echo "Downloading new version from https://nodejs.org..."
+echo
+
+wget https://nodejs.org/dist/v$VER/node-v$VER.tar.gz
+
+echo
 echo "Deleting old node version"
+
 rm -R node-*
 
 echo
 echo "Untar new version"
 echo
 
-tar zxvf ../archive/node-v$VER.tar.gz
+tar zxvf node-v$VER.tar.gz
+rm node-v$VER.tar.gz
 cd node-v$VER/
 ./configure
 ./configure --prefix=$localpwd/node-$VER/
