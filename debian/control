@@ -6,7 +6,6 @@ Build-Depends: debhelper (>=9),
                dh-python,
                python-all (>= 2.6.6-3~),
                python-setuptools,
-               dh-python
 Standards-Version: 3.9.8
 Homepage: http://mkchromecast.com
 X-Python-Version: >= 2.6
