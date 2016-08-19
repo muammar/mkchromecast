@@ -228,6 +228,8 @@ This option works for both backends. The example above sets the sample rate to
 
 Which sample rate to use?
 
+    - 96000Hz: maximum sampling rate supported in google cast audio. Only
+      supported by aac, wav and flac codecs.
     - 48000Hz: sampling rate of audio in DVDs.
     - 44100Hz: sampling rate of audio CDs giving a 20 kHz maximum frequency.
     - 32000Hz: sampling rate of audio quality a little below FM radio bandwidth.

@@ -192,6 +192,7 @@ if tray == True:
             Sample rate
             """
             self.samplerates = [
+                '96000',
                 '48000',
                 '44100',
                 '32000',
@@ -214,7 +215,8 @@ if tray == True:
             """
             self.colors_list = [
                 'black',
-                'blue'
+                'blue',
+                'white'
                 ]
             colorsindex = self.colors_list.index(self.searchcolorsconf)
             self.colors = QLabel('Icon Colors', self)

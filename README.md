@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-6.3.1-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-6.4.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -11,8 +11,10 @@ Google Cast devices.
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
-audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec` (**Linux**) are
-installed. Additionally, a system tray menu is available.
+audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
+(**Linux**) are installed. It also supports [Multi-room group
+playback](https://support.google.com/chromecast/answer/6329016?hl=en).
+Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
 together with `mp3` audio coding format at a sample rate of `44100Hz` and
@@ -471,7 +473,8 @@ No new issues reported.
 
 ##### Linux
 
-When using `parec` and `lame` encoder, the delay between audio played and
+* The system tray is not working in Unity (see https://github.com/muammar/mkchromecast/issues/10).
+* When using `parec` and `lame` encoder, the delay between audio played and
 listened can be up to 8 seconds. I suggest you to use something different than
 mp3.
 
@@ -483,8 +486,6 @@ TODO
 
 * Verify all exceptions when the system tray menu fails.
 * More eye candy.
-* Check that the index of the cast selected is correctly passed in the
-system tray.
 * Video?.
 
 Contribute
