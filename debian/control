@@ -32,7 +32,9 @@ Suggests: mkchromecast-doc,
 Description: cast your Linux audio to your Google Cast devices
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided
- that ffmpeg is installed. Additionally, a system tray menu is also available.
+ that ffmpeg is installed. It also supports Multi-room group playback, and
+ 24-bits/96kHz high audio resolution. Additionally, a system tray menu is also
+ available.
  .
  By default, mkchromecast streams with node.js (or using parec in Linux)
  together with mp3 audio coding format at a sample rate of 44100Hz and average
