@@ -1,7 +1,8 @@
-* mkchromecast (0.3.4) **unreleased**
+* mkchromecast (0.3.4) **released**: 2016/08/19
 
     - New white icons.
-    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends.
+    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends
+      Closes[#11](https://github.com/muammar/mkchromecast/issues/11).
     - Fixed 48000Hz sample rate case.
     - The node streaming has been updated to work with `node v6.4.0`.
 
