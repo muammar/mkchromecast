@@ -32,7 +32,7 @@ get-orig-source:
 	#git clone $(GIT) mkchromecast-$(VER)
 	git clone -b debian $(GIT) mkchromecast-$(VER)
 	cd mkchromecast-$(VER)
-	git archive --format=tar --prefix=mkchromecast-$(VER)/ debian > mkchromecast_$(VER).orig.tar
+	git archive --format=tar --prefix=mkchromecast-$(VER)/ HEAD > mkchromecast_$(VER).orig.tar
 	gzip --best mkchromecast_$(VER).orig.tar
 	mv mkchromecast_$(VER).orig.tar.gz ..
 	rm -rf mkchromecast-$(VER)

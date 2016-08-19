@@ -1,3 +1,4 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 nodejs export-ignore
+debian export-ignore
