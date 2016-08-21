@@ -5,5 +5,5 @@ Exec=/usr/bin/mkchromecast -t
 Terminal=false
 Type=Application
 Icon=/usr/share/pixmaps/mkchromecast.xpm
-Categories=Audio
+Categories=Audio;
 Keywords=audio;chromecast;google;cast;pychromecast;
