@@ -474,9 +474,11 @@ No new issues reported.
 
 ##### Linux
 
+* The preferences pane does not have an option to be closed in Unity. See:
+  [#13](https://github.com/muammar/mkchromecast/issues/13).
 * When using `parec` and `lame` encoder, the delay between audio played and
-listened can be up to 8 seconds. I suggest you to use something different than
-mp3.
+  listened can be up to 8 seconds. I suggest you to use something different
+  than mp3.
 
 You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
 for more information.
