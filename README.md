@@ -14,7 +14,7 @@ It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
 playback](https://support.google.com/chromecast/answer/6329016?hl=en), and
- 24-bit/96kHz high audio resolution.
+ [24-bit/96kHz high audio resolution](https://github.com/muammar/mkchromecast#high-quality-audio).
 Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
