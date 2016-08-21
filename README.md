@@ -14,7 +14,7 @@ It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
 playback](https://support.google.com/chromecast/answer/6329016?hl=en), and
- 24-bits/96kHz high audio resolution.
+ 24-bit/96kHz high audio resolution.
 Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
@@ -437,6 +437,27 @@ and `volume down` respectively.
 
 The system tray has a window with a volume slider to do `volume up` and `volume down`.
 
+#### High quality audio
+
+**mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This is the *maximum chromecast audio capability*. The supported codecs are: `wav` and `flac`. In spite of the fact that `aac` can use `96000Hz` sample rate, the bitrate corresponds to that of a lossy data compression format. Therefore, the following combinations can achieve this `24-bit/96kHz` capability:
+
+* `wav` + `96000Hz` sample rate.
+* `flac` + `96000Hz` sample rate.
+
+References: 
+* [#11](https://github.com/muammar/mkchromecast/issues/11).
+* [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
+
+Killing the application
+-----------------------
+
+To kill **mkchromecast** when you run it from console, there are two ways of
+doing it: if you didn't use the `--volume` option, just press
+<kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
+<kbd>q</kbd> key to quit.
+
+When launching from system tray, use the `Quit` button in the system tray.
+
 More help
 ---------
 
@@ -451,16 +472,6 @@ or when installing the debian package:
 ```
 mkchromecast -h
 ```
-
-Killing the application
------------------------
-
-To kill **mkchromecast** when you run it from console, there are two ways of
-doing it: if you didn't use the `--volume` option, just press
-<kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
-<kbd>q</kbd> key to quit.
-
-When launching from system tray, use the `Quit` button in the system tray.
 
 Known issues
 ------------
