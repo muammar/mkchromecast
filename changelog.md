@@ -1,8 +1,13 @@
+* mkchromecast (0.3.5) **unreleased**
+
+    - Added close button for preferences pane. Closes
+      [#13](https://github.com/muammar/mkchromecast/issues/13)
+
 * mkchromecast (0.3.4) **released**: 2016/08/19
 
     - New white icons.
-    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends
-      Closes[#11](https://github.com/muammar/mkchromecast/issues/11).
+    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends.
+      Closes [#11](https://github.com/muammar/mkchromecast/issues/11).
     - Fixed 48000Hz sample rate case.
     - The node streaming has been updated to work with `node v6.4.0`.
 
