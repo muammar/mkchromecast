@@ -36,7 +36,14 @@ file](https://github.com/mattingalls/Soundflower/releases/latest).
 
 ## Linux based installation
 
-Download the latest [deb package here](#download), and install it as follows:
+**mkchromecast** is available in the official debian repositories. You need to
+install it by executing:
+
+```
+sudo apt-get install mkchromecast
+```
+
+Alternatively, you can download the latest [deb package here](#download), and install it as follows:
 
 ```
 sudo dpkg -i mkchromecast_$VERSION_all.deb
