@@ -1,8 +1,10 @@
 mkchromecast for Debian
 ----------------------
 
-The source code has been downloaded from github. The `nodejs/` directory
-provided by upstream author has been deleted to avoid conflicts with Debian
-official packaging.
+The source code has been downloaded from github. The `nodejs/`, `archive/`,
+`bin/`, directory provided by upstream author in the git reposity were deleted
+to avoid conflicts with Debian official packaging.
 
- -- Muammar El Khatib <muammar@debian.org>  Fri, 06 May 2016 15:47:56 +0200
+To build the source package, execute: fakeroot debian/rules get-orig-source.
+
+ -- Muammar El Khatib <muammar@debian.org>  Fri, 22 Aug 2016 15:47:56 +0200

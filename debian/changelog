@@ -1,3 +1,13 @@
+mkchromecast (0.3.4-2) unstable; urgency=medium
+
+  * debian/control:
+    - Improved package description.
+  * Fixed an error in desktop file.
+  * debian/README.source:
+    - Improved description.
+
+ -- Muammar El Khatib <muammar@debian.org>  Mon, 22 Aug 2016 13:21:54 +0200
+
 mkchromecast (0.3.4-1) unstable; urgency=medium
 
   * Initial official debian release (Closes: #834400).
