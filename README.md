@@ -36,8 +36,8 @@ Tell me more about it
 To have an idea of using **mkchromecast** from console [check this gif](https://github.com/muammar/mkchromecast#usage).
 
 **mkchromecast** provides a **beta** system tray menu. It requires you to
-install `PyQt5`. For more information check the [Requirements](#Requirements)
-and [Install](#Install) sections.
+install `PyQt5`. For more information check the [Requirements](https://github.com/muammar/mkchromecast#requirements)
+and [Install](https://github.com/muammar/mkchromecast#install) sections.
 
 The system tray menu looks like:
 
