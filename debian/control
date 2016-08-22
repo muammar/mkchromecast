@@ -28,7 +28,7 @@ Depends: ${python:Depends},
 Suggests: mkchromecast-doc,
           libav-tools,
           ffmpeg
-Description: cast your Linux audio to your Google Cast devices
+Description: Cast your Linux audio to your Google Cast devices
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided
  that ffmpeg is installed. It also supports Multi-room group playback, and
