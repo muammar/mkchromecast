@@ -131,6 +131,14 @@ here](https://github.com/muammar/mkchromecast/issues).
 * Debian
 * Ubuntu
 
+**mkchromecast** is available in the [official Debian
+repositories](https://packages.debian.org/unstable/mkchromecast). To install
+it, just do:
+
+```
+apt-get install mkchromecast
+```
+
 Download the latest [deb package
 here](https://github.com/muammar/mkchromecast/releases/), and install it as
 follows:
@@ -150,7 +158,8 @@ This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
 here](https://github.com/muammar/mkchromecast/issues).
 
-If you experience other problems related to dependecies, please [discuss it here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
+If you experience other problems related to dependencies, please [discuss it
+here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
 
 #### From sources
 
@@ -188,6 +197,9 @@ Example for Debian based distros:
 ```
 sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
 ```
+
+**Note**: if `python-pychromecast` is not available in your repository, please
+follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
 ##### Soundflower (macOS users only)
 
@@ -312,13 +324,16 @@ or if you prefer it, you can just pass the `--update` argument to
 python mkchromecast.py --update
 ```
 
-If you are using the **macOS** application, [download the latest dmg
-here](https://github.com/muammar/mkchromecast/releases/latest), and replace the
-`mkchromecast.app` in your `/Applications/` directory.
+If you are using the **macOS** application:
 
-**Linux** users need to [download the latest deb
-here](https://github.com/muammar/mkchromecast/releases/), and `dpkg -i
-mkchromecast_$VERSION_all.deb`.
+1. Click on `Check For Updates`.
+2. If there are new versions, you will be prompted to [download the latest
+   dmg](https://github.com/muammar/mkchromecast/releases/latest).
+3. Replace the `mkchromecast.app` in your `/Applications/` directory.
+
+**Linux** users need to either perform a `apt-get upgrade` or [download the
+latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
+-i mkchromecast_$VERSION_all.deb`.
 
 Usage
 -----
@@ -444,7 +459,7 @@ The system tray has a window with a volume slider to do `volume up` and `volume 
 * `wav` + `96000Hz` sample rate.
 * `flac` + `96000Hz` sample rate.
 
-References: 
+References:
 * [#11](https://github.com/muammar/mkchromecast/issues/11).
 * [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
 
