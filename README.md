@@ -128,7 +128,7 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
-* Debian
+* Debian (.deb): [https://packages.debian.org/unstable/mkchromecast](https://packages.debian.org/unstable/mkchromecast).
 * Ubuntu
 
 **mkchromecast** is available in the [official Debian
