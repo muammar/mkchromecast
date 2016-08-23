@@ -3,34 +3,11 @@
 # This file is part of mkchromecast.
 
 from __future__ import print_function
-import pychromecast
-from mkchromecast.audiodevices import *
-from mkchromecast.node import *
-from mkchromecast.terminate import *
-import atexit
-
-print('Switching to soundflower')
-inputdev()
-outputdev()
-stream()
-
 import time
 import pychromecast
 
-pychromecast.get_chromecasts_as_dict().keys()
-
-cast = pychromecast.get_chromecast(friendly_name='Harman Kardon')
-cast.wait()
-print(cast.device)
-
-print(cast.status)
-
+cast = pychromecast.get_chromecast(friendly_name="CCA")
 mc = cast.media_controller
-mc.play_media('http://192.168.1.27:3000/stream.mp3', 'audio/mpeg')
-print(mc.status)
-
-print('Ctrl-c to kill the application')
-
-def terminateapp():
-    inputint()
-    outputint()
+mc.play_media('http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 'video/mp4')
+time.sleep(15)
+mc.stop()
