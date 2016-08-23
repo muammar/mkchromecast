@@ -56,7 +56,7 @@ class casting(object):
         import netifaces
         interfaces = netifaces.interfaces()
         for interface in interfaces:
-            if interface == 'lo':
+            if interface == 'lo' or interface == 'docker0':
                 continue
             iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
             if iface != None and iface[0]['addr'] != '127.0.0.1':
