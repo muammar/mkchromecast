@@ -32,20 +32,34 @@ http://stackoverflow.com/questions/12801192/client-closes-connection-when-stream
 I think that the command below is sending a file that is too big and the
 browser closes the connection.
 """
+
 command = [
     'ffmpeg',
     '-loglevel', 'panic',
-    '-f',
-    'x11grab',
-    '-r', '30',
-    '-s', '2560x1600',
-    '-i', ':0.0',
+    '-i', '/home/muammar/Videos/apocalyptica.mp4',
+    '-preset', 'ultrafast',
     '-f', 'mp4',
     '-movflags', 'frag_keyframe',
     'pipe:1'
  ]
 
 """
+Working commands
+command = [
+    'ffmpeg',
+    '-re',
+    '-loglevel', 'panic',
+    '-f',
+    'x11grab',
+    '-r', '30',
+    '-s', '2560x1600',
+    '-i', ':0.0',
+    '-preset', 'ultrafast',
+    '-f', 'mp4',
+    '-movflags', 'frag_keyframe',
+    'pipe:1'
+ ]
+
 command = [
     'youtube-dl',
     '-o',
@@ -95,7 +109,7 @@ def stream():
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host= '0.0.0.0')
+    app.run(host= '0.0.0.0', threaded = True)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):
