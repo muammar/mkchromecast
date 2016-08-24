@@ -31,6 +31,7 @@ appendtourl = 'stream'
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
 I think that the command below is sending a file that is too big and the
 browser closes the connection.
+"""
 command = [
     'ffmpeg',
     '-loglevel', 'panic',
@@ -39,21 +40,19 @@ command = [
     '-r', '30',
     '-s', '2560x1600',
     '-i', ':0.0',
-    '-vcodec', 'libx264',
-    '-preset', 'ultrafast',
-    '-crf', '0',
-    '-threads', '0',
-    '-f', 'h264',
-    '-pix_fmt', 'yuv420p',
-    'pipe:'
+    '-f', 'mp4',
+    '-movflags', 'frag_keyframe',
+    'pipe:1'
  ]
- """
+
+"""
 command = [
     'youtube-dl',
     '-o',
     '-',
     'https://www.youtube.com/watch?v=fb7K1dKNZKs'
     ]
+"""
 
 app = Flask(__name__)
 
