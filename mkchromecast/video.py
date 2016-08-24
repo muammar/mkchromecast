@@ -29,20 +29,28 @@ appendtourl = 'stream'
 
 command = [
     'ffmpeg',
-    '-loglevel', 'panic',
+    #'-loglevel', 'panic',
     '-f',
     'x11grab',
     '-r', '30',
     '-s', '2560x1600',
     '-i', ':0.0',
-    '-vcodec', 'libx264',
-    '-preset', 'ultrafast',
-    '-crf', '0',
-    '-threads', '0',
+    '-c:v', 'libx264',
+    '-crf', '22',
+    '-c:a', 'libfaac',
+    '-movflags', 'faststart',
+    #'-preset', 'ultrafast',
+    #'-threads', '0',
     '-f', 'h264',
-    '-pix_fmt', 'yuv420p',
     'pipe:'
     ]
+
+#command = [
+#    'youtube-dl',
+#    '-o',
+#    '-',
+#    'https://www.youtube.com/watch?v=fb7K1dKNZKs'
+#    ]
 
 app = Flask(__name__)
 
