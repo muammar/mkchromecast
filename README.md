@@ -514,7 +514,7 @@ TODO
 
 * Verify all exceptions when the system tray menu fails.
 * More eye candy.
-* Video?.
+* [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
 
 Contribute
 ----------
