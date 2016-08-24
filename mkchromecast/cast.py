@@ -35,7 +35,7 @@ class casting(object):
         self.backend = mkchromecast.__init__.backend
 
         if self.platform == 'Linux':
-            self.netifaces_ip()
+            self.getnetworkip()
             try:
                 self.ip = self.discovered_ip
             except AttributeError:
@@ -52,11 +52,22 @@ class casting(object):
                 except AttributeError:
                     self.ip = '127.0.0.1'
 
+    """
+    Methods to discover local IP
+    """
+    def getnetworkip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        s.connect(('<broadcast>', 0))
+        self.discovered_ip = s.getsockname()[0]
+        if self.debug == True:
+            print(':::cast::: sockets method', self.discovered_ip)
+
     def netifaces_ip(self):
         import netifaces
         interfaces = netifaces.interfaces()
         for interface in interfaces:
-            if interface == 'lo' or interface == 'docker0':
+            if interface == 'lo':
                 continue
             iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
             if iface != None and iface[0]['addr'] != '127.0.0.1':
@@ -65,6 +76,9 @@ class casting(object):
                     if self.debug == True:
                         print(':::cast::: netifaces method', self.discovered_ip)
 
+    """
+    Cast processes
+    """
     def initialize_cast(self):
         import mkchromecast.__init__            # This is to verify against some needed variables.
         from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
