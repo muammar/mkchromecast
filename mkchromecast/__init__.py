@@ -275,12 +275,21 @@ Show the version'''
 )
 
 parser.add_argument(
+'--video',
+action='store_true',
+default=False,
+help='''
+Video.
+'''
+)
+
+parser.add_argument(
 '--volume',
 action='store_true',
 default=False,
 help='''
-This option lets you control the volume of your Google Cast Devices. Use the
-'u' and 'd' keys to perform volume up and volume down actions respectively. Note
+this option lets you control the volume of your google cast devices. use the
+'u' and 'd' keys to perform volume up and volume down actions respectively. note
 that to kill the application using this option, you need to press the 'q' key.
 '''
 )
@@ -483,6 +492,12 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
+
+"""
+Video
+"""
+if args.video == True:
+    videoarg = args.video
 
 """
 Volume

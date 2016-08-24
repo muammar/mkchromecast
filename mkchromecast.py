@@ -27,7 +27,7 @@ if args.tray == False:
         print(colors.error('Your computer is not connected to any network'))
         terminate()
 
-    if args.youtube == None:
+    if args.youtube == None and args.video == False:
         if platform == 'Linux':
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
@@ -48,7 +48,13 @@ if args.tray == False:
         if args.encoder_backend in backends:
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
-    else: # When casting youtube url, we do it throught the ffmpeg module
+
+    if args.youtube == None and args.video == True:
+        print('video')
+        import mkchromecast.video
+        mkchromecast.video.main()
+
+    else: # When casting youtube url, we do it through the ffmpeg module
         import mkchromecast.ffmpeg
         mkchromecast.ffmpeg.main()
 
