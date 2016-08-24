@@ -49,12 +49,17 @@ if args.tray == False:
             import mkchromecast.ffmpeg
             mkchromecast.ffmpeg.main()
 
-    if args.youtube == None and args.video == True:
+    elif args.youtube == None and args.video == True:
         print('video')
         import mkchromecast.video
         mkchromecast.video.main()
 
-    else: # When casting youtube url, we do it through the ffmpeg module
+    elif args.youtube == True and args.video == True:
+        print('video')
+        import mkchromecast.video
+        mkchromecast.video.main()
+
+    else: # When casting audio from youtube url, we do it through the ffmpeg module
         import mkchromecast.ffmpeg
         mkchromecast.ffmpeg.main()
 

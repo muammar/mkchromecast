@@ -292,8 +292,12 @@ class casting(object):
                 self.backend = ConfigSectionMap('settings')['backend']
 
         if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
-            import mkchromecast.ffmpeg
-            mtype = mkchromecast.ffmpeg.mtype
+            if args.video == True:
+                import mkchromecast.video
+                mtype = mkchromecast.video.mtype
+            else:
+                import mkchromecast.ffmpeg
+                mtype = mkchromecast.ffmpeg.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)
