@@ -272,7 +272,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -294,7 +293,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -315,7 +313,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -339,7 +336,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -360,7 +356,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -387,7 +382,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -408,7 +402,7 @@ else:
     if  codec == 'wav':
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
-                backend, '-re',
+                backend,
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -438,7 +432,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -458,7 +451,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -484,7 +476,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
