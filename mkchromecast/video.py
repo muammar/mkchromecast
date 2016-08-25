@@ -26,6 +26,7 @@ from os import getpid
 mtype = 'video/mp4'
 chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
+platform = mkchromecast.__init__.platform
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
@@ -33,40 +34,60 @@ I think that the command below is sending a file that is too big and the
 browser closes the connection.
 """
 
-command = [
-    'ffmpeg',
-    '-loglevel', 'panic',
-    '-i', '/home/muammar/Videos/apocalyptica.mp4',
-    '-preset', 'ultrafast',
-    '-f', 'mp4',
-    '-movflags', 'frag_keyframe',
-    'pipe:1'
- ]
+#command = [
+#    'ffmpeg',
+#    '-re',
+#    '-loglevel', 'panic',
+#    '-i', '/home/muammar/Videos/apocalyptica.mp4',
+#    '-preset', 'ultrafast',
+#    '-f', 'mp4',
+#    '-movflags', 'frag_keyframe',
+#    'pipe:1'
+# ]
 
-"""
-Working commands
-command = [
-    'ffmpeg',
-    '-re',
-    '-loglevel', 'panic',
-    '-f',
-    'x11grab',
-    '-r', '30',
-    '-s', '2560x1600',
-    '-i', ':0.0',
-    '-preset', 'ultrafast',
-    '-f', 'mp4',
-    '-movflags', 'frag_keyframe',
-    'pipe:1'
- ]
+if platform == 'Linux':
+    command = [
+        'ffmpeg',
+        #'-re',
+        '-loglevel', 'panic',
+        '-f',
+        'x11grab',
+        '-r', '30',
+        '-s', '2560x1600',
+        '-i', ':0.0',
+        '-preset', 'ultrafast',
+        '-f', 'mp4',
+        '-movflags', 'frag_keyframe',
+        'pipe:1'
+     ]
+else:
+    command = [
+        'ffmpeg',
+        #'-re',
+        #'-loglevel', 'panic',
+        '-f',
+        'avfoundation',
+        '-r', '25',
+        #'-s', '2560x1600',
+        '-i', '1:0',
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-tune', 'zerolatency',
+        '-maxrate', '1200000k',
+        '-bufsize', '200000k',
+        '-threads', '4',
+        '-f', 'mp4',
+        '-movflags', 'frag_keyframe',
+        'pipe:1'
+     ]
 
-command = [
-    'youtube-dl',
-    '-o',
-    '-',
-    'https://www.youtube.com/watch?v=fb7K1dKNZKs'
-    ]
-"""
+#if args.youtube == True:
+#    command = [
+#        'youtube-dl',
+#        '-o',
+#        '-',
+#        'https://www.youtube.com/watch?v=fb7K1dKNZKs'
+#        ]
 
 app = Flask(__name__)
 
