@@ -5,6 +5,7 @@
     - Improvements for cases where there are virtual network interfaces
       present.
     - Dropped `-re` flag from ffmpeg and avconv commands.
+    - Renamed `ffmpeg.py` to `audio.py`.
 
 * mkchromecast (0.3.4) **released**: 2016/08/19
 

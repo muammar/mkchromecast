@@ -6,7 +6,7 @@ import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
-import mkchromecast.ffmpeg
+import mkchromecast.audio
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
@@ -76,11 +76,11 @@ class Player(QObject):
             stream()
         else:
             try:
-                reload(mkchromecast.ffmpeg)
+                reload(mkchromecast.audio)
             except NameError:
                 from imp import reload
-                reload(mkchromecast.ffmpeg)
-            mkchromecast.ffmpeg.main()
+                reload(mkchromecast.audio)
+            mkchromecast.audio.main()
         if platform == 'Linux':
             create_sink()
         start = casting()
