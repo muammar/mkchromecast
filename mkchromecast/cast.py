@@ -296,8 +296,8 @@ class casting(object):
                 import mkchromecast.video
                 mtype = mkchromecast.video.mtype
             else:
-                import mkchromecast.ffmpeg
-                mtype = mkchromecast.ffmpeg.mtype
+                import mkchromecast.audio
+                mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)

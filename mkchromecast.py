@@ -46,8 +46,8 @@ if args.tray == False:
             'parec'
             ]
         if args.encoder_backend in backends:
-            import mkchromecast.ffmpeg
-            mkchromecast.ffmpeg.main()
+            import mkchromecast.audio
+            mkchromecast.audio.main()
 
     elif args.youtube == None and args.video == True:
         print('video')
@@ -59,9 +59,9 @@ if args.tray == False:
         import mkchromecast.video
         mkchromecast.video.main()
 
-    else: # When casting audio from youtube url, we do it through the ffmpeg module
-        import mkchromecast.ffmpeg
-        mkchromecast.ffmpeg.main()
+    else: # When casting audio from youtube url, we do it through the audio module
+        import mkchromecast.audio
+        mkchromecast.audio.main()
 
     cc.initialize_cast()
 
