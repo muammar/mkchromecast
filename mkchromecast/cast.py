@@ -35,7 +35,7 @@ class casting(object):
         self.backend = mkchromecast.__init__.backend
 
         if self.platform == 'Linux':
-            self.netifaces_ip()
+            self.getnetworkip()
             try:
                 self.ip = self.discovered_ip
             except AttributeError:
@@ -52,6 +52,17 @@ class casting(object):
                 except AttributeError:
                     self.ip = '127.0.0.1'
 
+    """
+    Methods to discover local IP
+    """
+    def getnetworkip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        s.connect(('<broadcast>', 0))
+        self.discovered_ip = s.getsockname()[0]
+        if self.debug == True:
+            print(':::cast::: sockets method', self.discovered_ip)
+
     def netifaces_ip(self):
         import netifaces
         interfaces = netifaces.interfaces()
@@ -65,6 +76,9 @@ class casting(object):
                     if self.debug == True:
                         print(':::cast::: netifaces method', self.discovered_ip)
 
+    """
+    Cast processes
+    """
     def initialize_cast(self):
         import mkchromecast.__init__            # This is to verify against some needed variables.
         from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
@@ -278,8 +292,8 @@ class casting(object):
                 self.backend = ConfigSectionMap('settings')['backend']
 
         if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
-            import mkchromecast.ffmpeg
-            mtype = mkchromecast.ffmpeg.mtype
+            import mkchromecast.audio
+            mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)

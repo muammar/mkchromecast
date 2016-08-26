@@ -1,8 +1,17 @@
+* mkchromecast (0.3.5) **released**: 2016/08/26
+
+    - Added close button for preferences pane. Closes
+      [#13](https://github.com/muammar/mkchromecast/issues/13)
+    - Improvements for cases where there are virtual network interfaces
+      present.
+    - Dropped `-re` flag from ffmpeg and avconv commands.
+    - Renamed `ffmpeg.py` to `audio.py`.
+
 * mkchromecast (0.3.4) **released**: 2016/08/19
 
     - New white icons.
-    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends
-      Closes[#11](https://github.com/muammar/mkchromecast/issues/11).
+    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends.
+      Closes [#11](https://github.com/muammar/mkchromecast/issues/11).
     - Fixed 48000Hz sample rate case.
     - The node streaming has been updated to work with `node v6.4.0`.
 

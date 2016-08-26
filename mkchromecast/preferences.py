@@ -292,7 +292,7 @@ if tray == True:
                 self.setFixedSize(310*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
             else:
                 self.setFixedSize(282*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
-            self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
+            self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('Mkchromecast Preferences')
 
             """

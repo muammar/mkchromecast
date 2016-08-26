@@ -40,7 +40,7 @@ In this block we check variables from __init__.py
 tray = mkchromecast.__init__.tray
 chunk_size = mkchromecast.__init__.chunk_size
 if debug == True:
-    print(':::ffmpeg::: chunk_size: ', chunk_size)
+    print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
@@ -83,7 +83,7 @@ else:
         bitrate = ConfigSectionMap('settings')['bitrate']
         samplerate= ConfigSectionMap('settings')['samplerate']
         if debug == True:
-            print(':::ffmpeg::: tray ='+str(tray))
+            print(':::audio::: tray ='+str(tray))
             print(colors.warning('Configuration file exist'))
             print(colors.warning('Using defaults set there'))
             print(backend,codec,bitrate,samplerate)
@@ -117,8 +117,8 @@ else:
                 backends_dict[verifyif] = backend
                 backend = verifyif
                 if debug == True:
-                    print(':::ffmpeg::: Program '+str(backend)+' found in '+str(verifyif))
-                    print(':::ffmpeg::: backend dictionary '+str(backends_dict))
+                    print(':::audio::: Program '+str(backend)+' found in '+str(verifyif))
+                    print(':::audio::: backend dictionary '+str(backends_dict))
 
     if codec == 'mp3':
         appendmtype = 'mpeg'
@@ -272,7 +272,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -294,7 +293,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -315,7 +313,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -339,7 +336,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -360,7 +356,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -387,7 +382,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -408,7 +402,7 @@ else:
     if  codec == 'wav':
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
-                backend, '-re',
+                backend,
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -438,7 +432,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -458,7 +451,6 @@ else:
         if platform == 'Linux' and backends_dict[backend] != 'parec':
             command = [
                 backend,
-                '-re',
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
@@ -484,7 +476,6 @@ else:
         else:
             command = [
                 backend,
-                '-re',
                 '-f', 'avfoundation',
                 '-audio_device_index', '0',
                 '-i', '',
@@ -500,7 +491,7 @@ else:
 app = Flask(__name__)
 
 if debug == True:
-    print(':::ffmpeg::: command '+str(command))
+    print(':::audio::: command '+str(command))
 
 @app.route('/')
 def index():

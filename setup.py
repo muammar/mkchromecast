@@ -28,6 +28,9 @@ DATA_FILES = [
         'images/google_b.icns',
         'images/google_working_b.icns',
         'images/google_nodev_b.icns',
+        'images/google_w.icns',
+        'images/google_working_w.icns',
+        'images/google_nodev_w.icns',
         'bin/audiodevice',
         'nodejs',
         'notifier'

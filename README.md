@@ -13,7 +13,8 @@ It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
-playback](https://support.google.com/chromecast/answer/6329016?hl=en).
+playback](https://support.google.com/chromecast/answer/6329016?hl=en), and
+ [24-bit/96kHz high audio resolution](https://github.com/muammar/mkchromecast#high-quality-audio).
 Additionally, a system tray menu is available.
 
 By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
@@ -35,8 +36,8 @@ Tell me more about it
 To have an idea of using **mkchromecast** from console [check this gif](https://github.com/muammar/mkchromecast#usage).
 
 **mkchromecast** provides a **beta** system tray menu. It requires you to
-install `PyQt5`. For more information check the [Requirements](#Requirements)
-and [Install](#Install) sections.
+install `PyQt5`. For more information check the [Requirements](https://github.com/muammar/mkchromecast#requirements)
+and [Install](https://github.com/muammar/mkchromecast#install) sections.
 
 The system tray menu looks like:
 
@@ -127,8 +128,16 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
-* Debian
-* Ubuntu
+* Debian (.deb): [https://packages.debian.org/unstable/mkchromecast](https://packages.debian.org/unstable/mkchromecast).
+* Ubuntu (.deb): [https://launchpad.net/ubuntu/+source/mkchromecast](https://launchpad.net/ubuntu/+source/mkchromecast).
+
+**mkchromecast** is available in the [official Debian
+repositories](https://packages.debian.org/unstable/mkchromecast). To install
+it, just do:
+
+```
+apt-get install mkchromecast
+```
 
 Download the latest [deb package
 here](https://github.com/muammar/mkchromecast/releases/), and install it as
@@ -149,7 +158,8 @@ This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
 here](https://github.com/muammar/mkchromecast/issues).
 
-If you experience other problems related to dependecies, please [discuss it here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
+If you experience other problems related to dependencies, please [discuss it
+here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
 
 #### From sources
 
@@ -187,6 +197,9 @@ Example for Debian based distros:
 ```
 sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
 ```
+
+**Note**: if `python-pychromecast` is not available in your repository, please
+follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
 ##### Soundflower (macOS users only)
 
@@ -311,13 +324,16 @@ or if you prefer it, you can just pass the `--update` argument to
 python mkchromecast.py --update
 ```
 
-If you are using the **macOS** application, [download the latest dmg
-here](https://github.com/muammar/mkchromecast/releases/latest), and replace the
-`mkchromecast.app` in your `/Applications/` directory.
+If you are using the **macOS** application:
 
-**Linux** users need to [download the latest deb
-here](https://github.com/muammar/mkchromecast/releases/), and `dpkg -i
-mkchromecast_$VERSION_all.deb`.
+1. Click on `Check For Updates`.
+2. If there are new versions, you will be prompted to [download the latest
+   dmg](https://github.com/muammar/mkchromecast/releases/latest).
+3. Replace the `mkchromecast.app` in your `/Applications/` directory.
+
+**Linux** users need to either perform a `apt-get upgrade` or [download the
+latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
+-i mkchromecast_$VERSION_all.deb`.
 
 Usage
 -----
@@ -436,6 +452,27 @@ and `volume down` respectively.
 
 The system tray has a window with a volume slider to do `volume up` and `volume down`.
 
+#### High quality audio
+
+**mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This is the *maximum chromecast audio capability*. The supported codecs are: `wav` and `flac`. In spite of the fact that `aac` can use `96000Hz` sample rate, the bitrate corresponds to that of a lossy data compression format. Therefore, the following combinations can achieve this `24-bit/96kHz` capability:
+
+* `wav` + `96000Hz` sample rate.
+* `flac` + `96000Hz` sample rate.
+
+References:
+* [#11](https://github.com/muammar/mkchromecast/issues/11).
+* [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
+
+Killing the application
+-----------------------
+
+To kill **mkchromecast** when you run it from console, there are two ways of
+doing it: if you didn't use the `--volume` option, just press
+<kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
+<kbd>q</kbd> key to quit.
+
+When launching from system tray, use the `Quit` button in the system tray.
+
 More help
 ---------
 
@@ -451,16 +488,6 @@ or when installing the debian package:
 mkchromecast -h
 ```
 
-Killing the application
------------------------
-
-To kill **mkchromecast** when you run it from console, there are two ways of
-doing it: if you didn't use the `--volume` option, just press
-<kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
-<kbd>q</kbd> key to quit.
-
-When launching from system tray, use the `Quit` button in the system tray.
-
 Known issues
 ------------
 ##### General
@@ -473,10 +500,11 @@ No new issues reported.
 
 ##### Linux
 
-* The system tray is not working in Unity (see https://github.com/muammar/mkchromecast/issues/10).
+* The preferences pane does not have an option to be closed in Unity. See:
+  [#13](https://github.com/muammar/mkchromecast/issues/13).
 * When using `parec` and `lame` encoder, the delay between audio played and
-listened can be up to 8 seconds. I suggest you to use something different than
-mp3.
+  listened can be up to 8 seconds. I suggest you to use something different
+  than mp3.
 
 You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
 for more information.
@@ -486,7 +514,7 @@ TODO
 
 * Verify all exceptions when the system tray menu fails.
 * More eye candy.
-* Video?.
+* [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
 
 Contribute
 ----------
