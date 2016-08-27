@@ -1,3 +1,6 @@
+* mkchromecast (0.3.6) **unreleased**
+    -
+
 * mkchromecast (0.3.5) **released**: 2016/08/26
 
     - Added close button for preferences pane. Closes
