@@ -27,8 +27,7 @@ Depends: ${python:Depends},
          youtube-dl,
          pavucontrol,
          pulseaudio-utils
-Suggests: mkchromecast-doc,
-          libav-tools,
+Suggests: libav-tools,
           ffmpeg
 Description: Cast your Linux audio to your Google Cast devices
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.

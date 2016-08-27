@@ -6,7 +6,7 @@ Using this program
 1. Execute mkchromecast as a local user.
 2. After startup, the program will detect your google cast devices in your LAN
    and add a new sink called mkchromecast.
-3. In order to cast you have to install pavucontrol, and select the
+3. In order to cast you have to install pulseaudio, pavucontrol, and select the
    mkchromecast sink.
 4. If you stop mkchromecast, the audio will be sent to the default output
    device.
