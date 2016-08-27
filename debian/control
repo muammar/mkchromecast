@@ -26,7 +26,8 @@ Depends: ${python:Depends},
          python-pyqt5,
          youtube-dl,
          pavucontrol,
-         pulseaudio-utils
+         pulseaudio-utils,
+         pulseaudio
 Suggests: libav-tools,
           ffmpeg
 Description: Cast your Linux audio to your Google Cast devices
