@@ -202,6 +202,22 @@ If you have more than one Google Cast device use this option
 )
 
 parser.add_argument(
+'--sound-system',
+type=str,
+default='pulseaudio',
+help='''
+You pass this flag if you want to use ALSA sound system instead of pulseaudio
+sound server. By default, mkchromecast will use pulseaudio.
+
+Example:
+
+alsa:
+    python mkchromecast.py --sound-system alsa
+
+'''
+)
+
+parser.add_argument(
 '--sample-rate',
 type=int,
 default='44100',
