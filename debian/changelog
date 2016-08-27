@@ -1,11 +1,11 @@
-mkchromecast (0.3.5-2) UNRELEASED; urgency=medium
+mkchromecast (0.3.5-2) unstable; urgency=medium
 
   * Updated README.Debian file.
   * debian/control:
     - Added pavucontrol, pulseaudio-utils, and pulseaudio to the Depends field.
     - Removed mkchromecast-doc from the Suggests field.
 
- -- Muammar El Khatib <muammar@debian.org>  Sat, 27 Aug 2016 18:22:16 +0200
+ -- Muammar El Khatib <muammar@debian.org>  Sat, 27 Aug 2016 18:26:35 +0200
 
 mkchromecast (0.3.5-1) unstable; urgency=medium
 
