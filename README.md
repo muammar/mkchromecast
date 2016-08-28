@@ -80,7 +80,8 @@ following:
 #### Linux
 
 * Pulseaudio.
-* Python2, or Python3.
+* Pavucontrol.
+* Python2 (if using the official debian package), or Python3.
 * pychromecast.
 * psutil.
 * mutagen.
@@ -500,8 +501,6 @@ No new issues reported.
 
 ##### Linux
 
-* The preferences pane does not have an option to be closed in Unity. See:
-  [#13](https://github.com/muammar/mkchromecast/issues/13).
 * When using `parec` and `lame` encoder, the delay between audio played and
   listened can be up to 8 seconds. I suggest you to use something different
   than mp3.
