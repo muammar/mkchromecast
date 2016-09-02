@@ -1,0 +1,22 @@
+{
+  "esnext": true,
+  "validateQuoteMarks": "'",
+  "requireDotNotation": true,
+  "requireCurlyBraces": true,
+  "requireCommaBeforeLineBreak": true,
+  "requireOperatorBeforeLineBreak": true,
+  "disallowTrailingWhitespace": true,
+  "disallowMultipleLineStrings": true,
+  "disallowMixedSpacesAndTabs": true,
+  "disallowEmptyBlocks": true,
+
+  "requireCurlyBraces": [
+      "if",
+      "else",
+      "for",
+      "while",
+      "do",
+      "try",
+      "catch"
+  ]
+}

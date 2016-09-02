@@ -1,0 +1,35 @@
+; EditorConfig is awesome: http://EditorConfig.org
+
+; top-most EditorConfig file
+root = true
+
+; Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+
+; test files can have mized indent and there is no way to reset the value so we
+; only add to files/folders that need it
+[lib/**]
+indent_style = space
+indent_size = 2
+
+[bin/*]
+indent_style = space
+indent_size = 2
+
+[test/*.js]
+indent_style = space
+indent_size = 2
+
+[package.json]
+indent_style = space
+indent_size = 2
+
+; The test files can have mixed indent, tailing white space, etc...
+[test/compare/**]
+insert_final_newline = false
+trim_trailing_whitespace = false
+

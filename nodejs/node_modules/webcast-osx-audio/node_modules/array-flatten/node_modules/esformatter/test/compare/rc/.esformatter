@@ -1,0 +1,10 @@
+{
+  "indent": {
+    "value": "        "
+  },
+  "whiteSpace": {
+    "before": {
+      "FunctionDeclarationOpeningBrace" : 0
+    }
+  }
+}

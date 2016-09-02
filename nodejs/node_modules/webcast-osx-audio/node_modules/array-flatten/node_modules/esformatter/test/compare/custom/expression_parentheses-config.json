@@ -1,0 +1,10 @@
+{
+    "whiteSpace" : {
+        "before" : {
+            "ExpressionClosingParentheses" : 1
+        },
+        "after" : {
+            "ExpressionOpeningParentheses" : 1
+        }
+    }
+}

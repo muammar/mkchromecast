@@ -1,0 +1,22 @@
+--- test/file1.js	removed
++++ test/file2.js	added
+@@ -1,9 +1,8 @@
+ var foo = "bar";
+ 
+ // some comment
++function dolor(){ amet()
+-function dolor(){
+-  amet();
+ }
+ 
+ // no changes until line 19
+ var a = function() {
+@@ -15,7 +14,7 @@
+ thisWontShowOnDiff();
+ thisShouldBeFirstLineOfLine19Diff();
+ // yeap this will show too
+ 
++dolor (	a);
+-dolor(a);
+ amet();
+ // EOF

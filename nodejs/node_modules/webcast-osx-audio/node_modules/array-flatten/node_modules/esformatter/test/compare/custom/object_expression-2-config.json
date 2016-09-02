@@ -1,0 +1,19 @@
+{
+  "lineBreak": {
+    "before": {
+      "PropertyName": 0,
+      "PropertyValue": 1
+    },
+
+    "after": {
+      "PropertyName": 1,
+      "PropertyValue": 1
+    }
+  },
+
+  "whiteSpace": {
+    "before": {
+      "PropertyName": 1
+    }
+  }
+}

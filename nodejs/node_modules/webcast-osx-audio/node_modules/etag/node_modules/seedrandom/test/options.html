@@ -1,0 +1,189 @@
+<html>
+<head>
+<link rel="stylesheet" href="lib/qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="../seedrandom.min.js"></script>
+<script src="lib/qunit.js"></script>
+<script>
+module("Options API Test");
+
+test("Verify that we can use documented options", function() {
+ok(true, "Seeded random created with new:");
+
+var original = Math.random;
+
+ok(true, "Using Math.seedrandom('hello.')");
+var result = Math.seedrandom('hello.');
+var firstprng = Math.random;
+ok(original !== firstprng, "Should change Math.random.");
+equal(result, "hello.", "Should return short seed.");
+var r = Math.random();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+r = Math.random();
+ok(true, "Got " + r);
+equal(r, 0.3752569768646784, "Should be 'hello.'#2");
+
+ok(true, "Using Math.seedrandom()");
+result = Math.seedrandom();
+var secondprng = Math.random;
+ok(original !== secondprng, "Should change Math.random.");
+ok(firstprng !== secondprng, "Should change Math.random.");
+equal(result.length, 256, "Should return short seed.");
+r = Math.random();
+ok(true, "Got " + r);
+ok(r != 0.9282578795792454, "Should not be 'hello.'#1");
+ok(r != 0.7316977468919549, "Should not be 'hello.'#3");
+var autoseed1 = r;
+
+ok(true, "Using Math.seedrandom('added entropy.', { entropy:true })");
+result = Math.seedrandom('added entropy.', { entropy:true });
+equal(result.length, 256, "Should return short seed.");
+var thirdprng = Math.random;
+ok(thirdprng !== secondprng, "Should change Math.random.");
+r = Math.random();
+ok(true, "Got " + r);
+ok(r != 0.597067214994467, "Should not be 'added entropy.'#1");
+
+// Reset to original Math.random.
+Math.random = original;
+ok(true, "Using new Math.seedrandom('hello.')");
+var myrng = new Math.seedrandom('hello.');
+ok(original === Math.random, "Should not change Math.random.");
+ok(original !== myrng, "PRNG should not be Math.random.");
+r = myrng();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+
+// As if brought in by node.js
+var seedrandom = Math.seedrandom;
+
+ok(true, "Using seedrandom('hello.')");
+var rng = seedrandom('hello.');
+equal(typeof(rng), 'function', "Should return a function.");
+r = rng();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+ok(original === Math.random, "Should not change Math.random.");
+ok(original !== rng, "PRNG should not be Math.random.");
+
+// Global PRNG: set Math.random.
+ok(true, "Using seedrandom('hello.', { global: true })");
+result = seedrandom('hello.', { global: true });
+equal(result, 'hello.', "Should return short seed.");
+ok(original != Math.random, "Should change Math.random.");
+r = Math.random();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+
+// Autoseeded non-global
+Math.random = original;
+ok(true, "Using seedrandom()");
+result = seedrandom();
+equal(typeof(result), 'function', "Should return function.");
+ok(original === Math.random, "Should not change Math.random.");
+r = result();
+ok(true, "Got " + r);
+ok(r != autoseed1, "Should not repeat previous autoseed.");
+ok(r != 0.9282578795792454, "Should not be 'hello.'#1");
+ok(r != 0.7316977468919549, "Should not be 'hello.'#3");
+
+// Mixing accumulated entropy.
+ok(true, "Using seedrandom('added entropy.', { entropy: true })");
+rng = seedrandom('added entropy.', { entropy: true });
+r = result();
+ok(true, "Got " + r);
+ok(r != autoseed1, "Should not repeat previous autoseed.");
+ok(r != 0.597067214994467, "Should not be 'added entropy.'#1");
+
+// Legacy calling convention for mixing accumulated entropy.
+ok(true, "Using seedrandom('added entropy.', true)");
+rng = seedrandom('added entropy.', true);
+r = result();
+ok(true, "Got " + r);
+ok(r != autoseed1, "Should not repeat previous autoseed.");
+ok(r != 0.597067214994467, "Should not be 'added entropy.'#1");
+
+// The pass option
+ok(true, "Using Math.seedrandom(null, { pass: ...");
+var obj = Math.seedrandom(null, { pass: function(prng, seed) {
+  return { random: prng, seed: seed };
+}});
+ok(original === Math.random, "Should not change Math.random.");
+ok(original !== obj.random, "Should be different from Math.random.");
+equal(typeof(obj.random), 'function', "Should return a PRNG function.");
+equal(typeof(obj.seed), 'string', "Should return a seed.");
+var as2 = obj.random();
+ok(as2 != 0.9282578795792454, "Should not be 'hello.'#1");
+rng = seedrandom(obj.seed);
+var as3 = rng();
+equal(as2, as3, "Should be reproducible when using the seed.");
+
+// Exercise pass again, with explicit seed and global
+ok(true, "Using Math.seedrandom('hello.', { pass: ...");
+result = Math.seedrandom('hello.', {
+  global: 'abc',
+  pass: function(prng, seed, global) {
+    equal(typeof(prng), 'function', "Callback arg #1 ok");
+    equal(seed, 'hello.', "Callback arg #2 ok");
+    equal(global, 'abc', "Callback arg #3 passed through.");
+    equal(prng(), 0.9282578795792454, "Should be 'hello.'#1");
+    return 'def';
+}});
+equal(result, 'def', "Should return value from callback.");
+ok(original === Math.random, "Should not change Math.random.");
+
+// Legacy third argument callback argument:
+ok(true, "Using Math.seedrandom('hello.', { global: 50 }, callback)");
+result = Math.seedrandom('hello.', { global: 50 },
+  function(prng, seed, global) {
+    equal(typeof(prng), 'function', "Callback arg #1 ok");
+    equal(seed, 'hello.', "Callback arg #2 ok");
+    equal(global, 50, "Callback arg #3 ok");
+    equal(prng(), 0.9282578795792454, "Should be 'hello.'#1");
+    return 'zzz';
+});
+equal(result, 'zzz', "Should return value from callback.");
+ok(original === Math.random, "Should not change Math.random.");
+
+// Global: false.
+ok(true, "Using new Math.seedrandom('hello.', {global: false})");
+myrng = new Math.seedrandom('hello.', {global:false});
+equal(typeof(myrng), 'function', "Should return a PRNG funciton.");
+ok(original === Math.random, "Should not change Math.random.");
+ok(original !== myrng, "PRNG should not be Math.random.");
+r = myrng();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+
+// options = {} when a method of Math.
+ok(true, "Using Math.seedrandom('hello.', {})");
+var result = Math.seedrandom('hello.');
+var xprng = Math.random;
+ok(original !== xprng, "Should change Math.random.");
+equal(result, "hello.", "Should return short seed.");
+var r = Math.random();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+r = Math.random();
+ok(true, "Got " + r);
+equal(r, 0.3752569768646784, "Should be 'hello.'#2");
+Math.random = original;
+
+// options = {} when not a method of Math
+ok(true, "Using seedrandom('hello.', {})");
+rng = seedrandom('hello.', {});
+equal(typeof(rng), 'function', "Should return a function.");
+r = rng();
+ok(true, "Got " + r);
+equal(r, 0.9282578795792454, "Should be 'hello.'#1");
+ok(original === Math.random, "Should not change Math.random.");
+ok(original !== rng, "PRNG should not be Math.random.");
+
+});
+</script>
+</body>
+</html>

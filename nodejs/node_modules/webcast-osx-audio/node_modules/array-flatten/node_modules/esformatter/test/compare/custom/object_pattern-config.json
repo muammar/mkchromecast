@@ -1,0 +1,19 @@
+{
+  "lineBreak": {
+    "before": {
+      "ObjectPatternClosingBrace": 1
+    },
+    "after": {
+      "ObjectPatternOpeningBrace": 1,
+      "ObjectPatternComma": 1
+    }
+  },
+  "whiteSpace": {
+    "before": {
+      "ObjectPatternComma": 1
+    },
+    "after": {
+      "ObjectPatternComma": 1
+    }
+  }
+}

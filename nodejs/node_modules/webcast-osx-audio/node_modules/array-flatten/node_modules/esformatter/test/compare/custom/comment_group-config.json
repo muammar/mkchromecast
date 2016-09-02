@@ -1,0 +1,10 @@
+{
+  "lineBreak": {
+    "before": {
+      "CommentGroup": 2
+    },
+    "after": {
+      "CommentGroup": 2
+    }
+  }
+}

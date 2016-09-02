@@ -1,0 +1,8 @@
+{
+  "indent": {
+    // yes, you can set negative values. "0" is the real noop.
+    "ObjectExpression": -1,
+    "ArrayExpression": -2,
+    "IfStatement": 0
+  }
+}

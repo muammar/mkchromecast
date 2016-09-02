@@ -1,0 +1,46 @@
+{
+	"Array": [
+		"length"
+	],
+	"ArrayBuffer": [],
+	"Boolean": [],
+	"DataView": [],
+	"Date": [],
+	"Error": [
+		"stack"
+	],
+	"Float32Array": [],
+	"Float64Array": [],
+	"Function": [
+		"arguments",
+		"caller",
+		"length",
+		"name",
+		"prototype"
+	],
+	"Int16Array": [],
+	"Int32Array": [],
+	"Int8Array": [],
+	"Map": [],
+	"Number": [],
+	"Object": [],
+	"Promise": [],
+	"RegExp": [
+		"global",
+		"ignoreCase",
+		"lastIndex",
+		"multiline",
+		"source"
+	],
+	"Set": [],
+	"String": [
+		"length"
+	],
+	"Symbol": [],
+	"Uint16Array": [],
+	"Uint32Array": [],
+	"Uint8Array": [],
+	"Uint8ClampedArray": [],
+	"WeakMap": [],
+	"WeakSet": []
+}
