@@ -172,24 +172,39 @@ else:
 
             if codec in codecs_sr and int(samplerate) > 22000 and int(samplerate) <= 27050:
                 samplerate = '22050'
-                msg.samplerate_info(codec)
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
 
             if codec in codecs_sr and int(samplerate) > 27050 and int(samplerate) <= 32000:
                 samplerate = '32000'
-                msg.samplerate_info(codec)
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 32000 and int(samplerate) <= 36000:
                 samplerate = '32000'
-                msg.samplerate_info(codec)
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 36000 and int(samplerate) <= 43000:
                 samplerate = '44100'
-                msg.samplerate_info(codec)
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
                 print(colors.warning('Sample rate has been set to default!'))
 
             elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
                 samplerate = '48000'
-                msg.samplerate_info(codec)
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 72000:
                 if codec in no96k:
