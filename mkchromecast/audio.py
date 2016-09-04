@@ -10,6 +10,7 @@ import mkchromecast.__init__
 from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
+import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 import psutil
 import pickle
@@ -135,34 +136,23 @@ else:
     if backend != 'node':
         if bitrate == '192':
             bitrate = bitrate+'k'
-            print(colors.options('Default bitrate used:')+' '+ bitrate)
+            msg.bitrate_default(bitrate)
         elif bitrate == 'None':
-            print(colors.warning('The '+codec+' codec does not require the bitrate argument.'))
+            msg.no_bitrate(codec)
         else:
             if codec == 'mp3' and int(bitrate) > 320:
-                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(320)+'k.'))
-                print(colors.warning('You may try lossless audio coding formats.'))
                 bitrate = '320'
-                print(colors.warning('Bitrate has been set to maximum!'))
+                msg.maxbitrate(codec, bitrate)
 
-            if codec == 'ogg' and int(bitrate) > 500:
-                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-                print(colors.warning('You may try lossless audio coding formats.'))
+            if codec == 'ogg' or codec == 'aac' and int(bitrate) > 500:
                 bitrate = '500'
-                print(colors.warning('Bitrate has been set to maximum!'))
-
-            if codec == 'aac' and int(bitrate) > 500:
-                print(colors.warning('Maximum bitrate supported by '+codec+' is: '+str(500)+'k.'))
-                print(colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
-                print(colors.warning('You may try lossless audio coding formats.'))
-                bitrate = '500'
-                print(colors.warning('Bitrate has been set to maximum!'))
+                msg.maxbitrate(codec, bitrate)
 
             bitrate = bitrate+'k'
             print(colors.options('Selected bitrate:')+' '+ bitrate)
 
         if samplerate == '44100':
-            print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+            msg.samplerate_default(samplerate)
         else:
             codecs_sr = [
                 'mp3',
@@ -172,83 +162,42 @@ else:
                 'flac'
                 ]
 
-            '''
+            """
             The codecs below do not support 96000Hz
-            '''
+            """
             no96k = [
                 'mp3',
                 'ogg'
                 ]
 
             if codec in codecs_sr and int(samplerate) > 22000 and int(samplerate) <= 27050:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
                 samplerate = '22050'
+                msg.samplerate_info(codec)
 
             if codec in codecs_sr and int(samplerate) > 27050 and int(samplerate) <= 32000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
                 samplerate = '32000'
+                msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 32000 and int(samplerate) <= 36000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
                 samplerate = '32000'
+                msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 36000 and int(samplerate) <= 43000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
                 samplerate = '44100'
+                msg.samplerate_info(codec)
                 print(colors.warning('Sample rate has been set to default!'))
 
             elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
-                print(colors.warning('Sample rates supported by '+codec+' are: '
-                    +str(22050)+'Hz, '
-                    +str(32000)+'Hz, '
-                    +str(44100)+'Hz, '
-                    +str(48000)+'Hz or '
-                    +str(96000)+'Hz')
-                    )
                 samplerate = '48000'
+                msg.samplerate_info(codec)
 
             elif codec in codecs_sr and int(samplerate) > 72000:
                 if codec in no96k:
-                    print(colors.warning('sample rates supported by '+codec+' are: '
-                        +str(22050)+'hz, '
-                        +str(32000)+'hz, '
-                        +str(44100)+'hz or, '
-                        +str(48000)+'hz')
-                        )
                     samplerate = '48000'
+                    msg.samplerate_no96(codec)
                 else:
-                    print(colors.warning('sample rates supported by '+codec+' are: '
-                        +str(22050)+'hz, '
-                        +str(32000)+'hz, '
-                        +str(44100)+'hz, '
-                        +str(48000)+'hz or '
-                        +str(96000)+'hz')
-                        )
                     samplerate = '96000'
+                    msg.samplerate_info(codec)
 
                 print(colors.warning('Sample rate has been set to maximum!'))
 
