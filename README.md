@@ -467,8 +467,7 @@ References:
 Killing the application
 -----------------------
 
-To kill **mkchromecast** when you run it from console, there are two ways of
-doing it: if you didn't use the `--volume` option, just press
+To kill **mkchromecast** when you run it from console, just press
 <kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit.
 
 When launching from system tray, use the `Quit` button in the system tray.
