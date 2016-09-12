@@ -109,7 +109,7 @@ if args.tray == False:
             print('')
             print(colors.options('Volume up:')+' u')
             print(colors.options('Volume down:')+' d')
-            print(colors.options('Quit the application:')+' q')
+            print(colors.options('Quit the application:')+' q or Ctrl-C')
             print('')
             return
         controls_msg()
@@ -130,6 +130,8 @@ if args.tray == False:
                 elif(key == 'q'):
                     print(colors.error('Quitting application...'))
                     terminateapp()
+                elif(key == '\x03'):
+                    raise KeyboardInterrupt
         except KeyboardInterrupt:
             terminateapp()
 

@@ -1,0 +1,10 @@
+{
+  "whiteSpace" : {
+    "before" : {
+      "ForStatementExpressionClosing" : 1
+    },
+    "after" : {
+      "ForStatementExpressionOpening" : 1
+    }
+  }
+}

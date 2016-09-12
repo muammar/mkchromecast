@@ -1,0 +1,18 @@
+{
+   "{$}/import.less": {
+      "imports": [
+        {
+          "path": "{$}/import-header.less",
+          "mtime": null
+        },
+        {
+          "path": "{$}/import-widget.less",
+          "mtime": null
+        },
+        {
+          "path": "{$}/import-color.less",
+          "mtime": null
+        }
+      ]
+   }
+}

@@ -1,0 +1,7 @@
+{
+	"lineBreak" : {
+		"before" : {
+			"VariableDeclarationWithoutInit" : 0
+		}
+	}
+}

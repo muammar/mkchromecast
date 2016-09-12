@@ -1,0 +1,7 @@
+docs/
+test/
+coverage.html
+lib-cov
+.travis.yml
+Makefile
+*.swp

@@ -1,0 +1,15 @@
+{
+    "indent": {
+      "ConditionalExpression": 0
+    },
+    "whiteSpace" : {
+        "before" : {
+            "ConditionalExpressionConsequent" : 0,
+            "ConditionalExpressionAlternate" : 0
+        },
+        "after" : {
+            "ConditionalExpressionConsequent" : 0,
+            "ConditionalExpressionTest" : 1
+        }
+    }
+}

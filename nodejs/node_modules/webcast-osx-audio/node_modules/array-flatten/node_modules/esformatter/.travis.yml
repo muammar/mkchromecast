@@ -1,0 +1,16 @@
+ language: node_js
+ node_js:
+   - "0.12"
+ script:
+   - "npm test --coverage"
+   - "npm run-script lint"
+ branches:
+  only:
+  - master
+ notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#esformatter"
+    on_success: change
+    use_notice: true
+    skip_join: true

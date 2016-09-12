@@ -1,0 +1,25 @@
+{
+    "indent" : {
+        "SwitchStatement" : 0,
+        "SwitchCase": 1
+    },
+    "whiteSpace" : {
+        "before" : {
+            "SwitchDiscriminantClosing" : 1
+        },
+        "after" : {
+            "SwitchDiscriminantOpening" : 1
+        }
+    },
+    "lineBreak": {
+        "before": {
+            "SwitchOpeningBrace": 1,
+            "SwitchClosingBrace": 1
+        },
+        "after": {
+            "BreakKeyword": 2,
+            "SwitchOpeningBrace": 1,
+            "SwitchClosingBrace": ">= 0"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "whiteSpace": {
+    "before": {
+      "ModuleSpecifierClosingBrace": 3
+    },
+    "after": {
+      "ModuleSpecifierOpeningBrace": 3
+    }
+  }
+}

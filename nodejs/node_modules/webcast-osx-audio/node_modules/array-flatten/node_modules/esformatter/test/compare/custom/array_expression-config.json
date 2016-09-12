@@ -1,0 +1,26 @@
+{
+    "whiteSpace" : {
+        "before" : {
+            "ArrayExpressionOpening" : 0,
+            "ArrayExpressionClosing" : 1,
+            "ArrayExpressionComma" : 1
+        },
+        "after" : {
+            "ArrayExpressionOpening" : 1,
+            "ArrayExpressionClosing" : 0,
+            "ArrayExpressionComma" : 0
+        }
+    },
+    "lineBreak" : {
+        "before" : {
+            "ArrayExpressionOpening" : -1,
+            "ArrayExpressionClosing" : -1,
+            "ArrayExpressionComma" : -1
+        },
+        "after" : {
+            "ArrayExpressionOpening" : -1,
+            "ArrayExpressionClosing" : -1,
+            "ArrayExpressionComma" : -1
+        }
+    }
+}

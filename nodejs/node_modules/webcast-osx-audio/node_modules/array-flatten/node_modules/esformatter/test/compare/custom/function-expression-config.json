@@ -1,0 +1,21 @@
+{
+    "lineBreak" : {
+        "after": {
+            "ParameterComma": 0
+        }
+    },
+    "whiteSpace" : {
+        "before" : {
+            "FunctionName" : 1,
+            "FunctionExpressionOpeningBrace" : 1,
+            "FunctionExpressionClosingBrace" : 1,
+            "FunctionGeneratorAsterisk" : 1
+        },
+        "after" : {
+            "FunctionReservedWord": 1,
+            "FunctionName" : 1,
+            "FunctionExpressionOpeningBrace" : 1,
+            "FunctionExpressionClosingBrace" : 1
+        }
+    }
+}
