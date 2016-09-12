@@ -130,7 +130,7 @@ here](https://github.com/muammar/mkchromecast/issues).
 ##### Linux
 
 * Debian (.deb): [https://packages.debian.org/mkchromecast](https://packages.debian.org/mkchromecast).
-* Ubuntu (.deb): [https://launchpad.net/ubuntu/+source/mkchromecast](https://launchpad.net/ubuntu/+source/mkchromecast).
+* Ubuntu (.deb): [http://packages.ubuntu.com/search?keywords=mkchromecast](http://packages.ubuntu.com/search?keywords=mkchromecast).
 
 **mkchromecast** is available in the [official Debian
 repositories](https://packages.debian.org/mkchromecast). To install
