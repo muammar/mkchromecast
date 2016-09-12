@@ -1,0 +1,6 @@
+*.py[ocw]
+*~
+MANIFEST
+build/
+dist/
+yamlish.egg-info/

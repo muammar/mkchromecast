@@ -1,0 +1,7 @@
+{
+  "indent": {
+    "value": "    ",
+    "SingleVariableDeclaration": 1,
+    "MultipleVariableDeclaration": 0
+  }
+}

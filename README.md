@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-6.4.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-6.5.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -80,7 +80,8 @@ following:
 #### Linux
 
 * Pulseaudio.
-* Python2, or Python3.
+* Pavucontrol.
+* Python2 (if using the official debian package), or Python3.
 * pychromecast.
 * psutil.
 * mutagen.
@@ -128,11 +129,11 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
-* Debian (.deb): [https://packages.debian.org/unstable/mkchromecast](https://packages.debian.org/unstable/mkchromecast).
-* Ubuntu (.deb): [https://launchpad.net/ubuntu/+source/mkchromecast](https://launchpad.net/ubuntu/+source/mkchromecast).
+* Debian (.deb): [https://packages.debian.org/mkchromecast](https://packages.debian.org/mkchromecast).
+* Ubuntu (.deb): [http://packages.ubuntu.com/search?keywords=mkchromecast](http://packages.ubuntu.com/search?keywords=mkchromecast).
 
 **mkchromecast** is available in the [official Debian
-repositories](https://packages.debian.org/unstable/mkchromecast). To install
+repositories](https://packages.debian.org/mkchromecast). To install
 it, just do:
 
 ```
@@ -466,10 +467,8 @@ References:
 Killing the application
 -----------------------
 
-To kill **mkchromecast** when you run it from console, there are two ways of
-doing it: if you didn't use the `--volume` option, just press
-<kbd>Ctrl-C</kbd>. Otherwise, you will need to press the
-<kbd>q</kbd> key to quit.
+To kill **mkchromecast** when you run it from console, just press
+<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit.
 
 When launching from system tray, use the `Quit` button in the system tray.
 
@@ -500,8 +499,6 @@ No new issues reported.
 
 ##### Linux
 
-* The preferences pane does not have an option to be closed in Unity. See:
-  [#13](https://github.com/muammar/mkchromecast/issues/13).
 * When using `parec` and `lame` encoder, the delay between audio played and
   listened can be up to 8 seconds. I suggest you to use something different
   than mp3.

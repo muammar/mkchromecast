@@ -1,0 +1,8 @@
+{
+  "indent": {
+    // using the PascalCase format to ensure we support old format
+    // this will be deprecated during v1.0!!! favor "alignComments"
+    // instead
+    "AlignComments": false
+  }
+}

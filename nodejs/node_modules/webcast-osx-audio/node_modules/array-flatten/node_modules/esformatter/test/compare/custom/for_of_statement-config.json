@@ -1,0 +1,15 @@
+{
+    "lineBreak" : {
+        "before" : {
+            "ForOfStatementOpeningBrace" : 1
+        }
+    },
+    "whiteSpace" : {
+        "before" : {
+            "ForOfStatementExpressionClosing" : 1
+        },
+        "after" : {
+            "ForOfStatementExpressionOpening" : 1
+        }
+    }
+}

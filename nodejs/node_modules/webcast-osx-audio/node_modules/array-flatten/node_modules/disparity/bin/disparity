@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+var cli = require('../disparity-cli');
+var args = cli.parse(process.argv.slice(2));
+var code = cli.run(args, process.stdout, process.stderr);
+process.exit(code);

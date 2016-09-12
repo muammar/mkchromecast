@@ -1,0 +1,6 @@
+{
+  "indent": {
+    "FunctionDeclaration": 8,
+    "MultipleVariableDeclaration": 2
+  }
+}

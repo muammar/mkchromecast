@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "esformatter-pipe-test",
+  "version": "1.0.0",
+  "description": "used to test esformatter pipe option",
+  "author": "Miller Medeiros",
+  "bin": {
+    "esformatter-pipe-test-1": "./bin/esformatter-pipe-test-1",
+    "esformatter-pipe-test-2": "./bin/esformatter-pipe-test-2"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "stdin": "0.0.1"
+  }
+}
