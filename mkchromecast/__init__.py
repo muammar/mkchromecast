@@ -150,6 +150,7 @@ Possible backends:
     - parec (default in Linux)
     - ffmpeg
     - avconv
+    - gstreamer (for ALSA users)
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
@@ -198,21 +199,6 @@ parser.add_argument(
 action='store_true',
 help='''
 If you have more than one Google Cast device use this option
-'''
-)
-
-parser.add_argument(
-'--sound-server',
-type=str,
-default='pulseaudio',
-help='''
-You pass this flag if you don't want to use pulseaudio sound server.
-
-Example:
-
-Gstreamer:
-    python mkchromecast.py --sound-system gstreamer
-
 '''
 )
 
@@ -408,9 +394,10 @@ if platform == 'Darwin':
 else:
     backends.remove('node')
     backends.append('parec')
+    backends.append('gstreamer')
 
 if args.debug == True:
-    print('backends: ',backends)
+    print('backends: ', backends)
 
 if args.encoder_backend not in backends and args.encoder_backend != None:
     print(colors.error('Supported backends are: '))

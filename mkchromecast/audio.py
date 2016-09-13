@@ -233,7 +233,7 @@ else:
     """
     if  codec == 'mp3':
 
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -253,6 +253,20 @@ else:
                 '-b', bitrate[:-1],
                 '-r',
                 '-'
+                ]
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '-v', 'alsasrc', 'device="hw:0,0"',
+                '!',
+                'audioconvert',
+                '!',
+                'lamemp3enc',
+                'target=1',
+                'bitrate=64',
+                'cbr=true',
+                '!',
+                'filesink', 'location=/dev/stdout'
                 ]
         else:
             command = [

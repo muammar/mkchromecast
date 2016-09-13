@@ -28,7 +28,7 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        if platform == 'Linux':
+        if platform == 'Linux' and args.encoder_backend != 'gstreamer':
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
             create_sink()
@@ -43,7 +43,8 @@ if args.tray == False:
         backends = [
             'ffmpeg',
             'avconv',
-            'parec'
+            'parec',
+            'gstreamer'
             ]
         if args.encoder_backend in backends:
             import mkchromecast.audio

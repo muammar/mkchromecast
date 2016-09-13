@@ -181,7 +181,7 @@ class casting(object):
             if self.debug == True:
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
-            if self.platform == 'Linux':
+            if self.platform == 'Linux' and self.backend != 'gstreamer':
                 from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
             else:
