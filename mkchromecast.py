@@ -121,6 +121,7 @@ if args.tray == False:
                     terminateapp()
                 elif(key == '\x03'):
                     raise KeyboardInterrupt
+                    atexit.register(terminateapp)
         except KeyboardInterrupt:
             terminateapp()
 
