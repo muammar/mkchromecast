@@ -105,16 +105,19 @@ if tray == True:
                 'node',
                 'ffmpeg',
                 'avconv',
-                'parec'
+                'parec',
+                'gstreamer'
                 ]
             self.backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'avconv':
+                    if is_installed(item) == True and item != 'avconv' and item !='gstreamer':
                         self.backends.append(item)
             else:
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'node':
+                    if is_installed(item) == True and item != 'node' and item != 'gstreamer':
+                        self.backends.append(item)
+                    elif is_installed('gst-launch-1.0') == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
@@ -446,7 +449,6 @@ if tray == True:
             """This method writes to configfile"""
             with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
