@@ -291,7 +291,7 @@ class casting(object):
                 config.read(configf)
                 self.backend = ConfigSectionMap('settings')['backend']
 
-        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
+        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer':
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
