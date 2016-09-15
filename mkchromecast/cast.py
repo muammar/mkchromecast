@@ -33,6 +33,7 @@ class casting(object):
         self.select_cc = mkchromecast.__init__.select_cc
         self.debug = mkchromecast.__init__.debug
         self.backend = mkchromecast.__init__.backend
+        self.adevice = mkchromecast.__init__.adevice
 
         if self.platform == 'Linux':
             self.getnetworkip()
@@ -181,10 +182,10 @@ class casting(object):
             if self.debug == True:
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
-            if self.platform == 'Linux':
+            if self.platform == 'Linux' and self.adevice == None:
                 from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
-            else:
+            elif self.platform == 'Darwin':
                 inputint()
                 outputint()
             terminate()

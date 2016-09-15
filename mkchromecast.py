@@ -14,6 +14,7 @@ import atexit
 import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
+adevice = mkchromecast.__init__.adevice
 
 print(colors.bold('mkchromecast ')+'v'+__version__)
 
@@ -28,7 +29,7 @@ if args.tray == False:
         terminate()
 
     if args.youtube == None:
-        if platform == 'Linux':
+        if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
             create_sink()
@@ -78,7 +79,7 @@ if args.tray == False:
         if platform == 'Darwin':
             inputint()
             outputint()
-        else:
+        elif platform == 'Linux' and adevice == None:
             remove_sink()
         terminate()
         return

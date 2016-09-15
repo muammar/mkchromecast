@@ -39,6 +39,7 @@ backends_dict = {}
 In this block we check variables from __init__.py
 """
 tray = mkchromecast.__init__.tray
+adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
@@ -228,6 +229,12 @@ else:
         command.insert(2, 'panic')
         return
 
+    def modalsa():
+        command[command.index('pulse')] = 'alsa'
+        command[command.index('mkchromecast.monitor')] = adevice
+        print (command)
+        return
+
     """
     MP3 192k
     """
@@ -247,6 +254,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'lame',
@@ -288,6 +297,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'oggenc',
@@ -332,6 +343,8 @@ else:
                 '-cutoff', '18000',
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'faac',
@@ -377,6 +390,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'sox',
@@ -425,6 +440,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'flac',

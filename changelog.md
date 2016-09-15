@@ -4,6 +4,7 @@
     - `Ctrl-C` now raises `KeyboardInterrupt` when using `--volume` option from
       console.
     - Improvements under the hood.
+    - Now mkchromecast does not need pulseaudio to cast!.
 
 * mkchromecast (0.3.5) **released**: 2016/08/26
 
