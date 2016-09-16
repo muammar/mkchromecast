@@ -27,17 +27,21 @@ degrade the sound quality. For more information visit the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
 For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
-information here](https://github.com/muammar/mkchromecast/wiki/Linux)).  Note
-that sometimes the lag between playing a song and hearing may be up to
-8 seconds for certain backends.
+information here](https://github.com/muammar/mkchromecast/wiki/Linux)), or use
+pure [ALSA to capture
+audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
+the lag between playing a song and hearing may be up to 8 seconds for certain
+backends.
 
 Tell me more about it
 ----------------------
-To have an idea of using **mkchromecast** from console [check this gif](https://github.com/muammar/mkchromecast#usage).
+To have an idea of using **mkchromecast** from console [check this
+gif](https://github.com/muammar/mkchromecast#usage).
 
 **mkchromecast** provides a **beta** system tray menu. It requires you to
-install `PyQt5`. For more information check the [Requirements](https://github.com/muammar/mkchromecast#requirements)
-and [Install](https://github.com/muammar/mkchromecast#install) sections.
+install `PyQt5`. For more information check the
+[Requirements](https://github.com/muammar/mkchromecast#requirements) and
+[Install](https://github.com/muammar/mkchromecast#install) sections.
 
 The system tray menu looks like:
 
@@ -95,6 +99,10 @@ following:
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (option if you plan to cast youtube URLs).
+
+For those who don't like Pulseaudio, it is possible to [cast using
+ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA) together with the
+`ffmpeg` backend.
 
 Install
 -------

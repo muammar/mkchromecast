@@ -60,7 +60,8 @@ Example:
     python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
 This option only works for the ffmpeg and avconv backends. It is not useful for
-pulseaudio users.
+pulseaudio users. For more information please read the README.Debian file shipped
+in the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
 '''
 )
 
@@ -260,6 +261,10 @@ default=None,
 help=
 '''
 This option allows you to pass any stream to your Google Cast device.
+
+Example:
+
+    python mkchromecast.py --stream-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
 '''
 )
 
@@ -389,7 +394,6 @@ if args.version is True:
 Update
 """
 if args.update is True:
-
     print(colors.warning('Updating mkchromecast'))
     print(colors.important('git pull --all'))
     pull = subprocess.Popen(
