@@ -1,7 +1,0 @@
-#!/usr/bin/env node
-
-var stdin = require('stdin');
-
-stdin(function(source) {
-  process.stdout.write(source + '\n// ---- esformatter-pipe-test-1 ---\n');
-});

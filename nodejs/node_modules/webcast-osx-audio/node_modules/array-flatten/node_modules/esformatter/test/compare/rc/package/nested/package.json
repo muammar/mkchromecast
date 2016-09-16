@@ -1,9 +1,0 @@
-{
-  "esformatter": {
-    "lineBreak": {
-      "before": {
-        "FunctionDeclarationClosingBrace" : 0
-      }
-    }
-  }
-}

@@ -1,6 +1,0 @@
-__*
-coverage/
-/node_modules/
-
-# the inplace test only removes the generated file if it's executed
-test/compare/default/inplace-in.js.copy

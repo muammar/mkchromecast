@@ -1,3 +1,0 @@
-classic doc dot dump json jsonstream
-landing list markdown min nyan progress
-silent spec tap xunit
