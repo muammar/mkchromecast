@@ -324,8 +324,6 @@ platform = platform.system()
 """
 Assignment of args to variables
 """
-adevice = args.alsa_device
-print(adevice)
 tray = args.tray
 if tray == True:
     select_cc = True
@@ -337,6 +335,10 @@ if args.notifications == True:
     notifications = 'enabled'
 else:
     notifications = 'disabled'
+
+adevice = args.alsa_device
+if debug == True:
+    print('alsa device:', adevice)
 
 """
 Reset
