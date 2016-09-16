@@ -254,6 +254,16 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 )
 
 parser.add_argument(
+'--stream-url',
+type=str,
+default=None,
+help=
+'''
+This option allows you to pass any stream to your Google Cast device.
+'''
+)
+
+parser.add_argument(
 '-t',
 '--tray',
 action='store_true',
@@ -304,7 +314,7 @@ parser.add_argument(
 type=str,
 default=None,
 help='''
-Stream from Youtube URL. This option only works for Google Casts in TV.
+Stream from Youtube URL. This option needs youtube-dl.
 
 Example:
     python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
@@ -339,6 +349,8 @@ else:
 adevice = args.alsa_device
 if debug == True:
     print('alsa device:', adevice)
+
+streamurl = args.stream_url
 
 """
 Reset

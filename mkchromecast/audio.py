@@ -44,6 +44,7 @@ chunk_size = mkchromecast.__init__.chunk_size
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
+streamurl = mkchromecast.__init__.streamurl
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -131,8 +132,9 @@ else:
 
     mtype = 'audio/'+appendmtype
 
-    print(colors.options('Selected backend:')+' '+ backend)
-    print(colors.options('Selected audio codec:')+' '+ codec)
+    if streamurl == None:
+        print(colors.options('Selected backend:')+' '+ backend)
+        print(colors.options('Selected audio codec:')+' '+ codec)
 
     if backend != 'node':
         if bitrate == '192':
@@ -150,7 +152,8 @@ else:
                 msg.maxbitrate(codec, bitrate)
 
             bitrate = bitrate+'k'
-            print(colors.options('Selected bitrate:')+' '+ bitrate)
+            if streamurl == None:
+                print(colors.options('Selected bitrate:')+' '+ bitrate)
 
         if samplerate == '44100':
             msg.samplerate_default(samplerate)
@@ -198,7 +201,8 @@ else:
                     msg.samplerate_no96(codec)
                 else:
                     msg.samplerate_info(codec)
-                print(colors.warning('Sample rate has been set to default!'))
+                if streamurl == None:
+                    print(colors.warning('Sample rate has been set to default!'))
 
             elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
                 samplerate = '48000'
@@ -215,9 +219,11 @@ else:
                     samplerate = '96000'
                     msg.samplerate_info(codec)
 
-                print(colors.warning('Sample rate has been set to maximum!'))
+                if streamurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
 
-            print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+            if streamurl == None:
+                print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
     """
     We verify platform and other options

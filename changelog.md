@@ -5,6 +5,7 @@
       console.
     - Improvements under the hood.
     - Now mkchromecast does not need pulseaudio to cast!.
+    - You can play from pipe/stream using the `--stream-url` flag.
 
 * mkchromecast (0.3.5) **released**: 2016/08/26
 

@@ -28,7 +28,7 @@ if args.tray == False:
         print(colors.error('Your computer is not connected to any network'))
         terminate()
 
-    if args.youtube == None:
+    if args.youtube == None and args.stream_url == None:
         if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
@@ -46,10 +46,10 @@ if args.tray == False:
             'avconv',
             'parec'
             ]
-        if args.encoder_backend in backends:
+        if args.encoder_backend in backends and args.stream_url == None:
             import mkchromecast.audio
             mkchromecast.audio.main()
-    else: # When casting youtube url, we do it throught the audio module
+    elif args.youtube == True: # When casting youtube url, we do it throught the audio module
         import mkchromecast.audio
         mkchromecast.audio.main()
 
