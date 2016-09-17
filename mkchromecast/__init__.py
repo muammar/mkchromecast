@@ -186,6 +186,8 @@ network device available.
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
+
+You can pass it to all available backends.
 '''
 )
 
@@ -297,7 +299,7 @@ Supported source URLs are:
     - http://url:port/name.mp3
     - http://url:port/name.ogg
     - http://url:port/name.mp4 (use the aac codec)
-    - http://url:port/name.wav.
+    - http://url:port/name.wav
     - http://url:port/name.flac
 
 .m3u or .pls are not yet available.
