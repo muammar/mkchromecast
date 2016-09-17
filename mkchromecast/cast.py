@@ -309,7 +309,7 @@ class casting(object):
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
-            print(colors.options('Casting URL:')+' '+self.streamurl)
+            print(colors.options('Casting from stream URL:')+' '+self.streamurl)
             print(colors.options('Using media type:')+' '+mtype)
             ncast.play_media(self.streamurl, mtype)
         else:

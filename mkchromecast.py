@@ -40,7 +40,7 @@ if args.tray == False:
         print(colors.important('Starting local streaming server'))
         print(colors.success('[Done]'))
 
-        if args.encoder_backend == 'node' and platform == 'Darwin':
+        if args.encoder_backend == 'node' and platform == 'Darwin' and args.stream_url == None:
             from mkchromecast.node import *
             stream()
 
@@ -62,7 +62,7 @@ if args.tray == False:
         cc.sel_cc()
         cc.inp_cc()
         cc.get_cc()
-        if platform == 'Darwin':
+        if platform == 'Darwin' and args.stream_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -70,7 +70,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and args.youtube == None:
+        if platform == 'Darwin' and args.youtube == None and args.stream_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()

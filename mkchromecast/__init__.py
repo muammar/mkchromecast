@@ -20,9 +20,9 @@ This is a program to cast your macOS audio, or Linux audio to your Google Cast
 devices.
 
 It is written in Python, and it can stream via node.js, ffmpeg, parec (Linux
-only), or avconv (Linux only). mkchromecast is capable of using lossy and
-lossless audio formats provided that ffmpeg, avconv or parec is installed.
-Additionally, a system tray menu is available.
+pulseaudio users), avconv (Linux only) or ALSA (Linux users). mkchromecast is
+capable of using lossy and lossless audio formats provided that ffmpeg, avconv
+or parec is installed.  Additionally, a system tray menu is available.
 
 Linux users that have installed the debian package need to launch the command
 `mkchromecast`, e.g.:
@@ -59,9 +59,10 @@ ALSA in your system.
 Example:
     python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
-This option only works for the ffmpeg and avconv backends. It is not useful for
-pulseaudio users. For more information please read the README.Debian file shipped
-in the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
+It only works for the ffmpeg and avconv backends, and it is not useful for
+pulseaudio users. For more information please read the README.Debian file
+shipped in the Debian package or
+https://github.com/muammar/mkchromecast/wiki/ALSA.
 '''
 )
 
@@ -181,7 +182,7 @@ help=
 '''
 Set the ip of the local host. This option is useful if the local ip of your
 computer is not being detected correctly, or in the case you have more than one
-network connection.
+network device available.
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
@@ -238,10 +239,11 @@ type=int,
 default='44100',
 help='''
 Set the sample rate. The default sample rate obtained from avfoundation audio
-device input in ffmpeg using soundflower is 44100Hz. You can change this in the
-Audio MIDI Setup in the "Soundflower (2ch)" audio device. You need to change
-the "Format" in both input/output from 44100Hz to maximum 96000Hz. I think that
-more than 48000Hz is not necessary, but this is up to the users' preferences.
+device input in ffmpeg using soundflower for macOS is 44100Hz (in Linux can be
+44100Hz or 48000Hz). You can change this in the Audio MIDI Setup in the
+"Soundflower (2ch)" audio device. You need to change the "Format" in both
+input/output from 44100Hz to maximum 96000Hz.  I think that more than 48000Hz
+is not necessary, but this is up to the users' preferences.
 
 Note that re-sampling to higher sample rates is not a good idea. It was indeed
 an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
@@ -276,11 +278,29 @@ type=str,
 default=None,
 help=
 '''
-This option allows you to pass any stream to your Google Cast device.
+This option allows you to pass any stream URL to your Google Cast device. You
+have to specify the code with -c flag when using it.
 
 Example:
 
+URL, port and extension:
     python mkchromecast.py --stream-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+
+URL, no port, and extension:
+    python mkchromecast.py --stream-url http://example.com/stream.ogg -c ogg --volume
+
+URL stream without extension:
+    python mkchromecast.py --stream-url http://example.com/stream -c aac --volume
+
+Supported stream URLs are:
+
+    - http://url:port/name.mp3
+    - http://url:port/name.ogg
+    - http://url:port/name.mp4 (use the aac codec)
+    - http://url:port/name.wav.
+    - http://url:port/name.flac
+
+.m3u or .pls are not yet available.
 '''
 )
 
@@ -322,10 +342,9 @@ parser.add_argument(
 action='store_true',
 default=False,
 help='''
-This option lets you control the volume of your Google Cast Devices. Use the
-'u' and 'd' keys to perform volume up and volume down actions respectively. Note
-that to kill the application using this option, you need to press the 'q' key
-or 'Ctrl-c'.
+Control the volume of your Google Cast Devices. Use the 'u' and 'd' keys to
+perform volume up and volume down actions respectively. Note that to kill the
+application using this option, you need to press the 'q' key or 'Ctrl-c'.
 '''
 )
 
@@ -474,12 +493,14 @@ codecs = [
     'flac'
     ]
 
-if backend == 'node' and args.codec != 'mp3':
+if backend == 'node' and args.codec != 'mp3' and streamurl == None:
     rcodec = args.codec
     codec = 'mp3'
-elif backend == 'node' and args.codec == 'mp3':
+elif backend == 'node' and args.codec == 'mp3' and streamurl == None:
     rcodec = args.codec
     codec = 'mp3'
+elif streamurl != None:
+    codec = args.codec
 else:
     rcodec = None
     if backend != 'node' and args.codec in codecs:
