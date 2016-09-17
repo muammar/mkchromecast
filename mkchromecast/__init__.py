@@ -273,26 +273,26 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 )
 
 parser.add_argument(
-'--stream-url',
+'--source-url',
 type=str,
 default=None,
 help=
 '''
-This option allows you to pass any stream URL to your Google Cast device. You
+This option allows you to pass any source URL to your Google Cast device. You
 have to specify the code with -c flag when using it.
 
 Example:
 
-URL, port and extension:
-    python mkchromecast.py --stream-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+Source URL, port and extension:
+    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
 
-URL, no port, and extension:
-    python mkchromecast.py --stream-url http://example.com/stream.ogg -c ogg --volume
+Source URL, no port, and extension:
+    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --volume
 
-URL stream without extension:
-    python mkchromecast.py --stream-url http://example.com/stream -c aac --volume
+Source URL without extension:
+    python mkchromecast.py --source-url http://example.com/name -c aac --volume
 
-Supported stream URLs are:
+Supported source URLs are:
 
     - http://url:port/name.mp3
     - http://url:port/name.ogg
@@ -392,7 +392,7 @@ if debug == True:
 
 discover = args.discover
 host = args.host
-streamurl = args.stream_url
+sourceurl = args.source_url
 
 """
 Reset
@@ -493,13 +493,13 @@ codecs = [
     'flac'
     ]
 
-if backend == 'node' and args.codec != 'mp3' and streamurl == None:
+if backend == 'node' and args.codec != 'mp3' and sourceurl == None:
     rcodec = args.codec
     codec = 'mp3'
-elif backend == 'node' and args.codec == 'mp3' and streamurl == None:
+elif backend == 'node' and args.codec == 'mp3' and sourceurl == None:
     rcodec = args.codec
     codec = 'mp3'
-elif streamurl != None:
+elif sourceurl != None:
     codec = args.codec
 else:
     rcodec = None

@@ -31,7 +31,7 @@ if args.tray == False:
         cc.initialize_cast()
         terminate()
 
-    if args.youtube == None and args.stream_url == None:
+    if args.youtube == None and args.source_url == None:
         if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
@@ -40,7 +40,7 @@ if args.tray == False:
         print(colors.important('Starting local streaming server'))
         print(colors.success('[Done]'))
 
-        if args.encoder_backend == 'node' and platform == 'Darwin' and args.stream_url == None:
+        if args.encoder_backend == 'node' and platform == 'Darwin' and args.source_url == None:
             from mkchromecast.node import *
             stream()
 
@@ -49,7 +49,7 @@ if args.tray == False:
             'avconv',
             'parec'
             ]
-        if args.encoder_backend in backends and args.stream_url == None:
+        if args.encoder_backend in backends and args.source_url == None:
             import mkchromecast.audio
             mkchromecast.audio.main()
     elif args.youtube == True: # When casting youtube url, we do it throught the audio module
@@ -62,7 +62,7 @@ if args.tray == False:
         cc.sel_cc()
         cc.inp_cc()
         cc.get_cc()
-        if platform == 'Darwin' and args.stream_url == None:
+        if platform == 'Darwin' and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -70,7 +70,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and args.youtube == None and args.stream_url == None:
+        if platform == 'Darwin' and args.youtube == None and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()

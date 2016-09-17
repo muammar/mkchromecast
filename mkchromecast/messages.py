@@ -4,26 +4,26 @@
 import mkchromecast.__init__
 import mkchromecast.colors as colors
 
-streamurl = mkchromecast.__init__.streamurl
+sourceurl = mkchromecast.__init__.sourceurl
 
 """
 Bitrate messages
 """
 def bitrate_default(bitrate):
     """Printing default bitrate message"""
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.options('Default bitrate used:')+' '+ bitrate)
     return
 
 def no_bitrate(codec):
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.warning('The '+codec+' codec does not require the bitrate argument.'))
     return
 
 def maxbitrate(codec, bitrate):
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.warning('Maximum bitrate supported by '+codec+' is: '+bitrate+'k.'))
-    if codec == 'aac' and streamurl == None:
+    if codec == 'aac' and sourceurl == None:
         print(colors.warning('At about 128-256k is already considered as "transparent" for '+codec+'.'))
         print(colors.warning('You may try lossless audio coding formats.'))
         print(colors.warning('Bitrate has been set to maximum!'))
@@ -34,13 +34,13 @@ Sample rate messages
 """
 def samplerate_default(samplerate):
     """Printing default sample rate message"""
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
     return
 
 def samplerate_info(codec):
     """This prints warning when sample rates are set incorrectly"""
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.warning('Sample rates supported by '+codec+' are: '
             +str(22050)+'Hz, '
             +str(32000)+'Hz, '
@@ -52,7 +52,7 @@ def samplerate_info(codec):
 
 def samplerate_no96(codec):
     """This prints warning when sample rates are set incorrectly and no 96k"""
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.warning('sample rates supported by '+codec+' are: '
             +str(22050)+'hz, '
             +str(32000)+'hz, '

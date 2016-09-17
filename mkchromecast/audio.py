@@ -44,7 +44,7 @@ chunk_size = mkchromecast.__init__.chunk_size
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
-streamurl = mkchromecast.__init__.streamurl
+sourceurl = mkchromecast.__init__.sourceurl
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -132,7 +132,7 @@ else:
 
     mtype = 'audio/'+appendmtype
 
-    if streamurl == None:
+    if sourceurl == None:
         print(colors.options('Selected backend:')+' '+ backend)
         print(colors.options('Selected audio codec:')+' '+ codec)
 
@@ -152,7 +152,7 @@ else:
                 msg.maxbitrate(codec, bitrate)
 
             bitrate = bitrate+'k'
-            if streamurl == None:
+            if sourceurl == None:
                 print(colors.options('Selected bitrate:')+' '+ bitrate)
 
         if samplerate == '44100':
@@ -201,7 +201,7 @@ else:
                     msg.samplerate_no96(codec)
                 else:
                     msg.samplerate_info(codec)
-                if streamurl == None:
+                if sourceurl == None:
                     print(colors.warning('Sample rate has been set to default!'))
 
             elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
@@ -219,10 +219,10 @@ else:
                     samplerate = '96000'
                     msg.samplerate_info(codec)
 
-                if streamurl == None:
+                if sourceurl == None:
                     print(colors.warning('Sample rate has been set to maximum!'))
 
-            if streamurl == None:
+            if sourceurl == None:
                 print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
     """

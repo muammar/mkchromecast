@@ -34,7 +34,7 @@ class casting(object):
         self.debug = mkchromecast.__init__.debug
         self.backend = mkchromecast.__init__.backend
         self.adevice = mkchromecast.__init__.adevice
-        self.streamurl = mkchromecast.__init__.streamurl
+        self.sourceurl = mkchromecast.__init__.sourceurl
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
 
@@ -299,19 +299,19 @@ class casting(object):
                 config.read(configf)
                 self.backend = ConfigSectionMap('settings')['backend']
 
-        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' and self.streamurl == None:
+        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' and self.sourceurl == None:
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)
-        elif self.streamurl != None:
+        elif self.sourceurl != None:
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
-            print(colors.options('Casting from stream URL:')+' '+self.streamurl)
+            print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
-            ncast.play_media(self.streamurl, mtype)
+            ncast.play_media(self.sourceurl, mtype)
         else:
             print(' ')
             print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
