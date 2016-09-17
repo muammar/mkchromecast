@@ -7,6 +7,7 @@
     - Now mkchromecast does not need pulseaudio to cast!.
     - You can play from pipe/stream using the `--stream-url` flag.
     - `-d` option has been enable to discover available Google cast devices.
+    - `--host` flag allows users to manually enter the local ip. Closes #17.
 
 * mkchromecast (0.3.5) **released**: 2016/08/26
 

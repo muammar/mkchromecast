@@ -36,24 +36,28 @@ class casting(object):
         self.adevice = mkchromecast.__init__.adevice
         self.streamurl = mkchromecast.__init__.streamurl
         self.discover = mkchromecast.__init__.discover
+        self.host = mkchromecast.__init__.host
 
-        if self.platform == 'Linux':
-            self.getnetworkip()
-            try:
-                self.ip = self.discovered_ip
-            except AttributeError:
-                self.ip = '127.0.0.1'
-        else:
-            try:
-                self.ip = socket.gethostbyname(socket.gethostname())
-                if self.debug == True:
-                    print(':::cast::: sockets method', self.ip)
-            except socket.gaierror:
-                self.netifaces_ip()
+        if self.host == None:
+            if self.platform == 'Linux':
+                self.getnetworkip()
                 try:
                     self.ip = self.discovered_ip
                 except AttributeError:
                     self.ip = '127.0.0.1'
+            else:
+                try:
+                    self.ip = socket.gethostbyname(socket.gethostname())
+                    if self.debug == True:
+                        print(':::cast::: sockets method', self.ip)
+                except socket.gaierror:
+                    self.netifaces_ip()
+                    try:
+                        self.ip = self.discovered_ip
+                    except AttributeError:
+                        self.ip = '127.0.0.1'
+        else:
+            self.ip = self.host
 
     """
     Methods to discover local IP
@@ -254,12 +258,12 @@ class casting(object):
         if self.debug == True:
             print('def play_cast(self):')
         localip = self.ip
-        #if platform == 'Darwin':
-        #   self.host = socket.gethostbyname(self.castto+'.local')
-        self.host = self.cast.host
 
-        print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
-        print(colors.options('Your local IP is:')+' '+localip)
+        print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.cast.host)
+        if self.host == None:
+            print(colors.options('Your local IP is:')+' '+localip)
+        else:
+            print(colors.options('Your manually entered local IP is:')+' '+localip)
 
         """
         if self.youtubeurl != None:
@@ -344,8 +348,8 @@ class casting(object):
 
     def reboot(self):
         if self.platform == 'Darwin':
-            self.host = socket.gethostbyname(self.castto+'.local')
-            reboot(self.host)
+            self.cast.host = socket.gethostbyname(self.castto+'.local')
+            reboot(self.cast.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
 

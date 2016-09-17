@@ -174,6 +174,21 @@ Example:
 )
 
 parser.add_argument(
+'--host',
+type=str,
+default=None,
+help=
+'''
+Set the ip of the local host. This option is useful if the local ip of your
+computer is not being detected correctly, or in the case you have more than one
+network connection.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
+'''
+)
+
+parser.add_argument(
 '-n',
 '--name',
 action='store_true',
@@ -357,6 +372,7 @@ if debug == True:
     print('alsa device:', adevice)
 
 discover = args.discover
+host = args.host
 streamurl = args.stream_url
 
 """
