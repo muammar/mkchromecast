@@ -127,7 +127,7 @@ if args.tray == False:
             terminateapp()
 
     else:
-        if platform == 'Linux':
+        if platform == 'Linux' and adevice == None:
             print(colors.warning('Remember to open pavucontrol and select the mkchromecast sink.'))
         print('')
         print(colors.error('Ctrl-C to kill the application at any time'))
