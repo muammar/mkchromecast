@@ -149,6 +149,7 @@ parser.add_argument(
 '-d',
 '--discover',
 action='store_true',
+default=False,
 help='''
 Use this option if you want to know the friendly name of a Google Cast device.
 '''
@@ -355,6 +356,7 @@ adevice = args.alsa_device
 if debug == True:
     print('alsa device:', adevice)
 
+discover = args.discover
 streamurl = args.stream_url
 
 """
@@ -379,7 +381,7 @@ if args.reboot == True:
 """
 Not yet implemented
 """
-if args.config == True or args.discover == True or args.name == True:
+if args.config == True or args.name == True:
     print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 

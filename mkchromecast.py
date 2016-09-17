@@ -27,6 +27,9 @@ if args.tray == False:
     if cc.ip == '127.0.0.1':        # We verify the local IP.
         print(colors.error('Your computer is not connected to any network'))
         terminate()
+    elif cc.ip != '127.0.0.1' and args.discover == True:
+        cc.initialize_cast()
+        terminate()
 
     if args.youtube == None and args.stream_url == None:
         if platform == 'Linux' and adevice == None:

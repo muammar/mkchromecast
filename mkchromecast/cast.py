@@ -35,6 +35,7 @@ class casting(object):
         self.backend = mkchromecast.__init__.backend
         self.adevice = mkchromecast.__init__.adevice
         self.streamurl = mkchromecast.__init__.streamurl
+        self.discover = mkchromecast.__init__.discover
 
         if self.platform == 'Linux':
             self.getnetworkip()
@@ -114,11 +115,12 @@ class casting(object):
                 except UnicodeEncodeError:
                     print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
             print(' ')
-            print(colors.important('We will cast to first device in the list above!'))
-            print(' ')
-            self.castto = self.cclist[0]
-            print(colors.success(self.castto))
-            print(' ')
+            if self.discover == False:
+                print(colors.important('We will cast to first device in the list above!'))
+                print(' ')
+                self.castto = self.cclist[0]
+                print(colors.success(self.castto))
+                print(' ')
 
         elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:
             if self.debug == True:
