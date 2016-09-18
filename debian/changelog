@@ -7,6 +7,9 @@ mkchromecast (0.3.6-1) UNRELEASED; urgency=medium
     - Removed pavucontrol, pulseaudio-utils, and pulseaudio from
       mkchromecast's Depends field.
     - Improved descriptions.
+  * Fails to "Open pavucontrol and select the mkchromecast sink." bug has been
+    fixed (Closes: #835608).
+  * mkchromecast can cast without Pulseaudio.
 
  -- Muammar El Khatib <muammar@debian.org>  Sun, 18 Sep 2016 14:23:29 +0200
 
