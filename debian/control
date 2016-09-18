@@ -54,9 +54,9 @@ Depends: ${python:Depends},
          pulseaudio-utils,
          pulseaudio
 Description: Pulseaudio dependencies to cast with mkchromecast
- This package contains an informational list of packages which are considered
- essential for using mkchromecast together with pulseaudio sound server. This
- package also depends on the packages on that list.
+ This dependency package contains an informational list of packages which are
+ considered essential for using mkchromecast together with pulseaudio sound
+ server. This package also depends on the packages on that list.
 
 Package: mkchromecast-alsa
 Architecture: all
@@ -67,9 +67,9 @@ Depends: ${python:Depends},
          alsa-base,
          ffmpeg
 Description: ALSA dependencies to cast with mkchromecast
- This package contains an informational list of packages which are considered
- essential for using mkchromecast together with ALSA. This package also depends
- on the packages on that list.
+ This dependency package contains an informational list of packages which are
+ considered essential for using mkchromecast together with ALSA. This package
+ also depends on the packages on that list.
  .
  Information about needed configurations are contained in the README.Debian
  file shipped in this package.
