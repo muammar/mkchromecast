@@ -26,9 +26,10 @@ degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
-For **Linux**, you can optionally install `ffmpeg` (or `avconv`) ([more
-information here](https://github.com/muammar/mkchromecast/wiki/Linux)), or use
-pure [ALSA to capture
+You can optionally install `ffmpeg` or `avconv` (only supported in **Linux**)
+([more information
+here](https://github.com/muammar/mkchromecast#using-the-ffmpeg-backend-with-mkchromecast-installed-from-sources)).
+**Linux** users can configure [ALSA to capture
 audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
 the lag between playing a song and hearing may be up to 8 seconds for certain
 backends.
@@ -43,7 +44,7 @@ install `PyQt5`. For more information check the
 [Requirements](https://github.com/muammar/mkchromecast#requirements) and
 [Install](https://github.com/muammar/mkchromecast#install) sections.
 
-The system tray menu looks like:
+This is what the system tray menu looks like:
 
 ##### macOS
 
@@ -101,8 +102,27 @@ following:
 * youtube-dl (option if you plan to cast youtube URLs).
 
 For those who don't like Pulseaudio, it is possible to [cast using
-ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA) together with the
-`ffmpeg` backend.
+ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA). In that case the
+requirements are:
+
+* alsa-base
+* alsa-utils
+* alsa-utils
+* Python2 (if using the official debian package), or Python3.
+* pychromecast.
+* psutil.
+* mutagen.
+* flask.
+* vorbis-tools.
+* sox.
+* lame.
+* flac.
+* faac.
+* ffmpeg.
+* avconv (optional).
+* PyQt5 (optional if you want to use the system tray menu).
+* youtube-dl (option if you plan to cast youtube URLs).
+
 
 Install
 -------
@@ -169,6 +189,19 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 If you experience other problems related to dependencies, please [discuss it
 here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
+
+Additionally, there are two dependency packages for pulling pulseaudio or ALSA
+dependencies:
+
+```
+apt-get install mkchromecast-alsa (ALSA users)
+```
+
+or
+
+```
+apt-get install mkchromecast-pulseaudio (Pulseaudio users)
+```
 
 #### From sources
 
@@ -368,9 +401,18 @@ check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
-**Note**: the cast process is independent from the selection of the pulseaudio sink. This means that **mkchromecast** will tell the cast device to listen your computer but no sound will be heard until you select the sink.
+**Note**: the cast process is independent from the selection of the pulseaudio
+sink. This means that **mkchromecast** will tell the cast device to listen your
+computer but no sound will be heard until you select the sink.
 
 ##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
+
+Set the host ip manually, useful option when having more than one active
+network connection or when the automatically ip detection fails:
+
+```
+python mkchromecast.py --host 192.168.1.1
+```
 
 Below an example using `mp3`:
 
@@ -389,6 +431,7 @@ change the bitrate and sample rate:
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
+
 
 check the section [Soundflower (macOS users
 only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
@@ -433,7 +476,7 @@ The system tray application can perform all the actions from the aforementioned
 commands. To get an idea, please check the [Youtube video
 here](https://github.com/muammar/mkchromecast#macos).
 
-#### Playing Youtube URLs in Google Cast TV
+#### Playing Youtube URLs in Google Cast devices
 
 You can play Youtube URLs headlessly from the command line:
 
@@ -446,6 +489,30 @@ done with homebrew: `brew install youtube-dl`. In Debian based distros:
 `apt-get install youtube-dl`.
 
 **Note**: you may need to enclose the URL between quotation marks.
+
+#### Playing source URLs in Google Cast devices
+
+You can play any source URLs headlessly from the command line:
+
+```
+python mkchromecast.py --source-url SOURCE_URL
+```
+
+This option is useful for:
+
+1. Casting using MPD in the case you have already a `http` streaming source.
+2. Cast a radio station. A list of stations to try: https://ponyvillefm.com/servers
+
+Example:
+
+```
+python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+
+```
+
+As it can be seen above, the codec has to be specified with the `-c` flag.
+
+**Note**: `.m3u` or `.pls` are not yet supported.
 
 #### Controlling the Google Cast's volume
 
@@ -463,7 +530,11 @@ The system tray has a window with a volume slider to do `volume up` and `volume 
 
 #### High quality audio
 
-**mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This is the *maximum chromecast audio capability*. The supported codecs are: `wav` and `flac`. In spite of the fact that `aac` can use `96000Hz` sample rate, the bitrate corresponds to that of a lossy data compression format. Therefore, the following combinations can achieve this `24-bit/96kHz` capability:
+**mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This
+is the *maximum chromecast audio capability*. The supported codecs are: `wav`
+and `flac`. In spite of the fact that `aac` can use `96000Hz` sample rate, the
+bitrate corresponds to that of a lossy data compression format. Therefore, the
+following combinations can achieve this `24-bit/96kHz` capability:
 
 * `wav` + `96000Hz` sample rate.
 * `flac` + `96000Hz` sample rate.

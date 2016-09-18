@@ -281,7 +281,7 @@ default=None,
 help=
 '''
 This option allows you to pass any source URL to your Google Cast device. You
-have to specify the code with -c flag when using it.
+have to specify the codec with -c flag when using it.
 
 Example:
 
