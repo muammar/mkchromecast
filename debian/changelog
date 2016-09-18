@@ -1,3 +1,15 @@
+mkchromecast (0.3.6-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+    - Added new mkchromecast-alsa, and mkchromecast-pulseaudio dependency
+      packages.
+    - Removed pavucontrol, pulseaudio-utils, and pulseaudio from
+      mkchromecast's Depends field.
+    - Improved descriptions.
+
+ -- Muammar El Khatib <muammar@debian.org>  Sun, 18 Sep 2016 14:23:29 +0200
+
 mkchromecast (0.3.5-2) unstable; urgency=medium
 
   * Updated README.Debian file.

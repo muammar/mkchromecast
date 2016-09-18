@@ -42,9 +42,10 @@ Description: Cast your Linux audio to your Google Cast devices
  It is useful to modify these parameters when your wireless router is not very
  powerful, or in the case you don't want to degrade the sound quality.
  .
- mkchromecast can cast using pulseaudio or ALSA. The mkchromecast-pulseaudio
- and mkchromecast-alsa packages pull the respective dependencies. For more
- information, please read the README.Debian file shipped in this package.
+ mkchromecast can cast using either pulseaudio or ALSA. The respective
+ dependencies can be pulled by mkchromecast-pulseaudio and mkchromecast-alsa
+ dependency packages respectively. For more information, please read the
+ README.Debian file shipped in this package.
 
 Package: mkchromecast-pulseaudio
 Architecture: all
@@ -68,8 +69,8 @@ Depends: ${python:Depends},
          ffmpeg
 Description: ALSA dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
- considered essential for using mkchromecast together with ALSA. This package
- also depends on the packages on that list.
+ considered essential for using mkchromecast together with ALSA software
+ framework. This package also depends on the packages on that list.
  .
  Information about needed configurations are contained in the README.Debian
  file shipped in this package.
