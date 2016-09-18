@@ -26,10 +26,10 @@ degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
-You can optionally install `ffmpeg` or `avconv` (only supported in **Linux**)
-([more information
+You can optionally install `ffmpeg` or `avconv` (the latter only supported in **Linux**,
+[more information
 here](https://github.com/muammar/mkchromecast#using-the-ffmpeg-backend-with-mkchromecast-installed-from-sources)).
-**Linux** users can configure [ALSA to capture
+**Linux** users also can configure [ALSA to capture
 audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
 the lag between playing a song and hearing may be up to 8 seconds for certain
 backends.
@@ -187,7 +187,7 @@ This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
 here](https://github.com/muammar/mkchromecast/issues).
 
-If you experience other problems related to dependencies, please [discuss it
+If you experience other problems related to dependencies, please [discuss them
 here](https://github.com/muammar/mkchromecast/issues/9) or open a new issue.
 
 Additionally, there are two dependency packages for pulling pulseaudio or ALSA
@@ -216,7 +216,7 @@ here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 ##### Python
 
-To install the python requirements use the `requirements.txt` file shipped in
+To install python requirements use the `requirements.txt` file shipped in
 this repository:
 
 ```
@@ -225,7 +225,7 @@ pip install -r requirements.txt
 
 **Note**: if this step fails, maybe you need to run the installation with
 `sudo` as shown below. However, before installing using this method verify why
-a regular user cannot install the requirements.
+a regular user cannot install these requirements.
 
 ```
 sudo pip install -r requirements.txt
@@ -240,12 +240,12 @@ Example for Debian based distros:
 sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
 ```
 
-**Note**: if `python-pychromecast` is not available in your repository, please
+**Note**: if `python-pychromecast` is not available in your repository,
 follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
 ##### Soundflower (macOS users only)
 
-For Soundflower you can check
+For installing Soundflower you can check
 [https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
 and just download the [latest dmg
 file](https://github.com/mattingalls/Soundflower/releases).
@@ -298,6 +298,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 ```
 apt-get install ffmpeg
 ```
+
 or `avconv`
 
 ```
@@ -388,31 +389,25 @@ python mkchromecast.py
 
 This will launch **mkchromecast** using `node.js` (or `parec` for **Linux**
 users), and will do the streaming part together with the `mp3` audio coding
-format.  `node.js` works decently but the server tends to _fail_ under certain
-situations. In such a case, **mkchromecast** is able to restart the
+format.  `node.js` works decently but the server may tend to _fail_ under certain
+circumstances. In such a case, **mkchromecast** is able to restart the
 _streaming/casting_ process automatically. So, some hiccups are expected.
 
 **Note**: most of the steps described herein are the same for **macOS** and **Linux**
 users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
-called `mkchromecast` to stream.  See the [wiki for more
-information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
+called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).  
+See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
 check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
 **Note**: the cast process is independent from the selection of the pulseaudio
 sink. This means that **mkchromecast** will tell the cast device to listen your
-computer but no sound will be heard until you select the sink.
+computer but no sound will be heard until you select the sink. For ALSA users, this 
+does not apply.
 
 ##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
-
-Set the host ip manually, useful option when having more than one active
-network connection or when the automatically ip detection fails:
-
-```
-python mkchromecast.py --host 192.168.1.1
-```
 
 Below an example using `mp3`:
 
@@ -432,10 +427,16 @@ change the bitrate and sample rate:
 python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-
 check the section [Soundflower (macOS users
 only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
 for more about sample rates.
+
+You also can set the host ip manually which is a useful option when having more 
+than one active network connection or when the automatically ip detection fails:
+
+```
+python mkchromecast.py --host 192.168.1.1
+```
 
 ##### Other examples with **mkchromecast** installed using the debian package
 
@@ -501,7 +502,7 @@ python mkchromecast.py --source-url SOURCE_URL
 This option is useful for:
 
 1. Casting using MPD in the case you have already a `http` streaming source.
-2. Cast a radio station. A list of stations to try: https://ponyvillefm.com/servers
+2. Casting a radio station. A list of stations to try: https://ponyvillefm.com/servers
 
 Example:
 
@@ -510,7 +511,7 @@ python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg 
 
 ```
 
-As it can be seen above, the codec has to be specified with the `-c` flag.
+As it can be seen above, **the codec has to be specified with the `-c` flag**.
 
 **Note**: `.m3u` or `.pls` are not yet supported.
 
@@ -547,7 +548,7 @@ Killing the application
 -----------------------
 
 To kill **mkchromecast** when you run it from console, just press
-<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit.
+<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--volume` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
 
