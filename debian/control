@@ -41,6 +41,10 @@ Description: Cast your Linux audio to your Google Cast devices
  of 192k. These defaults can be changed using the --sample-rate and -b flags.
  It is useful to modify these parameters when your wireless router is not very
  powerful, or in the case you don't want to degrade the sound quality.
+ .
+ mkchromecast can cast using pulseaudio or ALSA. The mkchromecast-pulseaudio
+ and mkchromecast-alsa packages pull the respective dependencies. For more
+ information, please read the README.Debian file shipped in this package.
 
 Package: mkchromecast-pulseaudio
 Architecture: all
@@ -66,3 +70,6 @@ Description: ALSA dependencies to cast with mkchromecast
  This package contains an informational list of packages which are considered
  essential for using mkchromecast together with ALSA. This package also depends
  on the packages on that list.
+ .
+ Information about needed configurations are contained in the README.Debian
+ file shipped in this package.
