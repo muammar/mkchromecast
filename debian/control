@@ -24,10 +24,9 @@ Depends: ${python:Depends},
          lame (>=3.99.0),
          flac (>=1.3.0),
          python-pyqt5,
-         youtube-dl,
-         pavucontrol,
-         pulseaudio-utils,
-         pulseaudio
+         youtube-dl
+Recommends: mkchromecast-pulseaudio,
+            mkchromecast-alsa
 Suggests: libav-tools,
           ffmpeg
 Description: Cast your Linux audio to your Google Cast devices
@@ -42,3 +41,28 @@ Description: Cast your Linux audio to your Google Cast devices
  of 192k. These defaults can be changed using the --sample-rate and -b flags.
  It is useful to modify these parameters when your wireless router is not very
  powerful, or in the case you don't want to degrade the sound quality.
+
+Package: mkchromecast-pulseaudio
+Architecture: all
+Depends: ${python:Depends},
+         ${misc:Depends},
+         pavucontrol,
+         pulseaudio-utils,
+         pulseaudio
+Description: Pulseaudio dependencies to cast with mkchromecast
+ This package contains an informational list of packages which are considered
+ essential for using mkchromecast together with pulseaudio sound server. This
+ package also depends on the packages on that list.
+
+Package: mkchromecast-alsa
+Architecture: all
+Depends: ${python:Depends},
+         ${misc:Depends},
+         alsa-utils,
+         alsa-tools,
+         alsa-base,
+         ffmpeg
+Description: ALSA dependencies to cast with mkchromecast
+ This package contains an informational list of packages which are considered
+ essential for using mkchromecast together with ALSA. This package also depends
+ on the packages on that list.
