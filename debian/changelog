@@ -1,4 +1,4 @@
-mkchromecast (0.3.6-1) UNRELEASED; urgency=medium
+mkchromecast (0.3.6-1) unstable; urgency=medium
 
   * New upstream release.
   * debian/control:
@@ -11,7 +11,7 @@ mkchromecast (0.3.6-1) UNRELEASED; urgency=medium
     fixed (Closes: #835608).
   * mkchromecast can cast without Pulseaudio.
 
- -- Muammar El Khatib <muammar@debian.org>  Sun, 18 Sep 2016 14:23:29 +0200
+ -- Muammar El Khatib <muammar@debian.org>  Mon, 19 Sep 2016 20:55:48 +0200
 
 mkchromecast (0.3.5-2) unstable; urgency=medium
 
