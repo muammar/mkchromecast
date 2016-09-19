@@ -53,7 +53,8 @@ Depends: ${python:Depends},
          ${misc:Depends},
          pavucontrol,
          pulseaudio-utils,
-         pulseaudio
+         pulseaudio,
+         mkchromecast
 Description: Pulseaudio dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
  considered essential for using mkchromecast together with pulseaudio sound
@@ -66,7 +67,8 @@ Depends: ${python:Depends},
          alsa-utils,
          alsa-tools,
          alsa-base,
-         ffmpeg
+         ffmpeg,
+         mkchromecast
 Description: ALSA dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
  considered essential for using mkchromecast together with ALSA software
