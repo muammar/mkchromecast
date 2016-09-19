@@ -36,8 +36,8 @@ file](https://github.com/mattingalls/Soundflower/releases/latest).
 
 ## Linux based installation
 
-**mkchromecast** is available in the official debian repositories. You need to
-install it by executing:
+**mkchromecast** is available in the official debian and ubuntu repositories.
+You need to install it by executing:
 
 ```
 sudo apt-get install mkchromecast
@@ -55,6 +55,9 @@ not available you have to do:
 ```
 sudo apt-get -f install
 ```
+
+To pull the needed dependencies to cast using pulseaudio or ALSA, please
+install `mkchromecast-pulseaudio` or `mkchromecast-alsa` respectively.
 
 This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
