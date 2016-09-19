@@ -14,6 +14,7 @@ from mkchromecast.audiodevices import *
 import mkchromecast.colors as colors
 from mkchromecast.cast import *
 from mkchromecast.config import *
+import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 import argparse
 import subprocess
@@ -109,75 +110,30 @@ def streaming():
                     ]
 
                 if codec in codecs_sr and int(samplerate) > 22000 and int(samplerate) <= 27050:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '
-                        +str(22050)+'Hz, '
-                        +str(32000)+'Hz, '
-                        +str(44100)+'Hz, '
-                        +str(48000)+'Hz or '
-                        +str(96000)+'Hz')
-                        )
                     samplerate = '22050'
+                    msg.samplerate_no96(codec)
 
                 if codec in codecs_sr and int(samplerate) > 27050 and int(samplerate) <= 32000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '
-                        +str(22050)+'Hz, '
-                        +str(32000)+'Hz, '
-                        +str(44100)+'Hz, '
-                        +str(48000)+'Hz or '
-                        +str(96000)+'Hz')
-                        )
                     samplerate = '32000'
+                    msg.samplerate_no96(codec)
 
                 elif codec in codecs_sr and int(samplerate) > 32000 and int(samplerate) <= 36000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '
-                        +str(22050)+'Hz, '
-                        +str(32000)+'Hz, '
-                        +str(44100)+'Hz, '
-                        +str(48000)+'Hz or '
-                        +str(96000)+'Hz')
-                        )
                     samplerate = '32000'
+                    msg.samplerate_no96(codec)
 
                 elif codec in codecs_sr and int(samplerate) > 36000 and int(samplerate) <= 43000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '
-                        +str(22050)+'Hz, '
-                        +str(32000)+'Hz, '
-                        +str(44100)+'Hz, '
-                        +str(48000)+'Hz or '
-                        +str(96000)+'Hz')
-                        )
                     samplerate = '44100'
+                    msg.samplerate_no96(codec)
                     print(colors.warning('Sample rate has been set to default!'))
 
                 elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
-                    print(colors.warning('Sample rates supported by '+codec+' are: '
-                        +str(22050)+'Hz, '
-                        +str(32000)+'Hz, '
-                        +str(44100)+'Hz, '
-                        +str(48000)+'Hz or '
-                        +str(96000)+'Hz')
-                        )
                     samplerate = '48000'
+                    msg.samplerate_no96(codec)
 
                 elif codec in codecs_sr and int(samplerate) > 72000:
                     if codec in no96k:
-                        print(colors.warning('sample rates supported by '+codec+' are: '
-                            +str(22050)+'hz, '
-                            +str(32000)+'hz, '
-                            +str(44100)+'hz or, '
-                            +str(48000)+'hz')
-                            )
+                        msg.samplerate_no96(codec)
                         samplerate = '48000'
-                    else:
-                        print(colors.warning('sample rates supported by '+codec+' are: '
-                            +str(22050)+'hz, '
-                            +str(32000)+'hz, '
-                            +str(44100)+'hz, '
-                            +str(48000)+'hz or '
-                            +str(96000)+'hz')
-                            )
-                        samplerate = '96000'
-
                     print(colors.warning('Sample rate has been set to maximum!'))
 
                 print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
