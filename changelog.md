@@ -1,4 +1,4 @@
-* mkchromecast (0.3.6) **unreleased**
+* mkchromecast (0.3.6) **released**: 2016/09/19
 
     - The node streaming has been updated to work with `node v6.6.0`.
     - `Ctrl-C` now raises `KeyboardInterrupt` when using `--volume` option from
