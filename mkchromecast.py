@@ -15,6 +15,7 @@ import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
 adevice = mkchromecast.__init__.adevice
+ccname = mkchromecast.__init__.ccname
 
 print(colors.bold('mkchromecast ')+'v'+__version__)
 

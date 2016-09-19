@@ -37,6 +37,7 @@ class casting(object):
         self.sourceurl = mkchromecast.__init__.sourceurl
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
+        self.ccname = mkchromecast.__init__.ccname
 
         if self.host == None:
             if self.platform == 'Linux':
@@ -104,7 +105,7 @@ class casting(object):
             self.youtubeurl = None
         """
 
-        if len(self.cclist) != 0 and self.select_cc == False:
+        if len(self.cclist) != 0 and self.select_cc == False and self.ccname == None:
             if self.debug == True:
                 print('if len(self.cclist) != 0 and self.select_cc == False:')
             print(' ')
@@ -126,7 +127,7 @@ class casting(object):
                 print(colors.success(self.castto))
                 print(' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:
+        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False and self.ccname == None:
             if self.debug == True:
                 print('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
@@ -227,6 +228,8 @@ class casting(object):
         if self.debug == True:
             print('def get_cc(self):')
         try:
+            if self.ccname != None:
+                self.castto = self.ccname
             self.cast = pychromecast.get_chromecast(friendly_name=self.castto)
             # Wait for cast device to be ready
             self.cast.wait()

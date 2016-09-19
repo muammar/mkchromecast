@@ -193,9 +193,13 @@ You can pass it to all available backends.
 parser.add_argument(
 '-n',
 '--name',
-action='store_true',
+type=str,
+default=None,
 help='''
 Use this option if you know the name of the Google Cast you want to connect.
+
+Example:
+    python mkchromecast.py -n mychromecast
 '''
 )
 
@@ -389,11 +393,14 @@ else:
 
 adevice = args.alsa_device
 if debug == True:
-    print('alsa device:', adevice)
+    print('ALSA device name:', adevice)
 
 discover = args.discover
 host = args.host
 sourceurl = args.source_url
+ccname = args.name
+if debug == True:
+    print('Google Cast name:', ccname)
 
 """
 Reset
@@ -417,7 +424,7 @@ if args.reboot == True:
 """
 Not yet implemented
 """
-if args.config == True or args.name == True:
+if args.config == True:
     print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
