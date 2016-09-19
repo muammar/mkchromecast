@@ -60,9 +60,8 @@ Example:
     python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
 It only works for the ffmpeg and avconv backends, and it is not useful for
-pulseaudio users. For more information please read the README.Debian file
-shipped in the Debian package or
-https://github.com/muammar/mkchromecast/wiki/ALSA.
+pulseaudio users. For more information read the README.Debian file shipped in
+the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
 '''
 )
 
