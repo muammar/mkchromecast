@@ -1,5 +1,0 @@
-[];
-
-this.element;
-
-parts = [];

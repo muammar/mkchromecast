@@ -27,7 +27,7 @@ cd node-v$VER/
 ./configure
 ./configure --prefix=$localpwd/node-$VER/
 
-make -j8
+make -j4
 
 make install
 

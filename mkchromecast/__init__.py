@@ -20,9 +20,9 @@ This is a program to cast your macOS audio, or Linux audio to your Google Cast
 devices.
 
 It is written in Python, and it can stream via node.js, ffmpeg, parec (Linux
-only), or avconv (Linux only). mkchromecast is capable of using lossy and
-lossless audio formats provided that ffmpeg, avconv or parec is installed.
-Additionally, a system tray menu is available.
+pulseaudio users), avconv (Linux only) or ALSA (Linux users). mkchromecast is
+capable of using lossy and lossless audio formats provided that ffmpeg, avconv
+or parec is installed.  Additionally, a system tray menu is available.
 
 Linux users that have installed the debian package need to launch the command
 `mkchromecast`, e.g.:
@@ -48,6 +48,24 @@ formatter_class=RawTextHelpFormatter
 )
 
 parser.add_argument(
+'--alsa-device',
+type=str,
+default=None,
+help=
+'''
+Set the ALSA device name. This option is useful when you are using pure
+ALSA in your system.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
+
+It only works for the ffmpeg and avconv backends, and it is not useful for
+pulseaudio users. For more information read the README.Debian file shipped in
+the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
+'''
+)
+
+parser.add_argument(
 '-b',
 '--bitrate',
 type=int,
@@ -66,7 +84,6 @@ node:
 
 This option works with all backends. The example above sets the average
 bitrate to 128k.
-
 '''
 )
 
@@ -109,7 +126,6 @@ Possible codecs:
     - flac [HQ]     Free Lossless Audio Codec
 
 This option only works for the ffmpeg, avconv and parec backends.
-
 '''
 )
 
@@ -117,7 +133,7 @@ parser.add_argument(
 '--config',
 action='store_true',
 help='''
-Use this option to connect from configuration file
+Use this option to connect from configuration file.
 '''
 )
 
@@ -125,7 +141,7 @@ parser.add_argument(
 '--debug',
 action='store_true',
 help='''
-Option for debugging purposes
+Option for debugging purposes.
 '''
 )
 
@@ -133,8 +149,9 @@ parser.add_argument(
 '-d',
 '--discover',
 action='store_true',
+default=False,
 help='''
-Use this option if you want to know the friendly name of a Google Cast device
+Use this option if you want to know the friendly name of a Google Cast device.
 '''
 )
 
@@ -153,16 +170,36 @@ Possible backends:
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
+'''
+)
 
+parser.add_argument(
+'--host',
+type=str,
+default=None,
+help=
+'''
+Set the ip of the local host. This option is useful if the local ip of your
+computer is not being detected correctly, or in the case you have more than one
+network device available.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
+
+You can pass it to all available backends.
 '''
 )
 
 parser.add_argument(
 '-n',
 '--name',
-action='store_true',
+type=str,
+default=None,
 help='''
-Use this option if you know the name of the Google Cast you want to connect
+Use this option if you know the name of the Google Cast you want to connect.
+
+Example:
+    python mkchromecast.py -n mychromecast
 '''
 )
 
@@ -180,7 +217,7 @@ parser.add_argument(
 action='store_true',
 help='''
 When the application fails, and you have no audio in your computer, use this
-option to reset the computer's audio
+option to reset the computer's audio.
 '''
 )
 
@@ -188,7 +225,7 @@ parser.add_argument(
 '--reboot',
 action='store_true',
 help='''
-Reboot the Google Cast device
+Reboot the Google Cast device.
 '''
 )
 
@@ -197,7 +234,7 @@ parser.add_argument(
 '--select-cc',
 action='store_true',
 help='''
-If you have more than one Google Cast device use this option
+If you have more than one Google Cast device use this option.
 '''
 )
 
@@ -207,10 +244,11 @@ type=int,
 default='44100',
 help='''
 Set the sample rate. The default sample rate obtained from avfoundation audio
-device input in ffmpeg using soundflower is 44100Hz. You can change this in the
-Audio MIDI Setup in the "Soundflower (2ch)" audio device. You need to change
-the "Format" in both input/output from 44100Hz to maximum 96000Hz. I think that
-more than 48000Hz is not necessary, but this is up to the users' preferences.
+device input in ffmpeg using soundflower for macOS is 44100Hz (in Linux can be
+44100Hz or 48000Hz). You can change this in the Audio MIDI Setup in the
+"Soundflower (2ch)" audio device. You need to change the "Format" in both
+input/output from 44100Hz to maximum 96000Hz.  I think that more than 48000Hz
+is not necessary, but this is up to the users' preferences.
 
 Note that re-sampling to higher sample rates is not a good idea. It was indeed
 an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
@@ -236,7 +274,38 @@ Which sample rate to use?
     - 22050Hz: sampling rate of audio quality of AM radio.
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+'''
+)
 
+parser.add_argument(
+'--source-url',
+type=str,
+default=None,
+help=
+'''
+This option allows you to pass any source URL to your Google Cast device. You
+have to specify the codec with -c flag when using it.
+
+Example:
+
+Source URL, port and extension:
+    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+
+Source URL, no port, and extension:
+    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --volume
+
+Source URL without extension:
+    python mkchromecast.py --source-url http://example.com/name -c aac --volume
+
+Supported source URLs are:
+
+    - http://url:port/name.mp3
+    - http://url:port/name.ogg
+    - http://url:port/name.mp4 (use the aac codec)
+    - http://url:port/name.wav
+    - http://url:port/name.flac
+
+.m3u or .pls are not yet available.
 '''
 )
 
@@ -245,7 +314,7 @@ parser.add_argument(
 '--tray',
 action='store_true',
 help='''
-This option let you launch mkchromecast as a systray menu (beta)
+This option let you launch mkchromecast as a systray menu (beta).
 '''
 )
 
@@ -262,7 +331,6 @@ This will execute for you:
 
     git pull --all
     git fetch -p
-
 """
 )
 
@@ -279,9 +347,9 @@ parser.add_argument(
 action='store_true',
 default=False,
 help='''
-This option lets you control the volume of your Google Cast Devices. Use the
-'u' and 'd' keys to perform volume up and volume down actions respectively. Note
-that to kill the application using this option, you need to press the 'q' key.
+Control the volume of your Google Cast Devices. Use the 'u' and 'd' keys to
+perform volume up and volume down actions respectively. Note that to kill the
+application using this option, you need to press the 'q' key or 'Ctrl-c'.
 '''
 )
 
@@ -291,14 +359,13 @@ parser.add_argument(
 type=str,
 default=None,
 help='''
-Stream from Youtube URL. This option only works for Google Casts in TV.
+Stream from Youtube URL. This option needs youtube-dl.
 
 Example:
     python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
 
 As I don't own a Google Cast for TVs, I cannot test this correctly. But in
 principle it should work.
-
 '''
 )
 
@@ -310,7 +377,7 @@ Guess the platform
 platform = platform.system()
 
 """
-Assigment of args to variables
+Assignment of args to variables
 """
 tray = args.tray
 if tray == True:
@@ -323,6 +390,17 @@ if args.notifications == True:
     notifications = 'enabled'
 else:
     notifications = 'disabled'
+
+adevice = args.alsa_device
+if debug == True:
+    print('ALSA device name:', adevice)
+
+discover = args.discover
+host = args.host
+sourceurl = args.source_url
+ccname = args.name
+if debug == True:
+    print('Google Cast name:', ccname)
 
 """
 Reset
@@ -346,7 +424,7 @@ if args.reboot == True:
 """
 Not yet implemented
 """
-if args.config == True or args.discover == True or args.name == True:
+if args.config == True:
     print(colors.error('This option is not implemented yet.'))
     sys.exit(0)
 
@@ -361,7 +439,6 @@ if args.version is True:
 Update
 """
 if args.update is True:
-
     print(colors.warning('Updating mkchromecast'))
     print(colors.important('git pull --all'))
     pull = subprocess.Popen(
@@ -424,12 +501,14 @@ codecs = [
     'flac'
     ]
 
-if backend == 'node' and args.codec != 'mp3':
+if backend == 'node' and args.codec != 'mp3' and sourceurl == None:
     rcodec = args.codec
     codec = 'mp3'
-elif backend == 'node' and args.codec == 'mp3':
+elif backend == 'node' and args.codec == 'mp3' and sourceurl == None:
     rcodec = args.codec
     codec = 'mp3'
+elif sourceurl != None:
+    codec = args.codec
 else:
     rcodec = None
     if backend != 'node' and args.codec in codecs:
