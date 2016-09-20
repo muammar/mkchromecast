@@ -64,7 +64,7 @@ if args.tray == False:
         import mkchromecast.video
         mkchromecast.video.main()
 
-    else: # When casting audio from youtube url, we do it through the audio module
+    elif args.youtube == True and args.video == False: # When casting youtube url, we do it throught the audio module
         import mkchromecast.audio
         mkchromecast.audio.main()
 
