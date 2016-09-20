@@ -39,10 +39,12 @@ backends_dict = {}
 In this block we check variables from __init__.py
 """
 tray = mkchromecast.__init__.tray
+adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
+sourceurl = mkchromecast.__init__.sourceurl
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -130,8 +132,9 @@ else:
 
     mtype = 'audio/'+appendmtype
 
-    print(colors.options('Selected backend:')+' '+ backend)
-    print(colors.options('Selected audio codec:')+' '+ codec)
+    if sourceurl == None:
+        print(colors.options('Selected backend:')+' '+ backend)
+        print(colors.options('Selected audio codec:')+' '+ codec)
 
     if backend != 'node':
         if bitrate == '192':
@@ -149,7 +152,8 @@ else:
                 msg.maxbitrate(codec, bitrate)
 
             bitrate = bitrate+'k'
-            print(colors.options('Selected bitrate:')+' '+ bitrate)
+            if sourceurl == None:
+                print(colors.options('Selected bitrate:')+' '+ bitrate)
 
         if samplerate == '44100':
             msg.samplerate_default(samplerate)
@@ -197,7 +201,8 @@ else:
                     msg.samplerate_no96(codec)
                 else:
                     msg.samplerate_info(codec)
-                print(colors.warning('Sample rate has been set to default!'))
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to default!'))
 
             elif codec in codecs_sr and int(samplerate) > 43000 and int(samplerate) <= 72000:
                 samplerate = '48000'
@@ -214,9 +219,11 @@ else:
                     samplerate = '96000'
                     msg.samplerate_info(codec)
 
-                print(colors.warning('Sample rate has been set to maximum!'))
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
 
-            print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+            if sourceurl == None:
+                print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
 
     """
     We verify platform and other options
@@ -226,6 +233,12 @@ else:
     def debug_command():                # This function add some more flags to the ffmpeg command
         command.insert(1, '-loglevel')  # when user passes --debug option.
         command.insert(2, 'panic')
+        return
+
+    def modalsa():
+        command[command.index('pulse')] = 'alsa'
+        command[command.index('mkchromecast.monitor')] = adevice
+        print (command)
         return
 
     """
@@ -247,6 +260,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'lame',
@@ -288,6 +303,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'oggenc',
@@ -332,6 +349,8 @@ else:
                 '-cutoff', '18000',
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'faac',
@@ -377,6 +396,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'sox',
@@ -425,6 +446,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if adevice != None:
+                modalsa()
         elif platform == 'Linux' and backends_dict[backend] == 'parec':
             command = [
                 'flac',

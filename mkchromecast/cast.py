@@ -33,24 +33,32 @@ class casting(object):
         self.select_cc = mkchromecast.__init__.select_cc
         self.debug = mkchromecast.__init__.debug
         self.backend = mkchromecast.__init__.backend
+        self.adevice = mkchromecast.__init__.adevice
+        self.sourceurl = mkchromecast.__init__.sourceurl
+        self.discover = mkchromecast.__init__.discover
+        self.host = mkchromecast.__init__.host
+        self.ccname = mkchromecast.__init__.ccname
 
-        if self.platform == 'Linux':
-            self.getnetworkip()
-            try:
-                self.ip = self.discovered_ip
-            except AttributeError:
-                self.ip = '127.0.0.1'
-        else:
-            try:
-                self.ip = socket.gethostbyname(socket.gethostname())
-                if self.debug == True:
-                    print(':::cast::: sockets method', self.ip)
-            except socket.gaierror:
-                self.netifaces_ip()
+        if self.host == None:
+            if self.platform == 'Linux':
+                self.getnetworkip()
                 try:
                     self.ip = self.discovered_ip
                 except AttributeError:
                     self.ip = '127.0.0.1'
+            else:
+                try:
+                    self.ip = socket.gethostbyname(socket.gethostname())
+                    if self.debug == True:
+                        print(':::cast::: sockets method', self.ip)
+                except socket.gaierror:
+                    self.netifaces_ip()
+                    try:
+                        self.ip = self.discovered_ip
+                    except AttributeError:
+                        self.ip = '127.0.0.1'
+        else:
+            self.ip = self.host
 
     """
     Methods to discover local IP
@@ -97,7 +105,7 @@ class casting(object):
             self.youtubeurl = None
         """
 
-        if len(self.cclist) != 0 and self.select_cc == False:
+        if len(self.cclist) != 0 and self.select_cc == False and self.ccname == None:
             if self.debug == True:
                 print('if len(self.cclist) != 0 and self.select_cc == False:')
             print(' ')
@@ -112,13 +120,14 @@ class casting(object):
                 except UnicodeEncodeError:
                     print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
             print(' ')
-            print(colors.important('We will cast to first device in the list above!'))
-            print(' ')
-            self.castto = self.cclist[0]
-            print(colors.success(self.castto))
-            print(' ')
+            if self.discover == False:
+                print(colors.important('We will cast to first device in the list above!'))
+                print(' ')
+                self.castto = self.cclist[0]
+                print(colors.success(self.castto))
+                print(' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:
+        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False and self.ccname == None:
             if self.debug == True:
                 print('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
@@ -181,10 +190,10 @@ class casting(object):
             if self.debug == True:
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
-            if self.platform == 'Linux':
+            if self.platform == 'Linux' and self.adevice == None:
                 from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
-            else:
+            elif self.platform == 'Darwin':
                 inputint()
                 outputint()
             terminate()
@@ -219,6 +228,8 @@ class casting(object):
         if self.debug == True:
             print('def get_cc(self):')
         try:
+            if self.ccname != None:
+                self.castto = self.ccname
             self.cast = pychromecast.get_chromecast(friendly_name=self.castto)
             # Wait for cast device to be ready
             self.cast.wait()
@@ -250,12 +261,12 @@ class casting(object):
         if self.debug == True:
             print('def play_cast(self):')
         localip = self.ip
-        #if platform == 'Darwin':
-        #   self.host = socket.gethostbyname(self.castto+'.local')
-        self.host = self.cast.host
 
-        print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.host)
-        print(colors.options('Your local IP is:')+' '+localip)
+        print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.cast.host)
+        if self.host == None:
+            print(colors.options('Your local IP is:')+' '+localip)
+        else:
+            print(colors.options('Your manually entered local IP is:')+' '+localip)
 
         """
         if self.youtubeurl != None:
@@ -291,7 +302,7 @@ class casting(object):
                 config.read(configf)
                 self.backend = ConfigSectionMap('settings')['backend']
 
-        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec':
+        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' and self.sourceurl == None:
             if args.video == True:
                 import mkchromecast.video
                 mtype = mkchromecast.video.mtype
@@ -301,6 +312,13 @@ class casting(object):
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             ncast.play_media('http://'+localip+':5000/stream', mtype)
+        elif self.sourceurl != None:
+            import mkchromecast.audio
+            mtype = mkchromecast.audio.mtype
+            print(' ')
+            print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
+            print(colors.options('Using media type:')+' '+mtype)
+            ncast.play_media(self.sourceurl, mtype)
         else:
             print(' ')
             print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
@@ -337,8 +355,8 @@ class casting(object):
 
     def reboot(self):
         if self.platform == 'Darwin':
-            self.host = socket.gethostbyname(self.castto+'.local')
-            reboot(self.host)
+            self.cast.host = socket.gethostbyname(self.castto+'.local')
+            reboot(self.cast.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
 

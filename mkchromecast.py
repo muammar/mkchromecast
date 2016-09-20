@@ -14,6 +14,8 @@ import atexit
 import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
+adevice = mkchromecast.__init__.adevice
+ccname = mkchromecast.__init__.ccname
 
 print(colors.bold('mkchromecast ')+'v'+__version__)
 
@@ -26,9 +28,12 @@ if args.tray == False:
     if cc.ip == '127.0.0.1':        # We verify the local IP.
         print(colors.error('Your computer is not connected to any network'))
         terminate()
+    elif cc.ip != '127.0.0.1' and args.discover == True:
+        cc.initialize_cast()
+        terminate()
 
-    if args.youtube == None and args.video == False:
-        if platform == 'Linux':
+    if args.youtube == None and args.video == False and args.source_url == None:
+        if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
             create_sink()
@@ -36,7 +41,7 @@ if args.tray == False:
         print(colors.important('Starting local streaming server'))
         print(colors.success('[Done]'))
 
-        if args.encoder_backend == 'node' and platform == 'Darwin':
+        if args.encoder_backend == 'node' and platform == 'Darwin' and args.source_url == None:
             from mkchromecast.node import *
             stream()
 
@@ -45,7 +50,7 @@ if args.tray == False:
             'avconv',
             'parec'
             ]
-        if args.encoder_backend in backends:
+        if args.encoder_backend in backends and args.source_url == None:
             import mkchromecast.audio
             mkchromecast.audio.main()
 
@@ -69,7 +74,7 @@ if args.tray == False:
         cc.sel_cc()
         cc.inp_cc()
         cc.get_cc()
-        if platform == 'Darwin':
+        if platform == 'Darwin' and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -77,7 +82,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and args.youtube == None:
+        if platform == 'Darwin' and args.youtube == None and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -89,7 +94,7 @@ if args.tray == False:
         if platform == 'Darwin':
             inputint()
             outputint()
-        else:
+        elif platform == 'Linux' and adevice == None:
             remove_sink()
         terminate()
         return
@@ -137,7 +142,7 @@ if args.tray == False:
             terminateapp()
 
     else:
-        if platform == 'Linux':
+        if platform == 'Linux' and adevice == None:
             print(colors.warning('Remember to open pavucontrol and select the mkchromecast sink.'))
         print('')
         print(colors.error('Ctrl-C to kill the application at any time'))
