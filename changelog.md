@@ -1,9 +1,15 @@
-* mkchromecast (0.3.6) **unreleased**
+* mkchromecast (0.3.6) **released**: 2016/09/19
 
-    - The node streaming has been updated to work with `node v6.5.0`.
+    - The node streaming has been updated to work with `node v6.6.0`.
     - `Ctrl-C` now raises `KeyboardInterrupt` when using `--volume` option from
       console.
     - Improvements under the hood.
+    - Now mkchromecast does not need pulseaudio to cast!.
+    - You can play from pipe/stream using the `--source-url` flag.
+    - `-d` option has been enable to discover available Google cast devices.
+    - `--host` flag allows users to manually enter the local ip. Closes
+      [#17](https://github.com/muammar/mkchromecast/issues/17).
+    - `-n` flag allows users to pass the name of their cast devices.
 
 * mkchromecast (0.3.5) **released**: 2016/08/26
 

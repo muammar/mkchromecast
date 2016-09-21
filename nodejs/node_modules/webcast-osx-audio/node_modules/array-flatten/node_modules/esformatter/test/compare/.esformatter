@@ -1,6 +1,0 @@
-// this config file makes sure we won't load plugins or use user settings while
-// formatting the test files through the CLI
-{
-  "root": true,
-  "plugins": []
-}

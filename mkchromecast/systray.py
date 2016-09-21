@@ -717,18 +717,17 @@ class menubar(QtWidgets.QMainWindow):
     def reboot(self):
         if platform == 'Darwin':
             try:
-                self.host = socket.gethostbyname(self.castto+'.local')
-                print('Cast device IP: '+str(self.host))
-                reboot(self.host)
+                self.cast.host = socket.gethostbyname(self.castto+'.local')
+                print('Cast device IP: '+str(self.cast.host))
+                reboot(self.cast.host)
                 self.reset_audio()
                 self.stop_cast()
             except AttributeError:
                 pass    # I should add a notification here
         else:
             try:
-                self.host = self.cast.host
-                print('Cast device IP: '+str(self.host))
-                reboot(self.host)
+                print('Cast device IP: '+str(self.cast.host))
+                reboot(self.cast.host)
                 self.reset_audio()
                 self.stop_cast()
             except AttributeError:
