@@ -25,10 +25,10 @@ Depends: ${python:Depends},
          flac (>=1.3.0),
          python-pyqt5,
          youtube-dl
-Recommends: mkchromecast-pulseaudio,
-            mkchromecast-alsa
 Suggests: libav-tools,
-          ffmpeg
+          ffmpeg,
+          mkchromecast-pulseaudio,
+          mkchromecast-alsa
 Description: Cast your Linux audio to your Google Cast devices
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided

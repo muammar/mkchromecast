@@ -1,3 +1,11 @@
+mkchromecast (0.3.6-2) unstable; urgency=medium
+
+  * debian/control:
+    - mkchromecast-pulseaudio and mkchromecast-alsa were moved to the Suggests
+    field.
+
+ -- Muammar El Khatib <muammar@debian.org>  Wed, 21 Sep 2016 02:03:49 +0200
+
 mkchromecast (0.3.6-1) unstable; urgency=medium
 
   * New upstream release.
