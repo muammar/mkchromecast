@@ -167,7 +167,7 @@ Possible backends:
     - parec (default in Linux)
     - ffmpeg
     - avconv
-    - gstreamer (for ALSA users)
+    - gstreamer
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
