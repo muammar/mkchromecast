@@ -7,5 +7,3 @@ requests==2.11.1
 setuptools==27.1.2
 PyQt5==5.7
 gi==1.2
-unittest2==1.1.0
-PyYAML==3.12
