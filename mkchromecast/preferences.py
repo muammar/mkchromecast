@@ -277,6 +277,10 @@ if tray == True:
             self.qle = QLineEdit(self)
             self.qle.move(182*self.scale_factor, 244*self.scale_factor)
             self.qle.setFixedWidth(112*self.scale_factor)
+            self.read_defaults()
+            if self.alsadeviceconf != None:
+                self.qle.setText(self.alsadeviceconf)
+            self.qle.textChanged[str].connect(self.onActivatedalsadevice)
 
         def buttons(self):
             """
@@ -347,14 +351,14 @@ if tray == True:
 
         def onActivatedbk(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','backend',text)
+            self.config.set('settings', 'backend', text)
             self.write_config()
             self.read_defaults()
             self.qccodec.clear()
             if self.backendconf == 'node':
                 codecs = ['mp3']
                 self.config.read(self.configf)
-                self.config.set('settings','codec','mp3')
+                self.config.set('settings', 'codec', 'mp3')
                 self.write_config()
             else:
                 codecs = [
@@ -376,7 +380,7 @@ if tray == True:
 
         def onActivatedcc(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','codec',text)
+            self.config.set('settings', 'codec', text)
             self.write_config()
             self.read_defaults()
             self.qcbitrate.clear()
@@ -407,31 +411,40 @@ if tray == True:
 
         def onActivatedbt(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','bitrate',text)
+            self.config.set('settings', 'bitrate', text)
             self.write_config()
             self.read_defaults()
 
         def onActivatedsr(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','samplerate',text)
+            self.config.set('settings', 'samplerate', text)
             self.write_config()
             self.read_defaults()
 
         def onActivatednotify(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','notifications',text)
+            self.config.set('settings', 'notifications', text)
             self.write_config()
             self.read_defaults()
 
         def onActivatedcolors(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','colors',text)
+            self.config.set('settings', 'colors', text)
             self.write_config()
             self.read_defaults()
 
         def onActivatedatlaunch(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','searchatlaunch',text)
+            self.config.set('settings', 'searchatlaunch', text)
+            self.write_config()
+            self.read_defaults()
+
+        def onActivatedalsadevice(self, text):
+            self.config.read(self.configf)
+            if not text:
+                self.config.set('settings', 'alsadevice', None)
+            else:
+                self.config.set('settings', 'alsadevice', text)
             self.write_config()
             self.read_defaults()
 
@@ -440,18 +453,20 @@ if tray == True:
             self.codecconf = ConfigSectionMap('settings')['codec']
             if self.backendconf == 'node' and self.codecconf != 'mp3':
                 self.config.read(self.configf)
-                self.config.set('settings','codec','mp3')
+                self.config.set('settings', 'codec', 'mp3')
                 self.write_config()
                 self.codecconf = ConfigSectionMap('settings')['codec']
             self.bitrateconf = ConfigSectionMap('settings')['bitrate']
             self.samplerateconf = ConfigSectionMap('settings')['samplerate']
             self.notificationsconf = ConfigSectionMap('settings')['notifications']
-            self.searchatlaunchconf = ConfigSectionMap('settings')['searchatlaunch']
             self.searchcolorsconf = ConfigSectionMap('settings')['colors']
+            self.searchatlaunchconf = ConfigSectionMap('settings')['searchatlaunch']
+            self.alsadeviceconf = ConfigSectionMap('settings')['alsadevice']
             if debug == True:
                 print(self.backendconf, self.codecconf, self.bitrateconf, \
                         self.samplerateconf, self.notificationsconf, \
-                        self.searchatlaunchconf, self.searchcolorsconf)
+                        self.searchatlaunchconf, self.searchcolorsconf, \
+                        self.alsadeviceconf)
 
         def write_config(self):
             """This method writes to configfile"""

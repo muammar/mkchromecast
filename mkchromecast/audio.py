@@ -85,11 +85,12 @@ else:
         codec= ConfigSectionMap('settings')['codec']
         bitrate = ConfigSectionMap('settings')['bitrate']
         samplerate= ConfigSectionMap('settings')['samplerate']
+        adevice = ConfigSectionMap('settings')['alsadevice']
         if debug == True:
             print(':::audio::: tray ='+str(tray))
             print(colors.warning('Configuration file exist'))
             print(colors.warning('Using defaults set there'))
-            print(backend,codec,bitrate,samplerate)
+            print(backend, codec, bitrate, samplerate, adevice)
     else:
         backend = mkchromecast.__init__.backend
         backends_dict[backend] = backend
