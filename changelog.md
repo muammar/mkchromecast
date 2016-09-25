@@ -1,3 +1,7 @@
+* mkchromecast (0.3.7) **unreleased**:
+
+    - Added ALSA device configuration in preferences pane.
+
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
     - The node streaming has been updated to work with `node v6.6.0`.
