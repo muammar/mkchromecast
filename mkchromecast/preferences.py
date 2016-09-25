@@ -66,7 +66,7 @@ def ConfigSectionMap(section):
     return dict1
 
 if tray == True:
-    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication, QPushButton
+    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication, QPushButton, QLineEdit
     from PyQt5 import QtCore
 
     class preferences(QWidget):
@@ -94,6 +94,7 @@ if tray == True:
             self.iconcolors()
             self.notifications()
             self.searchatlaunch()
+            self.alsadevice()
             self.buttons()
             self.window()
 
@@ -267,20 +268,30 @@ if tray == True:
             self.qcatlaunch.setCurrentIndex(launchindex)
             self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
+        def alsadevice(self):
+            """
+            Set the ALSA Device
+            """
+            self.alsadevice = QLabel('ALSA Device', self)
+            self.alsadevice.move(20*self.scale_factor, 244*self.scale_factor)
+            self.qle = QLineEdit(self)
+            self.qle.move(182*self.scale_factor, 244*self.scale_factor)
+            self.qle.setFixedWidth(112*self.scale_factor)
+
         def buttons(self):
             """
             Buttons
             """
             resetbtn = QPushButton("Reset Settings", self)
-            resetbtn.move(10*self.scale_factor, 252*self.scale_factor)
+            resetbtn.move(10*self.scale_factor, 274*self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
 
             faqbtn = QPushButton("FAQ", self)
-            faqbtn.move(138*self.scale_factor, 252*self.scale_factor)
+            faqbtn.move(138*self.scale_factor, 274*self.scale_factor)
             faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
 
             donbtn = QPushButton("Donate :)", self)
-            donbtn.move(204*self.scale_factor, 252*self.scale_factor)
+            donbtn.move(204*self.scale_factor, 274*self.scale_factor)
             donbtn.clicked.connect(lambda: webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U'))
 
         def window(self):
@@ -289,9 +300,9 @@ if tray == True:
             """
             self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
             if platform == 'Darwin':
-                self.setFixedSize(310*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
+                self.setFixedSize(310*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
             else:
-                self.setFixedSize(282*self.scale_factor, 300*self.scale_factor)     #This is to fix the size of the window
+                self.setFixedSize(282*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('Mkchromecast Preferences')
 
