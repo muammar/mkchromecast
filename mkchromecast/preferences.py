@@ -94,7 +94,8 @@ if tray == True:
             self.iconcolors()
             self.notifications()
             self.searchatlaunch()
-            self.alsadevice()
+            if platform == 'Linux':
+                self.alsadevice()
             self.buttons()
             self.window()
 
@@ -275,8 +276,8 @@ if tray == True:
             self.alsadevice = QLabel('ALSA Device', self)
             self.alsadevice.move(20*self.scale_factor, 244*self.scale_factor)
             self.qle = QLineEdit(self)
-            self.qle.move(182*self.scale_factor, 244*self.scale_factor)
-            self.qle.setFixedWidth(112*self.scale_factor)
+            self.qle.move(179*self.scale_factor, 244*self.scale_factor)
+            self.qle.setFixedWidth(84*self.scale_factor)
             self.read_defaults()
             if self.alsadeviceconf != None:
                 self.qle.setText(self.alsadeviceconf)
