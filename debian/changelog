@@ -1,3 +1,9 @@
+mkchromecast (0.3.6-3) unstable; urgency=medium
+
+  * Now the desktop file places mkchromecast's icon in the correct category.
+
+ -- Muammar El Khatib <muammar@debian.org>  Wed, 28 Sep 2016 16:35:54 +0200
+
 mkchromecast (0.3.6-2) unstable; urgency=medium
 
   * debian/control:
