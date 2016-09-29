@@ -1,6 +1,8 @@
-* mkchromecast (0.3.7) **unreleased**
+* mkchromecast (0.3.7) **unreleased**:
 
-    - gstreamer is now available as backend.
+    - node streaming updated to work with `node v6.7.0`.
+    - Added ALSA device configuration in preferences pane.
+    - Improved systray stability.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
@@ -9,7 +11,7 @@
       console.
     - Improvements under the hood.
     - Now mkchromecast does not need pulseaudio to cast!.
-    - You can play from pipe/stream using the `--source-url` flag.
+    - You can play from stream using the `--source-url` flag.
     - `-d` option has been enable to discover available Google cast devices.
     - `--host` flag allows users to manually enter the local ip. Closes
       [#17](https://github.com/muammar/mkchromecast/issues/17).

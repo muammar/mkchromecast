@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-6.6.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-6.7.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -396,7 +396,7 @@ _streaming/casting_ process automatically. So, some hiccups are expected.
 **Note**: most of the steps described herein are the same for **macOS** and **Linux**
 users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
-called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).  
+called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).
 See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
 check the gif below.
 
@@ -404,7 +404,7 @@ check the gif below.
 
 **Note**: the cast process is independent from the selection of the pulseaudio
 sink. This means that **mkchromecast** will tell the cast device to listen your
-computer but no sound will be heard until you select the sink. For ALSA users, this 
+computer but no sound will be heard until you select the sink. For ALSA users, this
 does not apply.
 
 ##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
@@ -431,7 +431,7 @@ check the section [Soundflower (macOS users
 only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
 for more about sample rates.
 
-You also can set the host ip manually which is a useful option when having more 
+You also can set the host ip manually which is a useful option when having more
 than one active network connection or when the automatically ip detection fails:
 
 ```

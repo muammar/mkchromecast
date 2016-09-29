@@ -66,7 +66,10 @@ class casting(object):
     def getnetworkip(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        s.connect(('<broadcast>', 0))
+        try:
+            s.connect(('<broadcast>', 0))
+        except socket.error:
+            self.ip = '127.0.0.1'
         self.discovered_ip = s.getsockname()[0]
         if self.debug == True:
             print(':::cast::: sockets method', self.discovered_ip)

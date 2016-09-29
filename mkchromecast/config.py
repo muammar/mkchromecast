@@ -26,7 +26,8 @@ class config_manager(object):
                 'samplerate': '44100',
                 'notifications': 'disabled',
                 'colors': 'black',
-                'searchatlaunch': 'disabled'
+                'searchatlaunch': 'disabled',
+                'alsadevice': None
                 }
 
         if platform == 'Darwin':
@@ -68,6 +69,7 @@ class config_manager(object):
             self.config.set('settings', 'notifications', 'disabled')
             self.config.set('settings', 'colors', 'black')
             self.config.set('settings', 'searchatlaunch', 'disabled')
+            self.config.set('settings', 'alsadevice', None)
         else:
             self.config.set('settings', 'backend', 'parec')
             self.config.set('settings', 'codec', 'mp3')
@@ -76,6 +78,7 @@ class config_manager(object):
             self.config.set('settings', 'notifications', 'disabled')
             self.config.set('settings', 'colors', 'black')
             self.config.set('settings', 'searchatlaunch', 'disabled')
+            self.config.set('settings', 'alsadevice', None)
 
         with open(self.configf, 'w') as configfile:
             self.config.write(configfile)
@@ -95,7 +98,8 @@ class config_manager(object):
             'samplerate',
             'notifications',
             'colors',
-            'searchatlaunch'
+            'searchatlaunch',
+            'alsadevice'
             ]
         for e in chkconfig:
             try:
@@ -114,6 +118,7 @@ class config_manager(object):
         notifications = ConfigSectionMap('settings')['notifications']
         colors = ConfigSectionMap('settings')['colors']
         searchatlaunch = ConfigSectionMap('settings')['searchatlaunch']
+        alsadevice = ConfigSectionMap('settings')['alsadevice']
 
         codecs = [
             'mp3',
@@ -133,6 +138,7 @@ class config_manager(object):
                 self.config.set('settings', 'notifications', str(notifications))
                 self.config.set('settings', 'colors', str(colors))
                 self.config.set('settings', 'searchatlaunch', str(searchatlaunch))
+                self.config.set('settings', 'alsadevice', str(alsadevice))
 
             with open(self.configf, 'w') as configfile:
                 self.config.write(configfile)
