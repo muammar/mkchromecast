@@ -273,17 +273,25 @@ else:
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
-                '-v', 'alsasrc', 'device="default"',
+                '-v', #'alsasrc',
+                #'device="default"',
                 '!',
-                'audioconvert',
+                'audio/x-raw-int,rate='+samplerate+',channels=2',
+                #'audioconvert',
                 '!',
                 'lamemp3enc',
-                'target=1',
-                'bitrate=64',
+                'target=bitrate',
+                'bitrate='+bitrate,
                 'cbr=true',
                 '!',
                 'filesink', 'location=/dev/stdout'
                 ]
+            if adevice != None:
+                command.insert(2, 'alsasrc')
+                command.insert(3, 'device="'+adevice+'"')
+            else:
+                command.insert(2, 'pulsesrc')
+                command.insert(3, 'device="mkchromecast.monitor"')
         else:
             command = [
                 backend,
