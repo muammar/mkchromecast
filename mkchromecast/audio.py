@@ -534,7 +534,6 @@ def stream():
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
     else:
-	print("por que no sirve eta mierda")
         process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
     return Response(iter(read_chunk, b''), mimetype=mtype)
