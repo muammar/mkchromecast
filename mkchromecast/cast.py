@@ -193,7 +193,7 @@ class casting(object):
             if self.debug == True:
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
-            if self.platform == 'Linux' and self.backend != 'gstreamer' and self.adevice == None:
+            if self.platform == 'Linux' and self.adevice == None:
                 from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
             elif self.platform == 'Darwin':
@@ -264,7 +264,7 @@ class casting(object):
         if self.debug == True:
             print('def play_cast(self):')
         localip = self.ip
-        
+
         print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.cast.host)
         if self.host == None:
             print(colors.options('Your local IP is:')+' '+localip)

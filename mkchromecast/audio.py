@@ -284,6 +284,8 @@ else:
                 'bitrate='+bitrate[:-1],
                 'cbr=true',
                 '!',
+                'mpegaudioparse',
+                '!',
                 'filesink', 'location=/dev/stdout'
                 ]
             if adevice != None:
@@ -305,8 +307,6 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
 
     """
     OGG 192k
@@ -340,24 +340,27 @@ else:
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
-                '-v',
                 '!',
                 'audioconvert',
                 '!',
-                #'audio/x-raw,rate='+samplerate,
-                #'!',
+                'audioresample',
+                '!',
                 'vorbisenc',
-                #'!',
-                #'oggmux',
+                #'bitrate='+str(int(bitrate[:-1])*1000),
+                '!',
+                'vorbisparse',
+                '!',
+                'oggmux',
                 '!',
                 'filesink', 'location=/dev/stdout'
+                #gst-launch-1.0 pulsesrc device="mkchromecast.monitor" ! audioconvert ! audioresample ! vorbisenc ! oggmux ! filesink
                 ]
             if adevice != None:
-                command.insert(2, 'alsasrc')
-                command.insert(3, 'device="'+adevice+'"')
+                command.insert(1, 'alsasrc')
+                command.insert(2, 'device="'+adevice+'"')
             else:
-                command.insert(2, 'pulsesrc')
-                command.insert(3, 'device="mkchromecast.monitor"')
+                command.insert(1, 'pulsesrc')
+                command.insert(2, 'device="mkchromecast.monitor"')
         else:
             command = [
                 backend,
@@ -371,14 +374,12 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
 
     """
     AAC > 128k for Stereo, Default sample rate: 44100kHz
     """
     if  codec == 'aac':
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -406,6 +407,28 @@ else:
                 '-',
                 '-'
                 ]
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '-v',
+                '!',
+                'audioconvert',
+                '!',
+                'audio/x-raw,rate='+samplerate,
+                '!',
+                'voaacenc',
+                #'bitrate='+bitrate[:-1],
+                '!',
+                'aacparse',
+                '!',
+                'filesink', 'location=/dev/stdout'
+                ]
+            if adevice != None:
+                command.insert(2, 'alsasrc')
+                command.insert(3, 'device="'+adevice+'"')
+            else:
+                command.insert(2, 'pulsesrc')
+                command.insert(3, 'device="mkchromecast.monitor"')
         else:
             command = [
                 backend,
@@ -420,8 +443,6 @@ else:
                 '-cutoff', '18000',
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
 
     """
     WAV 24-Bit
@@ -470,8 +491,6 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
 
     """
     FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
@@ -516,8 +535,9 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
+
+if debug == False and backends_dict[backend] != 'parec' and backends_dict[backend] != 'parec':
+    debug_command()
 
 app = Flask(__name__)
 
