@@ -273,15 +273,13 @@ else:
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
-                '-v', #'alsasrc',
-                #'device="default"',
+                '-v',
                 '!',
-                'audio/x-raw-int,rate='+samplerate+',channels=2',
-                #'audioconvert',
+                'audioconvert',
                 '!',
                 'lamemp3enc',
                 'target=bitrate',
-                'bitrate='+bitrate,
+                'bitrate='+bitrate[:-1],
                 'cbr=true',
                 '!',
                 'filesink', 'location=/dev/stdout'
