@@ -277,6 +277,8 @@ else:
                 '!',
                 'audioconvert',
                 '!',
+                'audio/x-raw,rate='+samplerate,
+                '!',
                 'lamemp3enc',
                 'target=bitrate',
                 'bitrate='+bitrate[:-1],
@@ -310,7 +312,7 @@ else:
     OGG 192k
     """
     if  codec == 'ogg':
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -335,6 +337,27 @@ else:
                 '--ignorelength',
                 '-'
                 ]
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '-v',
+                '!',
+                'audioconvert',
+                '!',
+                #'audio/x-raw,rate='+samplerate,
+                #'!',
+                'vorbisenc',
+                #'!',
+                #'oggmux',
+                '!',
+                'filesink', 'location=/dev/stdout'
+                ]
+            if adevice != None:
+                command.insert(2, 'alsasrc')
+                command.insert(3, 'device="'+adevice+'"')
+            else:
+                command.insert(2, 'pulsesrc')
+                command.insert(3, 'device="mkchromecast.monitor"')
         else:
             command = [
                 backend,
