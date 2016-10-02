@@ -263,13 +263,15 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'lame',
                 '-b', bitrate[:-1],
                 '-r',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
@@ -294,6 +296,7 @@ else:
             else:
                 command.insert(2, 'pulsesrc')
                 command.insert(3, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
@@ -328,7 +331,7 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'oggenc',
                 '-b', bitrate[:-1],
@@ -337,6 +340,8 @@ else:
                 '--ignorelength',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
@@ -361,6 +366,7 @@ else:
             else:
                 command.insert(1, 'pulsesrc')
                 command.insert(2, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
@@ -396,7 +402,7 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'faac',
                 '-b', bitrate[:-1],
@@ -407,6 +413,8 @@ else:
                 '-',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
             command = [
                 'gst-launch-1.0',
@@ -429,6 +437,7 @@ else:
             else:
                 command.insert(2, 'pulsesrc')
                 command.insert(3, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
@@ -463,7 +472,7 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'sox',
                 '-t', 'raw',
@@ -511,7 +520,7 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'flac',
                 '-',
@@ -536,7 +545,7 @@ else:
                 'pipe:'
                 ]
 
-if debug == False and backends_dict[backend] != 'parec' and backends_dict[backend] != 'parec':
+if debug == False and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
     debug_command()
 
 app = Flask(__name__)
@@ -582,6 +591,24 @@ def stream():
             ]
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+    elif platform == 'Linux' and bool(backends_dict) == True \
+            and backends_dict[backend] == 'gstreamer':
+        c_gst = [
+            'gst-launch-1.0',
+            '-v',
+            '!',
+            'audioconvert',
+            '!',
+            'filesink', 'location=/dev/stdout'
+            ]
+        if adevice != None:
+            c_gst.insert(2, 'alsasrc')
+            c_gst.insert(3, 'device="'+adevice+'"')
+        else:
+            c_gst.insert(2, 'pulsesrc')
+            c_gst.insert(3, 'device="mkchromecast.monitor"')
+        gst = Popen(c_gst, stdout=PIPE)
+        process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
     else:
         process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)

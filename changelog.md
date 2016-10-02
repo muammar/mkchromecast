@@ -3,6 +3,7 @@
     - node streaming updated to work with `node v6.7.0`.
     - Added ALSA device configuration in preferences pane.
     - Improved systray stability.
+    - gstreamer support for capturing audio.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
