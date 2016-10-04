@@ -147,12 +147,15 @@ else:
             if codec == 'mp3' and int(bitrate) > 320:
                 bitrate = '320'
                 msg.maxbitrate(codec, bitrate)
-
-            if codec == 'ogg' or codec == 'aac' and int(bitrate) > 500:
+            elif codec == 'ogg' and int(bitrate) > 500:
                 bitrate = '500'
                 msg.maxbitrate(codec, bitrate)
+            elif codec == 'aac' and int(bitrate) > 500:
+                bitrate = '500'
+                msg.maxbitrate(codec, bitrate)
+            else:
+                bitrate = bitrate+'k'
 
-            bitrate = bitrate+'k'
             if sourceurl == None:
                 print(colors.options('Selected bitrate:')+' '+ bitrate)
 
