@@ -4,7 +4,7 @@
     - Added ALSA device configuration in preferences pane.
     - Improved systray stability.
     - gstreamer support for capturing audio.
-    - Fixed problem related to setting `ogg` bitrate.
+    - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
