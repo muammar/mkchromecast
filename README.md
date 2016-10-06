@@ -157,6 +157,7 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
+* Arch Linux: [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 * Debian (.deb): [https://packages.debian.org/mkchromecast](https://packages.debian.org/mkchromecast).
 * Ubuntu (.deb): [http://packages.ubuntu.com/search?keywords=mkchromecast](http://packages.ubuntu.com/search?keywords=mkchromecast).
 
