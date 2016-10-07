@@ -1,3 +1,4 @@
+
 mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
@@ -34,6 +35,7 @@ audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
 the lag between playing a song and hearing may be up to 8 seconds for certain
 backends.
 
+
 Tell me more about it
 ----------------------
 To have an idea of using **mkchromecast** from console [check this
@@ -59,6 +61,8 @@ Check these images:
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
+
+
 
 Requirements:
 ------------
@@ -124,6 +128,7 @@ requirements are:
 * youtube-dl (option if you plan to cast youtube URLs).
 
 
+
 Install
 -------
 
@@ -157,7 +162,6 @@ here](https://github.com/muammar/mkchromecast/issues).
 
 ##### Linux
 
-* Arch Linux: [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 * Debian (.deb): [https://packages.debian.org/mkchromecast](https://packages.debian.org/mkchromecast).
 * Ubuntu (.deb): [http://packages.ubuntu.com/search?keywords=mkchromecast](http://packages.ubuntu.com/search?keywords=mkchromecast).
 
@@ -214,6 +218,20 @@ git clone https://github.com/muammar/mkchromecast.git
 
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
+
+##### Arch Linux 
+
+mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
+
+```bash
+#install with yaourt
+yaourt mkchromecast-git
+```
+
+```bash
+#install with pacaur
+pacaur -S mkchromecast-git
+```
 
 ##### Python
 
@@ -352,6 +370,7 @@ apt-get install python3-pyqt5
 
 or if you desire it you can do it yourself from the sources.
 
+
 Updating
 --------
 
@@ -378,6 +397,7 @@ If you are using the **macOS** application:
 **Linux** users need to either perform a `apt-get upgrade` or [download the
 latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
 -i mkchromecast_$VERSION_all.deb`.
+
 
 Usage
 -----
@@ -545,6 +565,8 @@ References:
 * [#11](https://github.com/muammar/mkchromecast/issues/11).
 * [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
 
+
+
 Killing the application
 -----------------------
 
@@ -552,6 +574,7 @@ To kill **mkchromecast** when you run it from console, just press
 <kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--volume` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
+
 
 More help
 ---------
@@ -567,6 +590,7 @@ or when installing the debian package:
 ```
 mkchromecast -h
 ```
+
 
 Known issues
 ------------
@@ -587,12 +611,15 @@ No new issues reported.
 You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
 for more information.
 
+
 TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
 * More eye candy.
 * [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
+
+
 
 Contribute
 ----------
@@ -603,3 +630,4 @@ requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
+
