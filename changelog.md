@@ -5,6 +5,11 @@
     - Improved systray stability.
     - gstreamer support for capturing audio.
     - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
+    - A `--segment-time` option added to modify the segment time when using
+      ffmpeg.
+    - A `--reconnect` option that monitors if mkchromecast has disconnected
+      from google cast, and tries to reconnect.
+    - ALSA device can be set from systray.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

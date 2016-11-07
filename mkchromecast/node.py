@@ -231,6 +231,7 @@ class multi_proc(object):
 def kill():
     pid=getpid()
     os.kill(pid, signal.SIGTERM)
+    return
 
 def relaunch(func1,func2,func3):
     func1()

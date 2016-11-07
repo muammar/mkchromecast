@@ -279,6 +279,20 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 )
 
 parser.add_argument(
+'--segment-time',
+type=int,
+default=None,
+help=
+'''
+Segmentate audio for improved live streaming when using ffmpeg.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg --segment-time 2
+
+'''
+)
+
+parser.add_argument(
 '--source-url',
 type=str,
 default=None,
