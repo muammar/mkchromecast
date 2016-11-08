@@ -580,6 +580,17 @@ elif args.sample_rate == 0:
     samplerate = 44100
 
 """
+Segment time
+"""
+avoid = ['parec', 'node']
+if isinstance(args.segment_time, int) and backend not in avoid:
+    segmenttime = args.segment_time
+else:
+    print(colors.warning('The segment time has to be an integer number'))
+    print(colors.warning('Set to default of 2 seconds'))
+    segmenttime = 2
+
+"""
 Volume
 """
 if args.volume == True:

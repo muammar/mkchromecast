@@ -41,6 +41,8 @@ In this block we check variables from __init__.py
 tray = mkchromecast.__init__.tray
 adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
+segmenttime = mkchromecast.__init__.segmenttime
+
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
@@ -245,6 +247,12 @@ else:
         print (command)
         return
 
+    def setsegmenttime():
+        string = [ '-f', 'segment', '-segment_time', str(segmenttime) ]
+        for element in string:
+            command.insert(-9, element)
+        return
+
     """
     MP3 192k
     """
@@ -266,6 +274,10 @@ else:
                 ]
             if adevice != None:
                 modalsa()
+
+            if segmenttime != None:
+                setsegmenttime()
+
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'lame',
@@ -313,6 +325,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
+            if segmenttime != None:
+                setsegmenttime()
 
     """
     OGG 192k
@@ -326,7 +340,6 @@ else:
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-acodec', 'libvorbis',
-                '-f', 'segment', '-segment_time', '2',
                 '-f', 'ogg',
                 '-ac', '2',
                 '-ar', samplerate,
@@ -335,6 +348,10 @@ else:
                 ]
             if adevice != None:
                 modalsa()
+
+            if segmenttime != None:
+                setsegmenttime()
+
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'oggenc',
@@ -407,6 +424,10 @@ else:
                 ]
             if adevice != None:
                 modalsa()
+
+            if segmenttime != None:
+                setsegmenttime()
+
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'faac',
@@ -457,6 +478,8 @@ else:
                 '-cutoff', '18000',
                 'pipe:'
                 ]
+            if segmenttime != None:
+                setsegmenttime()
 
     """
     WAV 24-Bit
@@ -477,6 +500,10 @@ else:
                 ]
             if adevice != None:
                 modalsa()
+
+            if segmenttime != None:
+                setsegmenttime()
+
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'sox',
@@ -505,6 +532,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if segmenttime != None:
+                setsegmenttime()
 
     """
     FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
@@ -525,6 +554,10 @@ else:
                 ]
             if adevice != None:
                 modalsa()
+
+            if segmenttime != None:
+                setsegmenttime()
+
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'flac',
@@ -549,6 +582,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
+            if segmenttime != None:
+                setsegmenttime()
 
 if debug == False and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
     debug_command()
