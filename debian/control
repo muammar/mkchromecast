@@ -76,3 +76,17 @@ Description: ALSA dependencies to cast with mkchromecast
  .
  Information about needed configurations are contained in the README.Debian
  file shipped in this package.
+
+Package: mkchromecast-gstreamer
+Architecture: all
+Depends: ${python:Depends},
+         ${misc:Depends},
+         gstreamer1.0-tools
+         mkchromecast
+Description: Gstreamer dependencies to cast with mkchromecast
+ This dependency package contains an informational list of packages which are
+ considered essential for using mkchromecast together with Gstreamer software
+ framework. This package also depends on the packages on that list.
+ .
+ Information about needed configurations are contained in the README.Debian
+ file shipped in this package.
