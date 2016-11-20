@@ -24,7 +24,8 @@ Depends: ${python:Depends},
          lame (>=3.99.0),
          flac (>=1.3.0),
          python-pyqt5,
-         youtube-dl
+         youtube-dl,
+         gir1.2-notify
 Suggests: libav-tools,
           ffmpeg,
           mkchromecast-pulseaudio,
