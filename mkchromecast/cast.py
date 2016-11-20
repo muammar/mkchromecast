@@ -38,6 +38,7 @@ class casting(object):
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
+        self.reconnect = mkchromecast.__init__.reconnect
 
         if self.host == None:
             if self.platform == 'Linux':

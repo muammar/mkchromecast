@@ -231,6 +231,15 @@ Reboot the Google Cast device.
 )
 
 parser.add_argument(
+'--reconnect',
+action='store_true',
+default=False,
+help='''
+Monitor if connection with google cast has been lost, and try to reconnect.
+'''
+)
+
+parser.add_argument(
 '-s',
 '--select-cc',
 action='store_true',
@@ -413,6 +422,8 @@ if debug == True:
 discover = args.discover
 host = args.host
 sourceurl = args.source_url
+reconnect = args.reconnect
+
 ccname = args.name
 if debug == True:
     print('Google Cast name:', ccname)
@@ -585,8 +596,8 @@ Segment time
 avoid = ['parec', 'node']
 if isinstance(args.segment_time, int) and backend not in avoid:
     segmenttime = args.segment_time
-elif backend in avoid:
-    pass
+elif isinstance(args.segment_time, float) or backend in avoid:
+    segmenttime = None
 else:
     print(colors.warning('The segment time has to be an integer number'))
     print(colors.warning('Set to default of 2 seconds'))
