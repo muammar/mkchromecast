@@ -186,7 +186,7 @@ class menubar(QtWidgets.QMainWindow):
         configf = configurations.configf
 
         if os.path.exists(configf):
-            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Configuration file exists'))
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap('settings')['notifications']

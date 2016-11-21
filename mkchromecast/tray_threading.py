@@ -64,7 +64,7 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         if os.path.exists(configf):
-            print(colors.warning(':::Threading::: Configuration file exist'))
+            print(colors.warning(':::Threading::: Configuration file exists'))
             print(colors.warning(':::Threading::: Using defaults set there'))
             config.read(configf)
             backend = ConfigSectionMap('settings')['backend']

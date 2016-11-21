@@ -301,7 +301,7 @@ class casting(object):
 
             if os.path.exists(configf) and self.tray == True:
                 print(tray)
-                print(colors.warning('Configuration file exist'))
+                print(colors.warning('Configuration file exists'))
                 print(colors.warning('Using defaults set there'))
                 config.read(configf)
                 self.backend = ConfigSectionMap('settings')['backend']
