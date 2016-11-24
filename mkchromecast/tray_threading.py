@@ -130,5 +130,7 @@ class Updater(QObject):
                     self.updateready.emit('False')
             except UnboundLocalError:
                 self.updateready.emit('error1')
+            except requests.exceptions.ConnectionError:
+                self.updateready.emit('error1')
 
         self.upcastfinished.emit()
