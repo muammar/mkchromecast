@@ -218,7 +218,7 @@ git clone https://github.com/muammar/mkchromecast.git
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
-##### Arch Linux 
+##### Arch Linux
 
 mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 
@@ -231,6 +231,9 @@ yaourt mkchromecast-git
 #install with pacaur
 pacaur -S mkchromecast-git
 ```
+
+If you get the error `cannot import name 'DependencyWarning'` in Arch Linux,
+please check issue [#31](https://github.com/muammar/mkchromecast/issues/31).
 
 ##### Python
 
