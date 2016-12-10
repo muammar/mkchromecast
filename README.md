@@ -232,6 +232,9 @@ yaourt mkchromecast-git
 pacaur -S mkchromecast-git
 ```
 
+If you get the error `cannot import name 'DependencyWarning'` in Arch Linux,
+please check issue [#31](https://github.com/muammar/mkchromecast/issues/31).
+
 ##### Python
 
 To install python requirements use the `requirements.txt` file shipped in
