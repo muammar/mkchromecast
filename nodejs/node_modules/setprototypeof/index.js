@@ -2,10 +2,12 @@ module.exports = Object.setPrototypeOf || ({__proto__:[]} instanceof Array ? set
 
 function setProtoOf(obj, proto) {
 	obj.__proto__ = proto;
+	return obj;
 }
 
 function mixinProperties(obj, proto) {
 	for (var prop in proto) {
 		obj[prop] = proto[prop];
 	}
+	return obj;
 }
