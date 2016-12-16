@@ -88,6 +88,21 @@ class casting(object):
                     if self.debug == True:
                         print(':::cast::: netifaces method', self.discovered_ip)
 
+    def _get_chromecasts(self):
+        # compatibility
+        if hasattr(pychromecast, 'get_chromecasts_as_dict'):
+            return list(pychromecast.get_chromecasts_as_dict().keys())
+        else:
+            self._chromecasts_by_name = {c.name: c for c in pychromecast.get_chromecasts()}
+            return list(self._chromecasts_by_name.keys())
+
+    def _get_chromecast(self, name):
+        # compatibility
+        if hasattr(pychromecast, 'get_chromecast'):
+            return pychromecast.get_chromecast(friendly_name=self.castto)
+        else:
+            return self._chromecasts_by_name[name]
+
     """
     Cast processes
     """
@@ -95,7 +110,7 @@ class casting(object):
         import mkchromecast.__init__            # This is to verify against some needed variables.
         from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
                                                 # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
-        self.cclist = list(pychromecast.get_chromecasts_as_dict().keys())
+        self.cclist = self._get_chromecasts()
         if self.debug == True:
             print('self.cclist', self.cclist)
 
@@ -234,7 +249,7 @@ class casting(object):
         try:
             if self.ccname != None:
                 self.castto = self.ccname
-            self.cast = pychromecast.get_chromecast(friendly_name=self.castto)
+            self.cast = self._get_chromecast(self.castto)
             # Wait for cast device to be ready
             self.cast.wait()
             print(' ')
