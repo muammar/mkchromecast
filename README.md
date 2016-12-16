@@ -34,6 +34,7 @@ audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
 the lag between playing a song and hearing may be up to 8 seconds for certain
 backends.
 
+
 Tell me more about it
 ----------------------
 To have an idea of using **mkchromecast** from console [check this
@@ -59,6 +60,8 @@ Check these images:
 * [KDE5 1](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_1.png)
 * [KDE5 2](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Kde5_2.png)
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
+
+
 
 Requirements:
 ------------
@@ -122,6 +125,7 @@ requirements are:
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (option if you plan to cast youtube URLs).
+
 
 
 Install
@@ -213,6 +217,23 @@ git clone https://github.com/muammar/mkchromecast.git
 
 Or you may download one of the [stable releases
 here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
+
+##### Arch Linux
+
+mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
+
+```bash
+#install with yaourt
+yaourt mkchromecast-git
+```
+
+```bash
+#install with pacaur
+pacaur -S mkchromecast-git
+```
+
+If you get the error `cannot import name 'DependencyWarning'` in Arch Linux,
+please check issue [#31](https://github.com/muammar/mkchromecast/issues/31).
 
 ##### Python
 
@@ -351,6 +372,7 @@ apt-get install python3-pyqt5
 
 or if you desire it you can do it yourself from the sources.
 
+
 Updating
 --------
 
@@ -378,6 +400,7 @@ If you are using the **macOS** application:
 latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
 -i mkchromecast_$VERSION_all.deb`.
 
+
 Usage
 -----
 
@@ -396,7 +419,7 @@ _streaming/casting_ process automatically. So, some hiccups are expected.
 **Note**: most of the steps described herein are the same for **macOS** and **Linux**
 users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
-called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).  
+called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).
 See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
 check the gif below.
 
@@ -404,7 +427,7 @@ check the gif below.
 
 **Note**: the cast process is independent from the selection of the pulseaudio
 sink. This means that **mkchromecast** will tell the cast device to listen your
-computer but no sound will be heard until you select the sink. For ALSA users, this 
+computer but no sound will be heard until you select the sink. For ALSA users, this
 does not apply.
 
 ##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
@@ -431,7 +454,7 @@ check the section [Soundflower (macOS users
 only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
 for more about sample rates.
 
-You also can set the host ip manually which is a useful option when having more 
+You also can set the host ip manually which is a useful option when having more
 than one active network connection or when the automatically ip detection fails:
 
 ```
@@ -544,6 +567,8 @@ References:
 * [#11](https://github.com/muammar/mkchromecast/issues/11).
 * [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
 
+
+
 Killing the application
 -----------------------
 
@@ -551,6 +576,7 @@ To kill **mkchromecast** when you run it from console, just press
 <kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--volume` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
+
 
 More help
 ---------
@@ -566,6 +592,7 @@ or when installing the debian package:
 ```
 mkchromecast -h
 ```
+
 
 Known issues
 ------------
@@ -586,12 +613,15 @@ No new issues reported.
 You can also check the [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ)
 for more information.
 
+
 TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
 * More eye candy.
 * [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
+
+
 
 Contribute
 ----------
@@ -602,3 +632,4 @@ requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
+
