@@ -90,17 +90,17 @@ class casting(object):
 
     def _get_chromecasts(self):
         # compatibility
-        if hasattr(pychromecast, 'get_chromecasts_as_dict'):
+        try:
             return list(pychromecast.get_chromecasts_as_dict().keys())
-        else:
+        except AttributeError:
             self._chromecasts_by_name = {c.name: c for c in pychromecast.get_chromecasts()}
             return list(self._chromecasts_by_name.keys())
 
     def _get_chromecast(self, name):
         # compatibility
-        if hasattr(pychromecast, 'get_chromecast'):
+        try:
             return pychromecast.get_chromecast(friendly_name=self.castto)
-        else:
+        except AttributeError:
             return self._chromecasts_by_name[name]
 
     """
