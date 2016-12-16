@@ -10,7 +10,7 @@
     - A `--reconnect` option that monitors if mkchromecast has disconnected
       from google cast, and tries to reconnect.
     - ALSA device can be set from systray.
-    - Add support for newer `pychromecast` version. 
+    - Add support for newer `pychromecast` versions. Closes [#32](https://github.com/muammar/mkchromecast/pull/32). 
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
