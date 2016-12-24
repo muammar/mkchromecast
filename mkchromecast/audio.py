@@ -247,7 +247,7 @@ else:
         print (command)
         return
 
-    def setsegmenttime():
+    def set_segmenttime():
         string = [ '-f', 'segment', '-segment_time', str(segmenttime) ]
         for element in string:
             command.insert(-9, element)
@@ -276,7 +276,7 @@ else:
                 modalsa()
 
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
@@ -326,7 +326,7 @@ else:
                 'pipe:'
                 ]
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
     """
     OGG 192k
@@ -350,7 +350,7 @@ else:
                 modalsa()
 
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
@@ -425,9 +425,6 @@ else:
             if adevice != None:
                 modalsa()
 
-            if segmenttime != None:
-                setsegmenttime()
-
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'faac',
@@ -479,7 +476,7 @@ else:
                 'pipe:'
                 ]
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
     """
     WAV 24-Bit
@@ -502,7 +499,7 @@ else:
                 modalsa()
 
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
@@ -533,7 +530,7 @@ else:
                 'pipe:'
                 ]
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
     """
     FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
@@ -556,7 +553,7 @@ else:
                 modalsa()
 
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
         elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
@@ -583,10 +580,11 @@ else:
                 'pipe:'
                 ]
             if segmenttime != None:
-                setsegmenttime()
+                set_segmenttime()
 
-if debug == False and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
-    debug_command()
+    verbose_backend = ['ffmpeg', 'avconv']
+    if debug == False and backends_dict[backend] in verbose_backend:
+        debug_command()
 
 app = Flask(__name__)
 
