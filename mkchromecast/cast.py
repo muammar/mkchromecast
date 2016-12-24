@@ -321,19 +321,19 @@ class casting(object):
                 config.read(configf)
                 self.backend = ConfigSectionMap('settings')['backend']
 
-        if self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
-            import mkchromecast.audio
-            mtype = mkchromecast.audio.mtype
-            print(' ')
-            print(colors.options('The media type string used is:')+' '+mtype)
-            ncast.play_media('http://'+localip+':5000/stream', mtype)
-        elif self.sourceurl != None:
+        if self.sourceurl != None:
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
             ncast.play_media(self.sourceurl, mtype)
+        elif self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
+            import mkchromecast.audio
+            mtype = mkchromecast.audio.mtype
+            print(' ')
+            print(colors.options('The media type string used is:')+' '+mtype)
+            ncast.play_media('http://'+localip+':5000/stream', mtype)
         else:
             print(' ')
             print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
