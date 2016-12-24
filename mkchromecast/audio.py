@@ -620,8 +620,9 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    if platform == 'Linux' and bool(backends_dict) == True \
-            and backends_dict[backend] == 'parec':
+    if (platform == 'Linux'
+            and bool(backends_dict) == True
+            and backends_dict[backend] == 'parec'):
         c_parec = [
             backend,
             '--format=s16le',
@@ -629,8 +630,9 @@ def stream():
             ]
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
-    elif platform == 'Linux' and bool(backends_dict) == True \
-            and backends_dict[backend] == 'gstreamer':
+    elif (platform == 'Linux' and
+            bool(backends_dict) == True and
+            backends_dict[backend] == 'gstreamer'):
         c_gst = [
             'gst-launch-1.0',
             '-v',
