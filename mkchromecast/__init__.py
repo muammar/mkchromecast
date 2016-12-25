@@ -235,7 +235,8 @@ parser.add_argument(
 action='store_true',
 default=False,
 help='''
-Monitor if connection with google cast has been lost, and try to reconnect.
+This flag monitors if connection with google cast has been lost, and try to
+reconnect.
 '''
 )
 
