@@ -43,6 +43,7 @@ class casting(object):
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
         self.reconnect = mkchromecast.__init__.reconnect
+        self.title = 'Mkchromecast'
 
         if self.host == None:
             if self.platform == 'Linux':
@@ -311,7 +312,7 @@ class casting(object):
             yt.play_video(video)
         else:
         """
-        ncast = self.cast
+        media_controller = self.cast.media_controller
 
         if self.tray == True:
             config = ConfigParser.RawConfigParser()
@@ -331,21 +332,21 @@ class casting(object):
             print(' ')
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
-            ncast.play_media(self.sourceurl, mtype)
+            media_controller.play_media(self.sourceurl, mtype, title = self.title)
         elif self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
             import mkchromecast.audio
             mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
-            ncast.play_media('http://'+localip+':5000/stream', mtype)
+            media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
         else:
             print(' ')
             print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
-            ncast.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg')
+            media_controller.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg', title = self.title)
         print(' ')
         print(colors.important('Cast media controller status'))
         print(' ')
-        print(ncast.status)
+        print(self.cast.status)
         print(' ')
         if self.reconnect == True:
             self.r = Thread(target = self.reconnect_cc)
@@ -353,8 +354,7 @@ class casting(object):
             self.r.start()
 
     def stop_cast(self):
-        ncast = self.cast
-        ncast.quit_app()
+        self.cast.quit_app()
 
     def volume_up(self):
         """ Increment volume by 0.1 unless it is already maxed.
@@ -362,9 +362,8 @@ class casting(object):
         """
         print('Increasing volume...')
         print(' ')
-        ncast = self.cast
-        volume = round(ncast.status.volume_level, 1)
-        return ncast.set_volume(volume + 0.1)
+        volume = round(self.cast.status.volume_level, 1)
+        return self.cast.set_volume(volume + 0.1)
 
     def volume_down(self):
         """ Decrement the volume by 0.1 unless it is already 0.
@@ -372,9 +371,8 @@ class casting(object):
         """
         print('Decreasing volume...')
         print(' ')
-        ncast = self.cast
-        volume = round(ncast.status.volume_level, 1)
-        return ncast.set_volume(volume - 0.1)
+        volume = round(self.cast.status.volume_level, 1)
+        return self.cast.set_volume(volume - 0.1)
 
     def reboot(self):
         if self.platform == 'Darwin':

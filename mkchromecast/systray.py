@@ -455,7 +455,6 @@ class menubar(QtWidgets.QMainWindow):
             self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
-                self.ncast = self.cast
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -586,7 +585,7 @@ class menubar(QtWidgets.QMainWindow):
 
         if self.cast != None or self.stopped == True or self.pcastfailed == True:
             try:
-                self.ncast.quit_app()
+                self.cast.quit_app()
             except AttributeError:
                 pass
             self.menuentry.setChecked(False)
@@ -599,7 +598,7 @@ class menubar(QtWidgets.QMainWindow):
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
-                    self.ncast.quit_app()
+                    self.cast.quit_app()
                 except pychromecast.error.NotConnected:
                     continue
                 except AttributeError:
@@ -663,7 +662,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
+            self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -677,7 +676,7 @@ class menubar(QtWidgets.QMainWindow):
         #self.sl.setFocusPolicy(Qt.NoFocus)
         self.sl.setGeometry(30, 40, 180, 20)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+            self.sl.setValue(round((self.cast.status.volume_level*10), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -693,13 +692,13 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         try:
-            if round(self.ncast.status.volume_level, 1) == 1:
+            if round(self.cast.status.volume_level, 1) == 1:
                 print (colors.warning(':::systray::: Maximum volume level reached!'))
                 volume = value/self.maxvolset
-                self.ncast.set_volume(volume)
+                self.cast.set_volume(volume)
             else:
                 volume = value/self.maxvolset
-                self.ncast.set_volume(volume)
+                self.cast.set_volume(volume)
             if debug == True:
                 print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
