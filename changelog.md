@@ -9,8 +9,10 @@
       ffmpeg.
     - A `--reconnect` option that monitors if mkchromecast has disconnected
       from google cast, and tries to reconnect.
+      Closes [#25](https://github.com/muammar/mkchromecast/issues/25).
     - ALSA device can be set from systray.
-    - Add support for newer `pychromecast` versions. Closes [#32](https://github.com/muammar/mkchromecast/pull/32). 
+    - Add support for newer `pychromecast` versions.
+      Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

@@ -424,14 +424,12 @@ class casting(object):
         disconnected because of power supply reasons.
         """
         ip = self.cast.host
-        if ping_chromecast(ip) == True:
-            print('CC is Online')
+        if ping_chromecast(ip) == True:     # The chromecast is online.
             if str(self.cast.status.display_name) != "Default Media Receiver":
                 self.ccname = self.cast_to
                 self.get_cc()
                 self.play_cast()
-        else:
-            print('CC is not connected')
+        else:                               # The chromecast is offline.
             try:
                 self.ccname = self.cast_to
                 self.get_cc()
