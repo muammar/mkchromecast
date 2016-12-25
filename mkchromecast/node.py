@@ -49,7 +49,7 @@ def streaming():
 
     if os.path.exists(configf) and tray == True:
         configurations.chk_config()
-        print(colors.warning('Configuration file exist'))
+        print(colors.warning('Configuration file exists'))
         print(colors.warning('Using defaults set there'))
         config.read(configf)
         backend = ConfigSectionMap('settings')['backend']
@@ -231,6 +231,7 @@ class multi_proc(object):
 def kill():
     pid=getpid()
     os.kill(pid, signal.SIGTERM)
+    return
 
 def relaunch(func1,func2,func3):
     func1()

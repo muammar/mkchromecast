@@ -64,7 +64,7 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         if os.path.exists(configf):
-            print(colors.warning(':::Threading::: Configuration file exist'))
+            print(colors.warning(':::Threading::: Configuration file exists'))
             print(colors.warning(':::Threading::: Using defaults set there'))
             config.read(configf)
             backend = ConfigSectionMap('settings')['backend']
@@ -129,6 +129,8 @@ class Updater(QObject):
                     print ('You are up to date')
                     self.updateready.emit('False')
             except UnboundLocalError:
+                self.updateready.emit('error1')
+            except requests.exceptions.ConnectionError:
                 self.updateready.emit('error1')
 
         self.upcastfinished.emit()

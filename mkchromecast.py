@@ -48,12 +48,13 @@ if args.tray == False:
         backends = [
             'ffmpeg',
             'avconv',
-            'parec'
+            'parec',
+            'gstreamer'
             ]
         if args.encoder_backend in backends and args.source_url == None:
             import mkchromecast.audio
             mkchromecast.audio.main()
-    elif args.youtube == True: # When casting youtube url, we do it throught the audio module
+    elif args.youtube != None: # When casting youtube url, we do it through the audio module
         import mkchromecast.audio
         mkchromecast.audio.main()
 

@@ -167,6 +167,7 @@ Possible backends:
     - parec (default in Linux)
     - ffmpeg
     - avconv
+    - gstreamer
 
 Example:
     python mkchromecast.py --encoder-backend ffmpeg
@@ -230,6 +231,15 @@ Reboot the Google Cast device.
 )
 
 parser.add_argument(
+'--reconnect',
+action='store_true',
+default=False,
+help='''
+Monitor if connection with google cast has been lost, and try to reconnect.
+'''
+)
+
+parser.add_argument(
 '-s',
 '--select-cc',
 action='store_true',
@@ -274,6 +284,20 @@ Which sample rate to use?
     - 22050Hz: sampling rate of audio quality of AM radio.
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+'''
+)
+
+parser.add_argument(
+'--segment-time',
+type=int,
+default=None,
+help=
+'''
+Segmentate audio for improved live streaming when using ffmpeg.
+
+Example:
+    python mkchromecast.py --encoder-backend ffmpeg --segment-time 2
+
 '''
 )
 
@@ -398,6 +422,8 @@ if debug == True:
 discover = args.discover
 host = args.host
 sourceurl = args.source_url
+reconnect = args.reconnect
+
 ccname = args.name
 if debug == True:
     print('Google Cast name:', ccname)
@@ -470,9 +496,10 @@ if platform == 'Darwin':
 else:
     backends.remove('node')
     backends.append('parec')
+    backends.append('gstreamer')
 
 if args.debug == True:
-    print('backends: ',backends)
+    print('backends: ', backends)
 
 if args.encoder_backend not in backends and args.encoder_backend != None:
     print(colors.error('Supported backends are: '))
@@ -562,6 +589,19 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
+
+"""
+Segment time
+"""
+avoid = ['parec', 'node']
+if isinstance(args.segment_time, int) and backend not in avoid:
+    segmenttime = args.segment_time
+elif isinstance(args.segment_time, float) or backend in avoid:
+    segmenttime = None
+else:
+    print(colors.warning('The segment time has to be an integer number'))
+    print(colors.warning('Set to default of 2 seconds'))
+    segmenttime = 2
 
 """
 Volume
