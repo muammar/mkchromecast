@@ -402,7 +402,6 @@ class casting(object):
         """
         try:
             while self.r.is_alive():
-                print('Reconnecting tests')
                 self._reconnect_cc_()
                 time.sleep(5)
         except KeyboardInterrupt:

@@ -88,6 +88,8 @@ else:
         bitrate = ConfigSectionMap('settings')['bitrate']
         samplerate= ConfigSectionMap('settings')['samplerate']
         adevice = ConfigSectionMap('settings')['alsadevice']
+        if adevice == 'None':
+            adevice = None
         if debug == True:
             print(':::audio::: tray ='+str(tray))
             print(colors.warning('Configuration file exists'))
