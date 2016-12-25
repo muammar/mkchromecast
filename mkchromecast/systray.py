@@ -567,7 +567,7 @@ class menubar(QtWidgets.QMainWindow):
 
         print(self.entries[0], self.entries[1])
         self.index = self.entries[0]
-        self.castto = self.entries[1]
+        self.cast_to = self.entries[1]
         while True:
             try:
                 if os.path.exists('/tmp/mkchromecast.tmp') == True:
@@ -717,7 +717,7 @@ class menubar(QtWidgets.QMainWindow):
     def reboot(self):
         if platform == 'Darwin':
             try:
-                self.cast.host = socket.gethostbyname(self.castto+'.local')
+                self.cast.host = socket.gethostbyname(self.cast_to+'.local')
                 print('Cast device IP: '+str(self.cast.host))
                 reboot(self.cast.host)
                 self.reset_audio()

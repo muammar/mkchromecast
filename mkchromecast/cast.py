@@ -17,6 +17,8 @@ import os.path
 import pickle
 import subprocess
 import mkchromecast.colors as colors
+from threading import Thread
+
 """
 Configparser is imported differently in Python3
 """
@@ -26,6 +28,8 @@ except ImportError:
     import configparser as ConfigParser # This is for Python3
 
 class casting(object):
+    """Main casting class.
+    """
     def __init__(self):                     # __init__ to call the self.ip
         import mkchromecast.__init__        # This is to verify against some needed variables
         self.platform = mkchromecast.__init__.platform
@@ -99,7 +103,7 @@ class casting(object):
     def _get_chromecast(self, name):
         # compatibility
         try:
-            return pychromecast.get_chromecast(friendly_name=self.castto)
+            return pychromecast.get_chromecast(friendly_name=self.cast_to)
         except AttributeError:
             return self._chromecasts_by_name[name]
 
@@ -142,8 +146,8 @@ class casting(object):
             if self.discover == False:
                 print(colors.important('We will cast to first device in the list above!'))
                 print(' ')
-                self.castto = self.cclist[0]
-                print(colors.success(self.castto))
+                self.cast_to = self.cclist[0]
+                print(colors.success(self.cast_to))
                 print(' ')
 
         elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False and self.ccname == None:
@@ -170,9 +174,9 @@ class casting(object):
                     print('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
-                self.castto = self.cclist[int(self.index)]
+                self.cast_to = self.cclist[int(self.index)]
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.castto))
+                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
 
         elif len(self.cclist) != 0 and self.select_cc == True and self.tray == True:
@@ -199,10 +203,10 @@ class casting(object):
                     print('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.index=pickle.load(self.tf)
-                self.castto = self.cclist[int(self.index)]
+                self.cast_to = self.cclist[int(self.index)]
                 self.availablecc()
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.castto))
+                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
 
         elif len(self.cclist) == 0 and self.tray == False:
@@ -232,9 +236,9 @@ class casting(object):
             try:
                 pickle.dump(self.index, self.tf)
                 self.tf.close()
-                self.castto = self.cclist[int(self.index)]
+                self.cast_to = self.cclist[int(self.index)]
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.castto))
+                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
             except IndexError:
                 checkmktmp()
@@ -248,16 +252,16 @@ class casting(object):
             print('def get_cc(self):')
         try:
             if self.ccname != None:
-                self.castto = self.ccname
-            self.cast = self._get_chromecast(self.castto)
+                self.cast_to = self.ccname
+            self.cast = self._get_chromecast(self.cast_to)
             # Wait for cast device to be ready
             self.cast.wait()
             print(' ')
-            print(colors.important('Information about ')+' '+colors.success(self.castto))
+            print(colors.important('Information about ')+' '+colors.success(self.cast_to))
             print(' ')
             print(self.cast.device)
             print(' ')
-            print(colors.important('Status of device ')+' '+colors.success(self.castto))
+            print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
             print(' ')
             print(self.cast.status)
             print(' ')
@@ -281,7 +285,7 @@ class casting(object):
             print('def play_cast(self):')
         localip = self.ip
 
-        print(colors.options('The IP of ')+colors.success(self.castto)+colors.options(' is:')+' '+self.cast.host)
+        print(colors.options('The IP of ')+colors.success(self.cast_to)+colors.options(' is:')+' '+self.cast.host)
         if self.host == None:
             print(colors.options('Your local IP is:')+' '+localip)
         else:
@@ -343,6 +347,10 @@ class casting(object):
         print(' ')
         print(ncast.status)
         print(' ')
+        if self.reconnect == True:
+            self.r = Thread(target = self.reconnect_cc)
+            self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
+            self.r.start()
 
     def stop_cast(self):
         ncast = self.cast
@@ -370,7 +378,7 @@ class casting(object):
 
     def reboot(self):
         if self.platform == 'Darwin':
-            self.cast.host = socket.gethostbyname(self.castto+'.local')
+            self.cast.host = socket.gethostbyname(self.cast_to+'.local')
             reboot(self.cast.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
@@ -387,3 +395,47 @@ class casting(object):
                 print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
             toappend = [self.index,device]
             self.availablecc.append(toappend)
+
+    def reconnect_cc(self):
+        """
+        Dummy method to call  _reconnect_cc_().
+        """
+        try:
+            while self.r.is_alive():
+                print('Reconnecting tests')
+                self._reconnect_cc_()
+                time.sleep(5)
+        except KeyboardInterrupt:
+            self.stop_cast()
+            if platform == 'Darwin':
+                inputint()
+                outputint()
+            elif platform == 'Linux' and adevice == None:
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
+            terminate()
+
+    def _reconnect_cc_(self):
+        """Check if chromecast is disconnected and reconnect.
+
+        This function verifies if the ip is alive by doing a ping each 10
+        seconds. If there is no reply, then it tries to reconnect. This
+        function may fail in the case that the chromecast changes IP when it is
+        disconnected because of power supply reasons.
+        """
+        ip = self.cast.host
+        if ping_chromecast(ip) == True:
+            print('CC is connected')
+        else:
+            print('CC is not connected')
+
+def ping_chromecast(ip):
+    """This function pings to hosts.
+
+    Credits: http://stackoverflow.com/a/34455969/1995261
+    """
+    try:
+        output = subprocess.check_output("ping -c 1 "+ip, shell=True)
+    except Exception, e:
+        return False
+    return True
