@@ -655,9 +655,14 @@ def stream():
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
+    """Starting the streaming server.
+
+    Note that passthrough_errors=False is useful when reconnecting. In that
+    way, flask won't die.
+    """
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host= '0.0.0.0')
+    app.run(host= '0.0.0.0', passthrough_errors=False)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):

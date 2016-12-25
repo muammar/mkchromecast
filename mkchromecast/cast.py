@@ -425,9 +425,19 @@ class casting(object):
         """
         ip = self.cast.host
         if ping_chromecast(ip) == True:
-            print('CC is connected')
+            print('CC is Online')
+            if str(self.cast.status.display_name) != "Default Media Receiver":
+                self.ccname = self.cast_to
+                self.get_cc()
+                self.play_cast()
         else:
             print('CC is not connected')
+            try:
+                self.ccname = self.cast_to
+                self.get_cc()
+                self.play_cast()
+            except AttributeError:
+                pass
 
 def ping_chromecast(ip):
     """This function pings to hosts.
