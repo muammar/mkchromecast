@@ -43,7 +43,7 @@ class casting(object):
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
         self.reconnect = mkchromecast.__init__.reconnect
-        self.title = 'Mkchromecast'
+        self.title = 'Mkchromecast v'+mkchromecast.__init__.__version__
 
         if self.host == None:
             if self.platform == 'Linux':
@@ -167,8 +167,8 @@ class casting(object):
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
-                    toappend = [self.index,device]
-                    self.availablecc.append(toappend)
+                    to_append = [self.index,device]
+                    self.availablecc.append(to_append)
                 """
             else:
                 if self.debug == True:
@@ -196,8 +196,8 @@ class casting(object):
                 self.availablecc=[]
                 for self.index,device in enumerate(self.cclist):
                     print(str(self.index)+'      ',str(device))
-                    toappend = [self.index,device]
-                    self.availablecc.append(toappend)
+                    to_append = [self.index,device]
+                    self.availablecc.append(to_append)
                 """
             else:
                 if self.debug == True:
@@ -391,17 +391,20 @@ class casting(object):
                 print(str(self.index)+'      ', str(device))
             except UnicodeEncodeError:
                 print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
-            toappend = [self.index,device]
-            self.availablecc.append(toappend)
+            to_append = [self.index,device]
+            self.availablecc.append(to_append)
 
     def reconnect_cc(self):
-        """
-        Dummy method to call  _reconnect_cc_().
+        """Dummy method to call  _reconnect_cc_().
+
+        In the cast that the self.r thread is alive, we check that the
+        chromecast is connected. If it is connected, we check again in
+        5 seconds.
         """
         try:
             while self.r.is_alive():
                 self._reconnect_cc_()
-                time.sleep(5)
+                time.sleep(5)       #FIXME: I think that this has to be set by users.
         except KeyboardInterrupt:
             self.stop_cast()
             if platform == 'Darwin':
@@ -415,10 +418,9 @@ class casting(object):
     def _reconnect_cc_(self):
         """Check if chromecast is disconnected and reconnect.
 
-        This function verifies if the ip is alive by doing a ping each 10
-        seconds. If there is no reply, then it tries to reconnect. This
-        function may fail in the case that the chromecast changes IP when it is
-        disconnected because of power supply reasons.
+        This function checks if the chromecast is online. Then, if the display
+        name is different from "Default Media Receiver", it reconnects to the
+        chromecast.
         """
         ip = self.cast.host
         if ping_chromecast(ip) == True:     # The chromecast is online.
