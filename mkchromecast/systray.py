@@ -5,7 +5,7 @@
 
 from __future__ import division
 import mkchromecast.__init__        # This is to verify against some needed variables
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap

@@ -10,7 +10,7 @@ import os.path
 These functions are used to switch input/out to Soundflower back and forth.
 
 To call them:
-    from mkchromecast.audiodevices import *
+    from mkchromecast.audio_devices import *
     name()
 """
 

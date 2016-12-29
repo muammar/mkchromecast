@@ -4,7 +4,7 @@
 
 from __future__ import print_function
 from mkchromecast.__init__ import *
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap

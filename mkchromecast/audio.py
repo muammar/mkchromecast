@@ -7,7 +7,7 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 import mkchromecast.messages as msg

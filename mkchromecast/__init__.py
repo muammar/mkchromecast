@@ -2,7 +2,7 @@
 
 # This file is part of mkchromecast.
 
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 from mkchromecast.version import __version__

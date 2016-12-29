@@ -10,7 +10,7 @@ To call them:
 """
 
 import mkchromecast.__init__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.cast import *
 from mkchromecast.config import *
