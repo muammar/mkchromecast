@@ -82,7 +82,7 @@ Package: mkchromecast-gstreamer
 Architecture: all
 Depends: ${python:Depends},
          ${misc:Depends},
-         gstreamer1.0-tools
+         gstreamer1.0-tools,
          mkchromecast
 Description: Gstreamer dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
