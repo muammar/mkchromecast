@@ -3,7 +3,7 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.__init__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
 import mkchromecast.audio
