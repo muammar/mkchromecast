@@ -13,6 +13,8 @@
     - ALSA device can be set from systray.
     - Add support for newer `pychromecast` versions.
       Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
+    - Making ping code python 3 compatible. Closes:
+      [#35](https://github.com/muammar/mkchromecast/pull/35).
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
