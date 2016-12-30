@@ -1,3 +1,9 @@
+mkchromecast (0.3.7-1) UNRELEASED; urgency=medium
+
+  * New upstream release.
+
+ -- Muammar El Khatib <muammar@debian.org>  Fri, 30 Dec 2016 12:30:48 -0500
+
 mkchromecast (0.3.6-3) unstable; urgency=medium
 
   * Now the desktop file places mkchromecast's icon in the correct category.
