@@ -443,6 +443,6 @@ def ping_chromecast(ip):
     """
     try:
         output = subprocess.check_output("ping -c 1 "+ip, shell=True)
-    except (Exception, e):
+    except:
         return False
     return True
