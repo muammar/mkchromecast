@@ -327,6 +327,12 @@ class casting(object):
                 self.backend = ConfigSectionMap('settings')['backend']
 
         if self.sourceurl != None:
+            if args.video == True:
+                import mkchromecast.video
+                mtype = mkchromecast.video.mtype
+            else:
+                import mkchromecast.audio
+                mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)

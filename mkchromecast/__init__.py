@@ -630,8 +630,7 @@ else:
 """
 Video
 """
-if args.video == True:
-    videoarg = args.video
+videoarg = args.video
 
 """
 Volume
