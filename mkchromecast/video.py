@@ -26,6 +26,7 @@ from os import getpid
 chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
 platform = mkchromecast.__init__.platform
+subtitles = mkchromecast.__init__.subtitles
 f = mkchromecast.__init__.f
 
 try:
@@ -60,7 +61,7 @@ if youtubeurl != None:
     mtype = 'video/mp4'
 
 else:
-    if platform == 'Linux' and f != None:
+    if platform == 'Linux' and f != None and subtitles == None:
         command = [
             'ffmpeg',
             '-re',
@@ -71,6 +72,19 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
          ]
+    elif platform == 'Linux' and f != None and subtitles != None:
+        print('new')
+        command = [
+            'ffmpeg',
+            '-re',
+            '-loglevel', 'panic',
+            '-i', f,
+            '-preset', 'ultrafast',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe',
+            '-vf', 'subtitles='+subtitles,
+            'pipe:1'
+        ]
     else:
         command = [
             'ffmpeg',

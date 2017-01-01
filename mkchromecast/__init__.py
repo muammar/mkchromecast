@@ -361,6 +361,16 @@ Supported source URLs are:
 )
 
 parser.add_argument(
+'--subtitles',
+type=str,
+default=None,
+help=
+'''
+Set subtitles.
+'''
+)
+
+parser.add_argument(
 '-t',
 '--tray',
 action='store_true',
@@ -471,6 +481,7 @@ discover = args.discover
 host = args.host
 f = args.file
 sourceurl = args.source_url
+subtitles = args.subtitles
 reconnect = args.reconnect
 
 ccname = args.name
