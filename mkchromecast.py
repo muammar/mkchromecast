@@ -4,7 +4,7 @@
 
 import mkchromecast.__init__
 from mkchromecast.version import __version__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 from mkchromecast.pulseaudio import *
 from mkchromecast.terminate import *
@@ -48,7 +48,8 @@ if args.tray == False:
         backends = [
             'ffmpeg',
             'avconv',
-            'parec'
+            'parec',
+            'gstreamer'
             ]
         if args.encoder_backend in backends and args.source_url == None:
             import mkchromecast.audio

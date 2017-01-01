@@ -1,3 +1,21 @@
+* mkchromecast (0.3.7) **released**: 2016/12/30
+
+    - node streaming updated to work with `node v7.2.1`.
+    - Added ALSA device configuration in preferences pane.
+    - Improved systray stability.
+    - gstreamer support for capturing audio.
+    - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
+    - A `--segment-time` option added to modify the segment time when using
+      ffmpeg.
+    - A `--reconnect` option that monitors if mkchromecast has disconnected
+      from google cast, and tries to reconnect.
+      Closes [#25](https://github.com/muammar/mkchromecast/issues/25).
+    - ALSA device can be set from systray.
+    - Add support for newer `pychromecast` versions.
+      Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
+    - Making ping code python 3 compatible. Closes:
+      [#35](https://github.com/muammar/mkchromecast/pull/35).
+
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
     - The node streaming has been updated to work with `node v6.6.0`.
