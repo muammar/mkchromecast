@@ -23,10 +23,15 @@ import threading
 import os
 from os import getpid
 
-mtype = 'video/mp4'
 chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
 platform = mkchromecast.__init__.platform
+f = mkchromecast.__init__.f
+
+try:
+    youtubeurl = mkchromecast.__init__.youtubeurl
+except AttributeError:
+    youtubeurl = None
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
@@ -45,49 +50,48 @@ browser closes the connection.
 #    'pipe:1'
 # ]
 
-if platform == 'Linux':
+if youtubeurl != None:
     command = [
-        'ffmpeg',
-        #'-re',
-        '-loglevel', 'panic',
-        '-f',
-        'x11grab',
-        '-r', '30',
-        '-s', '2560x1600',
-        '-i', ':0.0',
-        '-preset', 'ultrafast',
-        '-f', 'mp4',
-        '-movflags', 'frag_keyframe',
-        'pipe:1'
-     ]
-else:
-    command = [
-        'ffmpeg',
-        #'-re',
-        #'-loglevel', 'panic',
-        '-f',
-        'avfoundation',
-        '-r', '25',
-        #'-s', '2560x1600',
-        '-i', '1:0',
-        '-c:v', 'libx264',
-        '-preset', 'ultrafast',
-        '-tune', 'zerolatency',
-        '-maxrate', '1200000k',
-        '-bufsize', '200000k',
-        '-threads', '4',
-        '-f', 'mp4',
-        '-movflags', 'frag_keyframe',
-        'pipe:1'
-     ]
+        'youtube-dl',
+        '-o',
+        '-',
+        youtubeurl
+        ]
+    mtype = 'video/mp4'
 
-#if args.youtube == True:
-#    command = [
-#        'youtube-dl',
-#        '-o',
-#        '-',
-#        'https://www.youtube.com/watch?v=fb7K1dKNZKs'
-#        ]
+else:
+    if platform == 'Linux' and f != None:
+        command = [
+            'ffmpeg',
+            '-re',
+            '-loglevel', 'panic',
+            '-i', f,
+            '-preset', 'ultrafast',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe',
+            'pipe:1'
+         ]
+    else:
+        command = [
+            'ffmpeg',
+            #'-re',
+            #'-loglevel', 'panic',
+            '-f',
+            'avfoundation',
+            '-r', '25',
+            #'-s', '2560x1600',
+            '-i', '1:0',
+            '-c:v', 'libx264',
+            '-preset', 'ultrafast',
+            '-tune', 'zerolatency',
+            '-maxrate', '1200000k',
+            '-bufsize', '200000k',
+            '-threads', '4',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe',
+            'pipe:1'
+         ]
+    mtype = 'video/mp4'
 
 app = Flask(__name__)
 

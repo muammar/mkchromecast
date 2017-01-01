@@ -16,6 +16,8 @@ import mkchromecast.colors as colors
 platform = mkchromecast.__init__.platform
 adevice = mkchromecast.__init__.adevice
 ccname = mkchromecast.__init__.ccname
+videoarg = mkchromecast.__init__.videoarg
+youtubeurl = mkchromecast.__init__.youtubeurl
 
 print(colors.bold('mkchromecast ')+'v'+__version__)
 
@@ -32,7 +34,7 @@ if args.tray == False:
         cc.initialize_cast()
         terminate()
 
-    if args.youtube == None and args.video == False and args.source_url == None:
+    if youtubeurl == None and videoarg == False and args.source_url == None:
         if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
@@ -55,17 +57,17 @@ if args.tray == False:
             import mkchromecast.audio
             mkchromecast.audio.main()
 
-    elif args.youtube == None and args.video == True:
+    elif youtubeurl == None and videoarg == True:
         print('video')
         import mkchromecast.video
         mkchromecast.video.main()
 
-    elif args.youtube == True and args.video == True:
+    elif youtubeurl != None and videoarg == True:
         print('video')
         import mkchromecast.video
         mkchromecast.video.main()
 
-    elif args.youtube == True and args.video == False: # When casting youtube url, we do it throught the audio module
+    elif youtubeurl != None and videoarg == False: # When casting youtube url, we do it throught the audio module
         import mkchromecast.audio
         mkchromecast.audio.main()
 
@@ -83,7 +85,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and args.youtube == None and args.source_url == None:
+        if platform == 'Darwin' and youtubeurl == None and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()

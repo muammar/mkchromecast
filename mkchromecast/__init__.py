@@ -192,6 +192,19 @@ You can pass it to all available backends.
 )
 
 parser.add_argument(
+'-f',
+'--file',
+type=str,
+default=None,
+help='''
+Stream a file.
+
+Example:
+    python mkchromecast.py -f /path/to/file.mp4
+'''
+)
+
+parser.add_argument(
 '-n',
 '--name',
 type=str,
@@ -431,6 +444,7 @@ if debug == True:
 
 discover = args.discover
 host = args.host
+f = args.file
 sourceurl = args.source_url
 reconnect = args.reconnect
 
@@ -635,6 +649,8 @@ if args.youtube != None:
     else:
         youtubeurl = args.youtube
         backend = 'ffmpeg'
+else:
+    youtubeurl = args.youtube
 
 """
 This is to write a PID file
