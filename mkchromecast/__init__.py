@@ -138,6 +138,19 @@ Use this option to connect from configuration file.
 )
 
 parser.add_argument(
+'--control',
+action='store_true',
+default=False,
+help='''
+Control some actions of your Google Cast Devices. Use the 'u' and 'd' keys to
+perform volume up and volume down respectively, or press 'p' and 'r' to pause
+and resume cast process (only works with ffmpeg). Note that to kill the
+application using this option, you need to press the 'q' key or 'Ctrl-c'.
+'''
+)
+
+
+parser.add_argument(
 '--debug',
 action='store_true',
 help='''
@@ -327,13 +340,13 @@ have to specify the codec with -c flag when using it.
 Example:
 
 Source URL, port and extension:
-    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 Source URL, no port, and extension:
-    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --volume
+    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --control
 
 Source URL without extension:
-    python mkchromecast.py --source-url http://example.com/name -c aac --volume
+    python mkchromecast.py --source-url http://example.com/name -c aac --control
 
 Supported source URLs are:
 
@@ -385,7 +398,20 @@ parser.add_argument(
 action='store_true',
 default=False,
 help='''
-Video.
+Use this flag to cast video to your Google cast devices. It is only working
+with ffmpeg.
+
+Examples:
+
+Cast a file:
+    python mkchromecast.py --video -f "/path/to/file.mp4"
+
+Cast from source-url:
+    python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --control --video
+
+Cast a youtube-url:
+    python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+
 '''
 )
 
@@ -394,9 +420,8 @@ parser.add_argument(
 action='store_true',
 default=False,
 help='''
-Control the volume of your Google Cast Devices. Use the 'u' and 'd' keys to
-perform volume up and volume down actions respectively. Note that to kill the
-application using this option, you need to press the 'q' key or 'Ctrl-c'.
+This option has been changed to --control. It will be deleted in following
+releases.
 '''
 )
 
@@ -635,8 +660,11 @@ videoarg = args.video
 """
 Volume
 """
-if args.volume == True:
-    volumearg = args.volume
+if args.control == True:
+    control = args.control
+elif args.volume == True:   #FIXME this has to be deleted in future releases.
+    control = args.volume
+    print(colors.warning('The --volume flag is going to be renamed to --control.'))
 
 """
 Youtube URLs
