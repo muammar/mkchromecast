@@ -118,8 +118,9 @@ if args.tray == False:
             print('')
             print(colors.options(           'Volume up:')+' u')
             print(colors.options(         'Volume down:')+' d')
-            print(colors.options(       'Pause casting:')+' p')
-            print(colors.options(      'Resume casting:')+' r')
+            if videoarg == True:
+                print(colors.options(       'Pause casting:')+' p')
+                print(colors.options(      'Resume casting:')+' r')
             print(colors.options('Quit the application:')+' q or Ctrl-C')
             print('')
             return
@@ -139,19 +140,25 @@ if args.tray == False:
                         if debug == True:
                             controls_msg()
                 elif(key == 'p'):
-                    print('Pausing casting process...')
-                    subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
-                    if args.encoder_backend == 'ffmpeg':
-                        debug = mkchromecast.__init__.debug
-                        if debug == True:
-                            controls_msg()
+                    if videoarg == True:
+                        print('Pausing casting process...')
+                        subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
+                        if args.encoder_backend == 'ffmpeg':
+                            debug = mkchromecast.__init__.debug
+                            if debug == True:
+                                controls_msg()
+                    else:
+                        pass
                 elif(key == 'r'):
-                    print('Resuming casting process...')
-                    subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
-                    if args.encoder_backend == 'ffmpeg':
-                        debug = mkchromecast.__init__.debug
-                        if debug == True:
-                            controls_msg()
+                    if videoarg == True:
+                        print('Resuming casting process...')
+                        subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
+                        if args.encoder_backend == 'ffmpeg':
+                            debug = mkchromecast.__init__.debug
+                            if debug == True:
+                                controls_msg()
+                    else:
+                        pass
                 elif(key == 'q'):
                     print(colors.error('Quitting application...'))
                     terminateapp()
