@@ -348,7 +348,6 @@ class casting(object):
             print(colors.options('The media type string used is:')+' '+mtype)
             media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
         else:
-            print(' ')
             print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
             media_controller.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg', title = self.title)
         print(' ')

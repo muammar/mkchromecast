@@ -7,7 +7,7 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
@@ -61,7 +61,7 @@ if youtubeurl != None:
     mtype = 'video/mp4'
 
 else:
-    if platform == 'Linux' and f != None and subtitles == None:
+    if f != None and subtitles == None:
         command = [
             'ffmpeg',
             '-re',
@@ -72,7 +72,7 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
          ]
-    elif platform == 'Linux' and f != None and subtitles != None:
+    elif f != None and subtitles != None:
         print('new')
         command = [
             'ffmpeg',

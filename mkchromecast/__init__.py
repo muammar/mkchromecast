@@ -573,7 +573,10 @@ elif args.encoder_backend  == None:     #This is to define defaults
     if platform == 'Linux':
         args.encoder_backend = 'parec'
         backend = args.encoder_backend
-    elif platform == 'Darwin':
+    elif platform == 'Darwin' and args.video == True:
+        args.encoder_backend = 'ffmpeg'
+        backend = args.encoder_backend
+    elif platform == 'Darwin' and args.video == False:
         args.encoder_backend = 'node'
         backend = args.encoder_backend
 
