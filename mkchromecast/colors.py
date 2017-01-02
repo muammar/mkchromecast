@@ -38,7 +38,7 @@ def color(text, **user_styles):
         'bg_purple': '\033[45m',
         'bg_cyan': '\033[46m',
         'bg_light_grey': '\033[47m'
-    }
+        }
 
     color_text = ''
     for style in user_styles:
@@ -48,7 +48,10 @@ def color(text, **user_styles):
             raise KeyError('def color: parameter `{}` does not exist'.format(style))
 
     color_text += text
-    return '\033[0m{}\033[0m'.format(color_text)
+    try:
+        return '\033[0m{}\033[0m'.format(color_text)
+    except UnicodeEncodeError:
+        return '\033[0m{}\033[0m'.format(unicode(color_text).encode("utf-8"))
 
 def error(text):
     return color(text, bold=True, fg_red=True)

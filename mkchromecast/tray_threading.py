@@ -3,16 +3,18 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.__init__
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
-import mkchromecast.ffmpeg
+import mkchromecast.audio
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import *
 from mkchromecast.systray import *
-import os.path, pickle, pychromecast
+from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+import os.path
+import pickle
+import pychromecast
 """
 Configparser is imported differently in Python3
 """
@@ -26,7 +28,6 @@ debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
-
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -63,10 +64,10 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         if os.path.exists(configf):
-            print(colors.warning(':::Threading::: Configuration file exist'))
+            print(colors.warning(':::Threading::: Configuration file exists'))
             print(colors.warning(':::Threading::: Using defaults set there'))
             config.read(configf)
-            backend = ConfigSectionMap("settings")['backend']
+            backend = ConfigSectionMap('settings')['backend']
             print(':::Threading backend::: '+backend)
         else:
             backend = mkchromecast.__init__.backend
@@ -75,11 +76,11 @@ class Player(QObject):
             stream()
         else:
             try:
-                reload(mkchromecast.ffmpeg)
+                reload(mkchromecast.audio)
             except NameError:
                 from imp import reload
-                reload(mkchromecast.ffmpeg)
-            mkchromecast.ffmpeg.main()
+                reload(mkchromecast.audio)
+            mkchromecast.audio.main()
         if platform == 'Linux':
             create_sink()
         start = casting()
@@ -97,8 +98,9 @@ class Player(QObject):
         self.pcastfinished.emit()
 
 class Updater(QObject):
+    """This class is employed to check for new mkchromecast versions"""
     upcastfinished = pyqtSignal()
-    upcastready = pyqtSignal(str)
+    updateready = pyqtSignal(str)
 
     def __init__(self):
         QObject.__init__(self)
@@ -107,11 +109,28 @@ class Updater(QObject):
     def _updater_(self):
         chk = casting()
         if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
-            self.upcastready.emit('None')
+            self.updateready.emit('None')
         else:
-            from mkchromecast.version import updater
-            if updater() == True:
-                self.upcastready.emit('True')
-            else:
-                self.upcastready.emit('False')
+            try:
+                from mkchromecast.version import __version__
+                import requests
+                url = 'https://api.github.com/repos/muammar/mkchromecast/releases/latest'
+                response = requests.get(url).text.split(',')
+
+                for e in response:
+                    if 'tag_name' in e:
+                        version = e.strip('"tag_name":')
+                        break
+
+                if version > __version__:
+                    print ('Version ' + version + ' is available to download')
+                    self.updateready.emit(version)
+                else:
+                    print ('You are up to date')
+                    self.updateready.emit('False')
+            except UnboundLocalError:
+                self.updateready.emit('error1')
+            except requests.exceptions.ConnectionError:
+                self.updateready.emit('error1')
+
         self.upcastfinished.emit()

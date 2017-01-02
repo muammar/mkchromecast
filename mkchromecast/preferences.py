@@ -5,8 +5,10 @@
 import sys
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
-import os, getpass
+import os
+import getpass
 import subprocess
+import webbrowser
 
 """
 Check if external programs are available to build the preferences
@@ -46,8 +48,6 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
-
-
 def ConfigSectionMap(section):
     config = ConfigParser.RawConfigParser()
     configurations = config_manager()    # Class from mkchromecast.config
@@ -59,23 +59,24 @@ def ConfigSectionMap(section):
         try:
             dict1[option] = config.get(section, option)
             if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
+                DebugPrint('skip: %s' % option)
         except:
-            print("exception on %s!" % option)
+            print('exception on %s!' % option)
             dict1[option] = None
     return dict1
 
 if tray == True:
-    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication
+    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication, QPushButton, QLineEdit
     from PyQt5 import QtCore
 
     class preferences(QWidget):
-        def __init__(self):
+        def __init__(self, scale_factor):
             try:
                 super().__init__()
             except TypeError:
                 super(self.__class__, self).__init__() #This is to port to python2
 
+            self.scale_factor = scale_factor
             self.config = ConfigParser.RawConfigParser()
             self.configurations = config_manager()    # Class from mkchromecast.config
             self.configf = self.configurations.configf
@@ -86,131 +87,295 @@ if tray == True:
             self.initUI()
 
         def initUI(self):
+            self.backend()
+            self.codec()
+            self.bitrate()
+            self.samplerates()
+            self.iconcolors()
+            self.notifications()
+            self.searchatlaunch()
+            if platform == 'Linux':
+                self.alsadevice()
+            self.buttons()
+            self.window()
 
+        def backend(self):
             """
             Backend
             """
-            backends_supported = ['node', 'ffmpeg', 'avconv', 'parec']
-            backends = []
+            backends_supported = [
+                'node',
+                'ffmpeg',
+                'avconv',
+                'parec',
+                'gstreamer'
+                ]
+            self.backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'avconv':
-                        backends.append(item)
+                    if is_installed(item) == True and item != 'avconv' and item !='gstreamer':
+                        self.backends.append(item)
             else:
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'node':
-                        backends.append(item)
-            backendindex = backends.index(self.backendconf)
+                    if is_installed(item) == True and item != 'node' and item != 'gstreamer':
+                        self.backends.append(item)
+                    elif is_installed('gst-launch-1.0') == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
+                        self.backends.append(item)
+            backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
-            self.backend.move(20, 24)
+            self.backend.move(20*self.scale_factor, 24*self.scale_factor)
             self.qcbackend = QComboBox(self)
-            self.qcbackend.move(180, 20)
+            self.qcbackend.move(180*self.scale_factor, 20*self.scale_factor)
             self.qcbackend.setMinimumContentsLength(7)
-            for item in backends:
+            for item in self.backends:
                 self.qcbackend.addItem(item)
             self.qcbackend.setCurrentIndex(backendindex)
             self.qcbackend.activated[str].connect(self.onActivatedbk)
 
+        def codec(self):
             """
             Codec
             """
-            self.codec = QLabel('Audio coding format', self)
-            self.codec.move(20, 56)
+            self.codec = QLabel('Audio Coding Format', self)
+            self.codec.move(20*self.scale_factor, 56*self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
             if self.backendconf == 'node':
-                codecs = ['mp3']
+                self.codecs = ['mp3']
             else:
-                codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+                self.codecs = [
+                    'mp3',
+                    'ogg',
+                    'aac',
+                    'wav',
+                    'flac'
+                    ]
             if debug == True:
-                print(codecs)
-            codecindex = codecs.index(self.codecconf)
-            self.qccodec.move(180, 54)
+                print(self.codecs)
+            codecindex = self.codecs.index(self.codecconf)
+            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
-            for item in codecs:
+            for item in self.codecs:
                 self.qccodec.addItem(item)
             self.qccodec.setCurrentIndex(codecindex)
             self.qccodec.activated[str].connect(self.onActivatedcc)
 
+        def bitrate(self):
             """
             Bitrate
             """
             self.bitrate = QLabel('Select Bitrate (kbit/s)', self)
-            self.bitrate.move(20, 88)
+            self.bitrate.move(20*self.scale_factor, 88*self.scale_factor)
             self.qcbitrate = QComboBox(self)
             self.qcbitrate.clear()
-            self.qcbitrate.move(180, 88)
+            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             self.qcbitrate.setMinimumContentsLength(7)
             if self.codecconf == 'wav':
-                bitrates = ["None"]
+                self.bitrates = ['None']
                 bitrateindex = 0
             elif self.codecconf == 'flac':
-                bitrates = ["None"]
+                self.bitrates = ['None']
                 bitrateindex = 0
             else:
-                bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
-                bitrateindex = bitrates.index(self.bitrateconf)
-            for item in bitrates:
+                self.bitrates = [
+                    '128',
+                    '160',
+                    '192',
+                    '224',
+                    '256',
+                    '320',
+                    '500'
+                    ]
+                bitrateindex = self.bitrates.index(self.bitrateconf)
+            for item in self.bitrates:
                 self.qcbitrate.addItem(item)
             self.qcbitrate.setCurrentIndex(bitrateindex)
             self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
+        def samplerates(self):
             """
             Sample rate
             """
-            samplerates = ["48000", "44100", "32000", "22050"]
-            sampleratesindex = samplerates.index(self.samplerateconf)
-            self.samplerate = QLabel('Sample rate (Hz)', self)
-            self.samplerate.move(20, 120)
+            self.samplerates = [
+                '96000',
+                '48000',
+                '44100',
+                '32000',
+                '22050'
+                ]
+            sampleratesindex = self.samplerates.index(self.samplerateconf)
+            self.samplerate = QLabel('Sample Rate (Hz)', self)
+            self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate = QComboBox(self)
-            self.qcsamplerate.move(180, 120)
+            self.qcsamplerate.move(180*self.scale_factor, 120*self.scale_factor)
             self.qcsamplerate.setMinimumContentsLength(7)
-            for item in samplerates:
+            for item in self.samplerates:
                 self.qcsamplerate.addItem(item)
             self.qcsamplerate.setCurrentIndex(sampleratesindex)
             self.qcsamplerate.activated[str].connect(self.onActivatedsr)
 
+        def iconcolors(self):
+            """
+            Icon colors
+            """
+            self.colors_list = [
+                'black',
+                'blue',
+                'white'
+                ]
+            colorsindex = self.colors_list.index(self.searchcolorsconf)
+            self.colors = QLabel('Icon Colors', self)
+            self.colors.move(20*self.scale_factor, 152*self.scale_factor)
+            self.qccolors = QComboBox(self)
+            self.qccolors.move(180*self.scale_factor, 152*self.scale_factor)
+            self.qccolors.setMinimumContentsLength(7)
+            for item in self.colors_list:
+                self.qccolors.addItem(item)
+            self.qccolors.setCurrentIndex(colorsindex)
+            self.qccolors.activated[str].connect(self.onActivatedcolors)
+
+        def notifications(self):
             """
             Notifications
             """
-            notifications = ["enabled", "disabled"]
-            notindex = notifications.index(self.notificationsconf)
+            self.notifications_list = [
+                'enabled',
+                'disabled'
+                ]
+            notindex = self.notifications_list.index(self.notificationsconf)
             self.notifications = QLabel('Notifications', self)
-            self.notifications.move(20, 152)
+            self.notifications.move(20*self.scale_factor, 184*self.scale_factor)
             self.qcnotifications = QComboBox(self)
-            self.qcnotifications.move(180, 152)
+            self.qcnotifications.move(180*self.scale_factor, 184*self.scale_factor)
             self.qcnotifications.setMinimumContentsLength(7)
-            for item in notifications:
+            for item in self.notifications_list:
                 self.qcnotifications.addItem(item)
             self.qcnotifications.setCurrentIndex(notindex)
             self.qcnotifications.activated[str].connect(self.onActivatednotify)
 
-            #self.lbl.move(50, 150)
+        def searchatlaunch(self):
+            """
+            Search at launch
+            """
+            self.atlaunch_list = [
+                'enabled',
+                'disabled'
+                ]
+            launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
+            self.atlaunch = QLabel('Search At Launch', self)
+            self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
+            self.qcatlaunch = QComboBox(self)
+            self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)
+            self.qcatlaunch.setMinimumContentsLength(7)
+            for item in self.atlaunch_list:
+                self.qcatlaunch.addItem(item)
+            self.qcatlaunch.setCurrentIndex(launchindex)
+            self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
-            self.setGeometry(300, 300, 300, 200)
-            self.setFixedSize(300, 200)     #This is to fix the size of the window
-            self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
-            self.setWindowTitle('mkchromecast Preferences')
+        def alsadevice(self):
+            """
+            Set the ALSA Device
+            """
+            self.alsadevice = QLabel('ALSA Device', self)
+            self.alsadevice.move(20*self.scale_factor, 244*self.scale_factor)
+            self.qle = QLineEdit(self)
+            self.qle.move(179*self.scale_factor, 244*self.scale_factor)
+            self.qle.setFixedWidth(84*self.scale_factor)
+            self.read_defaults()
+            if self.alsadeviceconf != None:
+                self.qle.setText(self.alsadeviceconf)
+            self.qle.textChanged[str].connect(self.onActivatedalsadevice)
+
+        def buttons(self):
+            """
+            Buttons
+            """
+            resetbtn = QPushButton("Reset Settings", self)
+            resetbtn.move(10*self.scale_factor, 274*self.scale_factor)
+            resetbtn.clicked.connect(self.reset_configuration)
+
+            faqbtn = QPushButton("FAQ", self)
+            faqbtn.move(138*self.scale_factor, 274*self.scale_factor)
+            faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
+
+            donbtn = QPushButton("Donate :)", self)
+            donbtn.move(204*self.scale_factor, 274*self.scale_factor)
+            donbtn.clicked.connect(lambda: webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U'))
+
+        def window(self):
+            """
+            Geometry and window's title
+            """
+            self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
+            if platform == 'Darwin':
+                self.setFixedSize(310*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
+            else:
+                self.setFixedSize(282*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
+            self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
+            self.setWindowTitle('Mkchromecast Preferences')
+
+            """
+            Methods
+            """
+        def reset_configuration(self):
+            self.configurations.write_defaults()
+            self.reset_indexes()
+
+        def reset_indexes(self):
+            self.read_defaults()
+            """
+            Indexes of QCombo boxes are reset
+            """
+            backendindex = self.backends.index(self.backendconf)
+            codecindex = self.codecs.index(self.codecconf)
+            self.bitrates = [
+                '128',
+                '160',
+                '192',
+                '224',
+                '256',
+                '320',
+                '500'
+                ]
+            bitrateindex = self.bitrates.index(self.bitrateconf)
+            self.qcbitrate.clear()
+            for item in self.bitrates:
+                self.qcbitrate.addItem(item)
+            sampleratesindex = self.samplerates.index(self.samplerateconf)
+            colorsindex = self.colors_list.index(self.searchcolorsconf)
+            notindex = self.notifications_list.index(self.notificationsconf)
+            launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
+            self.qcbackend.setCurrentIndex(backendindex)
+            self.qccodec.setCurrentIndex(codecindex)
+            self.qcbitrate.setCurrentIndex(bitrateindex)
+            self.qcsamplerate.setCurrentIndex(sampleratesindex)
+            self.qccolors.setCurrentIndex(colorsindex)
+            self.qcnotifications.setCurrentIndex(notindex)
+            self.qcatlaunch.setCurrentIndex(launchindex)
 
         def onActivatedbk(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','backend',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.config.set('settings', 'backend', text)
+            self.write_config()
             self.read_defaults()
             self.qccodec.clear()
             if self.backendconf == 'node':
                 codecs = ['mp3']
                 self.config.read(self.configf)
-                self.config.set('settings','codec','mp3')
-                with open(self.configf, 'w') as configfile:
-                        self.config.write(configfile)
+                self.config.set('settings', 'codec', 'mp3')
+                self.write_config()
             else:
-                codecs = ['mp3', 'ogg', 'aac', 'wav', 'flac']
+                codecs = [
+                    'mp3',
+                    'ogg',
+                    'aac',
+                    'wav',
+                    'flac'
+                    ]
             if debug == True:
                 print(codecs)
             codecindex = codecs.index(self.codecconf)
-            self.qccodec.move(180, 54)
+            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
             for item in codecs:
                 self.qccodec.addItem(item)
@@ -219,23 +384,30 @@ if tray == True:
 
         def onActivatedcc(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','codec',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.config.set('settings', 'codec', text)
+            self.write_config()
             self.read_defaults()
             self.qcbitrate.clear()
             if self.codecconf == 'wav':
-                bitrates = ["None"]
+                bitrates = ['None']
                 bitrateindex = 0
             elif self.codecconf == 'flac':
                 bitrateindex = 0
-                bitrates = ["None"]
+                bitrates = ['None']
             else:
-                self.configurations.verify_config()
+                self.configurations.chk_config()
                 self.read_defaults()
-                bitrates = [ "128", "160", "192", "224", "256", "320", "500"]
+                bitrates = [
+                    '128',
+                    '160',
+                    '192',
+                    '224',
+                    '256',
+                    '320',
+                    '500'
+                    ]
                 bitrateindex = bitrates.index(self.bitrateconf)
-            self.qcbitrate.move(180, 88)
+            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
             for item in bitrates:
                 self.qcbitrate.addItem(item)
             self.qcbitrate.setCurrentIndex(bitrateindex)
@@ -243,41 +415,67 @@ if tray == True:
 
         def onActivatedbt(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','bitrate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.config.set('settings', 'bitrate', text)
+            self.write_config()
             self.read_defaults()
 
         def onActivatedsr(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','samplerate',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.config.set('settings', 'samplerate', text)
+            self.write_config()
             self.read_defaults()
 
         def onActivatednotify(self, text):
             self.config.read(self.configf)
-            self.config.set('settings','notifications',text)
-            with open(self.configf, 'w') as configfile:
-                    self.config.write(configfile)
+            self.config.set('settings', 'notifications', text)
+            self.write_config()
             self.read_defaults()
-            #self.lbl.setText(text)
-            #self.lbl.adjustSize()
+
+        def onActivatedcolors(self, text):
+            self.config.read(self.configf)
+            self.config.set('settings', 'colors', text)
+            self.write_config()
+            self.read_defaults()
+
+        def onActivatedatlaunch(self, text):
+            self.config.read(self.configf)
+            self.config.set('settings', 'searchatlaunch', text)
+            self.write_config()
+            self.read_defaults()
+
+        def onActivatedalsadevice(self, text):
+            self.config.read(self.configf)
+            if not text:
+                self.config.set('settings', 'alsadevice', None)
+            else:
+                self.config.set('settings', 'alsadevice', text)
+            self.write_config()
+            self.read_defaults()
 
         def read_defaults(self):
-            self.backendconf = ConfigSectionMap("settings")['backend']
-            self.codecconf = ConfigSectionMap("settings")['codec']
+            self.backendconf = ConfigSectionMap('settings')['backend']
+            self.codecconf = ConfigSectionMap('settings')['codec']
             if self.backendconf == 'node' and self.codecconf != 'mp3':
                 self.config.read(self.configf)
-                self.config.set('settings','codec','mp3')
-                with open(self.configf, 'w') as configfile:
-                        self.config.write(configfile)
-                self.codecconf = ConfigSectionMap("settings")['codec']
-            self.bitrateconf = ConfigSectionMap("settings")['bitrate']
-            self.samplerateconf = ConfigSectionMap("settings")['samplerate']
-            self.notificationsconf = ConfigSectionMap("settings")['notifications']
+                self.config.set('settings', 'codec', 'mp3')
+                self.write_config()
+                self.codecconf = ConfigSectionMap('settings')['codec']
+            self.bitrateconf = ConfigSectionMap('settings')['bitrate']
+            self.samplerateconf = ConfigSectionMap('settings')['samplerate']
+            self.notificationsconf = ConfigSectionMap('settings')['notifications']
+            self.searchcolorsconf = ConfigSectionMap('settings')['colors']
+            self.searchatlaunchconf = ConfigSectionMap('settings')['searchatlaunch']
+            self.alsadeviceconf = ConfigSectionMap('settings')['alsadevice']
             if debug == True:
-                print(self.backendconf, self.codecconf, self.bitrateconf, self.samplerateconf, self.notificationsconf)
+                print(self.backendconf, self.codecconf, self.bitrateconf, \
+                        self.samplerateconf, self.notificationsconf, \
+                        self.searchatlaunchconf, self.searchcolorsconf, \
+                        self.alsadeviceconf)
+
+        def write_config(self):
+            """This method writes to configfile"""
+            with open(self.configf, 'w') as configfile:
+                    self.config.write(configfile)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

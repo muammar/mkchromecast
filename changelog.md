@@ -1,9 +1,103 @@
-* mkchromecast (0.2.8) **unreleased**:
+* mkchromecast (0.3.7) **released**: 2016/12/30
+
+    - node streaming updated to work with `node v7.2.1`.
+    - Added ALSA device configuration in preferences pane.
+    - Improved systray stability.
+    - gstreamer support for capturing audio.
+    - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
+    - A `--segment-time` option added to modify the segment time when using
+      ffmpeg.
+    - A `--reconnect` option that monitors if mkchromecast has disconnected
+      from google cast, and tries to reconnect.
+      Closes [#25](https://github.com/muammar/mkchromecast/issues/25).
+    - ALSA device can be set from systray.
+    - Add support for newer `pychromecast` versions.
+      Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
+    - Making ping code python 3 compatible. Closes:
+      [#35](https://github.com/muammar/mkchromecast/pull/35).
+
+* mkchromecast (0.3.6) **released**: 2016/09/19
+
+    - The node streaming has been updated to work with `node v6.6.0`.
+    - `Ctrl-C` now raises `KeyboardInterrupt` when using `--volume` option from
+      console.
+    - Improvements under the hood.
+    - Now mkchromecast does not need pulseaudio to cast!.
+    - You can play from stream using the `--source-url` flag.
+    - `-d` option has been enable to discover available Google cast devices.
+    - `--host` flag allows users to manually enter the local ip. Closes
+      [#17](https://github.com/muammar/mkchromecast/issues/17).
+    - `-n` flag allows users to pass the name of their cast devices.
+
+* mkchromecast (0.3.5) **released**: 2016/08/26
+
+    - Added close button for preferences pane. Closes
+      [#13](https://github.com/muammar/mkchromecast/issues/13)
+    - Improvements for cases where there are virtual network interfaces
+      present.
+    - Dropped `-re` flag from ffmpeg and avconv commands.
+    - Renamed `ffmpeg.py` to `audio.py`.
+
+* mkchromecast (0.3.4) **released**: 2016/08/19
+
+    - New white icons.
+    - Added 96000Hz sampling rate support for `ffmpeg` and `avconv` backends.
+      Closes [#11](https://github.com/muammar/mkchromecast/issues/11).
+    - Fixed 48000Hz sample rate case.
+    - The node streaming has been updated to work with `node v6.4.0`.
+
+* mkchromecast (0.3.3) **released**: 2016/08/16
+
+    - Improved MultiRoom support. Closes
+      [#8](https://github.com/muammar/mkchromecast/issues/8).
+
+* mkchromecast (0.3.2) **released**: 2016/06/15
+
+    - Improvements for cases where chromecasts have non-ascii characters in
+      their names. Closes
+      [#7](https://github.com/muammar/mkchromecast/issues/7).
+
+* mkchromecast (0.3.1) **released**: 2016/08/12
+
+    - Improved Preferences window.
+    - The node streaming has been updated to work with `node v6.3.1`.
+    - Improvements in pulseaudio.py for preventing subprocess.Popen from
+      displaying output.
+    - Improvements in `Check For Updates` method.
+    - Added new option `--chunk-size` to control chunk's size of flask server
+      when streaming using `ffmpeg` or `avconv`.
+
+* mkchromecast (0.3.0) **released**: 2016/07/12
+
+    - Youtube URLs can be played piping the audio using `youtube-dl`.
+    - New method for discovering local IP in macOS. This will improve the
+      stability of the system tray application. Closes
+      [#5](https://github.com/muammar/mkchromecast/issues/5).
+    - Now it is possible to select a different color for the system tray icon.
+      This is useful when using dark themes.
+    - The node streaming has been updated to work with `node v6.3.0`.
+    - Improved stability when using system tray icon.
+    - New method in preferences window to reset to default configurations.
+      Closes [#6](https://github.com/muammar/mkchromecast/issues/6).
+
+* mkchromecast (0.2.9.1) **released**: 2016/06/29
+
+    - Fixing `stop` segfault.
+
+* mkchromecast (0.2.9) **released**: 2016/06/29
+
+    - Improved stability when using system tray icon.
+    - New `search at launch` option. When enabled, the system tray search for
+      available Google cast devices at launch time.
+    - The node streaming server has been updated to work with `node v6.2.2`.
+
+* mkchromecast (0.2.8) **released**: 2016/06/22
 
     - Preferences and volume windows always on top.
     - The node streaming has been updated to work with v6.2.1. This improves
       stability for macOS users when streaming with node.
     - It is now possible to check for updates using the system tray icon.
+    - Scale factor added for retina resolutions.
 
 * mkchromecast (0.2.7) **released**: 2016/06/16
 
