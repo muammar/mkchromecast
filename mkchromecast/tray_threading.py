@@ -41,6 +41,7 @@ class Worker(QObject):
         try:                        # This should fix the error socket.gaierror making the system tray to be closed.
             self.cc = casting()
             self.cc.initialize_cast()
+            self.cc.availablecc()
         except socket.gaierror:
             if debug == True:
                 print(colors.warning(':::Threading::: Socket error, CC set to 0'))
