@@ -27,7 +27,7 @@ chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
 platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
-f = mkchromecast.__init__.f
+input_file = mkchromecast.__init__.input_file
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -39,18 +39,6 @@ http://stackoverflow.com/questions/12801192/client-closes-connection-when-stream
 I think that the command below is sending a file that is too big and the
 browser closes the connection.
 """
-
-#command = [
-#    'ffmpeg',
-#    '-re',
-#    '-loglevel', 'panic',
-#    '-i', '/home/muammar/Videos/apocalyptica.mp4',
-#    '-preset', 'ultrafast',
-#    '-f', 'mp4',
-#    '-movflags', 'frag_keyframe',
-#    'pipe:1'
-# ]
-
 if youtubeurl != None:
     command = [
         'youtube-dl',
@@ -66,7 +54,7 @@ else:
             'ffmpeg',
             '-re',
             '-loglevel', 'panic',
-            '-i', f,
+            '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe',
@@ -78,33 +66,13 @@ else:
             'ffmpeg',
             '-re',
             '-loglevel', 'panic',
-            '-i', f,
+            '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
-    else:
-        command = [
-            'ffmpeg',
-            #'-re',
-            #'-loglevel', 'panic',
-            '-f',
-            'avfoundation',
-            '-r', '25',
-            #'-s', '2560x1600',
-            '-i', '1:0',
-            '-c:v', 'libx264',
-            '-preset', 'ultrafast',
-            '-tune', 'zerolatency',
-            '-maxrate', '1200000k',
-            '-bufsize', '200000k',
-            '-threads', '4',
-            '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
-            'pipe:1'
-         ]
     mtype = 'video/mp4'
 
 app = Flask(__name__)

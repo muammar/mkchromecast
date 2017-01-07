@@ -205,15 +205,15 @@ You can pass it to all available backends.
 )
 
 parser.add_argument(
-'-f',
-'--file',
+'-i',
+'--input-file',
 type=str,
 default=None,
 help='''
 Stream a file.
 
 Example:
-    python mkchromecast.py -f /path/to/file.mp4
+    python mkchromecast.py -i /path/to/file.mp4
 '''
 )
 
@@ -414,7 +414,7 @@ with ffmpeg.
 Examples:
 
 Cast a file:
-    python mkchromecast.py --video -f "/path/to/file.mp4"
+    python mkchromecast.py --video -i "/path/to/file.mp4"
 
 Cast from source-url:
     python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --control --video
@@ -479,7 +479,7 @@ if debug == True:
 
 discover = args.discover
 host = args.host
-f = args.file
+input_file = args.input_file
 sourceurl = args.source_url
 subtitles = args.subtitles
 reconnect = args.reconnect
