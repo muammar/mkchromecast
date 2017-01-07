@@ -49,7 +49,7 @@ if youtubeurl != None:
     mtype = 'video/mp4'
 
 else:
-    if f != None and subtitles == None:
+    if input_file != None and subtitles == None:
         command = [
             'ffmpeg',
             '-re',
@@ -60,7 +60,7 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
          ]
-    elif f != None and subtitles != None:
+    elif input_file != None and subtitles != None:
         print('new')
         command = [
             'ffmpeg',
