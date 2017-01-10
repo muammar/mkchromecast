@@ -267,6 +267,22 @@ reconnect.
 )
 
 parser.add_argument(
+'--resolution',
+type=str,
+default=False,
+help='''
+Set the resolution of the streamed video. The following resolutions are supported:
+
+    - 480p.
+    - 720p (1280x720).
+    - 1080p (1920x1080).
+    - 2K.
+    - UHD (3840x2160).
+    - 4K (4096 × 2160).
+'''
+)
+
+parser.add_argument(
 '-s',
 '--select-cc',
 action='store_true',
@@ -607,8 +623,30 @@ else:
         print(colors.options('Selected audio codec: ')+ args.codec)
         print(colors.error('Supported audio codecs are: '))
         for codec in codecs:
-            print('-',codec)
+            print('-', codec)
         sys.exit(0)
+
+"""
+Resolution
+"""
+resolutions = [
+        False,
+        '480p',
+        '720p',
+        '1080p',
+        '2K',
+        'UHD',
+        '4K'
+     ]
+
+if args.resolution in resolutions:
+    resolution = args.resolution
+else:
+    print(colors.error('Supported resolutions are: '))
+    for res in resolutions:
+        if res != False:
+            print('-', res)
+    sys.exit(0)
 
 """
 Bitrate
