@@ -28,11 +28,32 @@ appendtourl = 'stream'
 platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
+res = mkchromecast.__init__.resolution
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
 except AttributeError:
     youtubeurl = None
+
+def resolution(res):
+    if res.lower() == '480p':
+        insert = ['-vf', 'scale=853:-1']
+        return insert
+    if res.lower() == '720p':
+        insert = ['-vf', 'scale=1280:-1']
+        return insert
+    if res.lower() == '1080p':
+        insert = ['-vf', 'scale=1920:-1']
+        return insert
+    if res.lower() == '2k':
+        insert = ['-vf', 'scale=2048:-1']
+        return insert
+    if res.lower() == 'uhd':
+        insert = ['-vf', 'scale=3840:-1']
+        return insert
+    if res.lower() == '4k':
+        insert = ['-vf', 'scale=4096:-1']
+        return insert
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
@@ -49,6 +70,9 @@ if youtubeurl != None:
     mtype = 'video/mp4'
 
 else:
+    """
+    The blocks shown below are related to input_files
+    """
     if input_file != None and subtitles == None:
         command = [
             'ffmpeg',
@@ -61,7 +85,6 @@ else:
             'pipe:1'
          ]
     elif input_file != None and subtitles != None:
-        print('new')
         command = [
             'ffmpeg',
             '-re',
@@ -73,7 +96,13 @@ else:
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
+
     mtype = 'video/mp4'
+    if res != None:
+        cindex = command.index(input_file)
+        res_elements = resolution(res)
+        for element in res_elements:
+            command.insert(-cindex, element)
 
 app = Flask(__name__)
 

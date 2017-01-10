@@ -269,7 +269,7 @@ reconnect.
 parser.add_argument(
 '--resolution',
 type=str,
-default=False,
+default=None,
 help='''
 Set the resolution of the streamed video. The following resolutions are supported:
 
@@ -278,7 +278,7 @@ Set the resolution of the streamed video. The following resolutions are supporte
     - 1080p (1920x1080).
     - 2K.
     - UHD (3840x2160).
-    - 4K (4096 × 2160).
+    - 4K (4096x2160).
 '''
 )
 
@@ -630,7 +630,6 @@ else:
 Resolution
 """
 resolutions = [
-        False,
         '480p',
         '720p',
         '1080p',
@@ -639,8 +638,12 @@ resolutions = [
         '4K'
      ]
 
-if args.resolution in resolutions:
+_resolutions = [r.lower() for r in resolutions]
+
+if args.resolution == None:
     resolution = args.resolution
+elif args.resolution.lower() in _resolutions:
+    resolution = args.resolution.lower()
 else:
     print(colors.error('Supported resolutions are: '))
     for res in resolutions:
