@@ -2,7 +2,6 @@
 
 # This file is part of mkchromecast.
 
-from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.terminate import *
 from mkchromecast.version import __version__
@@ -509,10 +508,11 @@ Reset
 """
 if args.reset == True:
     if platform == 'Darwin':
+        from mkchromecast.audio_devices import inputint, outputint
         inputint()
         outputint()
     else:
-        from mkchromecast.pulseaudio import *
+        from mkchromecast.pulseaudio import remove_sink
         remove_sink()
     terminate()
 
