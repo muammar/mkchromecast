@@ -436,7 +436,15 @@ class menubar(QtWidgets.QMainWindow):
                     self.menuentry = self.menu.addAction(str(menuentry[1]))
                 except UnicodeEncodeError:
                     self.menuentry = self.menu.addAction(str(unicode(menuentry[1]).encode("utf-8")))
-                self.menuentry.triggered.connect(self.play_cast)
+                # The receiver is a lambda function that passes clicked as
+                # a boolean, and the clicked_item as an argument to the
+                # self.clicked_cc() method. This last method, sets the correct
+                # index and name of the chromecast to be used by
+                # self.play_cast(). Credits to this question in stackoverflow:
+                #
+                # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
+                receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
+                self.menuentry.triggered.connect(receiver)
                 self.menuentry.setCheckable(True)
             self.separator_menu()
             self.stop_menu()
@@ -448,6 +456,13 @@ class menubar(QtWidgets.QMainWindow):
             self.update_menu()
             self.about_menu()
             self.exit_menu()
+
+    def clicked_cc(self, clicked_item):
+        if debug == True:
+            print(clicked_item)
+        self.index = clicked_item[0]
+        self.cast_to = clicked_item[1]
+        self.play_cast()
 
     def pcastready(self, message):
         print('pcastready ?', message)
@@ -564,9 +579,6 @@ class menubar(QtWidgets.QMainWindow):
                         )
                     )
 
-        print(self.entries[0], self.entries[1])
-        self.index = self.entries[0]
-        self.cast_to = self.entries[1]
         while True:
             try:
                 if os.path.exists('/tmp/mkchromecast.tmp') == True:
