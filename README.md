@@ -7,7 +7,7 @@ mkchromecast
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
 This is a program to cast your **macOS** audio, or **Linux** audio to your
-Google Cast devices. It can also cast video files.
+Google Cast devices. It can also [cast video files](https://github.com/muammar/mkchromecast/tree/devel#video).
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
@@ -571,6 +571,10 @@ References:
 
 
 #### Video
+
+You can now cast videos to your Google cast using **mkchromecast**. This feature is only working 
+with `ffmpeg` backend and from command line. In the future, they may be a graphical interface 
+for this process. [See this project](https://github.com/muammar/mkchromecast/projects/1).
 
 * Cast a file from your computer to your chromecast:
 
