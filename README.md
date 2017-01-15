@@ -530,7 +530,7 @@ This option is useful for:
 Example:
 
 ```
-python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 ```
 
@@ -538,13 +538,13 @@ As it can be seen above, **the codec has to be specified with the `-c` flag**.
 
 **Note**: `.m3u` or `.pls` are not yet supported.
 
-#### Controlling the Google Cast's volume
+#### Controlling the Google Cast's volume and pause/resume options
 
 You can control the volume of your Google Cast device by launching
-**mkchromecast** with the option `--volume`:
+**mkchromecast** with the option `--control`:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
+python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --control
 ```
 
 This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
@@ -573,7 +573,7 @@ Killing the application
 -----------------------
 
 To kill **mkchromecast** when you run it from console, just press
-<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--volume` flag is passed).
+<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--control` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
 
