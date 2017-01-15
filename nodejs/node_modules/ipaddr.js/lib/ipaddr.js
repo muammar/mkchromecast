@@ -427,6 +427,14 @@
     }
   };
 
+  ipaddr.IPv4.isValidFourPartDecimal = function(string) {
+    if (ipaddr.IPv4.isValid(string) && string.match(/^\d+(\.\d+){3}$/)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   ipaddr.IPv6.isValid = function(string) {
     var e;
     if (typeof string === "string" && string.indexOf(":") === -1) {

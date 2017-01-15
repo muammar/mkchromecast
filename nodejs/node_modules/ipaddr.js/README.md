@@ -126,6 +126,8 @@ have the same interface for both protocols, and are similar to global methods.
 `ipaddr.IPvX.isValid(string)` can be used to check if the string is a valid address
 for particular protocol, and `ipaddr.IPvX.parse(string)` is the error-throwing parser.
 
+`ipaddr.IPvX.isValid(string)` uses the same format for parsing as the POSIX `inet_ntoa` function, which accepts unusual formats like `0xc0.168.1.1` or `0x10000000`. The function `ipaddr.IPv4.isValidFourPartDecimal(string)` validates the IPv4 address and also ensures that it is written in four-part decimal format.
+
 [IPv6 ranges]: https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L186
 [IPv4 ranges]: https://github.com/whitequark/ipaddr.js/blob/master/src/ipaddr.coffee#L71
 

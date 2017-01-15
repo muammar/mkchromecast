@@ -1,6 +1,6 @@
 * mkchromecast (0.3.7) **released**: 2016/12/30
 
-    - node streaming updated to work with `node v7.2.1`.
+    - node streaming updated to work with `node v7.4.0`.
     - Added ALSA device configuration in preferences pane.
     - Improved systray stability.
     - gstreamer support for capturing audio.
@@ -15,6 +15,8 @@
       Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
     - Making ping code python 3 compatible. Closes:
       [#35](https://github.com/muammar/mkchromecast/pull/35).
+    - Fixed problem when having various Google cast devices and the system
+      tray.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

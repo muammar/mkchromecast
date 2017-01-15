@@ -372,6 +372,12 @@ ipaddr.IPv4.isValid = (string) ->
   catch e
     return false
 
+ipaddr.IPv4.isValidFourPartDecimal = (string) ->
+  if ipaddr.IPv4.isValid(string) and string.match(/^\d+(\.\d+){3}$/)
+    return true
+  else
+    return false
+
 ipaddr.IPv6.isValid = (string) ->
   # Since IPv6.isValid is always called first, this shortcut
   # provides a substantial performance gain.

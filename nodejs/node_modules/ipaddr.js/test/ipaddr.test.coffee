@@ -106,6 +106,11 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('8.8.8.8').range(),         'unicast')
     test.done()
 
+  'checks the conventional IPv4 address format': (test) ->
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('192.168.1.1'),  true)
+      test.equal(ipaddr.IPv4.isValidFourPartDecimal('0xc0.168.1.1'), false)
+      test.done()
+
   'can construct IPv6 from 16bit parts': (test) ->
     test.doesNotThrow ->
       new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
