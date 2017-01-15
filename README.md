@@ -7,7 +7,7 @@ mkchromecast
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
 This is a program to cast your **macOS** audio, or **Linux** audio to your
-Google Cast devices.
+Google Cast devices. It can also cast video files.
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
@@ -47,11 +47,11 @@ install `PyQt5`. For more information check the
 
 This is what the system tray menu looks like:
 
-##### macOS
+#### macOS
 
 [![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
 
-##### Linux
+#### Linux
 
 Check these images:
 
@@ -404,6 +404,8 @@ latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
 Usage
 -----
 
+#### Audio
+
 Get into the cloned **mkchromecast** directory and execute:
 
 ```
@@ -567,6 +569,40 @@ References:
 * [#11](https://github.com/muammar/mkchromecast/issues/11).
 * [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
 
+
+#### Video
+
+* Cast a file from your computer to your chromecast:
+
+```
+python mkchromecast.py --video -i "/path/to/file.mp4"
+```
+
+**Note**: the format of the file can be whatever is supported by `ffmpeg` and not exclusively mp4.
+
+* Subtitles
+
+```
+python mkchromecast.py --video -i "/tmp/Homeland.S06E01.Fair.Game.1080p.AMZN.WEBRip.HEVC.DD5.1.x265.mkv" --subtitles /tmp/Homeland.S06E01.Fair\ Game.HDTV.x264-BATV.en.HI.srt
+```
+
+* Set the resolution
+
+```
+python mkchromecast.py --video --resolution 4k -i /path/to/myvideo.something --subtitles /path/to/my.srt
+```
+
+* Cast from a source url:
+
+```
+python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --volume --video
+```
+
+* Youtube Video
+
+```
+python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+```
 
 
 Killing the application
