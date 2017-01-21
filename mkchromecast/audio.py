@@ -175,7 +175,7 @@ else:
                 ]
 
             """
-            The codecs below do not support 96000Hz
+            The codecs below do not support > 96000Hz
             """
             no96k = [
                 'mp3',
@@ -219,12 +219,23 @@ else:
                 else:
                     msg.samplerate_info(codec)
 
-            elif codec in codecs_sr and int(samplerate) > 72000:
+            elif codec in codecs_sr and int(samplerate) > 72000 and int(samplerate) <= 96000:
                 if codec in no96k:
                     samplerate = '48000'
                     msg.samplerate_no96(codec)
                 else:
                     samplerate = '96000'
+                    msg.samplerate_info(codec)
+
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
+
+            elif codec in codecs_sr and int(samplerate) > 96000:
+                if codec in no96k:
+                    samplerate = '48000'
+                    msg.samplerate_no96(codec)
+                else:
+                    samplerate = '192000'
                     msg.samplerate_info(codec)
 
                 if sourceurl == None:

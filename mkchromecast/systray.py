@@ -107,7 +107,7 @@ class menubar(QtWidgets.QMainWindow):
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
         self.height = screen_resolution.height()
-        if self.width > 1280:
+        if self.height > 1280:
             self.scale_factor = 2
         else:
             self.scale_factor = 1

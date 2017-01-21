@@ -197,6 +197,7 @@ if tray == True:
             Sample rate
             """
             self.samplerates = [
+                '192000',
                 '96000',
                 '48000',
                 '44100',

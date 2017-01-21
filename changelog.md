@@ -17,6 +17,9 @@
       [#35](https://github.com/muammar/mkchromecast/pull/35).
     - Fixed problem when having various Google cast devices and the system
       tray.
+    - Added support to 192000Hz sampling rate support (Closes:
+      [#39](https://github.com/muammar/mkchromecast/issues/39)).
+    - Fixed a minimal problem with size of preferences pane.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
