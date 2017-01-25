@@ -67,7 +67,7 @@ Depends: ${python:Depends},
          ${misc:Depends},
          alsa-utils,
          alsa-tools,
-         alsa-base,
+         kmod,
          ffmpeg,
          mkchromecast
 Description: ALSA dependencies to cast with mkchromecast

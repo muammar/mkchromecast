@@ -1,6 +1,7 @@
 mkchromecast (0.3.7-1) UNRELEASED; urgency=medium
 
   * New upstream release.
+  * Dropped alsa-base dependecy in favor of kmod. Closes: #852531.
 
  -- Muammar El Khatib <muammar@debian.org>  Fri, 30 Dec 2016 12:30:48 -0500
 
