@@ -329,8 +329,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', '":Soundflower (2ch)"',
                 '-acodec', 'libmp3lame',
                 '-f', 'mp3',
                 '-ac', '2',
@@ -405,8 +404,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', '":Soundflower (2ch)"',
                 '-acodec', 'libvorbis',
                 '-f', 'segment', '-segment_time', '2',
                 '-f', 'ogg',
@@ -478,8 +476,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', '":Soundflower (2ch)"',
                 '-acodec', 'libfdk_aac',
                 '-f', 'adts',
                 '-ac', '2',
@@ -534,8 +531,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', '":Soundflower (2ch)"',
                 '-acodec', 'pcm_s24le',
                 '-f', 'wav',
                 '-ac', '2',
@@ -584,8 +580,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', '":Soundflower (2ch)"',
                 '-acodec', 'flac',
                 '-f', 'flac',
                 '-ac', '2',
