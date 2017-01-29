@@ -163,13 +163,6 @@ class casting(object):
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
                 self.availablecc()
-                """
-                self.availablecc=[]
-                for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'      ',str(device))
-                    to_append = [self.index,device]
-                    self.availablecc.append(to_append)
-                """
             else:
                 if self.debug == True:
                     print('else:')
@@ -192,19 +185,11 @@ class casting(object):
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
                 self.availablecc()
-                """
-                self.availablecc=[]
-                for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'      ',str(device))
-                    to_append = [self.index,device]
-                    self.availablecc.append(to_append)
-                """
             else:
                 if self.debug == True:
                     print('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
-                self.index=pickle.load(self.tf)
-                self.cast_to = self.cclist[int(self.index)]
+                self.cast_to=pickle.load(self.tf)
                 self.availablecc()
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))

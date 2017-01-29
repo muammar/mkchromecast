@@ -583,7 +583,7 @@ class menubar(QtWidgets.QMainWindow):
             try:
                 if os.path.exists('/tmp/mkchromecast.tmp') == True:
                     self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-                pickle.dump(self.index, self.tf)
+                pickle.dump(self.cast_to, self.tf)
                 self.tf.close()
             except ValueError:
                 continue
