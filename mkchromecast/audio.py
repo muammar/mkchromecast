@@ -7,7 +7,7 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 import mkchromecast.messages as msg
@@ -41,6 +41,8 @@ In this block we check variables from __init__.py
 tray = mkchromecast.__init__.tray
 adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
+segmenttime = mkchromecast.__init__.segmenttime
+
 if debug == True:
     print(':::audio::: chunk_size: ', chunk_size)
 debug = mkchromecast.__init__.debug
@@ -85,11 +87,14 @@ else:
         codec= ConfigSectionMap('settings')['codec']
         bitrate = ConfigSectionMap('settings')['bitrate']
         samplerate= ConfigSectionMap('settings')['samplerate']
+        adevice = ConfigSectionMap('settings')['alsadevice']
+        if adevice == 'None':
+            adevice = None
         if debug == True:
             print(':::audio::: tray ='+str(tray))
-            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Configuration file exists'))
             print(colors.warning('Using defaults set there'))
-            print(backend,codec,bitrate,samplerate)
+            print(backend, codec, bitrate, samplerate, adevice)
     else:
         backend = mkchromecast.__init__.backend
         backends_dict[backend] = backend
@@ -146,12 +151,15 @@ else:
             if codec == 'mp3' and int(bitrate) > 320:
                 bitrate = '320'
                 msg.maxbitrate(codec, bitrate)
-
-            if codec == 'ogg' or codec == 'aac' and int(bitrate) > 500:
+            elif codec == 'ogg' and int(bitrate) > 500:
                 bitrate = '500'
                 msg.maxbitrate(codec, bitrate)
+            elif codec == 'aac' and int(bitrate) > 500:
+                bitrate = '500'
+                msg.maxbitrate(codec, bitrate)
+            else:
+                bitrate = bitrate+'k'
 
-            bitrate = bitrate+'k'
             if sourceurl == None:
                 print(colors.options('Selected bitrate:')+' '+ bitrate)
 
@@ -167,7 +175,7 @@ else:
                 ]
 
             """
-            The codecs below do not support 96000Hz
+            The codecs below do not support > 96000Hz
             """
             no96k = [
                 'mp3',
@@ -211,12 +219,23 @@ else:
                 else:
                     msg.samplerate_info(codec)
 
-            elif codec in codecs_sr and int(samplerate) > 72000:
+            elif codec in codecs_sr and int(samplerate) > 72000 and int(samplerate) <= 96000:
                 if codec in no96k:
                     samplerate = '48000'
                     msg.samplerate_no96(codec)
                 else:
                     samplerate = '96000'
+                    msg.samplerate_info(codec)
+
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
+
+            elif codec in codecs_sr and int(samplerate) > 96000:
+                if codec in no96k:
+                    samplerate = '48000'
+                    msg.samplerate_no96(codec)
+                else:
+                    samplerate = '192000'
                     msg.samplerate_info(codec)
 
                 if sourceurl == None:
@@ -241,12 +260,18 @@ else:
         print (command)
         return
 
+    def set_segmenttime():
+        string = [ '-f', 'segment', '-segment_time', str(segmenttime) ]
+        for element in string:
+            command.insert(-9, element)
+        return
+
     """
     MP3 192k
     """
     if  codec == 'mp3':
 
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -262,19 +287,49 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+
+            if segmenttime != None:
+                set_segmenttime()
+
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'lame',
                 '-b', bitrate[:-1],
                 '-r',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '-v',
+                '!',
+                'audioconvert',
+                '!',
+                'audio/x-raw,rate='+samplerate,
+                '!',
+                'lamemp3enc',
+                'target=bitrate',
+                'bitrate='+bitrate[:-1],
+                'cbr=true',
+                '!',
+                'mpegaudioparse',
+                '!',
+                'filesink', 'location=/dev/stdout'
+                ]
+            if adevice != None:
+                command.insert(2, 'alsasrc')
+                command.insert(3, 'device="'+adevice+'"')
+            else:
+                command.insert(2, 'pulsesrc')
+                command.insert(3, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libmp3lame',
                 '-f', 'mp3',
                 '-ac', '2',
@@ -282,14 +337,14 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
+            if segmenttime != None:
+                set_segmenttime()
 
     """
     OGG 192k
     """
     if  codec == 'ogg':
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -305,7 +360,11 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+
+            if segmenttime != None:
+                set_segmenttime()
+
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'oggenc',
                 '-b', bitrate[:-1],
@@ -314,27 +373,52 @@ else:
                 '--ignorelength',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '!',
+                'audioconvert',
+                '!',
+                'audioresample',
+                '!',
+                'vorbisenc',
+                #'bitrate='+str(int(bitrate[:-1])*1000),
+                '!',
+                'vorbisparse',
+                '!',
+                'oggmux',
+                '!',
+                'filesink', 'location=/dev/stdout'
+                #gst-launch-1.0 pulsesrc device="mkchromecast.monitor" ! audioconvert ! audioresample ! vorbisenc ! oggmux ! filesink
+                ]
+            if adevice != None:
+                command.insert(1, 'alsasrc')
+                command.insert(2, 'device="'+adevice+'"')
+            else:
+                command.insert(1, 'pulsesrc')
+                command.insert(2, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libvorbis',
+                '-f', 'segment', '-segment_time', '2',
                 '-f', 'ogg',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
 
     """
     AAC > 128k for Stereo, Default sample rate: 44100kHz
     """
     if  codec == 'aac':
-        if platform == 'Linux' and backends_dict[backend] != 'parec':
+        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
             command = [
                 backend,
                 '-ac', '2',
@@ -351,7 +435,8 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'faac',
                 '-b', bitrate[:-1],
@@ -362,22 +447,51 @@ else:
                 '-',
                 '-'
                 ]
+            """
+        This command dumps to file correctly, but does not work for stdout.
+        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+            command = [
+                'gst-launch-1.0',
+                '-v',
+                '!',
+                'audioconvert',
+                '!',
+                'audio/x-raw,rate='+samplerate,
+                '!',
+                'voaacenc',
+                #'bitrate='+bitrate[:-1],
+                '!',
+                'aacparse',
+                '!',
+                'filesink', 'location=/dev/stdout'
+                ]
+            if adevice != None:
+                command.insert(2, 'alsasrc')
+                command.insert(3, 'device="'+adevice+'"')
+            else:
+                command.insert(2, 'pulsesrc')
+                command.insert(3, 'device="mkchromecast.monitor"')
+            """
         else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libfdk_aac',
                 '-f', 'adts',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
-                '-cutoff', '18000',
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
+            if segmenttime != None:
+                set_segmenttime()
+                if platform == 'Darwin':
+                    cutoff = ['-cutoff', '18000']
+                    for element in cutoff:
+                        command.insert(-1, element)
+
+
 
     """
     WAV 24-Bit
@@ -398,7 +512,11 @@ else:
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+
+            if segmenttime != None:
+                set_segmenttime()
+
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'sox',
                 '-t', 'raw',
@@ -418,16 +536,15 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'pcm_s24le',
                 '-f', 'wav',
                 '-ac', '2',
                 '-ar', samplerate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
+            if segmenttime != None:
+                set_segmenttime()
 
     """
     FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
@@ -444,11 +561,16 @@ else:
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
             if adevice != None:
                 modalsa()
-        elif platform == 'Linux' and backends_dict[backend] == 'parec':
+
+            if segmenttime != None:
+                set_segmenttime()
+
+        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
             command = [
                 'flac',
                 '-',
@@ -464,16 +586,20 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'flac',
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
-        if debug == False and backends_dict[backend] != 'parec':
-            debug_command()
+            if segmenttime != None:
+                set_segmenttime()
+
+    verbose_backend = ['ffmpeg', 'avconv']
+    if debug == False and backends_dict[backend] in verbose_backend:
+        debug_command()
 
 app = Flask(__name__)
 
@@ -509,8 +635,9 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    if platform == 'Linux' and bool(backends_dict) == True \
-            and backends_dict[backend] == 'parec':
+    if (platform == 'Linux'
+            and bool(backends_dict) == True
+            and backends_dict[backend] == 'parec'):
         c_parec = [
             backend,
             '--format=s16le',
@@ -518,15 +645,39 @@ def stream():
             ]
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+    elif (platform == 'Linux' and
+            bool(backends_dict) == True and
+            backends_dict[backend] == 'gstreamer'):
+        c_gst = [
+            'gst-launch-1.0',
+            '-v',
+            '!',
+            'audioconvert',
+            '!',
+            'filesink', 'location=/dev/stdout'
+            ]
+        if adevice != None:
+            c_gst.insert(2, 'alsasrc')
+            c_gst.insert(3, 'device="'+adevice+'"')
+        else:
+            c_gst.insert(2, 'pulsesrc')
+            c_gst.insert(3, 'device="mkchromecast.monitor"')
+        gst = Popen(c_gst, stdout=PIPE)
+        process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
     else:
         process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
+    """Starting the streaming server.
+
+    Note that passthrough_errors=False is useful when reconnecting. In that
+    way, flask won't die.
+    """
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host= '0.0.0.0')
+    app.run(host= '0.0.0.0', passthrough_errors=False)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):

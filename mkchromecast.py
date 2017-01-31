@@ -4,18 +4,21 @@
 
 import mkchromecast.__init__
 from mkchromecast.version import __version__
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
+import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import *
 from mkchromecast.terminate import *
+import subprocess
 import os.path
 import time
 import atexit
-import mkchromecast.colors as colors
 
 platform = mkchromecast.__init__.platform
 adevice = mkchromecast.__init__.adevice
 ccname = mkchromecast.__init__.ccname
+videoarg = mkchromecast.__init__.videoarg
+youtubeurl = mkchromecast.__init__.youtubeurl
 
 print(colors.bold('mkchromecast ')+'v'+__version__)
 
@@ -32,7 +35,7 @@ if args.tray == False:
         cc.initialize_cast()
         terminate()
 
-    if args.youtube == None and args.source_url == None:
+    if youtubeurl == None and videoarg == False and args.source_url == None:
         if platform == 'Linux' and adevice == None:
             print('Creating pulseaudio sink...')
             print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
@@ -48,12 +51,24 @@ if args.tray == False:
         backends = [
             'ffmpeg',
             'avconv',
-            'parec'
+            'parec',
+            'gstreamer'
             ]
         if args.encoder_backend in backends and args.source_url == None:
             import mkchromecast.audio
             mkchromecast.audio.main()
-    elif args.youtube == True: # When casting youtube url, we do it throught the audio module
+
+    elif youtubeurl == None and videoarg == True:
+        print('video')
+        import mkchromecast.video
+        mkchromecast.video.main()
+
+    elif youtubeurl != None and videoarg == True:
+        print('video')
+        import mkchromecast.video
+        mkchromecast.video.main()
+
+    elif youtubeurl != None and videoarg == False: # When casting youtube url, we do it throught the audio module
         import mkchromecast.audio
         mkchromecast.audio.main()
 
@@ -71,7 +86,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and args.youtube == None and args.source_url == None:
+        if platform == 'Darwin' and youtubeurl == None and args.source_url == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -89,11 +104,11 @@ if args.tray == False:
         return
 
     try:
-        volumearg = mkchromecast.__init__.volumearg
+        control = mkchromecast.__init__.control
     except AttributeError:
-        volumearg = False
+        control = False
 
-    if volumearg == True:
+    if control == True:
         from mkchromecast.getch import getch, pause
 
         def controls_msg():
@@ -101,8 +116,11 @@ if args.tray == False:
             print(colors.important('Controls:'))
             print(colors.important('========='))
             print('')
-            print(colors.options('Volume up:')+' u')
-            print(colors.options('Volume down:')+' d')
+            print(colors.options(           'Volume up:')+' u')
+            print(colors.options(         'Volume down:')+' d')
+            if videoarg == True:
+                print(colors.options(       'Pause casting:')+' p')
+                print(colors.options(      'Resume casting:')+' r')
             print(colors.options('Quit the application:')+' q or Ctrl-C')
             print('')
             return
@@ -121,6 +139,26 @@ if args.tray == False:
                         debug = mkchromecast.__init__.debug
                         if debug == True:
                             controls_msg()
+                elif(key == 'p'):
+                    if videoarg == True:
+                        print('Pausing casting process...')
+                        subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
+                        if args.encoder_backend == 'ffmpeg':
+                            debug = mkchromecast.__init__.debug
+                            if debug == True:
+                                controls_msg()
+                    else:
+                        pass
+                elif(key == 'r'):
+                    if videoarg == True:
+                        print('Resuming casting process...')
+                        subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
+                        if args.encoder_backend == 'ffmpeg':
+                            debug = mkchromecast.__init__.debug
+                            if debug == True:
+                                controls_msg()
+                    else:
+                        pass
                 elif(key == 'q'):
                     print(colors.error('Quitting application...'))
                     terminateapp()

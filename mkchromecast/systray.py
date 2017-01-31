@@ -5,7 +5,7 @@
 
 from __future__ import division
 import mkchromecast.__init__        # This is to verify against some needed variables
-from mkchromecast.audiodevices import *
+from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
@@ -107,7 +107,7 @@ class menubar(QtWidgets.QMainWindow):
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
         self.height = screen_resolution.height()
-        if self.width > 1280:
+        if self.height > 1280:
             self.scale_factor = 2
         else:
             self.scale_factor = 1
@@ -186,7 +186,7 @@ class menubar(QtWidgets.QMainWindow):
         configf = configurations.configf
 
         if os.path.exists(configf):
-            print(colors.warning('Configuration file exist'))
+            print(colors.warning('Configuration file exists'))
             print(colors.warning('Using defaults set there'))
             config.read(configf)
             self.notifications = ConfigSectionMap('settings')['notifications']
@@ -436,7 +436,15 @@ class menubar(QtWidgets.QMainWindow):
                     self.menuentry = self.menu.addAction(str(menuentry[1]))
                 except UnicodeEncodeError:
                     self.menuentry = self.menu.addAction(str(unicode(menuentry[1]).encode("utf-8")))
-                self.menuentry.triggered.connect(self.play_cast)
+                # The receiver is a lambda function that passes clicked as
+                # a boolean, and the clicked_item as an argument to the
+                # self.clicked_cc() method. This last method, sets the correct
+                # index and name of the chromecast to be used by
+                # self.play_cast(). Credits to this question in stackoverflow:
+                #
+                # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
+                receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
+                self.menuentry.triggered.connect(receiver)
                 self.menuentry.setCheckable(True)
             self.separator_menu()
             self.stop_menu()
@@ -449,13 +457,19 @@ class menubar(QtWidgets.QMainWindow):
             self.about_menu()
             self.exit_menu()
 
+    def clicked_cc(self, clicked_item):
+        if debug == True:
+            print(clicked_item)
+        self.index = clicked_item[0]
+        self.cast_to = clicked_item[1]
+        self.play_cast()
+
     def pcastready(self, message):
         print('pcastready ?', message)
         if message == '_play_cast_ success':
             self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
-                self.ncast = self.cast
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -565,14 +579,11 @@ class menubar(QtWidgets.QMainWindow):
                         )
                     )
 
-        print(self.entries[0], self.entries[1])
-        self.index = self.entries[0]
-        self.castto = self.entries[1]
         while True:
             try:
                 if os.path.exists('/tmp/mkchromecast.tmp') == True:
                     self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-                pickle.dump(self.index, self.tf)
+                pickle.dump(self.cast_to, self.tf)
                 self.tf.close()
             except ValueError:
                 continue
@@ -586,7 +597,7 @@ class menubar(QtWidgets.QMainWindow):
 
         if self.cast != None or self.stopped == True or self.pcastfailed == True:
             try:
-                self.ncast.quit_app()
+                self.cast.quit_app()
             except AttributeError:
                 pass
             self.menuentry.setChecked(False)
@@ -599,7 +610,7 @@ class menubar(QtWidgets.QMainWindow):
             self.search_cast()
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
-                    self.ncast.quit_app()
+                    self.cast.quit_app()
                 except pychromecast.error.NotConnected:
                     continue
                 except AttributeError:
@@ -663,7 +674,7 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*self.maxvolset), 1))
+            self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -677,7 +688,7 @@ class menubar(QtWidgets.QMainWindow):
         #self.sl.setFocusPolicy(Qt.NoFocus)
         self.sl.setGeometry(30, 40, 180, 20)
         try:
-            self.sl.setValue(round((self.ncast.status.volume_level*10), 1))
+            self.sl.setValue(round((self.cast.status.volume_level*10), 1))
         except AttributeError:
             self.sl.setValue(2)
         self.sl.valueChanged.connect(self.valuechange)
@@ -693,13 +704,13 @@ class menubar(QtWidgets.QMainWindow):
 
     def valuechange(self, value):
         try:
-            if round(self.ncast.status.volume_level, 1) == 1:
+            if round(self.cast.status.volume_level, 1) == 1:
                 print (colors.warning(':::systray::: Maximum volume level reached!'))
                 volume = value/self.maxvolset
-                self.ncast.set_volume(volume)
+                self.cast.set_volume(volume)
             else:
                 volume = value/self.maxvolset
-                self.ncast.set_volume(volume)
+                self.cast.set_volume(volume)
             if debug == True:
                 print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
@@ -717,7 +728,7 @@ class menubar(QtWidgets.QMainWindow):
     def reboot(self):
         if platform == 'Darwin':
             try:
-                self.cast.host = socket.gethostbyname(self.castto+'.local')
+                self.cast.host = socket.gethostbyname(self.cast_to+'.local')
                 print('Cast device IP: '+str(self.cast.host))
                 reboot(self.cast.host)
                 self.reset_audio()

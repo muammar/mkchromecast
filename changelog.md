@@ -1,3 +1,26 @@
+* mkchromecast (0.3.7) **released**: 2016/12/30
+
+    - node streaming updated to work with `node v7.4.0`.
+    - Added ALSA device configuration in preferences pane.
+    - Improved systray stability.
+    - gstreamer support for capturing audio.
+    - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
+    - A `--segment-time` option added to modify the segment time when using
+      ffmpeg.
+    - A `--reconnect` option that monitors if mkchromecast has disconnected
+      from google cast, and tries to reconnect.
+      Closes [#25](https://github.com/muammar/mkchromecast/issues/25).
+    - ALSA device can be set from systray.
+    - Add support for newer `pychromecast` versions.
+      Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
+    - Making ping code python 3 compatible. Closes:
+      [#35](https://github.com/muammar/mkchromecast/pull/35).
+    - Fixed problem when having various Google cast devices and the system
+      tray.
+    - Added support to 192000Hz sampling rate support (Closes:
+      [#39](https://github.com/muammar/mkchromecast/issues/39)).
+    - Fixed a minimal problem with size of preferences pane.
+
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
     - The node streaming has been updated to work with `node v6.6.0`.
@@ -5,7 +28,7 @@
       console.
     - Improvements under the hood.
     - Now mkchromecast does not need pulseaudio to cast!.
-    - You can play from pipe/stream using the `--source-url` flag.
+    - You can play from stream using the `--source-url` flag.
     - `-d` option has been enable to discover available Google cast devices.
     - `--host` flag allows users to manually enter the local ip. Closes
       [#17](https://github.com/muammar/mkchromecast/issues/17).
