@@ -307,7 +307,7 @@ able to use all audio coding formats in **mkchromecast**, it is better to
 install `ffmpeg` with the following options enabled:
 
 ```
-brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+brew install ffmpeg --with-fdk-aac --with-sdl2 --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
 **mkchromecast** does not support `avconv` in **macOS**.
