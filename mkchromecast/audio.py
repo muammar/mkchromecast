@@ -561,6 +561,7 @@ else:
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
             if adevice != None:
@@ -590,6 +591,7 @@ else:
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
             if segmenttime != None:

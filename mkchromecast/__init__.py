@@ -659,7 +659,8 @@ Bitrate
 codecs_br = [
     'mp3',
     'ogg',
-    'aac'
+    'aac',
+    'flac'
     ]
 
 if codec in codecs_br:
