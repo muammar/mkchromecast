@@ -1,7 +1,7 @@
 mkchromecast (0.3.7+git20170130-1) unstable; urgency=medium
 
   * New git revision.
-  * Dropped alsa-base dependecy in favor of kmod. Closes: #852531.
+  * Dropped alsa-base dependency in favor of kmod. Closes: #852531.
 
  -- Muammar El Khatib <muammar@debian.org>  Fri, 30 Dec 2016 12:30:48 -0500
 
