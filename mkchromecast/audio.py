@@ -482,11 +482,16 @@ else:
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
-                '-cutoff', '18000',
                 'pipe:'
                 ]
             if segmenttime != None:
                 set_segmenttime()
+                if platform == 'Darwin':
+                    cutoff = ['-cutoff', '18000']
+                    for element in cutoff:
+                        command.insert(-1, element)
+
+
 
     """
     WAV 24-Bit
