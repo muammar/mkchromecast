@@ -1,9 +1,9 @@
-requests==2.12.4
-setuptools==32.1.0
-PyQt5==5.7.1
 Flask==0.12
-gi==1.2
-mutagen==1.36
+mutagen==1.36.2
 netifaces==0.10.5
 psutil==5.0.1
-pychromecast==0.7.7
+PyChromecast==0.7.7
+requests==2.13.0
+setuptools==34.1.0
+PyQt5==5.7.1
+gi==1.2
