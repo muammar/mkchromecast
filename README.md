@@ -642,7 +642,7 @@ No new issues reported.
 
 ##### macOS
 
-No new issues reported.
+* It is not possible to create a macOS app with py2app. For more details see #36.
 
 ##### Linux
 
