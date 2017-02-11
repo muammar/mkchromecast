@@ -642,7 +642,7 @@ No new issues reported.
 
 ##### macOS
 
-* It is not possible to create a macOS app with py2app. For more details see #36.
+* It is not possible to create a macOS app with py2app. For more details see [#36](https://github.com/muammar/mkchromecast/issues/36).
 
 ##### Linux
 
