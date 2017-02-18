@@ -1,6 +1,7 @@
 mkchromecast (0.3.7+git20170130-2) unstable; urgency=medium
 
-  * Updated gir1.2-notify-0.7 dependency.
+  * Updated gir1.2-notify-0.7 dependency. Closes: #855442.
+  * Updated debian/copyright. Closes: #854998.
 
  -- Muammar El Khatib <muammar@debian.org>  Tue, 31 Jan 2017 15:11:44 -0500
 

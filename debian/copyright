@@ -3,7 +3,11 @@ Upstream-Name: mkchromecast
 Source: http://mkchromecast.com
 
 Files: *
-Copyright: 2016 Muammar El Khatib <muammarelkhatib@gmail.com>
+Copyright: 2016-2017 Muammar El Khatib <muammarelkhatib@gmail.com>
+License: MIT
+
+Files: mkchromecast/getch/*
+Copyright: 2013 - 2015 Joe Esposito <joe@joeyespo.com>
 License: MIT
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
