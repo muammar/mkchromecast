@@ -74,6 +74,7 @@ else:
     The blocks shown below are related to input_files
     """
     if input_file != None and subtitles == None:
+        """
         command = [
             'ffmpeg',
             '-re',
@@ -84,13 +85,53 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
          ]
+        """
+        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        command = [
+            'ffmpeg',
+            '-re',
+            '-loglevel', 'panic',
+            '-i', input_file,
+            '-vcodec', 'libx264',
+            '-preset', 'veryfast',
+            '-tune', 'zerolatency',
+            '-maxrate', '3000k',
+            '-bufsize', '6000k',
+            #'-pix_fmt', 'yuv420p',
+            '-g', '50', #'-c:a', 'copy', '-ac', '2',
+            #'-b', '900k',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe',
+            'pipe:1'
+        ]
     elif input_file != None and subtitles != None:
+        """
         command = [
             'ffmpeg',
             '-re',
             '-loglevel', 'panic',
             '-i', input_file,
             '-preset', 'ultrafast',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe',
+            '-vf', 'subtitles='+subtitles,
+            'pipe:1'
+        ]
+        """
+        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        command = [
+            'ffmpeg',
+            '-re',
+            '-loglevel', 'panic',
+            '-i', input_file,
+            '-vcodec', 'libx264',
+            '-preset', 'veryfast',
+            '-tune', 'zerolatency',
+            '-maxrate', '3000k',
+            '-bufsize', '6000k',
+            #'-pix_fmt', 'yuv420p',
+            '-g', '50', #'-c:a', 'copy', '-ac', '2',
+            #'-b', '900k',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe',
             '-vf', 'subtitles='+subtitles,
