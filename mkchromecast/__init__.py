@@ -715,8 +715,7 @@ elif args.sample_rate == 0:
 """
 Seek
 """
-if args.seek != None:
-    seek = args.seek
+seek = args.seek
 
 """
 Segment time
