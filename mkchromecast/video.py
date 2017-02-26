@@ -29,6 +29,7 @@ platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
 res = mkchromecast.__init__.resolution
+seek = mkchromecast.__init__.seek
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -54,6 +55,11 @@ def resolution(res):
     if res.lower() == '4k':
         insert = ['-vf', 'scale=4096:-1']
         return insert
+
+def seeking(seek):
+    seek_append = ['-ss', seek]
+    for i, _ in enumerate(seek_append):
+       command.insert(i + 1, _)
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
@@ -104,6 +110,9 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
         ]
+        if seek != None:
+            seeking(seek)
+
     elif input_file != None and subtitles != None:
         """
         command = [
@@ -137,6 +146,8 @@ else:
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
+        if seek != None:
+            seeking(seek)
 
     mtype = 'video/mp4'
     if res != None:

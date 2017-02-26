@@ -1,6 +1,6 @@
 * mkchromecast (0.3.7) **released**: 2016/12/30
 
-    - node streaming updated to work with `node v7.4.0`.
+    - node streaming updated to work with `node v7.6.0`.
     - Added ALSA device configuration in preferences pane.
     - Improved systray stability.
     - gstreamer support for capturing audio.
@@ -20,6 +20,7 @@
     - Added support to 192000Hz sampling rate support (Closes:
       [#39](https://github.com/muammar/mkchromecast/issues/39)).
     - Fixed a minimal problem with size of preferences pane.
+    - Video support.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

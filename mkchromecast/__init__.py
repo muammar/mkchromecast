@@ -237,6 +237,7 @@ Use this flag to enable the notifications.
 '''
 )
 
+
 parser.add_argument(
 '-r',
 '--reset',
@@ -328,6 +329,20 @@ Which sample rate to use?
     - 22050Hz: sampling rate of audio quality of AM radio.
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+'''
+)
+
+parser.add_argument(
+'--seek',
+type=str,
+default=None,
+help=
+'''
+Option to seeking when casting video. The format to set the time is HH:MM:SS.
+
+Example:
+    python mkchromecast.py --video -i "/path/to/file.mp4" --seek 00:23:00
+
 '''
 )
 
@@ -696,6 +711,12 @@ if args.sample_rate != 0:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:
     samplerate = 44100
+
+"""
+Seek
+"""
+if args.seek != None:
+    seek = args.seek
 
 """
 Segment time
