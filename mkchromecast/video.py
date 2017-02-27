@@ -30,6 +30,7 @@ subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
 res = mkchromecast.__init__.resolution
 seek = mkchromecast.__init__.seek
+debug = mkchromecast.__init__.debug
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -84,7 +85,7 @@ else:
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
+            #'-loglevel', 'panic',
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
@@ -96,7 +97,6 @@ else:
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
             '-i', input_file,
             '-vcodec', 'libx264',
             '-preset', 'ultrafast',
@@ -110,15 +110,12 @@ else:
             '-movflags', 'frag_keyframe',
             'pipe:1'
         ]
-        if seek != None:
-            seeking(seek)
 
     elif input_file != None and subtitles != None:
         """
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
@@ -131,7 +128,6 @@ else:
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
             '-i', input_file,
             '-vcodec', 'libx264',
             '-preset', 'ultrafast',
@@ -146,8 +142,13 @@ else:
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
-        if seek != None:
-            seeking(seek)
+
+    if seek != None:
+        seeking(seek)
+
+    if debug == False:
+        command.insert(command.index('-i'), 'panic')
+        command.insert(command.index('panic'),  '-loglevel')
 
     mtype = 'video/mp4'
     if res != None:
