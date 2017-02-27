@@ -89,7 +89,7 @@ else:
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             'pipe:1'
          ]
         """
@@ -107,7 +107,7 @@ else:
             '-g', '60', #'-c:a', 'copy', '-ac', '2',
             #'-b', '900k',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             'pipe:1'
         ]
 
@@ -119,7 +119,7 @@ else:
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
@@ -138,7 +138,7 @@ else:
             '-g', '60', #'-c:a', 'copy', '-ac', '2',
             #'-b', '900k',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
