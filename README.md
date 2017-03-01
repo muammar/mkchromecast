@@ -638,11 +638,17 @@ Known issues
 ------------
 ##### General
 
-No new issues reported.
+* **mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
+  versions of pychromecast.
 
 ##### macOS
 
-* It is not possible to create a macOS app with py2app. For more details see [#36](https://github.com/muammar/mkchromecast/issues/36).
+* It is not possible to create a macOS app with py2app. For more details see
+  [#36](https://github.com/muammar/mkchromecast/issues/36).
+* **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
+  more than one available. In that case, you need to use the application from
+  sources or build the application as shown
+  [here](https://github.com/muammar/mkchromecast/wiki/macOS-standalone-app).
 
 ##### Linux
 
