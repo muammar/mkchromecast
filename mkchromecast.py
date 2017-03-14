@@ -78,7 +78,7 @@ if args.tray == False:
         cc.sel_cc()
         cc.inp_cc()
         cc.get_cc()
-        if platform == 'Darwin' and args.source_url == None and args.videoarg == None:
+        if platform == 'Darwin' and args.source_url == None and videoarg == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
@@ -86,7 +86,7 @@ if args.tray == False:
         cc.play_cast()
     else:
         cc.get_cc()
-        if platform == 'Darwin' and youtubeurl == None and args.source_url == None and args.videoarg == None:
+        if platform == 'Darwin' and youtubeurl == None and args.source_url == None and videoarg == None:
             print('Switching to soundflower...')
             inputdev()
             outputdev()
