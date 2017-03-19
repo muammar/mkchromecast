@@ -52,15 +52,12 @@ class mk(object):
             else:
                 self.audio_macOS()
         elif self.tray == False and self.videoarg == True:
-            if self.platform == 'Linux':
-                self.video_linux()
-            else:
-                self.video_macOS()
+            self.cast_video()
         else:
             self.start_tray()
 
     def audio_linux(self):
-        """docstring for audio_linux"""
+        """This method manages all related to casting audio in Linux"""
         if self.youtubeurl == None and self.source_url == None:
             if adevice == None:
                 print('Creating pulseaudio sink...')
@@ -74,12 +71,23 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif youtubeurl != None and videoarg == False: # When casting youtube url, we do it throught the audio module
+        elif self.youtubeurl == None and self.source_url != None:
+            self.start_backend(self.encoder_backend)
+            self.cc.initialize_cast()
+            self.get_cc(self.select_cc)
+            self.cc.play_cast()
+            self.show_control(self.control)
+
+        elif youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it throught the audio module
             import mkchromecast.audio
             mkchromecast.audio.main()
+            self.cc.initialize_cast()
+            self.get_cc(self.select_cc)
+            self.cc.play_cast()
+            self.show_control(self.control)
 
     def audio_macOS(self):
-        """docstring for audio_mac"""
+        """This method manages all related to casting audio in macOS"""
         if self.youtubeurl == None and self.source_url == None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
@@ -92,12 +100,42 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif youtubeurl != None and videoarg == False: # When casting youtube url, we do it throught the audio module
+        elif self.youtubeurl == None and self.source_url != None:
+            self.start_backend(self.encoder_backend)
+            self.cc.initialize_cast()
+            self.get_cc(self.select_cc)
+            self.cc.play_cast()
+            self.show_control(self.control)
+
+            print('Switching to soundflower...')
+            inputdev()
+            outputdev()
+            print(colors.success('[Done]'))
+            self.cc.play_cast()
+            self.show_control(self.control)
+
+        elif self.youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it throught the audio module
             import mkchromecast.audio
             mkchromecast.audio.main()
+            self.cc.initialize_cast()
+            self.get_cc(self.select_cc)
+            self.cc.play_cast()
+            self.show_control(self.control)
+
+    def cast_video(self):
+        """docstring for casting video"""
+        print('Starting Video Cast Process...')
+        import mkchromecast.video
+        mkchromecast.video.main()
+        self.cc.initialize_cast()
+        self.get_cc(self.select_cc)
+        self.cc.play_cast()
+        self.show_control(self.control)
 
     def get_cc(self, select_cc):
-        """docstring for get_cc"""
+        """Get chromecast name, and let user select one from a list if
+        select_cc flag is True.
+        """
         if select_cc == True: # This is done for the case that -s is passed
             self.cc.sel_cc()
             self.cc.inp_cc()
@@ -106,7 +144,7 @@ class mk(object):
             self.cc.get_cc()
 
     def start_backend(self, encoder_backend):
-        """docstring for backends"""
+        """Starting backends"""
         if encoder_backend == 'node' and self.source_url == None:
             from mkchromecast.node import stream
             stream()
@@ -115,7 +153,7 @@ class mk(object):
             mkchromecast.audio.main()
 
     def check_connection(self):
-        """docstring for check_connection"""
+        """Check if the computer is connected to a network"""
         if self.cc.ip == '127.0.0.1':        # We verify the local IP.
             print(colors.error('Your computer is not connected to any network'))
             terminate()
@@ -124,7 +162,7 @@ class mk(object):
             terminate()
 
     def terminate_app(self):
-        """docstring for terminate_app"""
+        """Terminate the app (kill app)"""
         self.cc.stop_cast()
         if platform == 'Darwin':
             inputint()
