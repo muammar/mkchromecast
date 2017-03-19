@@ -7,7 +7,7 @@ from mkchromecast.version import __version__
 from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 import mkchromecast.colors as colors
-from mkchromecast.pulseaudio import create_sink
+from mkchromecast.pulseaudio import create_sink, remove_sink
 from mkchromecast.terminate import terminate
 import subprocess
 import os.path
@@ -17,7 +17,7 @@ import atexit
 class mk(object):
     """Class to manage cast process"""
     def __init__(self):
-        print(colors.bold('mkchromecast ')+'v'+__version__)
+        print(colors.bold('Mkchromecast ')+'v'+__version__)
         self.platform = mkchromecast.__init__.platform
         self.adevice = mkchromecast.__init__.adevice
         self.debug = mkchromecast.__init__.debug
@@ -60,10 +60,10 @@ class mk(object):
         """This method manages all related to casting audio in Linux"""
         if self.youtubeurl == None and self.source_url == None:
             if adevice == None:
-                print('Creating pulseaudio sink...')
-                print(colors.warning('Open pavucontrol and select the mkchromecast sink.'))
+                print('Creating Pulseaudio Sink...')
+                print(colors.warning('Open Pavucontrol and Select the Mkchromecast Sink.'))
                 create_sink()
-            print(colors.important('Starting local streaming server'))
+            print(colors.important('Starting Local Streaming Server'))
             print(colors.success('[Done]'))
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
@@ -93,7 +93,7 @@ class mk(object):
             self.cc.initialize_cast()
             self.get_cc(self.select_cc)
 
-            print('Switching to soundflower...')
+            print('Switching to SoundFlower...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
@@ -107,7 +107,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-            print('Switching to soundflower...')
+            print('Switching to SoundFlower...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
@@ -124,7 +124,7 @@ class mk(object):
 
     def cast_video(self):
         """docstring for casting video"""
-        print('Starting Video Cast Process...')
+        print(colors.important('Starting Video Cast Process...'))
         import mkchromecast.video
         mkchromecast.video.main()
         self.cc.initialize_cast()
@@ -155,7 +155,7 @@ class mk(object):
     def check_connection(self):
         """Check if the computer is connected to a network"""
         if self.cc.ip == '127.0.0.1':        # We verify the local IP.
-            print(colors.error('Your computer is not connected to any network'))
+            print(colors.error('Your Computer is not Connected to Any Network'))
             terminate()
         elif self.cc.ip != '127.0.0.1' and self.discover == True:
             self.cc.initialize_cast()
@@ -176,12 +176,12 @@ class mk(object):
         print(colors.important('Controls:'))
         print(colors.important('========='))
         print('')
-        print(colors.options(           'Volume up:')+' u')
-        print(colors.options(         'Volume down:')+' d')
+        print(colors.options(           'Volume Up:')+' u')
+        print(colors.options(         'Volume Down:')+' d')
         if videoarg == True:
-            print(colors.options(       'Pause casting:')+' p')
-            print(colors.options(      'Resume casting:')+' r')
-        print(colors.options('Quit the application:')+' q or Ctrl-C')
+            print(colors.options(       'Pause Casting:')+' p')
+            print(colors.options(      'Resume Casting:')+' r')
+        print(colors.options('Quit the Application:')+' q or Ctrl-C')
         print('')
 
     def show_control(self, control):
@@ -205,7 +205,7 @@ class mk(object):
                                 self.controls_msg()
                     elif(key == 'p'):
                         if self.videoarg == True:
-                            print('Pausing casting process...')
+                            print('Pausing Casting Process...')
                             subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
@@ -214,7 +214,7 @@ class mk(object):
                             pass
                     elif(key == 'r'):
                         if self.videoarg == True:
-                            print('Resuming casting process...')
+                            print('Resuming Casting Process...')
                             subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
@@ -234,7 +234,7 @@ class mk(object):
             if self.platform == 'Linux' and self.adevice == None:
                 print(colors.warning('Remember to open pavucontrol and select the mkchromecast sink.'))
             print('')
-            print(colors.error('Ctrl-C to kill the application at any time'))
+            print(colors.error('Ctrl-C to kill the Application at any Time'))
             print('')
             try:
                 input()
