@@ -738,9 +738,8 @@ videoarg = args.video
 """
 Volume
 """
-if args.control == True:
-    control = args.control
-elif args.volume == True:   #FIXME this has to be deleted in future releases.
+control = args.control
+if args.volume == True:   #FIXME this has to be deleted in future releases.
     control = args.volume
     print(colors.warning('The --volume flag is going to be renamed to --control.'))
 
