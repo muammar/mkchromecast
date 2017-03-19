@@ -31,6 +31,7 @@ input_file = mkchromecast.__init__.input_file
 res = mkchromecast.__init__.resolution
 seek = mkchromecast.__init__.seek
 debug = mkchromecast.__init__.debug
+sourceurl = mkchromecast.__init__.sourceurl
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -146,7 +147,7 @@ else:
     if seek != None:
         seeking(seek)
 
-    if debug == False:
+    if debug == False and sourceurl == None:
         command.insert(command.index('-i'), 'panic')
         command.insert(command.index('panic'),  '-loglevel')
 
