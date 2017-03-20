@@ -297,8 +297,9 @@ def main():
                         './nodejs/html5-video-streamer.js',
                         input_file
                         ]
-                else:
-                    print(colors.warning('Nodejs is not installed in your system. Please, install it to use this backend.'))
-                    print(colors.warning('Closing the application...'))
-                    terminate()
-        p = subprocess.Popen(webcast)
+        try:
+            p = subprocess.Popen(webcast)
+        except:
+            print(colors.warning('Nodejs is not installed in your system. Please, install it to use this backend.'))
+            print(colors.warning('Closing the application...'))
+            terminate()
