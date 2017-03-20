@@ -7,7 +7,7 @@ var http = require('http'),
     util = require('util');
 
 http.createServer(function (req, res) {
-  var path = '/home/muammar/Videos/Boda_Fernando.mp4';
+  var path = process.argv[2];
   var stat = fs.statSync(path);
   var total = stat.size;
   if (req.headers['range']) {
