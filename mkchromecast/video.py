@@ -261,9 +261,16 @@ def main():
         st.start()
     else:
         print('Starting Node')
-        webcast = [
-            'nodejs',
-            './nodejs/html5-video-streamer.js',
-            input_file
-            ]
+        if os.path.exists('./bin/node') == True:
+            webcast = [
+                './bin/node',
+                './nodejs/html5-video-streamer.js',
+                input_file
+                ]
+        else:
+            webcast = [
+                'nodejs',
+                './nodejs/html5-video-streamer.js',
+                input_file
+                ]
         p = subprocess.Popen(webcast)
