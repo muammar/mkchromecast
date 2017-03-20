@@ -32,6 +32,7 @@ res = mkchromecast.__init__.resolution
 seek = mkchromecast.__init__.seek
 debug = mkchromecast.__init__.debug
 sourceurl = mkchromecast.__init__.sourceurl
+encoder_backend = mkchromecast.__init__.backend
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -255,5 +256,14 @@ def monitor_daemon():
             sys.exit(0)
 
 def main():
-    st = multi_proc()
-    st.start()
+    if encoder_backend != 'node':
+        st = multi_proc()
+        st.start()
+    else:
+        print('Starting Node')
+        webcast = [
+            'nodejs',
+            './nodejs/html5-video-streamer.js',
+            input_file
+            ]
+    p = subprocess.Popen(webcast)

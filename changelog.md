@@ -21,6 +21,7 @@
       [#39](https://github.com/muammar/mkchromecast/issues/39)).
     - Fixed a minimal problem with size of preferences pane.
     - Video support.
+    - node is a supported backend for streaming video.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

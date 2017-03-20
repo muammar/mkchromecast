@@ -322,7 +322,7 @@ class casting(object):
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
             media_controller.play_media(self.sourceurl, mtype, title = self.title)
-        elif self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
+        elif self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
             if args.video == True:
                 import mkchromecast.video
                 mtype = mkchromecast.video.mtype

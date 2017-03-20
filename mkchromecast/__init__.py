@@ -586,6 +586,8 @@ backends = [
     ]
 if platform == 'Darwin':
     backends.remove('avconv')
+elif platform == 'Linux' and args.video == True:
+    pass
 else:
     backends.remove('node')
     backends.append('parec')
