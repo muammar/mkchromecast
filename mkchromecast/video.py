@@ -10,6 +10,7 @@ import mkchromecast.__init__
 from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
+from mkchromecast.terminate import terminate
 from mkchromecast.preferences import ConfigSectionMap
 import psutil
 import pickle
@@ -261,16 +262,43 @@ def main():
         st.start()
     else:
         print('Starting Node')
+        if platform == 'Darwin':
+            PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+        else:
+            PATH = os.environ['PATH']
+
+        if debug == True:
+            print('PATH ='+str(PATH))
+
+        def is_installed(name):
+            iterate = PATH.split(':')
+            for item in iterate:
+                verifyif = str(item+'/'+name)
+                if os.path.exists(verifyif) == False:
+                    continue
+                else:
+                    if debug == True:
+                        print('Program '+str(name)+' found in '+str(verifyif))
+                    return True
+            return
+
         if platform == 'Darwin' and os.path.exists('./bin/node') == True:
             webcast = [
                 './bin/node',
                 './nodejs/html5-video-streamer.js',
                 input_file
                 ]
-        else:
-            webcast = [
-                'nodejs',
-                './nodejs/html5-video-streamer.js',
-                input_file
-                ]
+        elif platform == 'Linux':
+            node_names =['node', 'nodejs']
+            for name in node_names:
+                if is_installed(name) == True:
+                    webcast = [
+                        name,
+                        './nodejs/html5-video-streamer.js',
+                        input_file
+                        ]
+                else:
+                    print(colors.warning('Nodejs is not installed in your system. Please, install it to use this backend.'))
+                    print(colors.warning('Closing the application...'))
+                    terminate()
         p = subprocess.Popen(webcast)
