@@ -572,14 +572,18 @@ References:
 
 #### Video
 
-You can now cast videos to your Google cast using **mkchromecast**. This feature is only working
-with `ffmpeg` backend and from command line. In the future, they may be a graphical interface
+You can now cast videos to your Google cast using **mkchromecast**. This feature works both with `node`
+and `ffmpeg` backends and from command line. In the future, they may be a graphical interface
 for this process. [See this project](https://github.com/muammar/mkchromecast/projects/1).
 
 * Cast a file from your computer to your chromecast:
 
 ```
 python mkchromecast.py --video -i "/path/to/file.mp4"
+```
+
+```
+python mkchromecast.py --video -i "/path/to/file.mp4" --encoder-backend node
 ```
 
 **Note**: the format of the file can be whatever is supported by `ffmpeg` and not exclusively mp4.
@@ -640,6 +644,8 @@ Known issues
 
 * **mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
   versions of pychromecast.
+* When casting videos using the `node` backend, it is not possible to 
+  use neither the `--subtitle` nor the `--seek` flags. 
 
 ##### macOS
 
