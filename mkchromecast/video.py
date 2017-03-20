@@ -261,7 +261,7 @@ def main():
         st.start()
     else:
         print('Starting Node')
-        if os.path.exists('./bin/node') == True:
+        if platform == 'Darwin' and os.path.exists('./bin/node') == True:
             webcast = [
                 './bin/node',
                 './nodejs/html5-video-streamer.js',
