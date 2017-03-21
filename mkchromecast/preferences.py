@@ -5,6 +5,7 @@
 import sys
 import mkchromecast.__init__        # This is to verify against some needed variables
 from mkchromecast.config import *
+from mkchromecast.utils import is_installed
 import os
 import getpass
 import subprocess
@@ -27,18 +28,6 @@ else:
 if debug == True:
     print('USER ='+str(USER))
     print('PATH ='+str(PATH))
-
-def is_installed(name):
-    iterate = PATH.split(':')
-    for item in iterate:
-        verifyif = str(item+'/'+name)
-        if os.path.exists(verifyif) == False:
-            continue
-        else:
-            if debug == True:
-                print('Program '+str(name)+' found in '+str(verifyif))
-            return True
-    return
 
 """
 Configparser is imported differently in Python3
@@ -113,13 +102,13 @@ if tray == True:
             self.backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'avconv' and item !='gstreamer':
+                    if is_installed(item, PATH, debug) == True and item != 'avconv' and item !='gstreamer':
                         self.backends.append(item)
             else:
                 for item in backends_supported:
-                    if is_installed(item) == True and item != 'node' and item != 'gstreamer':
+                    if is_installed(item, PATH, debug) == True and item != 'node' and item != 'gstreamer':
                         self.backends.append(item)
-                    elif is_installed('gst-launch-1.0') == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
+                    elif is_installed('gst-launch-1.0', PATH, debug) == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)

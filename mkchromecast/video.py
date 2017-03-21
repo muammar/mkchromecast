@@ -10,7 +10,7 @@ import mkchromecast.__init__
 from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
-from mkchromecast.terminate import terminate
+from mkchromecast.utils import terminate, is_installed
 from mkchromecast.preferences import ConfigSectionMap
 import psutil
 import getpass
@@ -272,18 +272,6 @@ def main():
         if debug == True:
             print('PATH ='+str(PATH))
 
-        def is_installed(name):
-            iterate = PATH.split(':')
-            for item in iterate:
-                verifyif = str(item+'/'+name)
-                if os.path.exists(verifyif) == False:
-                    continue
-                else:
-                    if debug == True:
-                        print('Program '+str(name)+' found in '+str(verifyif))
-                    return True
-            return
-
         if platform == 'Darwin' and os.path.exists('./bin/node') == True:
             webcast = [
                 './bin/node',
@@ -293,7 +281,7 @@ def main():
         elif platform == 'Linux':
             node_names =['node', 'nodejs']
             for name in node_names:
-                if is_installed(name) == True:
+                if is_installed(name, PATH, debug) == True:
                     webcast = [
                         name,
                         './nodejs/html5-video-streamer.js',

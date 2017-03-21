@@ -3,7 +3,7 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.colors as colors
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 from mkchromecast.version import __version__
 import argparse
 import os.path

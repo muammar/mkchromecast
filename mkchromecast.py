@@ -8,7 +8,7 @@ from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, remove_sink
-from mkchromecast.terminate import terminate
+from mkchromecast.utils import terminate
 import subprocess
 import os.path
 import time

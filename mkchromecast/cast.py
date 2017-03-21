@@ -8,7 +8,7 @@ from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 import time
 import pychromecast
 from pychromecast.dial import reboot
