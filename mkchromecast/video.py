@@ -13,6 +13,7 @@ from mkchromecast.config import *
 from mkchromecast.terminate import terminate
 from mkchromecast.preferences import ConfigSectionMap
 import psutil
+import getpass
 import pickle
 import sys
 import time
@@ -23,6 +24,7 @@ import multiprocessing
 import threading
 import os
 from os import getpid
+USER = getpass.getuser()
 
 chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
