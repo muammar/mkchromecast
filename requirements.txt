@@ -1,8 +1,8 @@
 Flask==0.12
-mutagen==1.36.2
-netifaces==0.10.5
-psutil==5.0.1
-PyChromecast==0.7.7
+mutagen==1.37
+netifaces==0.10.4
+psutil==5.2.1
+PyChromecast==0.8.1
 requests==2.13.0
-setuptools==34.1.0
+setuptools==34.3.3
 gi==1.2
