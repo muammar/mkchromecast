@@ -1,6 +1,6 @@
 * mkchromecast (0.3.7) **unreleased**
 
-    - node streaming updated to work with `node v7.7.2`.
+    - node streaming updated to work with `node v7.8.0`.
     - Added ALSA device configuration in preferences pane.
     - Improved systray stability.
     - gstreamer support for capturing audio.
