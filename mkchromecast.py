@@ -206,7 +206,8 @@ class mk(object):
                     elif(key == 'p'):
                         if self.videoarg == True:
                             print('Pausing Casting Process...')
-                            subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
+                            action = 'pause'
+                            self.ffmpeg_handler(action)
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
                                     self.controls_msg()
@@ -215,7 +216,8 @@ class mk(object):
                     elif(key == 'r'):
                         if self.videoarg == True:
                             print('Resuming Casting Process...')
-                            subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
+                            action = 'resume'
+                            self.ffmpeg_handler(action)
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
                                     self.controls_msg()
@@ -240,6 +242,13 @@ class mk(object):
                 input()
             except KeyboardInterrupt:
                 atexit.register(self.terminate_app())
+
+    def ffmpeg_handler(self, action):
+        """docstring for ffmpeg_handler"""
+        if action == 'pause':
+            subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
+        elif action == 'resume':
+            subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
 
     def start_tray(self):
         """docstring for start_tray"""
