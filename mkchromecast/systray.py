@@ -458,6 +458,9 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
 
     def clicked_cc(self, clicked_item):
+        if self.played == True:
+            self.cast.quit_app()
+
         if debug == True:
             print(clicked_item)
         self.index = clicked_item[0]
@@ -846,7 +849,6 @@ class menubar(QtWidgets.QMainWindow):
         if self.cast == None and self.stopped == False:
             self.app.quit()
         elif self.stopped == True or self.cast != None:
-            #self.stop_cast() # This was duplicated.
             self.kill_child()
             self.stop_cast()
             self.app.quit()
