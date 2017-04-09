@@ -15,8 +15,8 @@
       Closes [#32](https://github.com/muammar/mkchromecast/pull/32).
     - Making ping code python 3 compatible. Closes:
       [#35](https://github.com/muammar/mkchromecast/pull/35).
-    - Fixed problem when having various Google cast devices and the system
-      tray.
+    - Fixed problem when having various Google cast devices. Closes
+      [#50](https://github.com/muammar/mkchromecast/issues/50)
     - Added support to 192000Hz sampling rate support (Closes:
       [#39](https://github.com/muammar/mkchromecast/issues/39)).
     - Fixed a minimal problem with size of preferences pane.

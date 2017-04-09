@@ -637,7 +637,6 @@ or when installing the debian package:
 mkchromecast -h
 ```
 
-
 Known issues
 ------------
 ##### General
@@ -670,10 +669,7 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-* More eye candy.
-* [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
-
-
+* Add SONOS support.
 
 Contribute
 ----------
@@ -684,4 +680,3 @@ requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
-
