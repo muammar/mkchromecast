@@ -155,6 +155,7 @@ class menubar(QtWidgets.QMainWindow):
     def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
         self.menu = QtWidgets.QMenu()
+        self.ag = QtWidgets.QActionGroup(self, exclusive=True)
         self.search_menu()
         self.separator_menu()
         self.populating_menu()
@@ -431,9 +432,9 @@ class menubar(QtWidgets.QMainWindow):
             self.separator_menu()
             print('Available Google Cast Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
-                self.entries = menuentry
                 try:
-                    self.menuentry = self.menu.addAction(str(menuentry[1]))
+                    self.a = self.ag.addAction((QtWidgets.QAction(str(menuentry[1]), self, checkable=True)))
+                    self.menuentry = self.menu.addAction(self.a)
                 except UnicodeEncodeError:
                     self.menuentry = self.menu.addAction(str(unicode(menuentry[1]).encode("utf-8")))
                 # The receiver is a lambda function that passes clicked as
@@ -444,8 +445,7 @@ class menubar(QtWidgets.QMainWindow):
                 #
                 # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
                 receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
-                self.menuentry.triggered.connect(receiver)
-                self.menuentry.setCheckable(True)
+                self.a.triggered.connect(receiver)
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
@@ -547,7 +547,6 @@ class menubar(QtWidgets.QMainWindow):
     def play_cast(self):
         if self.played == True:
             self.kill_child()
-        self.menuentry.setChecked(True)
         if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
                 self.tray.setIcon(
@@ -603,7 +602,6 @@ class menubar(QtWidgets.QMainWindow):
                 self.cast.quit_app()
             except AttributeError:
                 pass
-            self.menuentry.setChecked(False)
             self.reset_audio()
             try:
                 self.kill_child()
