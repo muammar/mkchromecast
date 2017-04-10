@@ -56,7 +56,7 @@ Set the ALSA device name. This option is useful when you are using pure
 ALSA in your system.
 
 Example:
-    mkchromecast --encoder-backend ffmpeg --alsa-device hw:2,1
+    python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
 It only works for the ffmpeg and avconv backends, and it is not useful for
 pulseaudio users. For more information read the README.Debian file shipped in
@@ -76,10 +76,10 @@ Set the audio encoder's bitrate. The default is set to be 192k average bitrate.
 Example:
 
 ffmpeg:
-    mkchromecast --encoder-backend ffmpeg -c ogg -b 128
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128
 
 node:
-    mkchromecast -b 128
+    python mkchromecast.py  -b 128
 
 This option works with all backends. The example above sets the average
 bitrate to 128k.
@@ -98,10 +98,10 @@ option only works when using the ffmpeg or avconv backends.
 Example:
 
 ffmpeg:
-    mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --chunk-size 2048
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --chunk-size 2048
 
 avconv:
-    mkchromecast --encoder-backend avconv -c ogg -b 128 --chunk-size 512
+    python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 512
 '''
 )
 
@@ -115,7 +115,7 @@ help=
 Set the audio codec.
 
 Example:
-    mkchromecast --encoder-backend ffmpeg -c ogg
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg
 
 Possible codecs:
     - mp3  [192k]   MPEG Audio Layer III (default)
@@ -182,7 +182,7 @@ Possible backends:
     - gstreamer
 
 Example:
-    mkchromecast --encoder-backend ffmpeg
+    python mkchromecast.py --encoder-backend ffmpeg
 '''
 )
 
@@ -197,7 +197,7 @@ computer is not being detected correctly, or in the case you have more than one
 network device available.
 
 Example:
-    mkchromecast --encoder-backend ffmpeg --host 192.168.1.1
+    python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
 
 You can pass it to all available backends.
 '''
@@ -212,7 +212,7 @@ help='''
 Stream a file.
 
 Example:
-    mkchromecast -i /path/to/file.mp4
+    python mkchromecast.py -i /path/to/file.mp4
 '''
 )
 
@@ -225,7 +225,7 @@ help='''
 Use this option if you know the name of the Google Cast you want to connect.
 
 Example:
-    mkchromecast -n mychromecast
+    python mkchromecast.py -n mychromecast
 '''
 )
 
@@ -309,10 +309,10 @@ an issue in the chromecast audio. See: https://goo.gl/yNVODZ.
 Example:
 
 ffmpeg:
-    mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 32000
+    python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 32000
 
 node:
-    mkchromecast -b 128 --sample-rate 32000
+    python mkchromecast.py -b 128 --sample-rate 32000
 
 This option works for both backends. The example above sets the sample rate to
 32000Hz, and the bitrate to 128k.
@@ -341,7 +341,7 @@ help=
 Option to seeking when casting video. The format to set the time is HH:MM:SS.
 
 Example:
-    mkchromecast --video -i "/path/to/file.mp4" --seek 00:23:00
+    python mkchromecast.py --video -i "/path/to/file.mp4" --seek 00:23:00
 
 '''
 )
@@ -355,7 +355,7 @@ help=
 Segmentate audio for improved live streaming when using ffmpeg.
 
 Example:
-    mkchromecast --encoder-backend ffmpeg --segment-time 2
+    python mkchromecast.py --encoder-backend ffmpeg --segment-time 2
 
 '''
 )
@@ -372,13 +372,13 @@ have to specify the codec with -c flag when using it.
 Example:
 
 Source URL, port and extension:
-    mkchromecast --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
+    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 Source URL, no port, and extension:
-    mkchromecast --source-url http://example.com/name.ogg -c ogg --control
+    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --control
 
 Source URL without extension:
-    mkchromecast --source-url http://example.com/name -c aac --control
+    python mkchromecast.py --source-url http://example.com/name -c aac --control
 
 Supported source URLs are:
 
@@ -418,7 +418,7 @@ help="""
 Update mkchromecast git repository.
 
 Example:
-    mkchromecast --update
+    python mkchromecast.py --update
 
 This will execute for you:
 
@@ -446,13 +446,13 @@ with ffmpeg.
 Examples:
 
 Cast a file:
-    mkchromecast --video -i "/path/to/file.mp4"
+    python mkchromecast.py --video -i "/path/to/file.mp4"
 
 Cast from source-url:
-    mkchromecast --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --control --video
+    python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --control --video
 
 Cast a youtube-url:
-    mkchromecast -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+    python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
 
 '''
 )
@@ -476,7 +476,7 @@ help='''
 Stream from Youtube URL. This option needs youtube-dl.
 
 Example:
-    mkchromecast -y https://www.youtube.com/watch?v=NVvAJhZVBTc
+    python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
 
 As I don't own a Google Cast for TVs, I cannot test this correctly. But in
 principle it should work.

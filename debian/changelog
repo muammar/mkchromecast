@@ -1,3 +1,12 @@
+mkchromecast (0.3.7+git20170410-1) unstable; urgency=medium
+
+  * New git revision.
+  * Support video casting with nodejs.
+  * Changing documentation from python mkchromecast.py to just mkchromecast.
+    Closes: #857846.
+
+ -- Muammar El Khatib <muammar@debian.org>  Mon, 10 Apr 2017 19:49:55 -0400
+
 mkchromecast (0.3.7+git20170130-2) unstable; urgency=medium
 
   * Updated gir1.2-notify-0.7 dependency. Closes: #855442.
