@@ -2,7 +2,7 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-7.4.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-7.8.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -572,14 +572,18 @@ References:
 
 #### Video
 
-You can now cast videos to your Google cast using **mkchromecast**. This feature is only working
-with `ffmpeg` backend and from command line. In the future, they may be a graphical interface
+You can now cast videos to your Google cast using **mkchromecast**. This feature works both with `node`
+and `ffmpeg` backends and from command line. In the future, they may be a graphical interface
 for this process. [See this project](https://github.com/muammar/mkchromecast/projects/1).
 
 * Cast a file from your computer to your chromecast:
 
 ```
 python mkchromecast.py --video -i "/path/to/file.mp4"
+```
+
+```
+python mkchromecast.py --video -i "/path/to/file.mp4" --encoder-backend node
 ```
 
 **Note**: the format of the file can be whatever is supported by `ffmpeg` and not exclusively mp4.
@@ -633,16 +637,23 @@ or when installing the debian package:
 mkchromecast -h
 ```
 
-
 Known issues
 ------------
 ##### General
 
-No new issues reported.
+* **mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
+  versions of pychromecast.
+* When casting videos using the `node` backend, it is not possible to
+  use neither the `--subtitle` nor the `--seek` flags.
 
 ##### macOS
 
-No new issues reported.
+* It is not possible to create a macOS app with py2app. For more details see
+  [#36](https://github.com/muammar/mkchromecast/issues/36).
+* **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
+  more than one available. In that case, you need to use the application from
+  sources or build the application as shown
+  [here](https://github.com/muammar/mkchromecast/wiki/macOS-standalone-app).
 
 ##### Linux
 
@@ -658,10 +669,7 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-* More eye candy.
-* [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
-
-
+* Add SONOS support.
 
 Contribute
 ----------
@@ -671,5 +679,4 @@ issues](https://github.com/muammar/mkchromecast/issues), [creating pull
 requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
-
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)

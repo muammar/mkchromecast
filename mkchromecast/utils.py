@@ -24,3 +24,16 @@ def terminate():
         child.kill()
     parent.kill()
     return
+
+def is_installed(name, path, debug):
+    PATH = path
+    iterate = PATH.split(':')
+    for item in iterate:
+        verifyif = str(item+'/'+name)
+        if os.path.exists(verifyif) == False:
+            continue
+        else:
+            if debug == True:
+                print('Program '+str(name)+' found in '+str(verifyif))
+            return True
+    return

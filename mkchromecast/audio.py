@@ -219,7 +219,14 @@ else:
                 else:
                     msg.samplerate_info(codec)
 
-            elif codec in codecs_sr and int(samplerate) > 72000 and int(samplerate) <= 96000:
+            elif codec in codecs_sr and int(samplerate) > 72000 and int(samplerate) <= 90000:
+                samplerate = '88200'
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
+
+            elif codec in codecs_sr and int(samplerate) > 90000 and int(samplerate) <= 96000:
                 if codec in no96k:
                     samplerate = '48000'
                     msg.samplerate_no96(codec)
@@ -230,7 +237,18 @@ else:
                 if sourceurl == None:
                     print(colors.warning('Sample rate has been set to maximum!'))
 
-            elif codec in codecs_sr and int(samplerate) > 96000:
+            elif codec in codecs_sr and int(samplerate) > 96000 and int(samplerate) <= 176000:
+                if codec in no96k:
+                    samplerate = '48000'
+                    msg.samplerate_no96(codec)
+                else:
+                    samplerate = '176000'
+                    msg.samplerate_info(codec)
+
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
+
+            elif codec in codecs_sr and int(samplerate) > 176000:
                 if codec in no96k:
                     samplerate = '48000'
                     msg.samplerate_no96(codec)

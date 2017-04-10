@@ -1,6 +1,5 @@
 *.DS_Store
 *.pyc
-nodejs
 bin
 archive
 notifier

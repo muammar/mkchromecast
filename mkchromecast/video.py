@@ -10,8 +10,10 @@ import mkchromecast.__init__
 from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
+from mkchromecast.utils import terminate, is_installed
 from mkchromecast.preferences import ConfigSectionMap
 import psutil
+import getpass
 import pickle
 import sys
 import time
@@ -22,6 +24,7 @@ import multiprocessing
 import threading
 import os
 from os import getpid
+USER = getpass.getuser()
 
 chunk_size = mkchromecast.__init__.chunk_size
 appendtourl = 'stream'
@@ -29,6 +32,10 @@ platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
 res = mkchromecast.__init__.resolution
+seek = mkchromecast.__init__.seek
+debug = mkchromecast.__init__.debug
+sourceurl = mkchromecast.__init__.sourceurl
+encoder_backend = mkchromecast.__init__.backend
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -55,6 +62,11 @@ def resolution(res):
         insert = ['-vf', 'scale=4096:-1']
         return insert
 
+def seeking(seek):
+    seek_append = ['-ss', seek]
+    for i, _ in enumerate(seek_append):
+       command.insert(i + 1, _)
+
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
 I think that the command below is sending a file that is too big and the
@@ -74,28 +86,74 @@ else:
     The blocks shown below are related to input_files
     """
     if input_file != None and subtitles == None:
+        """
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
+            #'-loglevel', 'panic',
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             'pipe:1'
          ]
-    elif input_file != None and subtitles != None:
+        """
+        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
             'ffmpeg',
             '-re',
-            '-loglevel', 'panic',
+            '-i', input_file,
+            '-vcodec', 'libx264',
+            '-preset', 'ultrafast',
+            '-tune', 'zerolatency',
+            '-maxrate', '10000k',
+            '-bufsize', '20000k',
+            '-pix_fmt', 'yuv420p',
+            '-g', '60', #'-c:a', 'copy', '-ac', '2',
+            #'-b', '900k',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe+faststart ',
+            'pipe:1'
+        ]
+
+    elif input_file != None and subtitles != None:
+        """
+        command = [
+            'ffmpeg',
+            '-re',
             '-i', input_file,
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-movflags', 'frag_keyframe',
+            '-movflags', 'frag_keyframe+faststart ',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
+        """
+        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        command = [
+            'ffmpeg',
+            '-re',
+            '-i', input_file,
+            '-vcodec', 'libx264',
+            '-preset', 'ultrafast',
+            '-tune', 'zerolatency',
+            '-maxrate', '10000k',
+            '-bufsize', '20000k',
+            '-pix_fmt', 'yuv420p',
+            '-g', '60', #'-c:a', 'copy', '-ac', '2',
+            #'-b', '900k',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe+faststart ',
+            '-vf', 'subtitles='+subtitles,
+            'pipe:1'
+        ]
+
+    if seek != None:
+        seeking(seek)
+
+    if debug == False and sourceurl == None:
+        command.insert(command.index('-i'), 'panic')
+        command.insert(command.index('panic'),  '-loglevel')
 
     mtype = 'video/mp4'
     if res != None:
@@ -201,5 +259,37 @@ def monitor_daemon():
             sys.exit(0)
 
 def main():
-    st = multi_proc()
-    st.start()
+    if encoder_backend != 'node':
+        st = multi_proc()
+        st.start()
+    else:
+        print('Starting Node')
+        if platform == 'Darwin':
+            PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+        else:
+            PATH = os.environ['PATH']
+
+        if debug == True:
+            print('PATH ='+str(PATH))
+
+        if platform == 'Darwin' and os.path.exists('./bin/node') == True:
+            webcast = [
+                './bin/node',
+                './nodejs/html5-video-streamer.js',
+                input_file
+                ]
+        elif platform == 'Linux':
+            node_names =['node', 'nodejs']
+            for name in node_names:
+                if is_installed(name, PATH, debug) == True:
+                    webcast = [
+                        name,
+                        './nodejs/html5-video-streamer.js',
+                        input_file
+                        ]
+        try:
+            p = subprocess.Popen(webcast)
+        except:
+            print(colors.warning('Nodejs is not installed in your system. Please, install it to use this backend.'))
+            print(colors.warning('Closing the application...'))
+            terminate()

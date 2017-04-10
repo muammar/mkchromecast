@@ -5,7 +5,7 @@
 import mkchromecast.__init__
 from mkchromecast.audio_devices import *
 from mkchromecast.cast import *
-from mkchromecast.terminate import *
+from mkchromecast.utils import *
 import os.path, time
 import mkchromecast.systray
 

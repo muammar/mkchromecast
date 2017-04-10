@@ -3,7 +3,7 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.colors as colors
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 from mkchromecast.version import __version__
 import argparse
 import os.path
@@ -237,6 +237,7 @@ Use this flag to enable the notifications.
 '''
 )
 
+
 parser.add_argument(
 '-r',
 '--reset',
@@ -328,6 +329,20 @@ Which sample rate to use?
     - 22050Hz: sampling rate of audio quality of AM radio.
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+'''
+)
+
+parser.add_argument(
+'--seek',
+type=str,
+default=None,
+help=
+'''
+Option to seeking when casting video. The format to set the time is HH:MM:SS.
+
+Example:
+    python mkchromecast.py --video -i "/path/to/file.mp4" --seek 00:23:00
+
 '''
 )
 
@@ -571,6 +586,8 @@ backends = [
     ]
 if platform == 'Darwin':
     backends.remove('avconv')
+elif platform == 'Linux' and args.video == True:
+    pass
 else:
     backends.remove('node')
     backends.append('parec')
@@ -698,6 +715,11 @@ elif args.sample_rate == 0:
     samplerate = 44100
 
 """
+Seek
+"""
+seek = args.seek
+
+"""
 Segment time
 """
 avoid = ['parec', 'node']
@@ -718,9 +740,8 @@ videoarg = args.video
 """
 Volume
 """
-if args.control == True:
-    control = args.control
-elif args.volume == True:   #FIXME this has to be deleted in future releases.
+control = args.control
+if args.volume == True:   #FIXME this has to be deleted in future releases.
     control = args.volume
     print(colors.warning('The --volume flag is going to be renamed to --control.'))
 

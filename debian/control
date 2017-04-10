@@ -25,6 +25,7 @@ Depends: ${python:Depends},
          flac (>=1.3.0),
          python-pyqt5,
          youtube-dl,
+         nodejs,
          gir1.2-notify-0.7
 Suggests: libav-tools,
           ffmpeg,

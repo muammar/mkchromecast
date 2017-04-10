@@ -148,7 +148,11 @@ def streaming():
             '-b',
             bitrate,
             '-s',
-            samplerate
+            samplerate,
+            '-p',
+            '5000',
+            '-u',
+            'stream'
             ]
     else:
         webcast = [
@@ -157,7 +161,11 @@ def streaming():
             '-b',
             bitrate,
             '-s',
-            samplerate
+            samplerate,
+            '-p',
+            '5000',
+            '-u',
+            'stream'
             ]
     p = subprocess.Popen(webcast)
     if debug == True:

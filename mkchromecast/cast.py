@@ -8,7 +8,7 @@ from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 import time
 import pychromecast
 from pychromecast.dial import reboot
@@ -322,7 +322,8 @@ class casting(object):
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
             media_controller.play_media(self.sourceurl, mtype, title = self.title)
-        elif self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
+        elif (self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or
+                self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None):
             if args.video == True:
                 import mkchromecast.video
                 mtype = mkchromecast.video.mtype
@@ -332,9 +333,6 @@ class casting(object):
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
-        else:
-            print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
-            media_controller.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg', title = self.title)
         print(' ')
         print(colors.important('Cast media controller status'))
         print(' ')
