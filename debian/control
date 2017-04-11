@@ -86,9 +86,9 @@ Depends: ${python:Depends},
          ${misc:Depends},
          gstreamer1.0-tools,
          mkchromecast
-Description: Gstreamer dependencies to cast with mkchromecast
+Description: GStreamer dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
- considered essential for using mkchromecast together with Gstreamer software
+ considered essential for using mkchromecast together with GStreamer software
  framework. This package also depends on the packages on that list.
  .
  Information about needed configurations are contained in the README.Debian
