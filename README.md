@@ -2,12 +2,12 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-7.2.1-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-7.8.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
 This is a program to cast your **macOS** audio, or **Linux** audio to your
-Google Cast devices.
+Google Cast devices. It can also [cast video files](#video).
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
@@ -47,11 +47,11 @@ install `PyQt5`. For more information check the
 
 This is what the system tray menu looks like:
 
-##### macOS
+#### macOS
 
 [![Example](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/screencast.png)](https://www.youtube.com/embed/d9Qn_LltOjU)
 
-##### Linux
+#### Linux
 
 Check these images:
 
@@ -307,7 +307,7 @@ able to use all audio coding formats in **mkchromecast**, it is better to
 install `ffmpeg` with the following options enabled:
 
 ```
-brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+brew install ffmpeg --with-fdk-aac --with-sdl2 --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
 ```
 
 **mkchromecast** does not support `avconv` in **macOS**.
@@ -403,6 +403,8 @@ latest deb here](https://github.com/muammar/mkchromecast/releases/), and `dpkg
 
 Usage
 -----
+
+#### Audio
 
 Get into the cloned **mkchromecast** directory and execute:
 
@@ -530,7 +532,7 @@ This option is useful for:
 Example:
 
 ```
-python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 ```
 
@@ -538,13 +540,13 @@ As it can be seen above, **the codec has to be specified with the `-c` flag**.
 
 **Note**: `.m3u` or `.pls` are not yet supported.
 
-#### Controlling the Google Cast's volume
+#### Controlling the Google Cast's volume and pause/resume options
 
 You can control the volume of your Google Cast device by launching
-**mkchromecast** with the option `--volume`:
+**mkchromecast** with the option `--control`:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --volume
+python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --control
 ```
 
 This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
@@ -568,12 +570,54 @@ References:
 * [Lossless formats](https://github.com/muammar/mkchromecast/wiki/Audio-Quality#lossless-formats).
 
 
+#### Video
+
+You can now cast videos to your Google cast using **mkchromecast**. This feature works both with `node`
+and `ffmpeg` backends and from command line. In the future, they may be a graphical interface
+for this process. [See this project](https://github.com/muammar/mkchromecast/projects/1).
+
+* Cast a file from your computer to your chromecast:
+
+```
+python mkchromecast.py --video -i "/path/to/file.mp4"
+```
+
+```
+python mkchromecast.py --video -i "/path/to/file.mp4" --encoder-backend node
+```
+
+**Note**: the format of the file can be whatever is supported by `ffmpeg` and not exclusively mp4.
+
+* Subtitles
+
+```
+python mkchromecast.py --video -i "/tmp/Homeland.S06E01.Fair.Game.1080p.AMZN.WEBRip.HEVC.DD5.1.x265.mkv" --subtitles /tmp/Homeland.S06E01.Fair\ Game.HDTV.x264-BATV.en.HI.srt
+```
+
+* Set the resolution
+
+```
+python mkchromecast.py --video --resolution 4k -i /path/to/myvideo.something --subtitles /path/to/my.srt
+```
+
+* Cast from a source url:
+
+```
+python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --volume --video
+```
+
+* Youtube Video
+
+```
+python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+```
+
 
 Killing the application
 -----------------------
 
 To kill **mkchromecast** when you run it from console, just press
-<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--volume` flag is passed).
+<kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--control` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
 
@@ -593,16 +637,23 @@ or when installing the debian package:
 mkchromecast -h
 ```
 
-
 Known issues
 ------------
 ##### General
 
-No new issues reported.
+* **mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
+  versions of pychromecast.
+* When casting videos using the `node` backend, it is not possible to
+  use neither the `--subtitle` nor the `--seek` flags.
 
 ##### macOS
 
-No new issues reported.
+* It is not possible to create a macOS app with py2app. For more details see
+  [#36](https://github.com/muammar/mkchromecast/issues/36).
+* **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
+  more than one available. In that case, you need to use the application from
+  sources or build the application as shown
+  [here](https://github.com/muammar/mkchromecast/wiki/macOS-standalone-app).
 
 ##### Linux
 
@@ -618,10 +669,7 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-* More eye candy.
-* [Video](https://github.com/muammar/mkchromecast/milestone/1)?.
-
-
+* Add SONOS support.
 
 Contribute
 ----------
@@ -631,5 +679,4 @@ issues](https://github.com/muammar/mkchromecast/issues), [creating pull
 requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
 me some pizza :).
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQGD4UXPBS96U)
-
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)

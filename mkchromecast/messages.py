@@ -45,8 +45,9 @@ def samplerate_info(codec):
             +str(22050)+'Hz, '
             +str(32000)+'Hz, '
             +str(44100)+'Hz, '
-            +str(48000)+'Hz or '
-            +str(96000)+'Hz')
+            +str(48000)+'Hz  '
+            +str(96000)+'Hz or '
+            +str(192000)+'Hz')
             )
     return
 

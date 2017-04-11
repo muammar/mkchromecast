@@ -2,9 +2,8 @@
 
 # This file is part of mkchromecast.
 
-from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 from mkchromecast.version import __version__
 import argparse
 import os.path
@@ -138,6 +137,19 @@ Use this option to connect from configuration file.
 )
 
 parser.add_argument(
+'--control',
+action='store_true',
+default=False,
+help='''
+Control some actions of your Google Cast Devices. Use the 'u' and 'd' keys to
+perform volume up and volume down respectively, or press 'p' and 'r' to pause
+and resume cast process (only works with ffmpeg). Note that to kill the
+application using this option, you need to press the 'q' key or 'Ctrl-c'.
+'''
+)
+
+
+parser.add_argument(
 '--debug',
 action='store_true',
 help='''
@@ -192,6 +204,19 @@ You can pass it to all available backends.
 )
 
 parser.add_argument(
+'-i',
+'--input-file',
+type=str,
+default=None,
+help='''
+Stream a file.
+
+Example:
+    python mkchromecast.py -i /path/to/file.mp4
+'''
+)
+
+parser.add_argument(
 '-n',
 '--name',
 type=str,
@@ -211,6 +236,7 @@ help='''
 Use this flag to enable the notifications.
 '''
 )
+
 
 parser.add_argument(
 '-r',
@@ -237,6 +263,22 @@ default=False,
 help='''
 This flag monitors if connection with google cast has been lost, and try to
 reconnect.
+'''
+)
+
+parser.add_argument(
+'--resolution',
+type=str,
+default=None,
+help='''
+Set the resolution of the streamed video. The following resolutions are supported:
+
+    - 480p.
+    - 720p (1280x720).
+    - 1080p (1920x1080).
+    - 2K.
+    - UHD (3840x2160).
+    - 4K (4096x2160).
 '''
 )
 
@@ -277,14 +319,30 @@ This option works for both backends. The example above sets the sample rate to
 
 Which sample rate to use?
 
-    - 96000Hz: maximum sampling rate supported in google cast audio. Only
-      supported by aac, wav and flac codecs.
+    - 192000Hz: maximum sampling rate supported in google cast audio without
+      using High Dynamic Range. Only supported by aac, wav and flac codecs.
+    - 96000Hz: maximum sampling rate supported in google cast audio using High
+      Dynamic Range. Only supported by aac, wav and flac codecs.
     - 48000Hz: sampling rate of audio in DVDs.
     - 44100Hz: sampling rate of audio CDs giving a 20 kHz maximum frequency.
     - 32000Hz: sampling rate of audio quality a little below FM radio bandwidth.
     - 22050Hz: sampling rate of audio quality of AM radio.
 
 For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
+'''
+)
+
+parser.add_argument(
+'--seek',
+type=str,
+default=None,
+help=
+'''
+Option to seeking when casting video. The format to set the time is HH:MM:SS.
+
+Example:
+    python mkchromecast.py --video -i "/path/to/file.mp4" --seek 00:23:00
+
 '''
 )
 
@@ -314,13 +372,13 @@ have to specify the codec with -c flag when using it.
 Example:
 
 Source URL, port and extension:
-    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --volume
+    python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 Source URL, no port, and extension:
-    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --volume
+    python mkchromecast.py --source-url http://example.com/name.ogg -c ogg --control
 
 Source URL without extension:
-    python mkchromecast.py --source-url http://example.com/name -c aac --volume
+    python mkchromecast.py --source-url http://example.com/name -c aac --control
 
 Supported source URLs are:
 
@@ -331,6 +389,16 @@ Supported source URLs are:
     - http://url:port/name.flac
 
 .m3u or .pls are not yet available.
+'''
+)
+
+parser.add_argument(
+'--subtitles',
+type=str,
+default=None,
+help=
+'''
+Set subtitles.
 '''
 )
 
@@ -368,13 +436,34 @@ Show the version'''
 )
 
 parser.add_argument(
+'--video',
+action='store_true',
+default=False,
+help='''
+Use this flag to cast video to your Google cast devices. It is only working
+with ffmpeg.
+
+Examples:
+
+Cast a file:
+    python mkchromecast.py --video -i "/path/to/file.mp4"
+
+Cast from source-url:
+    python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --control --video
+
+Cast a youtube-url:
+    python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+
+'''
+)
+
+parser.add_argument(
 '--volume',
 action='store_true',
 default=False,
 help='''
-Control the volume of your Google Cast Devices. Use the 'u' and 'd' keys to
-perform volume up and volume down actions respectively. Note that to kill the
-application using this option, you need to press the 'q' key or 'Ctrl-c'.
+This option has been changed to --control. It will be deleted in following
+releases.
 '''
 )
 
@@ -422,7 +511,9 @@ if debug == True:
 
 discover = args.discover
 host = args.host
+input_file = args.input_file
 sourceurl = args.source_url
+subtitles = args.subtitles
 reconnect = args.reconnect
 
 ccname = args.name
@@ -434,10 +525,11 @@ Reset
 """
 if args.reset == True:
     if platform == 'Darwin':
+        from mkchromecast.audio_devices import inputint, outputint
         inputint()
         outputint()
     else:
-        from mkchromecast.pulseaudio import *
+        from mkchromecast.pulseaudio import remove_sink
         remove_sink()
     terminate()
 
@@ -494,6 +586,8 @@ backends = [
     ]
 if platform == 'Darwin':
     backends.remove('avconv')
+elif platform == 'Linux' and args.video == True:
+    pass
 else:
     backends.remove('node')
     backends.append('parec')
@@ -514,7 +608,10 @@ elif args.encoder_backend  == None:     #This is to define defaults
     if platform == 'Linux':
         args.encoder_backend = 'parec'
         backend = args.encoder_backend
-    elif platform == 'Darwin':
+    elif platform == 'Darwin' and args.video == True:
+        args.encoder_backend = 'ffmpeg'
+        backend = args.encoder_backend
+    elif platform == 'Darwin' and args.video == False:
         args.encoder_backend = 'node'
         backend = args.encoder_backend
 
@@ -545,8 +642,33 @@ else:
         print(colors.options('Selected audio codec: ')+ args.codec)
         print(colors.error('Supported audio codecs are: '))
         for codec in codecs:
-            print('-',codec)
+            print('-', codec)
         sys.exit(0)
+
+"""
+Resolution
+"""
+resolutions = [
+        '480p',
+        '720p',
+        '1080p',
+        '2K',
+        'UHD',
+        '4K'
+     ]
+
+_resolutions = [r.lower() for r in resolutions]
+
+if args.resolution == None:
+    resolution = args.resolution
+elif args.resolution.lower() in _resolutions:
+    resolution = args.resolution.lower()
+else:
+    print(colors.error('Supported resolutions are: '))
+    for res in resolutions:
+        if res != False:
+            print('-', res)
+    sys.exit(0)
 
 """
 Bitrate
@@ -554,7 +676,8 @@ Bitrate
 codecs_br = [
     'mp3',
     'ogg',
-    'aac'
+    'aac',
+    'flac'
     ]
 
 if codec in codecs_br:
@@ -592,6 +715,11 @@ elif args.sample_rate == 0:
     samplerate = 44100
 
 """
+Seek
+"""
+seek = args.seek
+
+"""
 Segment time
 """
 avoid = ['parec', 'node']
@@ -605,10 +733,17 @@ else:
     segmenttime = 2
 
 """
+Video
+"""
+videoarg = args.video
+
+"""
 Volume
 """
-if args.volume == True:
-    volumearg = args.volume
+control = args.control
+if args.volume == True:   #FIXME this has to be deleted in future releases.
+    control = args.volume
+    print(colors.warning('The --volume flag is going to be renamed to --control.'))
 
 """
 Youtube URLs
@@ -620,6 +755,8 @@ if args.youtube != None:
     else:
         youtubeurl = args.youtube
         backend = 'ffmpeg'
+else:
+    youtubeurl = args.youtube
 
 """
 This is to write a PID file

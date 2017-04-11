@@ -107,7 +107,7 @@ class menubar(QtWidgets.QMainWindow):
         screen_resolution = self.app.desktop().screenGeometry()
         self.width = screen_resolution.width()
         self.height = screen_resolution.height()
-        if self.width > 1280:
+        if self.height > 1280:
             self.scale_factor = 2
         else:
             self.scale_factor = 1
@@ -155,6 +155,7 @@ class menubar(QtWidgets.QMainWindow):
     def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
         self.menu = QtWidgets.QMenu()
+        self.ag = QtWidgets.QActionGroup(self, exclusive=True)
         self.search_menu()
         self.separator_menu()
         self.populating_menu()
@@ -431,13 +432,20 @@ class menubar(QtWidgets.QMainWindow):
             self.separator_menu()
             print('Available Google Cast Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
-                self.entries = menuentry
                 try:
-                    self.menuentry = self.menu.addAction(str(menuentry[1]))
+                    self.a = self.ag.addAction((QtWidgets.QAction(str(menuentry[1]), self, checkable=True)))
+                    self.menuentry = self.menu.addAction(self.a)
                 except UnicodeEncodeError:
                     self.menuentry = self.menu.addAction(str(unicode(menuentry[1]).encode("utf-8")))
-                self.menuentry.triggered.connect(self.play_cast)
-                self.menuentry.setCheckable(True)
+                # The receiver is a lambda function that passes clicked as
+                # a boolean, and the clicked_item as an argument to the
+                # self.clicked_cc() method. This last method, sets the correct
+                # index and name of the chromecast to be used by
+                # self.play_cast(). Credits to this question in stackoverflow:
+                #
+                # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
+                receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
+                self.a.triggered.connect(receiver)
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
@@ -448,6 +456,16 @@ class menubar(QtWidgets.QMainWindow):
             self.update_menu()
             self.about_menu()
             self.exit_menu()
+
+    def clicked_cc(self, clicked_item):
+        if self.played == True:
+            self.cast.quit_app()
+
+        if debug == True:
+            print(clicked_item)
+        self.index = clicked_item[0]
+        self.cast_to = clicked_item[1]
+        self.play_cast()
 
     def pcastready(self, message):
         print('pcastready ?', message)
@@ -529,7 +547,6 @@ class menubar(QtWidgets.QMainWindow):
     def play_cast(self):
         if self.played == True:
             self.kill_child()
-        self.menuentry.setChecked(True)
         if os.path.exists('images/'+self.google_working[self.colors]+'.icns') == True:
             if platform == 'Darwin':
                 self.tray.setIcon(
@@ -564,14 +581,11 @@ class menubar(QtWidgets.QMainWindow):
                         )
                     )
 
-        print(self.entries[0], self.entries[1])
-        self.index = self.entries[0]
-        self.cast_to = self.entries[1]
         while True:
             try:
                 if os.path.exists('/tmp/mkchromecast.tmp') == True:
                     self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-                pickle.dump(self.index, self.tf)
+                pickle.dump(self.cast_to, self.tf)
                 self.tf.close()
             except ValueError:
                 continue
@@ -588,7 +602,6 @@ class menubar(QtWidgets.QMainWindow):
                 self.cast.quit_app()
             except AttributeError:
                 pass
-            self.menuentry.setChecked(False)
             self.reset_audio()
             try:
                 self.kill_child()
@@ -834,7 +847,6 @@ class menubar(QtWidgets.QMainWindow):
         if self.cast == None and self.stopped == False:
             self.app.quit()
         elif self.stopped == True or self.cast != None:
-            #self.stop_cast() # This was duplicated.
             self.kill_child()
             self.stop_cast()
             self.app.quit()

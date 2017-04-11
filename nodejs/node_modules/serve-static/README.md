@@ -9,11 +9,17 @@
 
 ## Install
 
+This is a [Node.js](https://nodejs.org/en/) module available through the
+[npm registry](https://www.npmjs.com/). Installation is done using the
+[`npm install` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
+
 ```sh
 $ npm install serve-static
 ```
 
 ## API
+
+<!-- eslint-disable no-unused-vars -->
 
 ```js
 var serveStatic = require('serve-static')
@@ -154,7 +160,7 @@ var serve = serveStatic('public/ftp', {
 })
 
 // Set header to force download
-function setHeaders(res, path) {
+function setHeaders (res, path) {
   res.setHeader('Content-Disposition', contentDisposition(path))
 }
 
@@ -191,12 +197,13 @@ a fallback.
 
 ```js
 var express = require('express')
+var path = require('path')
 var serveStatic = require('serve-static')
 
 var app = express()
 
-app.use(serveStatic(__dirname + '/public-optimized'))
-app.use(serveStatic(__dirname + '/public'))
+app.use(serveStatic(path.join(__dirname, 'public-optimized')))
+app.use(serveStatic(path.join(__dirname, 'public')))
 app.listen(3000)
 ```
 
@@ -208,11 +215,12 @@ is for 1 day.
 
 ```js
 var express = require('express')
+var path = require('path')
 var serveStatic = require('serve-static')
 
 var app = express()
 
-app.use(serveStatic(__dirname + '/public', {
+app.use(serveStatic(path.join(__dirname, 'public'), {
   maxAge: '1d',
   setHeaders: setCustomCacheControl
 }))

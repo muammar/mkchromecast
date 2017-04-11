@@ -175,7 +175,7 @@ else:
                 ]
 
             """
-            The codecs below do not support 96000Hz
+            The codecs below do not support > 96000Hz
             """
             no96k = [
                 'mp3',
@@ -219,12 +219,41 @@ else:
                 else:
                     msg.samplerate_info(codec)
 
-            elif codec in codecs_sr and int(samplerate) > 72000:
+            elif codec in codecs_sr and int(samplerate) > 72000 and int(samplerate) <= 90000:
+                samplerate = '88200'
+                if codec in no96k:
+                    msg.samplerate_no96(codec)
+                else:
+                    msg.samplerate_info(codec)
+
+            elif codec in codecs_sr and int(samplerate) > 90000 and int(samplerate) <= 96000:
                 if codec in no96k:
                     samplerate = '48000'
                     msg.samplerate_no96(codec)
                 else:
                     samplerate = '96000'
+                    msg.samplerate_info(codec)
+
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
+
+            elif codec in codecs_sr and int(samplerate) > 96000 and int(samplerate) <= 176000:
+                if codec in no96k:
+                    samplerate = '48000'
+                    msg.samplerate_no96(codec)
+                else:
+                    samplerate = '176000'
+                    msg.samplerate_info(codec)
+
+                if sourceurl == None:
+                    print(colors.warning('Sample rate has been set to maximum!'))
+
+            elif codec in codecs_sr and int(samplerate) > 176000:
+                if codec in no96k:
+                    samplerate = '48000'
+                    msg.samplerate_no96(codec)
+                else:
+                    samplerate = '192000'
                     msg.samplerate_info(codec)
 
                 if sourceurl == None:
@@ -318,8 +347,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libmp3lame',
                 '-f', 'mp3',
                 '-ac', '2',
@@ -394,8 +422,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libvorbis',
                 '-f', 'segment', '-segment_time', '2',
                 '-f', 'ogg',
@@ -467,18 +494,22 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'libfdk_aac',
                 '-f', 'adts',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
-                '-cutoff', '18000',
                 'pipe:'
                 ]
             if segmenttime != None:
                 set_segmenttime()
+                if platform == 'Darwin':
+                    cutoff = ['-cutoff', '18000']
+                    for element in cutoff:
+                        command.insert(-1, element)
+
+
 
     """
     WAV 24-Bit
@@ -523,8 +554,7 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'pcm_s24le',
                 '-f', 'wav',
                 '-ac', '2',
@@ -549,6 +579,7 @@ else:
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
             if adevice != None:
@@ -573,12 +604,12 @@ else:
             command = [
                 backend,
                 '-f', 'avfoundation',
-                '-audio_device_index', '0',
-                '-i', '',
+                '-i', ':Soundflower (2ch)',
                 '-acodec', 'flac',
                 '-f', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
+                '-b:a', bitrate,
                 'pipe:'
                 ]
             if segmenttime != None:

@@ -8,7 +8,7 @@ from mkchromecast.audio_devices import *
 import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.terminate import *
+from mkchromecast.utils import terminate
 import time
 import pychromecast
 from pychromecast.dial import reboot
@@ -163,13 +163,6 @@ class casting(object):
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
                 self.availablecc()
-                """
-                self.availablecc=[]
-                for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'      ',str(device))
-                    to_append = [self.index,device]
-                    self.availablecc.append(to_append)
-                """
             else:
                 if self.debug == True:
                     print('else:')
@@ -192,19 +185,11 @@ class casting(object):
                 print(colors.important('Index   Friendly name'))
                 print(colors.important('=====   ============= '))
                 self.availablecc()
-                """
-                self.availablecc=[]
-                for self.index,device in enumerate(self.cclist):
-                    print(str(self.index)+'      ',str(device))
-                    to_append = [self.index,device]
-                    self.availablecc.append(to_append)
-                """
             else:
                 if self.debug == True:
                     print('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
-                self.index=pickle.load(self.tf)
-                self.cast_to = self.cclist[int(self.index)]
+                self.cast_to=pickle.load(self.tf)
                 self.availablecc()
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
@@ -327,22 +312,27 @@ class casting(object):
                 self.backend = ConfigSectionMap('settings')['backend']
 
         if self.sourceurl != None:
-            import mkchromecast.audio
-            mtype = mkchromecast.audio.mtype
+            if args.video == True:
+                import mkchromecast.video
+                mtype = mkchromecast.video.mtype
+            else:
+                import mkchromecast.audio
+                mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
             print(colors.options('Using media type:')+' '+mtype)
             media_controller.play_media(self.sourceurl, mtype, title = self.title)
-        elif self.backend == 'ffmpeg' or self.backend == 'avconv' or self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None:
-            import mkchromecast.audio
-            mtype = mkchromecast.audio.mtype
+        elif (self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or
+                self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None):
+            if args.video == True:
+                import mkchromecast.video
+                mtype = mkchromecast.video.mtype
+            else:
+                import mkchromecast.audio
+                mtype = mkchromecast.audio.mtype
             print(' ')
             print(colors.options('The media type string used is:')+' '+mtype)
             media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
-        else:
-            print(' ')
-            print(colors.options('The media type string used is:')+' '+  'audio/mpeg')
-            media_controller.play_media('http://'+localip+':3000/stream.mp3', 'audio/mpeg', title = self.title)
         print(' ')
         print(colors.important('Cast media controller status'))
         print(' ')
