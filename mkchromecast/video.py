@@ -280,13 +280,18 @@ def main():
                 ]
         elif platform == 'Linux':
             node_names =['node', 'nodejs']
+            nodejs_dir = ['./nodejs/', '/usr/share/mkchromecast/nodejs/']
             for name in node_names:
                 if is_installed(name, PATH, debug) == True:
-                    webcast = [
-                        name,
-                        './nodejs/html5-video-streamer.js',
-                        input_file
-                        ]
+                    for path in nodejs_dir:
+                        if os.path.isdir(path):
+                            path = path + 'html5-video-streamer.js'
+                            webcast = [
+                                name,
+                                path,
+                                input_file
+                                ]
+                            break
         try:
             p = subprocess.Popen(webcast)
         except:
