@@ -1,3 +1,9 @@
+mkchromecast (0.3.7+git20170414-1) unstable; urgency=medium
+
+  * New git revision.
+
+ -- Muammar El Khatib <muammar@debian.org>  Sat, 15 Apr 2017 15:41:29 -0400
+
 mkchromecast (0.3.7+git20170410-1) unstable; urgency=medium
 
   * New git revision.
