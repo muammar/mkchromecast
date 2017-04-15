@@ -605,8 +605,11 @@ if args.encoder_backend not in backends and args.encoder_backend != None:
 if args.encoder_backend in backends:
     backend = args.encoder_backend
 elif args.encoder_backend  == None:     #This is to define defaults
-    if platform == 'Linux':
+    if platform == 'Linux' and args.video == False:
         args.encoder_backend = 'parec'
+        backend = args.encoder_backend
+    if platform == 'Linux' and args.video == True:
+        args.encoder_backend = 'ffmpeg'
         backend = args.encoder_backend
     elif platform == 'Darwin' and args.video == True:
         args.encoder_backend = 'ffmpeg'

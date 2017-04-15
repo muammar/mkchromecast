@@ -123,7 +123,7 @@ class mk(object):
             self.show_control(self.control)
 
     def cast_video(self):
-        """docstring for casting video"""
+        """This method launches video casting"""
         print(colors.important('Starting Video Cast Process...'))
         import mkchromecast.video
         mkchromecast.video.main()
@@ -172,6 +172,7 @@ class mk(object):
         terminate()
 
     def controls_msg(self):
+        """Messages shown when controls is True"""
         print('')
         print(colors.important('Controls:'))
         print(colors.important('========='))
@@ -185,7 +186,7 @@ class mk(object):
         print('')
 
     def show_control(self, control):
-        """docstring for control"""
+        """Method to show controls"""
         if control == True:
             from mkchromecast.getch import getch, pause
 
@@ -207,7 +208,7 @@ class mk(object):
                         if self.videoarg == True:
                             print('Pausing Casting Process...')
                             action = 'pause'
-                            self.ffmpeg_handler(action)
+                            self.backend_handler(action, self.encoder_backend)
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
                                     self.controls_msg()
@@ -217,7 +218,7 @@ class mk(object):
                         if self.videoarg == True:
                             print('Resuming Casting Process...')
                             action = 'resume'
-                            self.ffmpeg_handler(action)
+                            self.backend_handler(action, self.encoder_backend)
                             if self.encoder_backend == 'ffmpeg':
                                 if self.debug == True:
                                     self.controls_msg()
@@ -243,15 +244,23 @@ class mk(object):
             except KeyboardInterrupt:
                 atexit.register(self.terminate_app())
 
-    def ffmpeg_handler(self, action):
-        """docstring for ffmpeg_handler"""
-        if action == 'pause':
+    def backend_handler(self, action, backend):
+        """Methods to handle pause and resume state of backends"""
+        if action == 'pause' and backend == 'ffmpeg':
             subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
-        elif action == 'resume':
+        elif action == 'resume' and backend == 'ffmpeg':
             subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
+        elif action == 'pause' and backend == 'node' and self.platform == 'Linux':
+            subprocess.call(['pkill', '-STOP', '-f', 'nodejs'])
+        elif action == 'resume' and backend == 'node' and self.platform == 'Linux':
+            subprocess.call(['pkill', '-CONT', '-f', 'nodejs'])
+        elif action == 'pause' and backend == 'node' and self.platform == 'Darwin':
+            subprocess.call(['pkill', '-STOP', '-f', 'node'])
+        elif action == 'resume' and backend == 'node' and self.platform == 'Darwin':
+            subprocess.call(['pkill', '-CONT', '-f', 'node'])
 
     def start_tray(self):
-        """docstring for start_tray"""
+        """This method starts the system tray"""
         import mkchromecast.systray
         checkmktmp()
         writePidFile()

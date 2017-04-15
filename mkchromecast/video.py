@@ -291,6 +291,7 @@ def main():
                                 path,
                                 input_file
                                 ]
+                            break
         try:
             p = subprocess.Popen(webcast)
         except:
