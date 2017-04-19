@@ -27,6 +27,15 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
+"""
+We verify that soco is installed to give Sonos support
+"""
+try:
+    import soco
+    sonos = True
+except ImportError:
+    sonos = False
+
 class casting(object):
     """Main casting class.
     """
@@ -116,6 +125,9 @@ class casting(object):
         from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
                                                 # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         self.cclist = self._get_chromecasts()
+
+        if sonos == True:
+            self.sonos_list = list(soco.discover())
         if self.debug == True:
             print('self.cclist', self.cclist)
 
@@ -157,11 +169,11 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important('List of Google Cast devices available in your network:'))
-                print(colors.important('------------------------------------------------------'))
+                print(colors.important('List of devices available in your network:'))
+                print(colors.important('------------------------------------------'))
                 print(' ')
-                print(colors.important('Index   Friendly name'))
-                print(colors.important('=====   ============= '))
+                print(colors.important('Index   Types  Friendly name '))
+                print(colors.important('=====   =====  ============= '))
                 self.availablecc()
             else:
                 if self.debug == True:
@@ -378,11 +390,23 @@ class casting(object):
         self.availablecc=[]
         for self.index,device in enumerate(self.cclist):
             try:
-                print(str(self.index)+'      ', str(device))
+                print(str(self.index)+'       Gcast ', str(device))
             except UnicodeEncodeError:
-                print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
+                print(str(self.index)+'       Gcast ', str(unicode(device).encode("utf-8")))
             to_append = [self.index,device]
             self.availablecc.append(to_append)
+
+        if sonos == True:
+            lenght = len(self.availablecc)
+            for self.index,device in enumerate(self.sonos_list):
+                try:
+                    self.index = self.index + lenght
+                    print(str(self.index)+'       Sonos ', str(device.player_name))
+                except UnicodeEncodeError:
+                    self.index = self.index + lenght
+                    print(str(self.index)+'       Sonos ', str(unicode(device.player_name).encode("utf-8")))
+                to_append = [self.index,device]
+                self.availablecc.append(to_append)
 
     def reconnect_cc(self):
         """Dummy method to call  _reconnect_cc_().
