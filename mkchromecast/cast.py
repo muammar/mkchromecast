@@ -243,6 +243,7 @@ class casting(object):
                 print(' ')
             except TypeError:
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to.player_name))
+                self.types = 'Sonos'
             except IndexError:
                 checkmktmp()
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
