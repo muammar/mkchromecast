@@ -125,9 +125,16 @@ class casting(object):
         from pychromecast import socket_client  # This fixes the `No handlers could be found for logger "pychromecast.socket_client` warning"`.
                                                 # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         self.cclist = self._get_chromecasts()
+        self.cclist = [ [index, _, 'Gcast'] for index, _ in enumerate(self.cclist) ]
 
         if sonos == True:
             self.sonos_list = list(soco.discover())
+            lenght = len(self.cclist)
+
+            for self.index, device in enumerate(self.sonos_list):
+                add_sonos = [self.index, device, 'Sonos']
+                self.cclist.append(add_sonos)
+
         if self.debug == True:
             print('self.cclist', self.cclist)
 
@@ -145,21 +152,16 @@ class casting(object):
             if self.debug == True:
                 print('if len(self.cclist) != 0 and self.select_cc == False:')
             print(' ')
-            print(colors.important('List of Google Cast devices available in your network:'))
-            print(colors.important('------------------------------------------------------'))
-            print(' ')
-            print(colors.important('Index   Friendly name'))
-            print(colors.important('=====   ============= '))
-            for self.index,device in enumerate(self.cclist):
-                try:
-                    print(str(self.index)+'      ', str(device))
-                except UnicodeEncodeError:
-                    print(str(self.index)+'      ', str(unicode(device).encode("utf-8")))
+            print(colors.important('List of Devices Available in your Network:'))
+            print(colors.important('------------------------------------------\n'))
+            print(colors.important('Index \tTypes \tFriendly Name '))
+            print(colors.important('===== \t===== \t============= '))
+            self.availablecc()
             print(' ')
             if self.discover == False:
                 print(colors.important('We will cast to first device in the list above!'))
                 print(' ')
-                self.cast_to = self.cclist[0]
+                self.cast_to = self.cclist[0][1]
                 print(colors.success(self.cast_to))
                 print(' ')
 
@@ -169,11 +171,10 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important('List of devices available in your network:'))
-                print(colors.important('------------------------------------------'))
-                print(' ')
-                print(colors.important('Index   Types  Friendly name '))
-                print(colors.important('=====   =====  ============= '))
+                print(colors.important('List of Devices Available in your Network:'))
+                print(colors.important('------------------------------------------\n'))
+                print(colors.important('Index \tTypes \tFriendly Name '))
+                print(colors.important('===== \t===== \t============= '))
                 self.availablecc()
             else:
                 if self.debug == True:
@@ -191,11 +192,10 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important('List of Google Cast devices available in your network:'))
-                print(colors.important('------------------------------------------------------'))
-                print(' ')
-                print(colors.important('Index   Friendly name'))
-                print(colors.important('=====   ============= '))
+                print(colors.important('List of Devices Available in your Network:'))
+                print(colors.important('------------------------------------------\n'))
+                print(colors.important('Index \tTypes \tFriendly Name '))
+                print(colors.important('===== \t===== \t============= '))
                 self.availablecc()
             else:
                 if self.debug == True:
@@ -234,10 +234,12 @@ class casting(object):
             try:
                 pickle.dump(self.index, self.tf)
                 self.tf.close()
-                self.cast_to = self.cclist[int(self.index)]
+                self.cast_to = self.cclist[int(self.index)][1]
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
+            except TypeError:
+                print(colors.options('Casting to:')+' '+colors.success(self.cast_to.player_name))
             except IndexError:
                 checkmktmp()
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
@@ -248,115 +250,110 @@ class casting(object):
     def get_cc(self):
         if self.debug == True:
             print('def get_cc(self):')
-        try:
-            if self.ccname != None:
-                self.cast_to = self.ccname
-            self.cast = self._get_chromecast(self.cast_to)
-            # Wait for cast device to be ready
-            self.cast.wait()
-            print(' ')
-            print(colors.important('Information about ')+' '+colors.success(self.cast_to))
-            print(' ')
-            print(self.cast.device)
-            print(' ')
-            print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
-            print(' ')
-            print(self.cast.status)
-            print(' ')
-        except pychromecast.error.NoChromecastFoundError:
-            print(colors.error('No Chromecasts matching filter critera were found!'))
-            if self.platform == 'Darwin':
-                inputint()
-                outputint()
-            elif self.platform == 'Linux':
-                from mkchromecast.pulseaudio import remove_sink
-                remove_sink()
-            if self.tray == False:  # In the case that the tray is used, we don't kill the application
-                print(colors.error('Finishing the application...'))
-                terminate()
-                exit()
-            else:
-                self.stop_cast()
+        if self.cclist[int(self.index)][2] == 'Gcast':
+            try:
+                if self.ccname != None:
+                    self.cast_to = self.ccname
+                self.cast = self._get_chromecast(self.cast_to)
+                # Wait for cast device to be ready
+                self.cast.wait()
+                print(' ')
+                print(colors.important('Information about ')+' '+colors.success(self.cast_to))
+                print(' ')
+                print(self.cast.device)
+                print(' ')
+                print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
+                print(' ')
+                print(self.cast.status)
+                print(' ')
+            except pychromecast.error.NoChromecastFoundError:
+                print(colors.error('No Chromecasts matching filter critera were found!'))
+                if self.platform == 'Darwin':
+                    inputint()
+                    outputint()
+                elif self.platform == 'Linux':
+                    from mkchromecast.pulseaudio import remove_sink
+                    remove_sink()
+                if self.tray == False:  # In the case that the tray is used, we don't kill the application
+                    print(colors.error('Finishing the application...'))
+                    terminate()
+                    exit()
+                else:
+                    self.stop_cast()
+        else:
+            pass
 
     def play_cast(self):
+        print('play cast')
         if self.debug == True:
             print('def play_cast(self):')
         localip = self.ip
 
-        print(colors.options('The IP of ')+colors.success(self.cast_to)+colors.options(' is:')+' '+self.cast.host)
+        try:
+            print(colors.options('The IP of ')+colors.success(self.cast_to)+colors.options(' is:')+' '+self.cast.host)
+        except TypeError:
+            print(colors.options('The IP of ')+colors.success(self.cast_to.player_name)+colors.options(' is:')+' '+self.cast_to.ip_address)
+
         if self.host == None:
             print(colors.options('Your local IP is:')+' '+localip)
         else:
             print(colors.options('Your manually entered local IP is:')+' '+localip)
 
-        """
-        if self.youtubeurl != None:
-            print(colors.options('The Youtube URL chosen:')+' '+self.youtubeurl)
-            import pychromecast.controllers.youtube as youtube
-            yt = youtube.YouTubeController()
-            self.cast.register_handler(yt)
+        if self.cclist[int(self.index)][2] == 'Gcast':
+            media_controller = self.cast.media_controller
 
-            try:
-                import urlparse
-                url_data = urlparse.urlparse(self.youtubeurl)
-                query = urlparse.parse_qs(url_data.query)
-            except ImportError:
-                import urllib.parse
-                url_data = urllib.parse.urlparse(self.youtubeurl)
-                query = urllib.parse.parse_qs(url_data.query)
-            video = query["v"][0]
-            print(colors.options('Playing video:')+' '+video)
-            yt.play_video(video)
-        else:
-        """
-        media_controller = self.cast.media_controller
+            if self.tray == True:
+                config = ConfigParser.RawConfigParser()
+                configurations = config_manager()    # Class from mkchromecast.config
+                configf = configurations.configf
 
-        if self.tray == True:
-            config = ConfigParser.RawConfigParser()
-            configurations = config_manager()    # Class from mkchromecast.config
-            configf = configurations.configf
+                if os.path.exists(configf) and self.tray == True:
+                    print(tray)
+                    print(colors.warning('Configuration file exists'))
+                    print(colors.warning('Using defaults set there'))
+                    config.read(configf)
+                    self.backend = ConfigSectionMap('settings')['backend']
 
-            if os.path.exists(configf) and self.tray == True:
-                print(tray)
-                print(colors.warning('Configuration file exists'))
-                print(colors.warning('Using defaults set there'))
-                config.read(configf)
-                self.backend = ConfigSectionMap('settings')['backend']
-
-        if self.sourceurl != None:
-            if args.video == True:
-                import mkchromecast.video
-                mtype = mkchromecast.video.mtype
-            else:
-                import mkchromecast.audio
-                mtype = mkchromecast.audio.mtype
+            if self.sourceurl != None:
+                if args.video == True:
+                    import mkchromecast.video
+                    mtype = mkchromecast.video.mtype
+                else:
+                    import mkchromecast.audio
+                    mtype = mkchromecast.audio.mtype
+                print(' ')
+                print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
+                print(colors.options('Using media type:')+' '+mtype)
+                media_controller.play_media(self.sourceurl, mtype, title = self.title)
+            elif (self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or
+                    self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None):
+                if args.video == True:
+                    import mkchromecast.video
+                    mtype = mkchromecast.video.mtype
+                else:
+                    import mkchromecast.audio
+                    mtype = mkchromecast.audio.mtype
+                print(' ')
+                print(colors.options('The media type string used is:')+' '+mtype)
+                media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
             print(' ')
-            print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
-            print(colors.options('Using media type:')+' '+mtype)
-            media_controller.play_media(self.sourceurl, mtype, title = self.title)
-        elif (self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or
-                self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None):
-            if args.video == True:
-                import mkchromecast.video
-                mtype = mkchromecast.video.mtype
-            else:
-                import mkchromecast.audio
-                mtype = mkchromecast.audio.mtype
+            print(colors.important('Cast media controller status'))
             print(' ')
-            print(colors.options('The media type string used is:')+' '+mtype)
-            media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
-        print(' ')
-        print(colors.important('Cast media controller status'))
-        print(' ')
-        print(self.cast.status)
-        print(' ')
-        if self.reconnect == True:
-            self.r = Thread(target = self.reconnect_cc)
-            self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
-            self.r.start()
+            print(self.cast.status)
+            print(' ')
+            if self.reconnect == True:
+                self.r = Thread(target = self.reconnect_cc)
+                self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
+                self.r.start()
+        elif self.cclist[int(self.index)][2] == 'Sonos':
+            self.sonos = self.cast_to
+            self.sonos.play_uri('x-rincon-mp3radio://'+localip+':5000/stream')
 
     def stop_cast(self):
-        self.cast.quit_app()
+        if self.cclist[int(self.index)][2] == 'Gcast':
+            self.cast.quit_app()
+        else:
+            self.sonos.stop()
 
     def volume_up(self):
         """ Increment volume by 0.1 unless it is already maxed.
@@ -388,25 +385,23 @@ class casting(object):
         needed for the system tray.
         """
         self.availablecc=[]
-        for self.index,device in enumerate(self.cclist):
+        for (self.index, device) in enumerate(self.cclist):
             try:
-                print(str(self.index)+'       Gcast ', str(device))
+                types = device[2]
+                if types == 'Sonos':
+                    device = device[1].player_name
+                else:
+                    device = device[1]
+                print('%s \t%s \t%s' % (self.index, types, device))
             except UnicodeEncodeError:
-                print(str(self.index)+'       Gcast ', str(unicode(device).encode("utf-8")))
-            to_append = [self.index,device]
+                types = device[2]
+                if types == 'Sonos':
+                    device = device[1].player_name
+                else:
+                    device = device[1]
+                print('%s \t%s \t%s' % (self.index, device[2], str(unicode(device).encode("utf-8"))))
+            to_append = [self.index, device]
             self.availablecc.append(to_append)
-
-        if sonos == True:
-            lenght = len(self.availablecc)
-            for self.index,device in enumerate(self.sonos_list):
-                try:
-                    self.index = self.index + lenght
-                    print(str(self.index)+'       Sonos ', str(device.player_name))
-                except UnicodeEncodeError:
-                    self.index = self.index + lenght
-                    print(str(self.index)+'       Sonos ', str(unicode(device.player_name).encode("utf-8")))
-                to_append = [self.index,device]
-                self.availablecc.append(to_append)
 
     def reconnect_cc(self):
         """Dummy method to call  _reconnect_cc_().
