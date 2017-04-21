@@ -206,6 +206,9 @@ class casting(object):
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
+                for _ in self.cclist:
+                    if self.cast_to in _:
+                        self.types = _[2]
 
         elif len(self.cclist) == 0 and self.tray == False:
             if self.debug == True:
@@ -250,7 +253,7 @@ class casting(object):
     def get_cc(self):
         if self.debug == True:
             print('def get_cc(self):')
-        if self.cclist[int(self.index)][2] == 'Gcast':
+        if self.cclist[int(self.index)][2] == 'Gcast' or self.types == 'Gcast':
             try:
                 if self.ccname != None:
                     self.cast_to = self.ccname
@@ -284,7 +287,6 @@ class casting(object):
             pass
 
     def play_cast(self):
-        print('play cast')
         if self.debug == True:
             print('def play_cast(self):')
         localip = self.ip
@@ -299,7 +301,7 @@ class casting(object):
         else:
             print(colors.options('Your manually entered local IP is:')+' '+localip)
 
-        if self.cclist[int(self.index)][2] == 'Gcast':
+        if self.cclist[int(self.index)][2] == 'Gcast' or self.types == 'Gcast':
             media_controller = self.cast.media_controller
 
             if self.tray == True:
@@ -400,7 +402,7 @@ class casting(object):
                 else:
                     device = device[1]
                 print('%s \t%s \t%s' % (self.index, device[2], str(unicode(device).encode("utf-8"))))
-            to_append = [self.index, device]
+            to_append = [self.index, device, types]
             self.availablecc.append(to_append)
 
     def reconnect_cc(self):
