@@ -291,6 +291,11 @@ class casting(object):
             print(colors.options('The IP of ')+colors.success(self.cast_to)+colors.options(' is:')+' '+self.cast.host)
         except TypeError:
             print(colors.options('The IP of ')+colors.success(self.cast_to.player_name)+colors.options(' is:')+' '+self.cast_to.ip_address)
+        except AttributeError:
+            for _ in self.sonos_list:
+                if self.cast_to in _.player_name:
+                    self.cast_to = _
+            print(colors.options('The IP of ')+colors.success(self.cast_to.player_name)+colors.options(' is:')+' '+self.cast_to.ip_address)
 
         if self.host == None:
             print(colors.options('Your local IP is:')+' '+localip)
@@ -348,9 +353,9 @@ class casting(object):
             self.sonos.play_uri('x-rincon-mp3radio://'+localip+':5000/stream')
 
     def stop_cast(self):
-        if self.cclist[int(self.index)][2] == 'Gcast':
+        try:
             self.cast.quit_app()
-        else:
+        except AttributeError:
             self.sonos.stop()
 
     def volume_up(self):
