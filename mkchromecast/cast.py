@@ -206,9 +206,6 @@ class casting(object):
                 print(' ')
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
-                for _ in self.cclist:
-                    if self.cast_to in _:
-                        self.types = _[2]
 
         elif len(self.cclist) == 0 and self.tray == False:
             if self.debug == True:
@@ -243,7 +240,6 @@ class casting(object):
                 print(' ')
             except TypeError:
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to.player_name))
-                self.types = 'Sonos'
             except IndexError:
                 checkmktmp()
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
@@ -254,37 +250,36 @@ class casting(object):
     def get_cc(self):
         if self.debug == True:
             print('def get_cc(self):')
-        if self.cclist[int(self.index)][2] == 'Gcast' or self.types == 'Gcast':
-            try:
-                if self.ccname != None:
-                    self.cast_to = self.ccname
-                self.cast = self._get_chromecast(self.cast_to)
-                # Wait for cast device to be ready
-                self.cast.wait()
-                print(' ')
-                print(colors.important('Information about ')+' '+colors.success(self.cast_to))
-                print(' ')
-                print(self.cast.device)
-                print(' ')
-                print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
-                print(' ')
-                print(self.cast.status)
-                print(' ')
-            except pychromecast.error.NoChromecastFoundError:
-                print(colors.error('No Chromecasts matching filter critera were found!'))
-                if self.platform == 'Darwin':
-                    inputint()
-                    outputint()
-                elif self.platform == 'Linux':
-                    from mkchromecast.pulseaudio import remove_sink
-                    remove_sink()
-                if self.tray == False:  # In the case that the tray is used, we don't kill the application
-                    print(colors.error('Finishing the application...'))
-                    terminate()
-                    exit()
-                else:
-                    self.stop_cast()
-        else:
+        try:
+            if self.ccname != None:
+                self.cast_to = self.ccname
+            self.cast = self._get_chromecast(self.cast_to)
+            # Wait for cast device to be ready
+            self.cast.wait()
+            print(' ')
+            print(colors.important('Information about ')+' '+colors.success(self.cast_to))
+            print(' ')
+            print(self.cast.device)
+            print(' ')
+            print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
+            print(' ')
+            print(self.cast.status)
+            print(' ')
+        except pychromecast.error.NoChromecastFoundError:
+            print(colors.error('No Chromecasts matching filter critera were found!'))
+            if self.platform == 'Darwin':
+                inputint()
+                outputint()
+            elif self.platform == 'Linux':
+                from mkchromecast.pulseaudio import remove_sink
+                remove_sink()
+            if self.tray == False:  # In the case that the tray is used, we don't kill the application
+                print(colors.error('Finishing the application...'))
+                terminate()
+                exit()
+            else:
+                self.stop_cast()
+        except AttributeError:
             pass
 
     def play_cast(self):
@@ -302,7 +297,7 @@ class casting(object):
         else:
             print(colors.options('Your manually entered local IP is:')+' '+localip)
 
-        if self.cclist[int(self.index)][2] == 'Gcast' or self.types == 'Gcast':
+        try:
             media_controller = self.cast.media_controller
 
             if self.tray == True:
@@ -348,7 +343,7 @@ class casting(object):
                 self.r = Thread(target = self.reconnect_cc)
                 self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
                 self.r.start()
-        elif self.cclist[int(self.index)][2] == 'Sonos':
+        except AttributeError:
             self.sonos = self.cast_to
             self.sonos.play_uri('x-rincon-mp3radio://'+localip+':5000/stream')
 
@@ -362,19 +357,25 @@ class casting(object):
         """ Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
-        print('Increasing volume...')
-        print(' ')
-        volume = round(self.cast.status.volume_level, 1)
-        return self.cast.set_volume(volume + 0.1)
+        print('Increasing volume... \n')
+        try:
+            volume = round(self.cast.status.volume_level, 1)
+            return self.cast.set_volume(volume + 0.1)
+        except AttributeError:
+            self.sonos.volume += 1
+            self.sonos.play()
 
     def volume_down(self):
         """ Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
-        print('Decreasing volume...')
-        print(' ')
-        volume = round(self.cast.status.volume_level, 1)
-        return self.cast.set_volume(volume - 0.1)
+        print('Decreasing volume... \n')
+        try:
+            volume = round(self.cast.status.volume_level, 1)
+            return self.cast.set_volume(volume - 0.1)
+        except AttributeError:
+            self.sonos.volume -= 1
+            self.sonos.play()
 
     def reboot(self):
         if self.platform == 'Darwin':
