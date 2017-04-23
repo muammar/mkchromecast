@@ -282,6 +282,8 @@ class casting(object):
                 self.stop_cast()
         except AttributeError:
             pass
+        except KeyError:
+            pass
 
     def play_cast(self):
         if self.debug == True:
