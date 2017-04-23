@@ -45,9 +45,9 @@ class Worker(QObject):
         except socket.gaierror:
             if debug == True:
                 print(colors.warning(':::Threading::: Socket error, CC set to 0'))
-            self.cc.availablecc == 0
+            self.cc.availablecc = []
         except TypeError:
-            self.cc.availablecc == 0
+            self.cc.availablecc = []
         if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
