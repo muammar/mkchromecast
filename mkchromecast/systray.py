@@ -692,9 +692,10 @@ class menubar(QtWidgets.QMainWindow):
         except AttributeError:
             self.maxvolset = 100
             self.sl.setMaximum(self.maxvolset)
-            self.sl.setValue(self.cast.volume)
-        finally:
-            self.sl.setValue(2)
+            if self.played == False:
+                self.sl.setValue(2)
+            else:
+                self.sl.setValue(self.cast.volume)
         self.sl.valueChanged.connect(self.value_changed)
         self.sl.setWindowTitle('Google Cast Volume')
         self.sl.show()
