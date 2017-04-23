@@ -9,6 +9,7 @@ import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate
+from mkchromecast.pulseaudio import remove_sink
 import time
 import pychromecast
 from pychromecast.dial import reboot
@@ -214,7 +215,6 @@ class casting(object):
                 print('elif len(self.cclist) == 0 and self.tray == False:')
             print(colors.error('No devices found!'))
             if self.platform == 'Linux' and self.adevice == None:
-                from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
             elif self.platform == 'Darwin':
                 inputint()
@@ -273,7 +273,6 @@ class casting(object):
                 inputint()
                 outputint()
             elif self.platform == 'Linux':
-                from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
             if self.tray == False:  # In the case that the tray is used, we don't kill the application
                 print(colors.error('Finishing the application...'))
@@ -431,7 +430,6 @@ class casting(object):
                 inputint()
                 outputint()
             elif platform == 'Linux' and adevice == None:
-                from mkchromecast.pulseaudio import remove_sink
                 remove_sink()
             terminate()
 

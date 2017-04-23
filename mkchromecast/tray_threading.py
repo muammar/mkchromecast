@@ -9,7 +9,7 @@ from mkchromecast.config import *
 import mkchromecast.audio
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.pulseaudio import *
+from mkchromecast.pulseaudio import create_sink, check_sink
 from mkchromecast.systray import *
 from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 import os.path
@@ -85,7 +85,9 @@ class Player(QObject):
                 reload(mkchromecast.audio)
             mkchromecast.audio.main()
         if platform == 'Linux':
-            create_sink()
+            if check_sink() == False: # We create the sink only if it is not available
+                create_sink()
+
         start = casting()
         start.initialize_cast()
         try:
