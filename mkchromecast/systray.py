@@ -459,7 +459,10 @@ class menubar(QtWidgets.QMainWindow):
 
     def clicked_cc(self, clicked_item):
         if self.played == True:
-            self.cast.quit_app()
+            try:
+                self.cast.quit_app()
+            except AttributeError:
+                self.cast.stop()
 
         if debug == True:
             print(clicked_item)
