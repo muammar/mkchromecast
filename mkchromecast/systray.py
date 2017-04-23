@@ -473,6 +473,7 @@ class menubar(QtWidgets.QMainWindow):
             self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
+
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -598,28 +599,32 @@ class menubar(QtWidgets.QMainWindow):
             pass
 
         if self.cast != None or self.stopped == True or self.pcastfailed == True:
+
             try:
                 self.cast.quit_app()
             except AttributeError:
-                pass
+                self.cast.stop() # This is for sonos. The thing is that if we are at this point, user requested an stop or cast failed.
             self.reset_audio()
+
             try:
                 self.kill_child()
             except psutil.NoSuchProcess:
                 pass
             checkmktmp()
             self.search_cast()
+
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
                     self.cast.quit_app()
                 except pychromecast.error.NotConnected:
                     continue
                 except AttributeError:
-                    continue
+                    self.cast.stop() # This is for sonos. The thing is that if we are at this point, user requested an stop or cast failed.
                 break
 
             self.stopped = True
             self.read_config()
+
             if platform == 'Darwin' and self.notifications == 'enabled':
                 if self.pcastfailed == True:
                     stop = [

@@ -352,6 +352,8 @@ class casting(object):
         except AttributeError:
             self.sonos = self.cast_to
             self.sonos.play_uri('x-rincon-mp3radio://'+localip+':5000/stream')
+            if self.tray == True:
+                self.cast = self.sonos
 
     def stop_cast(self):
         try:

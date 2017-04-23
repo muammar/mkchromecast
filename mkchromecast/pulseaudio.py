@@ -66,7 +66,13 @@ def check_sink():
             )
     chkoutput, chkerror = chk.communicate()
 
-    if 'mkchromecast' in chkoutput:
-        return True
-    else:
-        return False
+    try:
+        if 'mkchromecast' in chkoutput:
+            return True
+        else:
+            return False
+    except TypeError:
+        if 'mkchromecast' in chkoutput.decode('utf-8'):
+            return True
+        else:
+            return False
