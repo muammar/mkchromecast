@@ -128,12 +128,14 @@ class casting(object):
         self.cclist = [ [index, _, 'Gcast'] for index, _ in enumerate(self.cclist) ]
 
         if sonos == True:
-            self.sonos_list = list(soco.discover())
-            lenght = len(self.cclist)
-
-            for self.index, device in enumerate(self.sonos_list):
-                add_sonos = [self.index, device, 'Sonos']
-                self.cclist.append(add_sonos)
+            try:
+                self.sonos_list = list(soco.discover())
+                lenght = len(self.cclist)
+                for self.index, device in enumerate(self.sonos_list):
+                    add_sonos = [self.index, device, 'Sonos']
+                    self.cclist.append(add_sonos)
+            except TypeError:
+                pass
 
         if self.debug == True:
             print('self.cclist', self.cclist)
