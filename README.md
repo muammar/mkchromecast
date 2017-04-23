@@ -62,7 +62,7 @@ Check these images:
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 
-SONOS support
+Sonos support
 --------------
 
 If you have Sonos speakers, you can play whatever you are listening in your
@@ -113,7 +113,7 @@ following:
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (optional if you plan to cast youtube URLs).
-* soco (This module add Sonos support to mkchromecast).
+* soco (this module adds Sonos support to mkchromecast).
 
 For those who don't like Pulseaudio, it is possible to [cast using
 ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA). In that case the
@@ -136,7 +136,7 @@ requirements are:
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (optional if you plan to cast youtube URLs).
-* soco (This module add Sonos support to mkchromecast).
+* soco (this module adds Sonos support to mkchromecast).
 
 
 Install
