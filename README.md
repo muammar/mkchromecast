@@ -7,7 +7,7 @@ mkchromecast
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
 This is a program to cast your **macOS** audio, or **Linux** audio to your
-Google Cast devices. It can also [cast video files](#video).
+Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
@@ -62,6 +62,16 @@ Check these images:
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 
+SONOS support
+--------------
+
+If you have Sonos speakers, you can play whatever you are listening in your
+computer with **mkchromecast**. To add Sonos support, install the `soco` python
+module:
+
+```
+pip install soco
+```
 
 Requirements:
 ------------
@@ -102,7 +112,8 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (option if you plan to cast youtube URLs).
+* youtube-dl (optional if you plan to cast youtube URLs).
+* soco (This module add Sonos support to mkchromecast).
 
 For those who don't like Pulseaudio, it is possible to [cast using
 ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA). In that case the
@@ -124,8 +135,8 @@ requirements are:
 * ffmpeg.
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (option if you plan to cast youtube URLs).
-
+* youtube-dl (optional if you plan to cast youtube URLs).
+* soco (This module add Sonos support to mkchromecast).
 
 
 Install
@@ -669,7 +680,6 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-* Add SONOS support.
 
 Contribute
 ----------
