@@ -676,42 +676,30 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
-        self.maxvolset = 40
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
-        self.sl.setMaximum(self.maxvolset)
-        self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
+        self.sl.setGeometry(
+                30 * self.scale_factor,
+                40 * self.scale_factor,
+               260 * self.scale_factor,
+                70 * self.scale_factor
+                )
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
+            self.maxvolset = 40
+            self.sl.setMaximum(self.maxvolset)
             self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
+            self.maxvolset = 100
+            self.sl.setMaximum(self.maxvolset)
+            self.sl.setValue(self.cast.volume)
+        finally:
             self.sl.setValue(2)
-        self.sl.valueChanged.connect(self.valuechange)
+        self.sl.valueChanged.connect(self.value_changed)
         self.sl.setWindowTitle('Google Cast Volume')
         self.sl.show()
 
-        """
-        self.sl = QSlider(Qt.Horizontal, self)
-        self.sl.setMinimum(0)
-        self.sl.setMaximum(10)
-        #self.sl.setFocusPolicy(Qt.NoFocus)
-        self.sl.setGeometry(30, 40, 180, 20)
-        try:
-            self.sl.setValue(round((self.cast.status.volume_level*10), 1))
-        except AttributeError:
-            self.sl.setValue(2)
-        self.sl.valueChanged.connect(self.valuechange)
-
-        #self.label = QLabel(self)
-        #self.label.setPixmap(QPixmap('images/max.png'))
-        #self.label.setGeometry(160, 40, 80, 30)
-
-        self.setGeometry(300, 300, 240, 100)
-        self.setWindowTitle('Google cast volume')
-        self.show()
-        """
-
-    def valuechange(self, value):
+    def value_changed(self, value):
         try:
             if round(self.cast.status.volume_level, 1) == 1:
                 print (colors.warning(':::systray::: Maximum volume level reached!'))
@@ -723,7 +711,21 @@ class menubar(QtWidgets.QMainWindow):
             if debug == True:
                 print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
-            pass
+            """
+            Sonos volume
+            """
+            self.maxvolset = 100
+            if (self.cast.volume) == 100:
+                print (colors.warning(':::systray::: Maximum volume level reached!'))
+                volume = value
+                self.cast.volume = volume
+                self.cast.play()
+            else:
+                volume = value
+                self.cast.volume = volume
+                self.cast.play()
+            if debug == True:
+                print(':::systray::: Volume set to: '+str(volume))
         if debug == True:
             print(':::systray::: Volume changed: '+str(value))
 
