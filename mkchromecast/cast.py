@@ -83,7 +83,7 @@ class casting(object):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         try:
-            s.connect(('<broadcast>', 0))
+            s.connect(("8.8.8.8", 80))
         except socket.error:
             self.ip = '127.0.0.1'
         self.discovered_ip = s.getsockname()[0]

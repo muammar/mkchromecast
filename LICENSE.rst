@@ -1,6 +1,6 @@
-The MIT License (MIT)
+Copyright (c) 2017 Muammar El Khatib
 
-Copyright (c) 2016 Muammar El Khatib
+The MIT License (MIT)
 
 The following license applies to all parts of this software except as
 documented below:
