@@ -130,8 +130,6 @@ else:
 
     if codec == 'mp3':
         appendmtype = 'mpeg'
-    elif codec == 'aac':
-        appendmtype = 'mp4' #This is the container used for aac
     else:
         appendmtype = codec
 
