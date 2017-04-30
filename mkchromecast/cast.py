@@ -269,7 +269,7 @@ class casting(object):
             print(self.cast.status)
             print(' ')
         except pychromecast.error.NoChromecastFoundError:
-            print(colors.error('No Chromecasts matching filter critera were found!'))
+            print(colors.error('No Chromecasts matching filter criteria were found!'))
             if self.platform == 'Darwin':
                 inputint()
                 outputint()

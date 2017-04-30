@@ -108,7 +108,7 @@ if tray == True:
                 for item in backends_supported:
                     if is_installed(item, PATH, debug) == True and item != 'node' and item != 'gstreamer':
                         self.backends.append(item)
-                    elif is_installed('gst-launch-1.0', PATH, debug) == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
+                    elif is_installed('gst-launch-1.0', PATH, debug) == True and item == 'gstreamer': # Hardcoded gst-launch-1.0 for gstreamer
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
