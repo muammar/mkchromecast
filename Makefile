@@ -11,7 +11,7 @@
 #
 # Note: Be careful when using this Makefile, because all files not tracked will
 # be deleted, and all changes to mkchromecast/__init__.py will be discarded if
-# they are not commited.
+# they are not committed.
 #
 # How to use it?
 # ==============
