@@ -78,7 +78,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it throught the audio module
+        elif youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it through the audio module
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
@@ -114,7 +114,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif self.youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it throught the audio module
+        elif self.youtubeurl != None and self.videoarg == False: # When casting youtube url, we do it through the audio module
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
