@@ -130,8 +130,6 @@ else:
 
     if codec == 'mp3':
         appendmtype = 'mpeg'
-    elif codec == 'aac':
-        appendmtype = 'mp4' #This is the container used for aac
     else:
         appendmtype = codec
 
@@ -289,7 +287,8 @@ else:
     """
     if  codec == 'mp3':
 
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
@@ -309,7 +308,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+        backends_dict[backend] == 'gstreamer'):
             command = [
                 'lame',
                 '-b', bitrate[:-1],
@@ -362,7 +362,8 @@ else:
     OGG 192k
     """
     if  codec == 'ogg':
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
@@ -382,7 +383,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'oggenc',
                 '-b', bitrate[:-1],
@@ -436,7 +438,8 @@ else:
     AAC > 128k for Stereo, Default sample rate: 44100kHz
     """
     if  codec == 'aac':
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
@@ -454,7 +457,8 @@ else:
             if adevice != None:
                 modalsa()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'faac',
                 '-b', bitrate[:-1],
@@ -534,7 +538,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'sox',
                 '-t', 'raw',
@@ -588,7 +593,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'flac',
                 '-',
