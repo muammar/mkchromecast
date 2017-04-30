@@ -65,13 +65,23 @@ Check these images:
 Sonos support
 --------------
 
-If you have Sonos speakers, you can play whatever you are listening in your
+If you have Sonos speakers, you can play whatever you are listening to in your
 computer with **mkchromecast**. To add Sonos support, install the `soco` python
 module:
 
 ```
 pip install soco
 ```
+
+Contribute
+----------
+
+If you want to contribute, help me improving this application by [reporting
+issues](https://github.com/muammar/mkchromecast/issues), [creating pull
+requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
+me some pizza :).
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 Requirements:
 ------------
@@ -657,6 +667,9 @@ Known issues
   versions of pychromecast.
 * When casting videos using the `node` backend, it is not possible to
   use neither the `--subtitle` nor the `--seek` flags.
+* When casting to Sonos the only codecs supported are: `mp3`, and `aac`.
+  I won't give `wma` support. Apparently there is a way to play `wav`, and
+  `ogg` that I will try to implement later.
 
 ##### macOS
 
@@ -681,13 +694,5 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-
-Contribute
-----------
-
-If you want to contribute, help me improving this application by [reporting
-issues](https://github.com/muammar/mkchromecast/issues), [creating pull
-requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
-me some pizza :).
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+* **Sonos**: add support to different available flags.
+* **Sonos**: add Equalizer in the controls.
