@@ -37,6 +37,7 @@ try:
 except ImportError:
     sonos = False
 
+
 class casting(object):
     """Main casting class.
     """
@@ -53,7 +54,7 @@ class casting(object):
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
         self.reconnect = mkchromecast.__init__.reconnect
-        self.title = 'Mkchromecast v'+mkchromecast.__init__.__version__
+        self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
         if self.host == None:
             if self.platform == 'Linux':
