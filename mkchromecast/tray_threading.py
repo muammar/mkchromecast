@@ -11,7 +11,7 @@ from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
 from mkchromecast.systray import *
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot)
 import os.path
 import pickle
 import pychromecast
@@ -85,7 +85,10 @@ class Player(QObject):
                 reload(mkchromecast.audio)
             mkchromecast.audio.main()
         if platform == 'Linux':
-            if check_sink() == False: # We create the sink only if it is not available
+            if check_sink() == False:   # We create the sink only if it is not available
+                create_sink()
+            else:                       # This is to fix a possible problem when letting the systray unused
+                remove_sink()           # for some time.
                 create_sink()
 
         start = casting()

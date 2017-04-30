@@ -152,7 +152,8 @@ class casting(object):
             self.youtubeurl = None
         """
 
-        if len(self.cclist) != 0 and self.select_cc == False and self.ccname == None:
+        if (len(self.cclist) != 0 and self.select_cc == False and
+                self.ccname == None):
             if self.debug == True:
                 print('if len(self.cclist) != 0 and self.select_cc == False:')
             print(' ')
@@ -169,7 +170,8 @@ class casting(object):
                 print(colors.success(self.cast_to))
                 print(' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False and self.ccname == None:
+        elif (len(self.cclist) != 0 and self.select_cc == True and
+                self.tray == False and self.ccname == None):
             if self.debug == True:
                 print('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == False:')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
@@ -190,7 +192,8 @@ class casting(object):
                 print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
                 print(' ')
 
-        elif len(self.cclist) != 0 and self.select_cc == True and self.tray == True:
+        elif (len(self.cclist) != 0 and self.select_cc == True and
+                self.tray == True):
             if self.debug == True:
                 print('elif len(self.cclist) != 0 and self.select_cc == True and self.tray == True:')
             if os.path.exists('/tmp/mkchromecast.tmp') == False:
@@ -229,7 +232,7 @@ class casting(object):
 
     def sel_cc(self):
         print(' ')
-        print('Please, select the '+colors.important('Index')+' of the Google Cast device that you want to use:')
+        print('Please, select the ' + colors.important('Index') + ' of the Google Cast device that you want to use:')
         self.index = input()
 
     def inp_cc(self):
@@ -239,10 +242,10 @@ class casting(object):
                 self.tf.close()
                 self.cast_to = self.cclist[int(self.index)][1]
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
+                print(colors.options('Casting to:') + ' ' + colors.success(self.cast_to))
                 print(' ')
             except TypeError:
-                print(colors.options('Casting to:')+' '+colors.success(self.cast_to.player_name))
+                print(colors.options('Casting to:') + ' ' + colors.success(self.cast_to.player_name))
             except IndexError:
                 checkmktmp()
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
@@ -260,11 +263,11 @@ class casting(object):
             # Wait for cast device to be ready
             self.cast.wait()
             print(' ')
-            print(colors.important('Information about ')+' '+colors.success(self.cast_to))
+            print(colors.important('Information about ') + ' ' + colors.success(self.cast_to))
             print(' ')
             print(self.cast.device)
             print(' ')
-            print(colors.important('Status of device ')+' '+colors.success(self.cast_to))
+            print(colors.important('Status of device ') + ' ' + colors.success(self.cast_to))
             print(' ')
             print(self.cast.status)
             print(' ')
@@ -292,19 +295,25 @@ class casting(object):
         localip = self.ip
 
         try:
-            print(colors.options('The IP of ')+colors.success(self.cast_to)+colors.options(' is:')+' '+self.cast.host)
+            print(colors.options('The IP of ')
+                    + colors.success(self.cast_to)+colors.options(' is:')
+                    + ' ' + self.cast.host)
         except TypeError:
-            print(colors.options('The IP of ')+colors.success(self.cast_to.player_name)+colors.options(' is:')+' '+self.cast_to.ip_address)
+            print(colors.options('The IP of ')
+                    + colors.success(self.cast_to.player_name)
+                    + colors.options(' is:') + ' ' + self.cast_to.ip_address)
         except AttributeError:
             for _ in self.sonos_list:
                 if self.cast_to in _.player_name:
                     self.cast_to = _
-            print(colors.options('The IP of ')+colors.success(self.cast_to.player_name)+colors.options(' is:')+' '+self.cast_to.ip_address)
+            print(colors.options('The IP of ')
+                    + colors.success(self.cast_to.player_name)
+                    + colors.options(' is:') + ' ' + self.cast_to.ip_address)
 
         if self.host == None:
-            print(colors.options('Your local IP is:')+' '+localip)
+            print(colors.options('Your local IP is:') + ' ' + localip)
         else:
-            print(colors.options('Your manually entered local IP is:')+' '+localip)
+            print(colors.options('Your manually entered local IP is:') + ' ' + localip)
 
         try:
             media_controller = self.cast.media_controller
@@ -329,11 +338,12 @@ class casting(object):
                     import mkchromecast.audio
                     mtype = mkchromecast.audio.mtype
                 print(' ')
-                print(colors.options('Casting from stream URL:')+' '+self.sourceurl)
-                print(colors.options('Using media type:')+' '+mtype)
-                media_controller.play_media(self.sourceurl, mtype, title = self.title)
-            elif (self.backend == 'ffmpeg' or self.backend == 'node' or self.backend == 'avconv' or
-                    self.backend == 'parec' or self.backend == 'gstreamer' and self.sourceurl == None):
+                print(colors.options('Casting from stream URL:') + ' ' + self.sourceurl)
+                print(colors.options('Using media type:') + ' ' + mtype)
+                media_controller.play_media(self.sourceurl, mtype, title=self.title)
+            elif (self.backend == 'ffmpeg' or self.backend == 'node' or
+                    self.backend == 'avconv' or self.backend == 'parec' or
+                    self.backend == 'gstreamer' and self.sourceurl == None):
                 if args.video == True:
                     import mkchromecast.video
                     mtype = mkchromecast.video.mtype
@@ -341,20 +351,20 @@ class casting(object):
                     import mkchromecast.audio
                     mtype = mkchromecast.audio.mtype
                 print(' ')
-                print(colors.options('The media type string used is:')+' '+mtype)
-                media_controller.play_media('http://'+localip+':5000/stream', mtype, title = self.title)
+                print(colors.options('The media type string used is:') + ' ' + mtype)
+                media_controller.play_media('http://' + localip + ':5000/stream', mtype, title=self.title)
             print(' ')
             print(colors.important('Cast media controller status'))
             print(' ')
             print(self.cast.status)
             print(' ')
             if self.reconnect == True:
-                self.r = Thread(target = self.reconnect_cc)
+                self.r = Thread(target=self.reconnect_cc)
                 self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
                 self.r.start()
         except AttributeError:
             self.sonos = self.cast_to
-            self.sonos.play_uri('x-rincon-mp3radio://'+localip+':5000/stream', title=self.title)
+            self.sonos.play_uri('x-rincon-mp3radio://' + localip + ':5000/stream', title=self.title)
             if self.tray == True:
                 self.cast = self.sonos
 
@@ -390,7 +400,7 @@ class casting(object):
 
     def reboot(self):
         if self.platform == 'Darwin':
-            self.cast.host = socket.gethostbyname(self.cast_to+'.local')
+            self.cast.host = socket.gethostbyname(self.cast_to + '.local')
             reboot(self.cast.host)
         else:
             print(colors.error('This method is not supported in Linux yet.'))
@@ -465,7 +475,7 @@ def ping_chromecast(ip):
     Credits: http://stackoverflow.com/a/34455969/1995261
     """
     try:
-        output = subprocess.check_output("ping -c 1 "+ip, shell=True)
+        output = subprocess.check_output("ping -c 1 " + ip, shell=True)
     except:
         return False
     return True

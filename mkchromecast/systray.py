@@ -14,8 +14,9 @@ import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
-from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
+from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot, Qt)
+from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication,
+        QMessageBox, QMainWindow)
 from PyQt5.QtGui import QPixmap
 import pychromecast
 from pychromecast.dial import reboot
@@ -203,7 +204,7 @@ class menubar(QtWidgets.QMainWindow):
                 print(':::systray::: self.colors '+self.colors)
 
     def search_menu(self):
-        self.SearchAction = self.menu.addAction('Search For Google Cast Devices')
+        self.SearchAction = self.menu.addAction('Search For Media Streaming Devices')
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
@@ -408,7 +409,7 @@ class menubar(QtWidgets.QMainWindow):
                     '-title',
                     'mkchromecast',
                     '-message',
-                    'Google Cast Devices Found'
+                    'Media Streaming Devices Found!'
                     ]
                 subprocess.Popen(found)
                 if debug == True:
@@ -421,7 +422,7 @@ class menubar(QtWidgets.QMainWindow):
                     Notify.init('mkchromecast')
                     found=Notify.Notification.new(
                         'mkchromecast',
-                        'Google Cast Devices Found!',
+                        'Media Streaming Devices Found!',
                         'dialog-information'
                         )
                     found.show()
@@ -430,7 +431,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print('Available Google Cast Devices', self.availablecc)
+            print('Available Media Streaming Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 try:
                     self.a = self.ag.addAction((QtWidgets.QAction(str(menuentry[1]), self, checkable=True)))
@@ -697,7 +698,7 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.sl.setValue(self.cast.volume)
         self.sl.valueChanged.connect(self.value_changed)
-        self.sl.setWindowTitle('Google Cast Volume')
+        self.sl.setWindowTitle('Device Volume')
         self.sl.show()
 
     def value_changed(self, value):
@@ -894,7 +895,7 @@ class menubar(QtWidgets.QMainWindow):
                 '-title',
                 'mkchromecast',
                 '-message',
-                'Searching for Google Cast Devices...'
+                'Searching for Media Streaming Devices...'
                 ]
             subprocess.Popen(searching)
             if debug == True:
@@ -907,7 +908,7 @@ class menubar(QtWidgets.QMainWindow):
                 Notify.init('mkchromecast')
                 found=Notify.Notification.new(
                     'mkchromecast',
-                    'Searching for Google Cast Devices...',
+                    'Searching for Media Streaming Devices...',
                     'dialog-information'
                     )
                 found.show()
