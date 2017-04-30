@@ -87,9 +87,6 @@ class Player(QObject):
         if platform == 'Linux':
             if check_sink() == False:   # We create the sink only if it is not available
                 create_sink()
-            else:                       # This is to fix a possible problem when letting the systray unused
-                remove_sink()           # for some time.
-                create_sink()
 
         start = casting()
         start.initialize_cast()

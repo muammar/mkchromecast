@@ -35,6 +35,13 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
+"""
+urllib is imported differently in Python3
+"""
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
@@ -755,12 +762,20 @@ class menubar(QtWidgets.QMainWindow):
                 pass    # I should add a notification here
         else:
             try:
-                print('Cast device IP: '+str(self.cast.host))
+                print('Cast device IP: %s' % str(self.cast.host))
                 self.reset_audio()
                 self.stop_cast()
                 reboot(self.cast.host)
             except AttributeError:
-                pass    # I should add a notification here
+                self.reset_audio()
+                self.stop_cast()
+                for device in self.availablecc:
+                    if self.cast_to in device:
+                        ip = device[3]
+                        print('Cast device IP: %s' % str(ip))
+                url = 'http://' + ip + ':1400/reboot'
+                urlopen(url).read()
+
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)
@@ -844,7 +859,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         <br>
         <br>
-        Copyright (c) 2016, Muammar El Khatib.
+        Copyright (c) 2017, Muammar El Khatib.
         <br>
         <br>
         This program comes with absolutely no warranty.

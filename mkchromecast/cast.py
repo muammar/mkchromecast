@@ -409,11 +409,12 @@ class casting(object):
         """This method is used for populating the self.availablecc array
         needed for the system tray.
         """
-        self.availablecc=[]
+        self.availablecc = []
         for (self.index, device) in enumerate(self.cclist):
             try:
                 types = device[2]
                 if types == 'Sonos':
+                    device_ip = device[1].ip_address
                     device = device[1].player_name
                 else:
                     device = device[1]
@@ -421,11 +422,16 @@ class casting(object):
             except UnicodeEncodeError:
                 types = device[2]
                 if types == 'Sonos':
+                    device_ip = device[1].ip_address
                     device = device[1].player_name
                 else:
                     device = device[1]
                 print('%s \t%s \t%s' % (self.index, device[2], str(unicode(device).encode("utf-8"))))
-            to_append = [self.index, device, types]
+
+            if types == 'Sonos':
+                to_append = [self.index, device, types, device_ip]
+            else:
+                to_append = [self.index, device, types]
             self.availablecc.append(to_append)
 
     def reconnect_cc(self):
