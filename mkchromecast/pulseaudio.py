@@ -53,3 +53,26 @@ def remove_sink():
             )
     rmsoutput, rmserror = rms.communicate()
     return
+
+def check_sink():
+    check_sink = [
+        'pacmd',
+        'list-sinks'
+        ]
+    chk = subprocess.Popen(
+            check_sink,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+            )
+    chkoutput, chkerror = chk.communicate()
+
+    try:
+        if 'mkchromecast' in chkoutput:
+            return True
+        else:
+            return False
+    except TypeError:
+        if 'mkchromecast' in chkoutput.decode('utf-8'):
+            return True
+        else:
+            return False

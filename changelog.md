@@ -22,6 +22,7 @@
     - Fixed a minimal problem with size of preferences pane.
     - Video support.
     - node is a supported backend for streaming video.
+    - Added Sonos speakers support.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 

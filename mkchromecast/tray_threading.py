@@ -9,9 +9,9 @@ from mkchromecast.config import *
 import mkchromecast.audio
 from mkchromecast.node import *
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.pulseaudio import *
+from mkchromecast.pulseaudio import create_sink, check_sink
 from mkchromecast.systray import *
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot)
 import os.path
 import pickle
 import pychromecast
@@ -45,9 +45,9 @@ class Worker(QObject):
         except socket.gaierror:
             if debug == True:
                 print(colors.warning(':::Threading::: Socket error, CC set to 0'))
-            self.cc.availablecc == 0
+            pass
         except TypeError:
-            self.cc.availablecc == 0
+            pass
         if len(self.cc.availablecc) == 0 and tray == True:
             availablecc = []
             self.intReady.emit(availablecc)
@@ -85,7 +85,9 @@ class Player(QObject):
                 reload(mkchromecast.audio)
             mkchromecast.audio.main()
         if platform == 'Linux':
-            create_sink()
+            if check_sink() == False:   # We create the sink only if it is not available
+                create_sink()
+
         start = casting()
         start.initialize_cast()
         try:

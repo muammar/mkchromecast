@@ -21,7 +21,10 @@ tray = mkchromecast.__init__.tray
 USER = getpass.getuser()
 
 if platform == 'Darwin':
-    PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+    PATH ='./bin:./nodejs/bin:/Users/' + \
+            str(USER) + \
+            '/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' + \
+            os.environ['PATH']
 else:
     PATH = os.environ['PATH']
 
@@ -55,7 +58,8 @@ def ConfigSectionMap(section):
     return dict1
 
 if tray == True:
-    from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QApplication, QPushButton, QLineEdit
+    from PyQt5.QtWidgets import (QWidget, QLabel, QComboBox, QApplication,
+            QPushButton, QLineEdit)
     from PyQt5 import QtCore
 
     class preferences(QWidget):
@@ -102,13 +106,16 @@ if tray == True:
             self.backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
-                    if is_installed(item, PATH, debug) == True and item != 'avconv' and item !='gstreamer':
+                    if (is_installed(item, PATH, debug) == True
+                            and item != 'avconv' and item !='gstreamer'):
                         self.backends.append(item)
             else:
                 for item in backends_supported:
-                    if is_installed(item, PATH, debug) == True and item != 'node' and item != 'gstreamer':
+                    if (is_installed(item, PATH, debug) == True
+                            and item != 'node' and item != 'gstreamer'):
                         self.backends.append(item)
-                    elif is_installed('gst-launch-1.0', PATH, debug) == True and item == 'gstreamer': # Harcoded gst-launch-1.0 for gstreamer
+                    elif (is_installed('gst-launch-1.0', path, debug) == true and
+                            item == 'gstreamer'): # hardcoded gst-launch-1.0 for gstreamer
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
@@ -126,7 +133,7 @@ if tray == True:
             Codec
             """
             self.codec = QLabel('Audio Coding Format', self)
-            self.codec.move(20*self.scale_factor, 56*self.scale_factor)
+            self.codec.move(20 * self.scale_factor, 56 * self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
             if self.backendconf == 'node':
@@ -154,10 +161,10 @@ if tray == True:
             Bitrate
             """
             self.bitrate = QLabel('Select Bitrate (kbit/s)', self)
-            self.bitrate.move(20*self.scale_factor, 88*self.scale_factor)
+            self.bitrate.move(20 * self.scale_factor, 88 * self.scale_factor)
             self.qcbitrate = QComboBox(self)
             self.qcbitrate.clear()
-            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
+            self.qcbitrate.move(180 * self.scale_factor, 88 * self.scale_factor)
             self.qcbitrate.setMinimumContentsLength(7)
             if self.codecconf == 'wav':
                 self.bitrates = ['None']
