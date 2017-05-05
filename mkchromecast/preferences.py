@@ -114,7 +114,7 @@ if tray == True:
                     if (is_installed(item, PATH, debug) == True
                             and item != 'node' and item != 'gstreamer'):
                         self.backends.append(item)
-                    elif (is_installed('gst-launch-1.0', path, debug) == true and
+                    elif (is_installed('gst-launch-1.0', PATH, debug) == True and
                             item == 'gstreamer'): # hardcoded gst-launch-1.0 for gstreamer
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
