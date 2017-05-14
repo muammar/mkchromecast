@@ -414,7 +414,7 @@ class menubar(QtWidgets.QMainWindow):
                     '-contentImage',
                     noticon,
                     '-title',
-                    'mkchromecast',
+                    'Mkchromecast',
                     '-message',
                     'Media Streaming Devices Found!'
                     ]
@@ -426,9 +426,9 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init('mkchromecast')
+                    Notify.init('Mkchromecast')
                     found=Notify.Notification.new(
-                        'mkchromecast',
+                        'Mkchromecast',
                         'Media Streaming Devices Found!',
                         'dialog-information'
                         )
@@ -643,9 +643,9 @@ class menubar(QtWidgets.QMainWindow):
                         '-group',
                         'cast',
                         '-title',
-                        'mkchromecast',
+                        'Mkchromecast',
                         '-message',
-                        'Streaming process failed. Try again...'
+                        'Streaming Process Failed. Try Again...'
                         ]
                 else:
                     stop = [
@@ -653,9 +653,9 @@ class menubar(QtWidgets.QMainWindow):
                         '-group',
                         'cast',
                         '-title',
-                        'mkchromecast',
+                        'Mkchromecast',
                         '-message',
-                        'Streaming stopped!'
+                        'Streaming Stopped!'
                         ]
                 subprocess.Popen(stop)
                 if debug == True:
@@ -666,17 +666,17 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init('mkchromecast')
+                    Notify.init('Mkchromecast')
                     if self.pcastfailed == True:
                         stop=Notify.Notification.new(
-                            'mkchromecast',
-                            'Streaming process failed. Try again...',
+                            'Mkchromecast',
+                            'Streaming Process Failed. Try Again...',
                             'dialog-information'
                             )
                     else:
                         stop=Notify.Notification.new(
-                            'mkchromecast',
-                            'Streaming stopped!',
+                            'Mkchromecast',
+                            'Streaming Stopped!',
                             'dialog-information'
                             )
                     stop.show()
@@ -793,7 +793,7 @@ class menubar(QtWidgets.QMainWindow):
         elif message == 'False':
             updaterBox.setText('<b>Your installation is up-to-date!</b>')
             updaterBox.setInformativeText(
-                '<b>mkchromecast</b> v'
+                '<b>Mkchromecast</b> v'
                 + mkchromecast.__init__.__version__
                 + ' is currently the newest version available.'
                 )
@@ -801,7 +801,7 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setText('Problems connecting to remote file server!')
             updaterBox.setInformativeText("""Try again later.""")
         else:
-            updaterBox.setText('New version of mkchromecast available!')
+            updaterBox.setText('New version of Mkchromecast available!')
             if platform == 'Darwin':
                 downloadurl = (
                     '<a href="https://github.com/muammar/mkchromecast/releases/download/'
@@ -842,13 +842,13 @@ class menubar(QtWidgets.QMainWindow):
         msgsettext = (
             '<center><img src="'
             + self.abouticon
-            + '" "height="98" width="128" align="middle"> <br> <br> <b>mkchromecast</b> v'
+            + '" "height="98" width="128" align="middle"> <br> <br> <b>Mkchromecast</b> v'
             + mkchromecast.__init__.__version__
             )
         msgBox.setText(msgsettext)
         msgBox.setInformativeText("""
         <p align='center'>
-        <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
+        <a href="http://mkchromecast.com/">Visit Mkchromecast's website.</a>
         <br>
         <br>
         <br>
@@ -908,7 +908,7 @@ class menubar(QtWidgets.QMainWindow):
                 '-contentImage',
                 noticon,
                 '-title',
-                'mkchromecast',
+                'Mkchromecast',
                 '-message',
                 'Searching for Media Streaming Devices...'
                 ]
@@ -920,9 +920,9 @@ class menubar(QtWidgets.QMainWindow):
                 import gi
                 gi.require_version('Notify', '0.7')
                 from gi.repository import Notify
-                Notify.init('mkchromecast')
+                Notify.init('Mkchromecast')
                 found=Notify.Notification.new(
-                    'mkchromecast',
+                    'Mkchromecast',
                     'Searching for Media Streaming Devices...',
                     'dialog-information'
                     )
