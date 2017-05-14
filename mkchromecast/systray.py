@@ -215,7 +215,7 @@ class menubar(QtWidgets.QMainWindow):
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
-        self.StopCastAction = self.menu.addAction('Stop Casting')
+        self.StopCastAction = self.menu.addAction('Stop Streaming')
         self.StopCastAction.triggered.connect(self.stop_cast)
 
     def volume_menu(self):
@@ -234,7 +234,7 @@ class menubar(QtWidgets.QMainWindow):
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction('Reboot Cast Device')
+        self.rebootAction = self.menu.addAction('Reboot Streaming Device')
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
@@ -354,7 +354,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            self.NodevAction = self.menu.addAction('No Cast Devices Found.')
+            self.NodevAction = self.menu.addAction('No Streaming Devices Found.')
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -645,7 +645,7 @@ class menubar(QtWidgets.QMainWindow):
                         '-title',
                         'mkchromecast',
                         '-message',
-                        'Casting process failed. Try again...'
+                        'Streaming process failed. Try again...'
                         ]
                 else:
                     stop = [
@@ -655,7 +655,7 @@ class menubar(QtWidgets.QMainWindow):
                         '-title',
                         'mkchromecast',
                         '-message',
-                        'Cast stopped!'
+                        'Streaming stopped!'
                         ]
                 subprocess.Popen(stop)
                 if debug == True:
@@ -670,13 +670,13 @@ class menubar(QtWidgets.QMainWindow):
                     if self.pcastfailed == True:
                         stop=Notify.Notification.new(
                             'mkchromecast',
-                            'Casting process failed. Try again...',
+                            'Streaming process failed. Try again...',
                             'dialog-information'
                             )
                     else:
                         stop=Notify.Notification.new(
                             'mkchromecast',
-                            'Cast stopped!',
+                            'Streaming stopped!',
                             'dialog-information'
                             )
                     stop.show()
