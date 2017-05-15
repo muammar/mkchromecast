@@ -864,7 +864,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         This program comes with absolutely no warranty.
         <br>
-        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE">MIT license</a> for details.
+        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE.rst">MIT license</a> for details.
         </p>
                 """)
         msgBox.exec_()
