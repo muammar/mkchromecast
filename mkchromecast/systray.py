@@ -703,7 +703,10 @@ class menubar(QtWidgets.QMainWindow):
             if self.played == False:
                 self.sl.setValue(2)
             else:
-                self.sl.setValue(self.cast.volume)
+                try:
+                    self.sl.setValue(self.cast.volume)
+                except:
+                    pass
         self.sl.valueChanged.connect(self.value_changed)
         self.sl.setWindowTitle('Device Volume')
         self.sl.show()
