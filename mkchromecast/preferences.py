@@ -169,9 +169,6 @@ if tray == True:
             if self.codecconf == 'wav':
                 self.bitrates = ['None']
                 bitrateindex = 0
-            elif self.codecconf == 'flac':
-                self.bitrates = ['None']
-                bitrateindex = 0
             else:
                 self.bitrates = [
                     '128',
@@ -390,9 +387,6 @@ if tray == True:
             if self.codecconf == 'wav':
                 bitrates = ['None']
                 bitrateindex = 0
-            elif self.codecconf == 'flac':
-                bitrateindex = 0
-                bitrates = ['None']
             else:
                 self.configurations.chk_config()
                 self.read_defaults()
