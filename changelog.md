@@ -2,7 +2,7 @@
 
     - node streaming updated to work with `node v7.10.0`.
     - Added ALSA device configuration in preferences pane.
-    - Improved systray stability.
+    - Improved systray stability, and usability.
     - gstreamer support for capturing audio.
     - Fixed problem related to setting `ogg` and `aac` bitrate. Closes #21.
     - A `--segment-time` option added to modify the segment time when using
@@ -23,6 +23,7 @@
     - Video support.
     - node is a supported backend for streaming video.
     - Added Sonos speakers support.
+    - FLAC codec supports bitrate.
 
 * mkchromecast (0.3.6) **released**: 2016/09/19
 
