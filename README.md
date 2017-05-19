@@ -673,8 +673,6 @@ Known issues
 
 ##### macOS
 
-* It is not possible to create a macOS app with py2app. For more details see
-  [#36](https://github.com/muammar/mkchromecast/issues/36).
 * **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
   more than one available. In that case, you need to use the application from
   sources or build the application as shown
