@@ -1,3 +1,9 @@
+mkchromecast (0.3.7-1) unstable; urgency=medium
+
+  *  New upstream release.
+
+ -- Muammar El Khatib <muammar@debian.org>  Sat, 20 May 2017 14:50:34 -0400
+
 mkchromecast (0.3.7+git20170414-1) unstable; urgency=medium
 
   * New git revision.
