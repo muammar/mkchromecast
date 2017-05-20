@@ -9,8 +9,9 @@ fa-icon: toggle-on
 
 [Download the dmg](#download), and drag **mkchromecast** to your
 `/Applications/` folder.  Note that for the moments `node` is the only backend
-supported. You also need to install Soundflower as shown below. If you use
-homebrew, you can install **mkchromecast** with one command line:
+supported by default. This bundle contains support for casting to both Google
+Cast and Sonos. You also need to install Soundflower as instructed below.
+If you use homebrew, you can install **mkchromecast** with one command line:
 
 ```
 brew cask install mkchromecast
@@ -36,7 +37,7 @@ file](https://github.com/mattingalls/Soundflower/releases/latest).
 
 ## Linux based installation
 
-**mkchromecast** is available in the official debian and ubuntu repositories.
+**mkchromecast** is available in the official Debian and Ubuntu repositories.
 You need to install it by executing:
 
 ```
@@ -59,9 +60,8 @@ sudo apt-get -f install
 To pull the needed dependencies to cast using pulseaudio or ALSA, please
 install `mkchromecast-pulseaudio` or `mkchromecast-alsa` respectively.
 
-This should work in Debian Unstable and Testing. I would appreciate Ubuntu
-testers as well. If you find any problems, please [report it
-here](https://github.com/muammar/mkchromecast/issues).`
+This should work in Debian Unstable and Testing. If you find any problems,
+please [report it here](https://github.com/muammar/mkchromecast/issues).`
 
 -------------------------
 
@@ -98,3 +98,14 @@ managers coming with their distributions.
 
 Now you are good to go!. If you are interested in installing ffmpeg, please
 [follow the instructions here](https://github.com/muammar/mkchromecast/#ffmpeg).
+
+#### Sonos support
+
+If you are using Linux, and need Sonos suport, you need to install the soco
+module:
+
+```
+pip install soco
+```
+
+This will automatically add support to stream to Sonos speakers.
