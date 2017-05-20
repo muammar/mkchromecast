@@ -54,11 +54,11 @@ OPTIONS = {
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices',
+        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices and Sonos speakers',
         'CFBundleIdentifier': 'com.mkchromecast.osx',
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
-        'NSHumanReadableCopyright': u'Copyright (c) 2016, Muammar El Khatib, All Rights Reserved',
+        'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
         'LSPrefersPPC': True
     }
 }

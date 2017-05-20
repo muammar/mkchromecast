@@ -130,8 +130,6 @@ else:
 
     if codec == 'mp3':
         appendmtype = 'mpeg'
-    elif codec == 'aac':
-        appendmtype = 'mp4' #This is the container used for aac
     else:
         appendmtype = codec
 
@@ -289,15 +287,16 @@ else:
     """
     if  codec == 'mp3':
 
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
-                '-acodec', 'libmp3lame',
                 '-f', 'mp3',
+                '-acodec', 'libmp3lame',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -309,7 +308,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+        backends_dict[backend] == 'gstreamer'):
             command = [
                 'lame',
                 '-b', bitrate[:-1],
@@ -348,8 +348,8 @@ else:
                 backend,
                 '-f', 'avfoundation',
                 '-i', ':Soundflower (2ch)',
-                '-acodec', 'libmp3lame',
                 '-f', 'mp3',
+                '-acodec', 'libmp3lame',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -362,15 +362,16 @@ else:
     OGG 192k
     """
     if  codec == 'ogg':
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
-                '-acodec', 'libvorbis',
                 '-f', 'ogg',
+                '-acodec', 'libvorbis',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -382,7 +383,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'oggenc',
                 '-b', bitrate[:-1],
@@ -423,9 +425,8 @@ else:
                 backend,
                 '-f', 'avfoundation',
                 '-i', ':Soundflower (2ch)',
-                '-acodec', 'libvorbis',
-                '-f', 'segment', '-segment_time', '2',
                 '-f', 'ogg',
+                '-acodec', 'libvorbis',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -436,15 +437,16 @@ else:
     AAC > 128k for Stereo, Default sample rate: 44100kHz
     """
     if  codec == 'aac':
-        if platform == 'Linux' and backends_dict[backend] != 'parec' and backends_dict[backend] != 'gstreamer':
+        if (platform == 'Linux' and backends_dict[backend] != 'parec' and
+                backends_dict[backend] != 'gstreamer'):
             command = [
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
-                '-acodec', 'aac',
                 '-f', 'adts',
+                '-acodec', 'aac',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -454,7 +456,8 @@ else:
             if adevice != None:
                 modalsa()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'faac',
                 '-b', bitrate[:-1],
@@ -495,9 +498,9 @@ else:
                 backend,
                 '-f', 'avfoundation',
                 '-i', ':Soundflower (2ch)',
-                '-acodec', 'libfdk_aac',
                 '-f', 'adts',
                 '-ac', '2',
+                '-acodec', 'libfdk_aac',
                 '-ar', samplerate,
                 '-b:a', bitrate,
                 'pipe:'
@@ -522,8 +525,8 @@ else:
                 '-ar', '44100',
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
-                '-acodec', 'pcm_s24le',
                 '-f', 'wav',
+                '-acodec', 'pcm_s24le',
                 '-ac', '2',
                 '-ar', samplerate,
                 'pipe:'
@@ -534,7 +537,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'sox',
                 '-t', 'raw',
@@ -555,8 +559,8 @@ else:
                 backend,
                 '-f', 'avfoundation',
                 '-i', ':Soundflower (2ch)',
-                '-acodec', 'pcm_s24le',
                 '-f', 'wav',
+                '-acodec', 'pcm_s24le',
                 '-ac', '2',
                 '-ar', samplerate,
                 'pipe:'
@@ -575,8 +579,8 @@ else:
                 '-ar', '44100',
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
-                '-acodec', 'flac',
                 '-f', 'flac',
+                '-acodec', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,
@@ -588,7 +592,8 @@ else:
             if segmenttime != None:
                 set_segmenttime()
 
-        elif platform == 'Linux' and backends_dict[backend] == 'parec' or backends_dict[backend] == 'gstreamer':
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
             command = [
                 'flac',
                 '-',
@@ -605,8 +610,8 @@ else:
                 backend,
                 '-f', 'avfoundation',
                 '-i', ':Soundflower (2ch)',
-                '-acodec', 'flac',
                 '-f', 'flac',
+                '-acodec', 'flac',
                 '-ac', '2',
                 '-ar', samplerate,
                 '-b:a', bitrate,

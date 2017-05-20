@@ -2,12 +2,12 @@ mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-7.8.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-7.10.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
 This is a program to cast your **macOS** audio, or **Linux** audio to your
-Google Cast devices. It can also [cast video files](#video).
+Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
@@ -62,6 +62,26 @@ Check these images:
 * [Awesome WM with Blue icons](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/Awesome_BI.png)
 
 
+Sonos support
+--------------
+
+If you have Sonos speakers, you can play whatever you are listening to in your
+computer with **mkchromecast**. To add Sonos support, install the `soco` python
+module:
+
+```
+pip install soco
+```
+
+Contribute
+----------
+
+If you want to contribute, help me improving this application by [reporting
+issues](https://github.com/muammar/mkchromecast/issues), [creating pull
+requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
+me some pizza :).
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
 Requirements:
 ------------
@@ -102,7 +122,8 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (option if you plan to cast youtube URLs).
+* youtube-dl (optional if you plan to cast youtube URLs).
+* soco (this module adds Sonos support to mkchromecast).
 
 For those who don't like Pulseaudio, it is possible to [cast using
 ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA). In that case the
@@ -124,8 +145,8 @@ requirements are:
 * ffmpeg.
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (option if you plan to cast youtube URLs).
-
+* youtube-dl (optional if you plan to cast youtube URLs).
+* soco (this module adds Sonos support to mkchromecast).
 
 
 Install
@@ -307,7 +328,8 @@ able to use all audio coding formats in **mkchromecast**, it is better to
 install `ffmpeg` with the following options enabled:
 
 ```
-brew install ffmpeg --with-fdk-aac --with-sdl2 --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265
+
 ```
 
 **mkchromecast** does not support `avconv` in **macOS**.
@@ -645,11 +667,12 @@ Known issues
   versions of pychromecast.
 * When casting videos using the `node` backend, it is not possible to
   use neither the `--subtitle` nor the `--seek` flags.
+* When casting to Sonos the only codecs supported are: `mp3`, and `aac`.
+  I won't give `wma` support. Apparently there is a way to play `wav`, and
+  `ogg` that I will try to implement later.
 
 ##### macOS
 
-* It is not possible to create a macOS app with py2app. For more details see
-  [#36](https://github.com/muammar/mkchromecast/issues/36).
 * **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
   more than one available. In that case, you need to use the application from
   sources or build the application as shown
@@ -669,14 +692,5 @@ TODO
 ----
 
 * Verify all exceptions when the system tray menu fails.
-* Add SONOS support.
-
-Contribute
-----------
-
-If you want to contribute, help me improving this application by [reporting
-issues](https://github.com/muammar/mkchromecast/issues), [creating pull
-requests](https://github.com/muammar/mkchromecast/pulls), or you may also buy
-me some pizza :).
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
+* **Sonos**: add support to different available flags.
+* **Sonos**: add Equalizer in the controls.

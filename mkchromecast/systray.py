@@ -14,8 +14,9 @@ import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot, Qt
-from PyQt5.QtWidgets import QWidget, QSlider, QLabel, QApplication, QMessageBox, QMainWindow
+from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot, Qt)
+from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication,
+        QMessageBox, QMainWindow)
 from PyQt5.QtGui import QPixmap
 import pychromecast
 from pychromecast.dial import reboot
@@ -34,6 +35,13 @@ try:
 except ImportError:
     import configparser as ConfigParser # This is for Python3
 
+"""
+urllib is imported differently in Python3
+"""
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
@@ -203,11 +211,11 @@ class menubar(QtWidgets.QMainWindow):
                 print(':::systray::: self.colors '+self.colors)
 
     def search_menu(self):
-        self.SearchAction = self.menu.addAction('Search For Google Cast Devices')
+        self.SearchAction = self.menu.addAction('Search For Media Streaming Devices')
         self.SearchAction.triggered.connect(self.search_cast)
 
     def stop_menu(self):
-        self.StopCastAction = self.menu.addAction('Stop Casting')
+        self.StopCastAction = self.menu.addAction('Stop Streaming')
         self.StopCastAction.triggered.connect(self.stop_cast)
 
     def volume_menu(self):
@@ -226,7 +234,7 @@ class menubar(QtWidgets.QMainWindow):
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
     def reboot_menu(self):
-        self.rebootAction = self.menu.addAction('Reboot Cast Device')
+        self.rebootAction = self.menu.addAction('Reboot Streaming Device')
         self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
@@ -346,7 +354,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            self.NodevAction = self.menu.addAction('No Cast Devices Found.')
+            self.NodevAction = self.menu.addAction('No Streaming Devices Found.')
             if os.path.exists('images/'+self.google_nodev[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -406,9 +414,9 @@ class menubar(QtWidgets.QMainWindow):
                     '-contentImage',
                     noticon,
                     '-title',
-                    'mkchromecast',
+                    'Mkchromecast',
                     '-message',
-                    'Google Cast Devices Found'
+                    'Media Streaming Devices Found!'
                     ]
                 subprocess.Popen(found)
                 if debug == True:
@@ -418,10 +426,10 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init('mkchromecast')
+                    Notify.init('Mkchromecast')
                     found=Notify.Notification.new(
-                        'mkchromecast',
-                        'Google Cast Devices Found!',
+                        'Mkchromecast',
+                        'Media Streaming Devices Found!',
                         'dialog-information'
                         )
                     found.show()
@@ -430,7 +438,7 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print('Available Google Cast Devices', self.availablecc)
+            print('Available Media Streaming Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 try:
                     self.a = self.ag.addAction((QtWidgets.QAction(str(menuentry[1]), self, checkable=True)))
@@ -459,7 +467,10 @@ class menubar(QtWidgets.QMainWindow):
 
     def clicked_cc(self, clicked_item):
         if self.played == True:
-            self.cast.quit_app()
+            try:
+                self.cast.quit_app()
+            except AttributeError:
+                self.cast.stop()
 
         if debug == True:
             print(clicked_item)
@@ -473,6 +484,7 @@ class menubar(QtWidgets.QMainWindow):
             self.pcastfailed = False
             if os.path.exists('/tmp/mkchromecast.tmp') == True:
                 self.cast = mkchromecast.tray_threading.cast
+
             if os.path.exists('images/'+self.google[self.colors]+'.icns') == True:
                 if platform == 'Darwin':
                     self.tray.setIcon(
@@ -598,28 +610,32 @@ class menubar(QtWidgets.QMainWindow):
             pass
 
         if self.cast != None or self.stopped == True or self.pcastfailed == True:
+
             try:
                 self.cast.quit_app()
             except AttributeError:
-                pass
+                self.cast.stop() # This is for sonos. The thing is that if we are at this point, user requested an stop or cast failed.
             self.reset_audio()
+
             try:
                 self.kill_child()
             except psutil.NoSuchProcess:
                 pass
             checkmktmp()
             self.search_cast()
+
             while True:     # This is to retry when stopping and pychromecast.error.NotConnected raises.
                 try:
                     self.cast.quit_app()
                 except pychromecast.error.NotConnected:
                     continue
                 except AttributeError:
-                    continue
+                    self.cast.stop() # This is for sonos. The thing is that if we are at this point, user requested an stop or cast failed.
                 break
 
             self.stopped = True
             self.read_config()
+
             if platform == 'Darwin' and self.notifications == 'enabled':
                 if self.pcastfailed == True:
                     stop = [
@@ -627,9 +643,9 @@ class menubar(QtWidgets.QMainWindow):
                         '-group',
                         'cast',
                         '-title',
-                        'mkchromecast',
+                        'Mkchromecast',
                         '-message',
-                        'Casting process failed. Try again...'
+                        'Streaming Process Failed. Try Again...'
                         ]
                 else:
                     stop = [
@@ -637,9 +653,9 @@ class menubar(QtWidgets.QMainWindow):
                         '-group',
                         'cast',
                         '-title',
-                        'mkchromecast',
+                        'Mkchromecast',
                         '-message',
-                        'Cast stopped!'
+                        'Streaming Stopped!'
                         ]
                 subprocess.Popen(stop)
                 if debug == True:
@@ -650,17 +666,17 @@ class menubar(QtWidgets.QMainWindow):
                     import gi
                     gi.require_version('Notify', '0.7')
                     from gi.repository import Notify
-                    Notify.init('mkchromecast')
+                    Notify.init('Mkchromecast')
                     if self.pcastfailed == True:
                         stop=Notify.Notification.new(
-                            'mkchromecast',
-                            'Casting process failed. Try again...',
+                            'Mkchromecast',
+                            'Streaming Process Failed. Try Again...',
                             'dialog-information'
                             )
                     else:
                         stop=Notify.Notification.new(
-                            'mkchromecast',
-                            'Cast stopped!',
+                            'Mkchromecast',
+                            'Streaming Stopped!',
                             'dialog-information'
                             )
                     stop.show()
@@ -668,42 +684,34 @@ class menubar(QtWidgets.QMainWindow):
                     print('If you want to receive notifications in Linux, install  libnotify and python-gobject')
 
     def volume_cast(self):
-        self.maxvolset = 40
         self.sl = QtWidgets.QSlider(Qt.Horizontal)
         self.sl.setMinimum(0)
-        self.sl.setMaximum(self.maxvolset)
-        self.sl.setGeometry(30*self.scale_factor, 40*self.scale_factor, 260*self.scale_factor, 70*self.scale_factor)
+        self.sl.setGeometry(
+                30 * self.scale_factor,
+                40 * self.scale_factor,
+               260 * self.scale_factor,
+                70 * self.scale_factor
+                )
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
+            self.maxvolset = 40
+            self.sl.setMaximum(self.maxvolset)
             self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset), 1))
         except AttributeError:
-            self.sl.setValue(2)
-        self.sl.valueChanged.connect(self.valuechange)
-        self.sl.setWindowTitle('Google Cast Volume')
+            self.maxvolset = 100
+            self.sl.setMaximum(self.maxvolset)
+            if self.played == False:
+                self.sl.setValue(2)
+            else:
+                try:
+                    self.sl.setValue(self.cast.volume)
+                except:
+                    pass
+        self.sl.valueChanged.connect(self.value_changed)
+        self.sl.setWindowTitle('Device Volume')
         self.sl.show()
 
-        """
-        self.sl = QSlider(Qt.Horizontal, self)
-        self.sl.setMinimum(0)
-        self.sl.setMaximum(10)
-        #self.sl.setFocusPolicy(Qt.NoFocus)
-        self.sl.setGeometry(30, 40, 180, 20)
-        try:
-            self.sl.setValue(round((self.cast.status.volume_level*10), 1))
-        except AttributeError:
-            self.sl.setValue(2)
-        self.sl.valueChanged.connect(self.valuechange)
-
-        #self.label = QLabel(self)
-        #self.label.setPixmap(QPixmap('images/max.png'))
-        #self.label.setGeometry(160, 40, 80, 30)
-
-        self.setGeometry(300, 300, 240, 100)
-        self.setWindowTitle('Google cast volume')
-        self.show()
-        """
-
-    def valuechange(self, value):
+    def value_changed(self, value):
         try:
             if round(self.cast.status.volume_level, 1) == 1:
                 print (colors.warning(':::systray::: Maximum volume level reached!'))
@@ -715,7 +723,21 @@ class menubar(QtWidgets.QMainWindow):
             if debug == True:
                 print(':::systray::: Volume set to: '+str(volume))
         except AttributeError:
-            pass
+            """
+            Sonos volume
+            """
+            self.maxvolset = 100
+            if (self.cast.volume) == 100:
+                print (colors.warning(':::systray::: Maximum volume level reached!'))
+                volume = value
+                self.cast.volume = volume
+                self.cast.play()
+            else:
+                volume = value
+                self.cast.volume = volume
+                self.cast.play()
+            if debug == True:
+                print(':::systray::: Volume set to: '+str(volume))
         if debug == True:
             print(':::systray::: Volume changed: '+str(value))
 
@@ -743,12 +765,20 @@ class menubar(QtWidgets.QMainWindow):
                 pass    # I should add a notification here
         else:
             try:
-                print('Cast device IP: '+str(self.cast.host))
+                print('Cast device IP: %s' % str(self.cast.host))
                 self.reset_audio()
                 self.stop_cast()
                 reboot(self.cast.host)
             except AttributeError:
-                pass    # I should add a notification here
+                self.reset_audio()
+                self.stop_cast()
+                for device in self.availablecc:
+                    if self.cast_to in device:
+                        ip = device[3]
+                        print('Cast device IP: %s' % str(ip))
+                url = 'http://' + ip + ':1400/reboot'
+                urlopen(url).read()
+
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)
@@ -766,7 +796,7 @@ class menubar(QtWidgets.QMainWindow):
         elif message == 'False':
             updaterBox.setText('<b>Your installation is up-to-date!</b>')
             updaterBox.setInformativeText(
-                '<b>mkchromecast</b> v'
+                '<b>Mkchromecast</b> v'
                 + mkchromecast.__init__.__version__
                 + ' is currently the newest version available.'
                 )
@@ -774,7 +804,7 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setText('Problems connecting to remote file server!')
             updaterBox.setInformativeText("""Try again later.""")
         else:
-            updaterBox.setText('New version of mkchromecast available!')
+            updaterBox.setText('New version of Mkchromecast available!')
             if platform == 'Darwin':
                 downloadurl = (
                     '<a href="https://github.com/muammar/mkchromecast/releases/download/'
@@ -815,13 +845,13 @@ class menubar(QtWidgets.QMainWindow):
         msgsettext = (
             '<center><img src="'
             + self.abouticon
-            + '" "height="98" width="128" align="middle"> <br> <br> <b>mkchromecast</b> v'
+            + '" "height="98" width="128" align="middle"> <br> <br> <b>Mkchromecast</b> v'
             + mkchromecast.__init__.__version__
             )
         msgBox.setText(msgsettext)
         msgBox.setInformativeText("""
         <p align='center'>
-        <a href="http://mkchromecast.com/">Visit mkchromecast's website.</a>
+        <a href="http://mkchromecast.com/">Visit Mkchromecast's website.</a>
         <br>
         <br>
         <br>
@@ -832,12 +862,12 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         <br>
         <br>
-        Copyright (c) 2016, Muammar El Khatib.
+        Copyright (c) 2017, Muammar El Khatib.
         <br>
         <br>
         This program comes with absolutely no warranty.
         <br>
-        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE">MIT license</a> for details.
+        See the <a href="https://github.com/muammar/mkchromecast/blob/master/LICENSE.rst">MIT license</a> for details.
         </p>
                 """)
         msgBox.exec_()
@@ -881,9 +911,9 @@ class menubar(QtWidgets.QMainWindow):
                 '-contentImage',
                 noticon,
                 '-title',
-                'mkchromecast',
+                'Mkchromecast',
                 '-message',
-                'Searching for Google Cast Devices...'
+                'Searching for Media Streaming Devices...'
                 ]
             subprocess.Popen(searching)
             if debug == True:
@@ -893,10 +923,10 @@ class menubar(QtWidgets.QMainWindow):
                 import gi
                 gi.require_version('Notify', '0.7')
                 from gi.repository import Notify
-                Notify.init('mkchromecast')
+                Notify.init('Mkchromecast')
                 found=Notify.Notification.new(
-                    'mkchromecast',
-                    'Searching for Google Cast Devices...',
+                    'Mkchromecast',
+                    'Searching for Media Streaming Devices...',
                     'dialog-information'
                     )
                 found.show()

@@ -11,7 +11,7 @@
 #
 # Note: Be careful when using this Makefile, because all files not tracked will
 # be deleted, and all changes to mkchromecast/__init__.py will be discarded if
-# they are not commited.
+# they are not committed.
 #
 # How to use it?
 # ==============
@@ -54,16 +54,16 @@ debug:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app
-	cp -R /usr/local/Cellar/qt5/5.8.0_1/plugins dist/mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt5/5.8.0_1/bin/macdeployqt dist/mkchromecast.app
+	cp -R /usr/local/Cellar/qt/5.8.0_2/plugins dist/mkchromecast.app/Contents/PlugIns
+	/usr/local/Cellar/qt/5.8.0_2/bin/macdeployqt dist/mkchromecast.app
 
 # This target creates a standalone app with debugging disabled
 deploy:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = False/g' mkchromecast/__init__.py
 	python3 setup.py py2app
-	cp -R /usr/local/Cellar/qt5/5.8.0_1/plugins dist/mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt5/5.8.0_1/bin/macdeployqt dist/mkchromecast.app -dmg
+	cp -R /usr/local/Cellar/qt/5.8.0_2/plugins dist/mkchromecast.app/Contents/PlugIns
+	/usr/local/Cellar/qt/5.8.0_2/bin/macdeployqt dist/mkchromecast.app -dmg
 
 # This cleans
 clean:

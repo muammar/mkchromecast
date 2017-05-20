@@ -1,6 +1,7 @@
 The MIT License (MIT)
+=====================
 
-Copyright (c) 2016 Muammar El Khatib
+Copyright (c) 2017 Muammar El Khatib
 
 The following license applies to all parts of this software except as
 documented below:
@@ -34,5 +35,4 @@ Files in `mkchromecast/getch` are maintained under the MIT license. For more
 information please see: https://github.com/joeyespo/py-getch.
 
 Files in `notifier`, except for `Terminal.icns` are  maintained under the MIT
-license. For more information see:
-https://github.com/julienXX/terminal-notifier#license
+license. For more information see: https://github.com/julienXX/terminal-notifier#license
