@@ -775,7 +775,7 @@ class menubar(QtWidgets.QMainWindow):
                 for device in self.availablecc:
                     if self.cast_to in device:
                         ip = device[3]
-                        print('Cast device IP: %s' % str(ip))
+                        print('Sonos device IP: %s' % str(ip))
                 url = 'http://' + ip + ':1400/reboot'
                 urlopen(url).read()
 
