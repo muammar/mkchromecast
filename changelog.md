@@ -1,4 +1,9 @@
-* mkchromecast (0.3.7) **unreleased**
+* mkchromecast (0.3.7.1) **2017/05/21**
+
+    - macOS bundle built in Yosemite to add more compatibility.
+    - Bumped version to match debian official release.
+
+* mkchromecast (0.3.7) **2017/05/20**
 
     - node streaming updated to work with `node v7.10.0`.
     - Added ALSA device configuration in preferences pane.
