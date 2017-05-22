@@ -1,3 +1,7 @@
+* mkchromecast (0.3.8) **UNRELEASED**
+
+    - The macOS bundle is now renamed with capital M.
+
 * mkchromecast (0.3.7.1) **2017/05/21**
 
     - macOS bundle built in Yosemite to add more compatibility.

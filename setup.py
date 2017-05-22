@@ -20,7 +20,7 @@ from setuptools import setup
 version=open('mkchromecast/version.py').readlines()[-1].split()[-1].strip("\"'")
 
 APP = ['start_tray.py']
-APP_NAME = 'mkchromecast'
+APP_NAME = 'Mkchromecast'
 DATA_FILES = [
         'images/google.icns',
         'images/google_working.icns',
@@ -67,7 +67,7 @@ setup(
     name=APP_NAME,
     app=APP,
     data_files=DATA_FILES,
-    package='mkchromecast',
+    package='Mkchromecast',
     platforms=['i386', 'x86_64'],
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
