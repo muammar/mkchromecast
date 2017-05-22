@@ -772,13 +772,15 @@ class menubar(QtWidgets.QMainWindow):
             except AttributeError:
                 self.reset_audio()
                 self.stop_cast()
-                for device in self.availablecc:
-                    if self.cast_to in device:
-                        ip = device[3]
-                        print('Sonos device IP: %s' % str(ip))
-                url = 'http://' + ip + ':1400/reboot'
-                urlopen(url).read()
-
+                try:
+                    for device in self.availablecc:
+                        if self.cast_to in device:
+                            ip = device[3]
+                            print('Sonos device IP: %s' % str(ip))
+                    url = 'http://' + ip + ':1400/reboot'
+                    urlopen(url).read()
+                except AttributeError:
+                    pass
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)
