@@ -15,9 +15,9 @@ highlighter: rouge
 
 
 ### content configuration ###
-title:       "mkchromecast"
-keywords:    "Google, Cast, Audio, Mac, Linux, Python,"
-description: "This is a program to cast your macOS X, or Linux audio to your Google Cast devices."
+title:       "Mkchromecast"
+keywords:    "Google, Cast, Audio, Mac, Linux, Python, Sonos"
+description: "This is a program to cast your macOS X, or Linux audio to your Google Cast or Sonos devices."
 source_link: "https://github.com/t413/SinglePaged"
 favicon:     "img/favicon.ico"
 touch_icon:  "img/apple-touch-icon.png"
