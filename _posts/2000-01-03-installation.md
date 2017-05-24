@@ -7,11 +7,11 @@ fa-icon: toggle-on
 
 ## macOS app
 
-[Download the dmg](#download), and drag **mkchromecast** to your
+[Download the dmg](#download), and drag **Mkchromecast** to your
 `/Applications/` folder.  Note that for the moments `node` is the only backend
 supported by default. This bundle contains support for casting to both Google
 Cast and Sonos. You also need to install Soundflower as instructed below.
-If you use homebrew, you can install **mkchromecast** with one command line:
+If you use homebrew, you can install **Mkchromecast** with one command line:
 
 ```
 brew cask install mkchromecast
@@ -37,7 +37,7 @@ file](https://github.com/mattingalls/Soundflower/releases/latest).
 
 ## Linux based installation
 
-**mkchromecast** is available in the official Debian and Ubuntu repositories.
+**Mkchromecast** is available in the official Debian and Ubuntu repositories.
 You need to install it by executing:
 
 ```
@@ -67,7 +67,7 @@ please [report it here](https://github.com/muammar/mkchromecast/issues).`
 
 ## Installing from Github
 
-To install **mkchromecast**, clone this repository:
+To install **Mkchromecast**, clone this repository:
 
 ```
 git clone https://github.com/muammar/mkchromecast.git
