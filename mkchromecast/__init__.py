@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# This file is part of mkchromecast.
+# This file is part of Mkchromecast.
 
 import mkchromecast.colors as colors
 from mkchromecast.utils import terminate
@@ -19,7 +19,7 @@ This is a program to cast your macOS audio, or Linux audio to your Google Cast
 devices.
 
 It is written in Python, and it can stream via node.js, ffmpeg, parec (Linux
-pulseaudio users), avconv (Linux only) or ALSA (Linux users). mkchromecast is
+pulseaudio users), avconv (Linux only) or ALSA (Linux users). Mkchromecast is
 capable of using lossy and lossless audio formats provided that ffmpeg, avconv
 or parec is installed.  Additionally, a system tray menu is available.
 
@@ -33,7 +33,7 @@ repository and execute:
 
     python mkchromecast.py
 
-The two examples above will make mkchromecast streams with node.js (or parec in
+The two examples above will make Mkchromecast streams with node.js (or parec in
 Linux) together with mp3 audio coding format at a sample rate of 44100Hz and an
 average bitrate of 192k (defaults). These defaults can be changed using the
 --sample-rate and -b flags. It is useful to modify these parameters when your
@@ -89,10 +89,10 @@ bitrate to 128k.
 parser.add_argument(
 '--chunk-size',
 type=int,
-default='1024',
+default='32768',
 help=
 '''
-Set the chunk size for streaming in the Flask server. Default to 1024. This
+Set the chunk size for streaming in the Flask server. Default to 32768. This
 option only works when using the ffmpeg or avconv backends.
 
 Example:
@@ -407,7 +407,7 @@ parser.add_argument(
 '--tray',
 action='store_true',
 help='''
-This option let you launch mkchromecast as a systray menu (beta).
+This option let you launch Mkchromecast as a systray menu (beta).
 '''
 )
 
@@ -415,7 +415,7 @@ parser.add_argument(
 '--update',
 action='store_true',
 help="""
-Update mkchromecast git repository.
+Update Mkchromecast git repository.
 
 Example:
     python mkchromecast.py --update
@@ -558,7 +558,7 @@ if args.version is True:
 Update
 """
 if args.update is True:
-    print(colors.warning('Updating mkchromecast'))
+    print(colors.warning('Updating Mkchromecast'))
     print(colors.important('git pull --all'))
     pull = subprocess.Popen(
         ['git', 'pull', '--all'],
