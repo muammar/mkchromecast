@@ -726,14 +726,13 @@ seek = args.seek
 Segment time
 """
 avoid = ['parec', 'node']
+
 if isinstance(args.segment_time, int) and backend not in avoid:
     segmenttime = args.segment_time
 elif isinstance(args.segment_time, float) or backend in avoid:
     segmenttime = None
 else:
-    print(colors.warning('The segment time has to be an integer number'))
-    print(colors.warning('Set to default of 2 seconds'))
-    segmenttime = 2
+    segmenttime = None
 
 """
 Video
