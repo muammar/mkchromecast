@@ -89,11 +89,13 @@ bitrate to 128k.
 parser.add_argument(
 '--chunk-size',
 type=int,
-default='32768',
+default='1024',
 help=
 '''
-Set the chunk size for streaming in the Flask server. Default to 32768. This
-option only works when using the ffmpeg or avconv backends.
+Set the chunk size base for streaming in the Flask server. Default to 1024.
+This option only works when using the ffmpeg or avconv backends. This number is
+the base to set both the buffer_size (defined by 2 * chunk_size**2) in Flask
+server and the frame_size (defined by 32 * chunk_size).
 
 Example:
 
@@ -728,11 +730,11 @@ Segment time
 avoid = ['parec', 'node']
 
 if isinstance(args.segment_time, int) and backend not in avoid:
-    segmenttime = args.segment_time
+    segment_time = args.segment_time
 elif isinstance(args.segment_time, float) or backend in avoid:
-    segmenttime = None
+    segment_time = None
 else:
-    segmenttime = None
+    segment_time = None
 
 """
 Video

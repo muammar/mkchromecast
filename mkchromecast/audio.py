@@ -41,10 +41,14 @@ In this block we check variables from __init__.py
 tray = mkchromecast.__init__.tray
 adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
-segmenttime = mkchromecast.__init__.segmenttime
+segment_time = mkchromecast.__init__.segment_time
+
+frame_size = 32 * chunk_size
+buffer_size = 2 * chunk_size**2
 
 if debug == True:
-    print(':::audio::: chunk_size: ', chunk_size)
+    print(':::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s'
+            % (chunk_size, frame_size, buffer_size))
 debug = mkchromecast.__init__.debug
 sourceurl = mkchromecast.__init__.sourceurl
 config = ConfigParser.RawConfigParser()
@@ -276,8 +280,8 @@ else:
         print (command)
         return
 
-    def set_segmenttime():
-        string = [ '-f', 'segment', '-segment_time', str(segmenttime) ]
+    def set_segment_time():
+        string = [ '-f', 'segment', '-segment_time', str(segment_time) ]
         for element in string:
             command.insert(-9, element)
         return
@@ -293,8 +297,8 @@ else:
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
-                '-frame_size', str(chunk_size),
-                '-fragment_size', str(chunk_size),
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-f', 'mp3',
@@ -307,8 +311,8 @@ else:
             if adevice != None:
                 modalsa()
 
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
         elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
         backends_dict[backend] == 'gstreamer'):
@@ -357,8 +361,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
     """
     OGG 192k
@@ -370,8 +374,8 @@ else:
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
-                '-frame_size', str(chunk_size),
-                '-fragment_size', str(chunk_size),
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-f', 'ogg',
@@ -384,8 +388,8 @@ else:
             if adevice != None:
                 modalsa()
 
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
         elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
                 backends_dict[backend] == 'gstreamer'):
@@ -447,8 +451,8 @@ else:
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
-                '-frame_size', str(chunk_size),
-                '-fragment_size', str(chunk_size),
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-f', 'adts',
@@ -511,8 +515,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
                 if platform == 'Darwin':
                     cutoff = ['-cutoff', '18000']
                     for element in cutoff:
@@ -529,8 +533,8 @@ else:
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
-                '-frame_size', str(chunk_size),
-                '-fragment_size', str(chunk_size),
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-f', 'wav',
@@ -542,8 +546,8 @@ else:
             if adevice != None:
                 modalsa()
 
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
         elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
                 backends_dict[backend] == 'gstreamer'):
@@ -573,8 +577,8 @@ else:
                 '-ar', samplerate,
                 'pipe:'
                 ]
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
     """
     FLAC 24-Bit (values taken from: https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
@@ -585,8 +589,8 @@ else:
                 backend,
                 '-ac', '2',
                 '-ar', '44100',
-                '-frame_size', str(chunk_size),
-                '-fragment_size', str(chunk_size),
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
                 '-f', 'pulse',
                 '-i', 'mkchromecast.monitor',
                 '-f', 'flac',
@@ -599,8 +603,8 @@ else:
             if adevice != None:
                 modalsa()
 
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
         elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
                 backends_dict[backend] == 'gstreamer'):
@@ -627,8 +631,8 @@ else:
                 '-b:a', bitrate,
                 'pipe:'
                 ]
-            if segmenttime != None:
-                set_segmenttime()
+            if segment_time != None:
+                set_segment_time()
 
     verbose_backend = ['ffmpeg', 'avconv']
     if debug == False and backends_dict[backend] in verbose_backend:
@@ -699,7 +703,7 @@ def stream():
         process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
     else:
         process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
+    read_chunk = partial(os.read, process.stdout.fileno(), buffer_size)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
 def start_app():
