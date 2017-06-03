@@ -89,13 +89,13 @@ bitrate to 128k.
 parser.add_argument(
 '--chunk-size',
 type=int,
-default='512',
+default='64',
 help=
 '''
-Set the chunk size base for streaming in the Flask server. Default to 512.
-This option only works when using the ffmpeg or avconv backends. This number is
-the base to set both the buffer_size (defined by 2 * chunk_size**2) in Flask
-server and the frame_size (defined by 32 * chunk_size).
+Set the chunk size base for streaming in the Flask server. Default to 64.  This
+option only works when using the ffmpeg or avconv backends. This number is the
+base to set both the buffer_size (defined by 2 * chunk_size**2) in Flask server
+and the frame_size (defined by 32 * chunk_size).
 
 Example:
 
@@ -103,7 +103,8 @@ ffmpeg:
     python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --chunk-size 2048
 
 avconv:
-    python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 512
+    python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 64
+
 '''
 )
 
@@ -699,11 +700,8 @@ else:
 Chunk size
 """
 if args.chunk_size <= 0:
-    print(colors.warning('Chunk size set to default: 1024.'))
-    chunk_size = 1024
-elif args.chunk_size < 512:
-    print(colors.warning('Chunk size not recommended. Using 512 instead.'))
-    chunk_size = 512
+    chunk_size = 64
+    print(colors.warning('Chunk size set to default: %s.' % chunk_size))
 else:
     chunk_size = abs(args.chunk_size)
 

@@ -1,9 +1,11 @@
 * mkchromecast (0.3.8) **UNRELEASED**
 
     - The macOS bundle is now renamed with capital M.
-    - Chunk size changed from 1024 to 32768.
+    - Chunk size changed from 1024 to 64. Added two more variables that
+      decreases the delay.
     - Improved ffmpeg commands for pulseaudio part of the code.
     - node streaming updated to work with `node v8.0.0`.
+
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 
