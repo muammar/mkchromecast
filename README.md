@@ -190,7 +190,7 @@ repositories](https://packages.debian.org/mkchromecast). To install
 it, just do:
 
 ```
-apt-get install mkchromecast
+apt install mkchromecast
 ```
 
 Download the latest [deb package
@@ -198,15 +198,10 @@ here](https://github.com/muammar/mkchromecast/releases/), and install it as
 follows:
 
 ```
-sudo dpkg -i mkchromecast_$VERSION_all.deb
+sudo apt -f install ./mkchromecast_$VERSION_all.deb
 ```
 
-where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`. Then, if the dependencies are
-not available you have to do:
-
-```
-sudo apt-get -f install
-```
+where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`.
 
 This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
