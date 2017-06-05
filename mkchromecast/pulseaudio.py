@@ -6,20 +6,20 @@ import subprocess
 import time
 
 def create_sink():
-    sink_name = 'mkchromecast'
+    sink_name = 'Mkchromecast'
 
     create_sink = [
         'pactl',
         'load-module',
         'module-null-sink',
-        'sink_name='+sink_name
+        'sink_name=' + sink_name
         ]
 
     rename_sink = [
         'pacmd',
         'update-sink-proplist',
         sink_name,
-        'device.description='+sink_name
+        'device.description=' + sink_name
         ]
 
     cs = subprocess.Popen(
@@ -67,12 +67,12 @@ def check_sink():
     chkoutput, chkerror = chk.communicate()
 
     try:
-        if 'mkchromecast' in chkoutput:
+        if 'Mkchromecast' in chkoutput:
             return True
         else:
             return False
     except TypeError:
-        if 'mkchromecast' in chkoutput.decode('utf-8'):
+        if 'Mkchromecast' in chkoutput.decode('utf-8'):
             return True
         else:
             return False

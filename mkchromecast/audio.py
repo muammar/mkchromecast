@@ -74,7 +74,7 @@ if youtubeurl != None:
         url_data = urllib.parse.urlparse(youtubeurl)
         query = urllib.parse.parse_qs(url_data.query)
     video = query['v'][0]
-    print(colors.options('Playing video:')+' '+video)
+    print(colors.options('Playing video:') + ' ' + video)
     command = [
         'youtube-dl',
         '-o',
@@ -95,7 +95,7 @@ else:
         if adevice == 'None':
             adevice = None
         if debug == True:
-            print(':::audio::: tray ='+str(tray))
+            print(':::audio::: tray = ' + str(tray))
             print(colors.warning('Configuration file exists'))
             print(colors.warning('Using defaults set there'))
             print(backend, codec, bitrate, samplerate, adevice)
@@ -116,36 +116,37 @@ else:
         import subprocess
         USER = getpass.getuser()
         PATH = './bin:./nodejs/bin:/Users/' \
-        +str(USER) \
-        +'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' \
-        +os.environ['PATH']
+        + str(USER) \
+        + '/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' \
+        + os.environ['PATH']
 
         iterate = PATH.split(':')
         for item in iterate:
-            verifyif = str(item+'/'+backend)
+            verifyif = str(item + '/' + backend)
             if os.path.exists(verifyif) == False:
                 continue
             else:
                 backends_dict[verifyif] = backend
                 backend = verifyif
                 if debug == True:
-                    print(':::audio::: Program '+str(backend)+' found in '+str(verifyif))
-                    print(':::audio::: backend dictionary '+str(backends_dict))
+                    print(':::audio::: Program ' + str(backend) + ' found in '
+                            + str(verifyif))
+                    print(':::audio::: backend dictionary ' + str(backends_dict))
 
     if codec == 'mp3':
         appendmtype = 'mpeg'
     else:
         appendmtype = codec
 
-    mtype = 'audio/'+appendmtype
+    mtype = 'audio/' + appendmtype
 
     if sourceurl == None:
-        print(colors.options('Selected backend:')+' '+ backend)
-        print(colors.options('Selected audio codec:')+' '+ codec)
+        print(colors.options('Selected backend:') + ' ' +  backend)
+        print(colors.options('Selected audio codec:') + ' ' + codec)
 
     if backend != 'node':
         if bitrate == '192':
-            bitrate = bitrate+'k'
+            bitrate = bitrate + 'k'
             msg.bitrate_default(bitrate)
         elif bitrate == 'None':
             msg.no_bitrate(codec)
@@ -160,10 +161,10 @@ else:
                 bitrate = '500'
                 msg.maxbitrate(codec, bitrate)
             else:
-                bitrate = bitrate+'k'
+                bitrate = bitrate + 'k'
 
             if sourceurl == None:
-                print(colors.options('Selected bitrate:')+' '+ bitrate)
+                print(colors.options('Selected bitrate:') + ' ' + bitrate)
 
         if samplerate == '44100':
             msg.samplerate_default(samplerate)
@@ -262,7 +263,8 @@ else:
                     print(colors.warning('Sample rate has been set to maximum!'))
 
             if sourceurl == None:
-                print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+                print(colors.options('Sample rate set to:') + ' ' + samplerate
+                        + 'Hz')
 
     """
     We verify platform and other options
@@ -276,7 +278,7 @@ else:
 
     def modalsa():
         command[command.index('pulse')] = 'alsa'
-        command[command.index('mkchromecast.monitor')] = adevice
+        command[command.index('Mkchromecast.monitor')] = adevice
         print (command)
         return
 
@@ -300,7 +302,7 @@ else:
                 '-frame_size', str(frame_size),
                 '-fragment_size', str(frame_size),
                 '-f', 'pulse',
-                '-i', 'mkchromecast.monitor',
+                '-i', 'Mkchromecast.monitor',
                 '-f', 'mp3',
                 '-acodec', 'libmp3lame',
                 '-ac', '2',
@@ -347,7 +349,7 @@ else:
                 command.insert(3, 'device="'+adevice+'"')
             else:
                 command.insert(2, 'pulsesrc')
-                command.insert(3, 'device="mkchromecast.monitor"')
+                command.insert(3, 'device="Mkchromecast.monitor"')
             """
         else:
             command = [
@@ -377,7 +379,7 @@ else:
                 '-frame_size', str(frame_size),
                 '-fragment_size', str(frame_size),
                 '-f', 'pulse',
-                '-i', 'mkchromecast.monitor',
+                '-i', 'Mkchromecast.monitor',
                 '-f', 'ogg',
                 '-acodec', 'libvorbis',
                 '-ac', '2',
@@ -419,14 +421,14 @@ else:
                 'oggmux',
                 '!',
                 'filesink', 'location=/dev/stdout'
-                #gst-launch-1.0 pulsesrc device="mkchromecast.monitor" ! audioconvert ! audioresample ! vorbisenc ! oggmux ! filesink
+                #gst-launch-1.0 pulsesrc device="Mkchromecast.monitor" ! audioconvert ! audioresample ! vorbisenc ! oggmux ! filesink
                 ]
             if adevice != None:
                 command.insert(1, 'alsasrc')
                 command.insert(2, 'device="'+adevice+'"')
             else:
                 command.insert(1, 'pulsesrc')
-                command.insert(2, 'device="mkchromecast.monitor"')
+                command.insert(2, 'device="Mkchromecast.monitor"')
             """
         else:
             command = [
@@ -454,7 +456,7 @@ else:
                 '-frame_size', str(frame_size),
                 '-fragment_size', str(frame_size),
                 '-f', 'pulse',
-                '-i', 'mkchromecast.monitor',
+                '-i', 'Mkchromecast.monitor',
                 '-f', 'adts',
                 '-acodec', 'aac',
                 '-ac', '2',
@@ -501,7 +503,7 @@ else:
                 command.insert(3, 'device="'+adevice+'"')
             else:
                 command.insert(2, 'pulsesrc')
-                command.insert(3, 'device="mkchromecast.monitor"')
+                command.insert(3, 'device="Mkchromecast.monitor"')
             """
         else:
             command = [
@@ -522,8 +524,6 @@ else:
                     for element in cutoff:
                         command.insert(-1, element)
 
-
-
     """
     WAV 24-Bit
     """
@@ -536,7 +536,7 @@ else:
                 '-frame_size', str(frame_size),
                 '-fragment_size', str(frame_size),
                 '-f', 'pulse',
-                '-i', 'mkchromecast.monitor',
+                '-i', 'Mkchromecast.monitor',
                 '-f', 'wav',
                 '-acodec', 'pcm_s24le',
                 '-ac', '2',
@@ -592,7 +592,7 @@ else:
                 '-frame_size', str(frame_size),
                 '-fragment_size', str(frame_size),
                 '-f', 'pulse',
-                '-i', 'mkchromecast.monitor',
+                '-i', 'Mkchromecast.monitor',
                 '-f', 'flac',
                 '-acodec', 'flac',
                 '-ac', '2',
@@ -672,18 +672,16 @@ def shutdown():
 """
 @app.route('/' + appendtourl)
 def stream():
-    if (platform == 'Linux'
-            and bool(backends_dict) == True
-            and backends_dict[backend] == 'parec'):
+    if (platform == 'Linux' and bool(backends_dict) == True and
+            backends_dict[backend] == 'parec'):
         c_parec = [
             backend,
             '--format=s16le',
-            '-d', 'mkchromecast.monitor'
+            '-d', 'Mkchromecast.monitor'
             ]
         parec = Popen(c_parec, stdout=PIPE)
         process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
-    elif (platform == 'Linux' and
-            bool(backends_dict) == True and
+    elif (platform == 'Linux' and bool(backends_dict) == True and
             backends_dict[backend] == 'gstreamer'):
         c_gst = [
             'gst-launch-1.0',
@@ -698,7 +696,7 @@ def stream():
             c_gst.insert(3, 'device="'+adevice+'"')
         else:
             c_gst.insert(2, 'pulsesrc')
-            c_gst.insert(3, 'device="mkchromecast.monitor"')
+            c_gst.insert(3, 'device="Mkchromecast.monitor"')
         gst = Popen(c_gst, stdout=PIPE)
         process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
     else:
@@ -740,10 +738,10 @@ class monitor(object):
 def monitor_daemon():
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print(colors.options('PID of main process:')+' '+str(pidnumber))
+    print(colors.options('PID of main process:') + ' ' + str(pidnumber))
 
     localpid=getpid()
-    print(colors.options('PID of streaming process:')+' '+str(localpid))
+    print(colors.options('PID of streaming process:') + ' ' + str(localpid))
 
     while psutil.pid_exists(localpid) == True:
         try:

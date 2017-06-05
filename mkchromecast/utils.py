@@ -15,8 +15,11 @@ To call them:
 """
 
 def terminate():
-    if os.path.exists('/tmp/mkchromecast.tmp') == True:
-        os.remove('/tmp/mkchromecast.tmp')
+    delete_me = ['/tmp/mkchromecast.tmp', '/tmp/mkchromecast.pid']
+
+    for f in delete_me:
+        if f == True:
+            os.remove(f)
 
     parent_pid = getpid()
     parent = psutil.Process(parent_pid)
@@ -29,11 +32,11 @@ def is_installed(name, path, debug):
     PATH = path
     iterate = PATH.split(':')
     for item in iterate:
-        verifyif = str(item+'/'+name)
+        verifyif = str(item + '/' + name)
         if os.path.exists(verifyif) == False:
             continue
         else:
             if debug == True:
-                print('Program '+str(name)+' found in '+str(verifyif))
+                print('Program %s found in %s.' % (name, verifyif))
             return True
     return

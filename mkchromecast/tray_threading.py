@@ -67,11 +67,11 @@ class Player(QObject):
     @pyqtSlot()
     def _play_cast_(self):
         if os.path.exists(configf):
-            print(colors.warning(':::Threading::: Configuration file exists'))
-            print(colors.warning(':::Threading::: Using defaults set there'))
+            print(colors.warning(':::Threading::: Configuration file exists.'))
+            print(colors.warning(':::Threading::: Using defaults set there.'))
             config.read(configf)
             backend = ConfigSectionMap('settings')['backend']
-            print(':::Threading backend::: '+backend)
+            print(':::Threading backend::: %s.' % backend)
         else:
             backend = mkchromecast.__init__.backend
         global cast
@@ -128,10 +128,10 @@ class Updater(QObject):
                         break
 
                 if version > __version__:
-                    print ('Version ' + version + ' is available to download')
+                    print ('Version %s is available to download' % version)
                     self.updateready.emit(version)
                 else:
-                    print ('You are up to date')
+                    print ('You are up to date.')
                     self.updateready.emit('False')
             except UnboundLocalError:
                 self.updateready.emit('error1')

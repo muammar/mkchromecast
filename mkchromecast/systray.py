@@ -473,7 +473,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.cast.stop()
 
         if debug == True:
-            print(clicked_item)
+            print(':::tray::: clicked item: %s.' % clicked_item)
         self.index = clicked_item[0]
         self.cast_to = clicked_item[1]
         self.play_cast()

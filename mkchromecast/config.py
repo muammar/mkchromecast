@@ -42,10 +42,10 @@ class config_manager(object):
         locations.
         """
         if platform == 'Darwin':
-            self.directory = '/Users/'+self.user+'/Library/Application Support/mkchromecast/'
+            self.directory = '/Users/' + self.user + '/Library/Application Support/mkchromecast/'
         else:
-            self.directory = '/home/'+self.user+'/.config/mkchromecast/'      #Linux
-        self.configf = self.directory+'mkchromecast.cfg'
+            self.directory = '/home/' + self.user + '/.config/mkchromecast/'      #Linux
+        self.configf = self.directory + 'mkchromecast.cfg'
 
     def config_defaults(self):
         """
@@ -106,7 +106,7 @@ class config_manager(object):
                 e = ConfigSectionMap('settings')[str(e)]
             except KeyError:
                 if debug == True:
-                    print(':::config::: the setting '+e+' is not correctly set. Defaults added.')
+                    print(':::config::: the setting %s is not correctly set. Defaults added.' % e)
                 self.config.set('settings', str(e), self.defaultconf[e])
                 with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)

@@ -65,10 +65,10 @@ def streaming():
         samplerate = str(mkchromecast.__init__.samplerate)
         notifications = mkchromecast.__init__.notifications
 
-    print(colors.options('Selected backend:')+' '+ backend)
+    print(colors.options('Selected backend:') + ' ' + backend)
 
     if debug == True:
-        print(':::node::: variables', backend,rcodec,bitrate,samplerate,notifications)
+        print(':::node::: variables %s, %s, %s, %s, %s' % (backend, rcodec, bitrate, samplerate, notifications))
 
     try:
         youtubeurl = mkchromecast.__init__.youtubeurl
@@ -77,21 +77,21 @@ def streaming():
 
     if youtubeurl == None:
         if backend == 'node' and rcodec != 'mp3':
-            print(colors.warning('Codec '+rcodec+' is not supported by the node server!'))
-            print('Using '+codec+' as default.')
+            print(colors.warning('Codec ' + rcodec + ' is not supported by the node server!'))
+            print('Using ' + codec + ' as default.')
 
         if backend == 'node':
             if int(bitrate) == 192:
-                print(colors.options('Default bitrate used:')+' '+bitrate+'k')
+                print(colors.options('Default bitrate used:') + ' ' + bitrate + 'k.')
             elif int(bitrate) > 320:
-                    print(colors.warning('Maximum bitrate supported by '+codec+' is:')+' '+str(320)+'k')
+                    print(colors.warning('Maximum bitrate supported by ' + codec + ' is:') + ' ' + str(320) + 'k.')
                     bitrate = '320'
                     print(colors.warning('Bitrate has been set to maximum!'))
             else:
-                print(colors.options('Selected bitrate: ')+bitrate+'k')
+                print(colors.options('Selected bitrate: ') + bitrate + 'k.')
 
             if samplerate == '44100':
-                print(colors.options('Default sample rate used:')+' '+ samplerate+'Hz')
+                print(colors.options('Default sample rate used:') + ' ' + samplerate + 'Hz.')
             else:
                 codecs_sr = [
                     'mp3',
@@ -136,7 +136,7 @@ def streaming():
                         samplerate = '48000'
                     print(colors.warning('Sample rate has been set to maximum!'))
 
-                print(colors.options('Sample rate set to:')+' '+samplerate+'Hz')
+                print(colors.options('Sample rate set to:') + ' ' + samplerate + 'Hz.')
 
     """
     Node section
@@ -169,14 +169,14 @@ def streaming():
             ]
     p = subprocess.Popen(webcast)
     if debug == True:
-        print(':::node::: node command', webcast)
+        print(':::node::: node command: %s.' % webcast)
 
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print(colors.options('PID of main process:')+' '+str(pidnumber))
+    print(colors.options('PID of main process:') + ' ' + str(pidnumber))
 
     localpid=getpid()
-    print(colors.options('PID of streaming process:')+' '+str(localpid))
+    print(colors.options('PID of streaming process:') + ' ' + str(localpid))
 
     while p.poll() is None:
         try:
@@ -205,7 +205,7 @@ def streaming():
             else:
                 noticon = 'google.icns'
         if debug == True:
-            print(':::node::: platform, tray, notifications', platform, tray, notifications)
+            print(':::node::: platform, tray, notifications: %s, %s, %s.' % (platform, tray, notifications))
 
         if platform == 'Darwin' and tray == True and notifications == 'enabled':
             reconnecting = [
@@ -224,8 +224,8 @@ def streaming():
             subprocess.Popen(reconnecting)
 
             if debug == True:
-                print(':::node::: reconnecting notifier command', reconnecting)
-        relaunch(stream,recasting,kill)
+                print(':::node::: reconnecting notifier command: %s.' % reconnecting)
+        relaunch(stream, recasting, kill)
     return
 
 class multi_proc(object):
@@ -241,7 +241,7 @@ def kill():
     os.kill(pid, signal.SIGTERM)
     return
 
-def relaunch(func1,func2,func3):
+def relaunch(func1, func2, func3):
     func1()
     func2()
     func3()

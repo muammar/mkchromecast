@@ -510,7 +510,7 @@ else:
 
 adevice = args.alsa_device
 if debug == True:
-    print('ALSA device name:', adevice)
+    print('ALSA device name: %s.' % adevice)
 
 discover = args.discover
 host = args.host
@@ -521,7 +521,7 @@ reconnect = args.reconnect
 
 ccname = args.name
 if debug == True:
-    print('Google Cast name:', ccname)
+    print('Google Cast name: %s.' % ccname)
 
 """
 Reset
@@ -602,7 +602,7 @@ if args.debug == True:
 if args.encoder_backend not in backends and args.encoder_backend != None:
     print(colors.error('Supported backends are: '))
     for backend in backends:
-        print('-',backend)
+        print('- %s.' % backend)
     sys.exit(0)
 
 if args.encoder_backend in backends:
@@ -645,10 +645,10 @@ else:
     if backend != 'node' and args.codec in codecs:
         codec = args.codec
     else:
-        print(colors.options('Selected audio codec: ')+ args.codec)
+        print(colors.options('Selected audio codec: %s.') % args.codec)
         print(colors.error('Supported audio codecs are: '))
         for codec in codecs:
-            print('-', codec)
+            print('- %s.' % codec)
         sys.exit(0)
 
 """
@@ -663,17 +663,17 @@ resolutions = [
         '4K'
      ]
 
-_resolutions = [r.lower() for r in resolutions]
+resolutions = [ r.lower() for r in resolutions ]
 
 if args.resolution == None:
     resolution = args.resolution
-elif args.resolution.lower() in _resolutions:
+elif args.resolution.lower() in resolutions:
     resolution = args.resolution.lower()
 else:
     print(colors.error('Supported resolutions are: '))
     for res in resolutions:
         if res != False:
-            print('-', res)
+            print('- %s.' % res)
     sys.exit(0)
 
 """

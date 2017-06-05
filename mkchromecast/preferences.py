@@ -53,7 +53,7 @@ def ConfigSectionMap(section):
             if dict1[option] == -1:
                 DebugPrint('skip: %s' % option)
         except:
-            print('exception on %s!' % option)
+            print('Exception on %s!' % option)
             dict1[option] = None
     return dict1
 
@@ -74,7 +74,7 @@ if tray == True:
             self.configurations = config_manager()    # Class from mkchromecast.config
             self.configf = self.configurations.configf
             if os.path.exists(self.configf) == False:
-                print('config does not exist')
+                print('Config file does not exist!')
                 self.configurations.config_defaults()
             self.read_defaults()
             self.initUI()
@@ -107,7 +107,7 @@ if tray == True:
             if platform == 'Darwin':
                 for item in backends_supported:
                     if (is_installed(item, PATH, debug) == True
-                            and item != 'avconv' and item !='gstreamer'):
+                            and item != 'avconv' and item != 'gstreamer'):
                         self.backends.append(item)
             else:
                 for item in backends_supported:
@@ -119,9 +119,9 @@ if tray == True:
                         self.backends.append(item)
             backendindex = self.backends.index(self.backendconf)
             self.backend = QLabel('Select Backend', self)
-            self.backend.move(20*self.scale_factor, 24*self.scale_factor)
+            self.backend.move(20 * self.scale_factor, 24 * self.scale_factor)
             self.qcbackend = QComboBox(self)
-            self.qcbackend.move(180*self.scale_factor, 20*self.scale_factor)
+            self.qcbackend.move(180 * self.scale_factor, 20 * self.scale_factor)
             self.qcbackend.setMinimumContentsLength(7)
             for item in self.backends:
                 self.qcbackend.addItem(item)
@@ -149,7 +149,7 @@ if tray == True:
             if debug == True:
                 print(self.codecs)
             codecindex = self.codecs.index(self.codecconf)
-            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
+            self.qccodec.move(180 * self.scale_factor, 54 * self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
             for item in self.codecs:
                 self.qccodec.addItem(item)
@@ -201,9 +201,9 @@ if tray == True:
                 ]
             sampleratesindex = self.samplerates.index(self.samplerateconf)
             self.samplerate = QLabel('Sample Rate (Hz)', self)
-            self.samplerate.move(20*self.scale_factor, 120*self.scale_factor)
+            self.samplerate.move(20 * self.scale_factor, 120 * self.scale_factor)
             self.qcsamplerate = QComboBox(self)
-            self.qcsamplerate.move(180*self.scale_factor, 120*self.scale_factor)
+            self.qcsamplerate.move(180 * self.scale_factor, 120 * self.scale_factor)
             self.qcsamplerate.setMinimumContentsLength(7)
             for item in self.samplerates:
                 self.qcsamplerate.addItem(item)
@@ -221,9 +221,9 @@ if tray == True:
                 ]
             colorsindex = self.colors_list.index(self.searchcolorsconf)
             self.colors = QLabel('Icon Colors', self)
-            self.colors.move(20*self.scale_factor, 152*self.scale_factor)
+            self.colors.move(20 * self.scale_factor, 152 * self.scale_factor)
             self.qccolors = QComboBox(self)
-            self.qccolors.move(180*self.scale_factor, 152*self.scale_factor)
+            self.qccolors.move(180 * self.scale_factor, 152 * self.scale_factor)
             self.qccolors.setMinimumContentsLength(7)
             for item in self.colors_list:
                 self.qccolors.addItem(item)
@@ -240,9 +240,9 @@ if tray == True:
                 ]
             notindex = self.notifications_list.index(self.notificationsconf)
             self.notifications = QLabel('Notifications', self)
-            self.notifications.move(20*self.scale_factor, 184*self.scale_factor)
+            self.notifications.move(20 * self.scale_factor, 184 * self.scale_factor)
             self.qcnotifications = QComboBox(self)
-            self.qcnotifications.move(180*self.scale_factor, 184*self.scale_factor)
+            self.qcnotifications.move(180 * self.scale_factor, 184 * self.scale_factor)
             self.qcnotifications.setMinimumContentsLength(7)
             for item in self.notifications_list:
                 self.qcnotifications.addItem(item)
@@ -259,9 +259,9 @@ if tray == True:
                 ]
             launchindex = self.atlaunch_list.index(self.searchatlaunchconf)
             self.atlaunch = QLabel('Search At Launch', self)
-            self.atlaunch.move(20*self.scale_factor, 214*self.scale_factor)
+            self.atlaunch.move(20 * self.scale_factor, 214 * self.scale_factor)
             self.qcatlaunch = QComboBox(self)
-            self.qcatlaunch.move(180*self.scale_factor, 214*self.scale_factor)
+            self.qcatlaunch.move(180 * self.scale_factor, 214 * self.scale_factor)
             self.qcatlaunch.setMinimumContentsLength(7)
             for item in self.atlaunch_list:
                 self.qcatlaunch.addItem(item)
@@ -273,9 +273,9 @@ if tray == True:
             Set the ALSA Device
             """
             self.alsadevice = QLabel('ALSA Device', self)
-            self.alsadevice.move(20*self.scale_factor, 244*self.scale_factor)
+            self.alsadevice.move(20 * self.scale_factor, 244 * self.scale_factor)
             self.qle = QLineEdit(self)
-            self.qle.move(179*self.scale_factor, 244*self.scale_factor)
+            self.qle.move(179 * self.scale_factor, 244 * self.scale_factor)
             self.qle.setFixedWidth(84*self.scale_factor)
             self.read_defaults()
             if self.alsadeviceconf != None:
@@ -287,26 +287,27 @@ if tray == True:
             Buttons
             """
             resetbtn = QPushButton("Reset Settings", self)
-            resetbtn.move(10*self.scale_factor, 274*self.scale_factor)
+            resetbtn.move(10 * self.scale_factor, 274 * self.scale_factor)
             resetbtn.clicked.connect(self.reset_configuration)
 
             faqbtn = QPushButton("FAQ", self)
-            faqbtn.move(138*self.scale_factor, 274*self.scale_factor)
+            faqbtn.move(138 * self.scale_factor, 274 * self.scale_factor)
             faqbtn.clicked.connect(lambda: webbrowser.open('https://github.com/muammar/mkchromecast/wiki/FAQ'))
 
             donbtn = QPushButton("Donate :)", self)
-            donbtn.move(204*self.scale_factor, 274*self.scale_factor)
+            donbtn.move(204 * self.scale_factor, 274 * self.scale_factor)
             donbtn.clicked.connect(lambda: webbrowser.open('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted'))
 
         def window(self):
             """
             Geometry and window's title
             """
-            self.setGeometry(300*self.scale_factor, 300*self.scale_factor, 300*self.scale_factor, 200*self.scale_factor)
+            self.setGeometry(300 * self.scale_factor, 300 * self.scale_factor,
+                    300 * self.scale_factor, 200 * self.scale_factor)
             if platform == 'Darwin':
-                self.setFixedSize(310*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
+                self.setFixedSize(310 * self.scale_factor, 320 * self.scale_factor)     #This is to fix the size of the window
             else:
-                self.setFixedSize(282*self.scale_factor, 320*self.scale_factor)     #This is to fix the size of the window
+                self.setFixedSize(282 * self.scale_factor, 320 * self.scale_factor)     #This is to fix the size of the window
             self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setWindowTitle('Mkchromecast Preferences')
 
@@ -369,9 +370,9 @@ if tray == True:
                     'flac'
                     ]
             if debug == True:
-                print(codecs)
+                print('Codecs: %s.' % codecs)
             codecindex = codecs.index(self.codecconf)
-            self.qccodec.move(180*self.scale_factor, 54*self.scale_factor)
+            self.qccodec.move(180 * self.scale_factor, 54 * self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
             for item in codecs:
                 self.qccodec.addItem(item)
@@ -400,7 +401,7 @@ if tray == True:
                     '500'
                     ]
                 bitrateindex = bitrates.index(self.bitrateconf)
-            self.qcbitrate.move(180*self.scale_factor, 88*self.scale_factor)
+            self.qcbitrate.move(180 * self.scale_factor, 88 * self.scale_factor)
             for item in bitrates:
                 self.qcbitrate.addItem(item)
             self.qcbitrate.setCurrentIndex(bitrateindex)

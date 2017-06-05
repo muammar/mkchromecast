@@ -165,7 +165,7 @@ else:
 app = Flask(__name__)
 
 if debug == True:
-    print(':::ffmpeg::: command '+str(command))
+    print(':::ffmpeg::: command: %s.' % command)
 
 @app.route('/')
 def index():
@@ -203,7 +203,7 @@ def stream():
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host= '0.0.0.0', threaded = True)
+    app.run(host='0.0.0.0', threaded=True)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):
@@ -229,10 +229,10 @@ class monitor(object):
 def monitor_daemon():
     f = open('/tmp/mkchromecast.pid', 'rb')
     pidnumber=int(pickle.load(f))
-    print(colors.options('PID of main process:')+' '+str(pidnumber))
+    print(colors.options('PID of main process:') + ' ' + str(pidnumber))
 
     localpid=getpid()
-    print(colors.options('PID of streaming process:')+' '+str(localpid))
+    print(colors.options('PID of streaming process:') + ' ' + str(localpid))
 
     while psutil.pid_exists(localpid) == True:
         try:
@@ -270,7 +270,7 @@ def main():
             PATH = os.environ['PATH']
 
         if debug == True:
-            print('PATH ='+str(PATH))
+            print('PATH = %s.' % PATH)
 
         if platform == 'Darwin' and os.path.exists('./bin/node') == True:
             webcast = [

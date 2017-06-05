@@ -189,7 +189,7 @@ class casting(object):
                 self.index=pickle.load(self.tf)
                 self.cast_to = self.cclist[int(self.index)]
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
+                print(colors.options('Casting to:') + ' ' + colors.success(self.cast_to))
                 print(' ')
 
         elif (len(self.cclist) != 0 and self.select_cc == True and
@@ -211,7 +211,7 @@ class casting(object):
                 self.cast_to=pickle.load(self.tf)
                 self.availablecc()
                 print(' ')
-                print(colors.options('Casting to:')+' '+colors.success(self.cast_to))
+                print(colors.options('Casting to:') + ' ' + colors.success(self.cast_to))
                 print(' ')
 
         elif len(self.cclist) == 0 and self.tray == False:
@@ -296,7 +296,7 @@ class casting(object):
 
         try:
             print(colors.options('The IP of ')
-                    + colors.success(self.cast_to)+colors.options(' is:')
+                    + colors.success(self.cast_to) + colors.options(' is:')
                     + ' ' + self.cast.host)
         except TypeError:
             print(colors.options('The IP of ')
