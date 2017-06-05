@@ -12,6 +12,7 @@ from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.node import *
 import mkchromecast.preferences
 from mkchromecast.pulseaudio import *
+from mkchromecast.utils import del_tmp
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot, Qt)
@@ -881,6 +882,7 @@ class menubar(QtWidgets.QMainWindow):
             child.kill()
 
     def exit_all(self):
+        del_tmp()
         if self.cast == None and self.stopped == False:
             self.app.quit()
         elif self.stopped == True or self.cast != None:

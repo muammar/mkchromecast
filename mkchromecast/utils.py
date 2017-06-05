@@ -5,6 +5,7 @@
 from os import getpid
 import psutil
 import os.path
+import mkchromecast.colors as colors
 
 """
 These functions are used to kill main processes and child.
@@ -15,18 +16,27 @@ To call them:
 """
 
 def terminate():
-    delete_me = ['/tmp/mkchromecast.tmp', '/tmp/mkchromecast.pid']
-
-    for f in delete_me:
-        if f == True:
-            os.remove(f)
-
+    del_tmp()
     parent_pid = getpid()
     parent = psutil.Process(parent_pid)
     for child in parent.children(recursive=True):  # or parent.children() for recursive=False
         child.kill()
     parent.kill()
     return
+
+def del_tmp():
+    """Delete files created in /tmp/"""
+    delete_me = ['/tmp/mkchromecast.tmp', '/tmp/mkchromecast.pid']
+
+    print(colors.important('Cleaning up /tmp/...'))
+
+    for f in delete_me:
+        if os.path.exists(f) == True:
+            os.remove(f)
+
+    print(colors.success('[Done]'))
+    return
+
 
 def is_installed(name, path, debug):
     PATH = path
