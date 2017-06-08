@@ -4,7 +4,7 @@
     - Chunk size changed from 1024 to 64. Added two more variables that
       decreases the delay.
     - Improved ffmpeg commands for pulseaudio part of the code.
-    - node streaming updated to work with `node v8.0.0`.
+    - node streaming updated to work with `node v8.1.0`.
 
 
 * mkchromecast (0.3.7.1) **2017/05/21**
