@@ -59,7 +59,8 @@ OPTIONS = {
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
         'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
-        'LSPrefersPPC': True
+        'LSPrefersPPC': True,
+        'LSUIElement': True
     }
 }
 
