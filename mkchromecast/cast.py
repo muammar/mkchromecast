@@ -378,7 +378,8 @@ class casting(object):
         """ Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
-        print('Increasing volume... \n')
+        if self.debug == True:
+            print('Increasing volume... \n')
         try:
             volume = round(self.cast.status.volume_level, 1)
             return self.cast.set_volume(volume + 0.1)
@@ -390,7 +391,8 @@ class casting(object):
         """ Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
-        print('Decreasing volume... \n')
+        if self.debug == True:
+            print('Decreasing volume... \n')
         try:
             volume = round(self.cast.status.volume_level, 1)
             return self.cast.set_volume(volume - 0.1)
