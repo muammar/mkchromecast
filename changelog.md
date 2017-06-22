@@ -6,6 +6,7 @@
       decreases the delay.
     - Improved ffmpeg commands for pulseaudio part of the code.
     - node streaming updated to work with `node v8.1.2`.
+    - Manpage is now shipped in main branches.
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 
