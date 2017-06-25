@@ -165,6 +165,7 @@ class casting(object):
             print(' ')
             if self.discover == False:
                 print(colors.important('We will cast to first device in the list above!'))
+                print(colors.important('You can select devices by using the -s flag.'))
                 print(' ')
                 self.cast_to = self.cclist[0][1]
                 if self.cclist[0][2] == 'Sonos':
