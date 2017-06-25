@@ -167,7 +167,10 @@ class casting(object):
                 print(colors.important('We will cast to first device in the list above!'))
                 print(' ')
                 self.cast_to = self.cclist[0][1]
-                print(colors.success(self.cast_to))
+                if self.cclist[0][2] == 'Sonos':
+                    print(colors.success(self.cast_to.player_name))
+                else:
+                    print(colors.success(self.cast_to))
                 print(' ')
 
         elif (len(self.cclist) != 0 and self.select_cc == True and
