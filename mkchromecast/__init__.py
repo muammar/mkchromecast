@@ -628,6 +628,7 @@ codecs = [
     'mp3',
     'ogg',
     'aac',
+    'opus',
     'wav',
     'flac'
     ]
@@ -683,6 +684,7 @@ codecs_br = [
     'mp3',
     'ogg',
     'aac',
+    'opus',
     'flac'
     ]
 
@@ -712,6 +714,8 @@ if args.sample_rate != 0:
     if args.sample_rate < 22050:
         print(colors.error('The sample rate has to be greater than 22049.'))
         sys.exit(0)
+    elif args.codec == 'opus':
+        samplerate = 48000
     else:
         samplerate = abs(args.sample_rate)
 elif args.sample_rate == 0:

@@ -123,7 +123,9 @@ class config_manager(object):
         codecs = [
             'mp3',
             'ogg',
-            'aac'
+            'aac',
+            'opus',
+            'flac',
             ]
 
         if os.path.exists(self.configf):

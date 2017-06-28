@@ -323,8 +323,7 @@ able to use all audio coding formats in **Mkchromecast**, it is better to
 install `ffmpeg` with the following options enabled:
 
 ```
-brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265
-
+brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265 --with-opus
 ```
 
 **Mkchromecast** does not support `avconv` in **macOS**.
@@ -350,6 +349,7 @@ apt-get install libav-tools
   `mp3`                 | MPEG Audio Layer III (default)    | Lossy compression format (default bitrate: 192k)
   `ogg`                 | Ogg Vorbis                        | Lossy compression format (default bitrate: 192k)
   `aac`                 | Advanced Audio Coding (AAC)       | Lossy compression format (default bitrate: 192k)
+  `opus`                | Opus                              | Lossy compression format (default bitrate: 192k)
   `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
   `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
 

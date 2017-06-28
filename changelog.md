@@ -9,6 +9,7 @@
     - Manpage is now shipped in main branches.
     - TypeError caused by a print statement for Soco devices has been fixed.
       Closes #80.
+    - Added Opus codec support.
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 

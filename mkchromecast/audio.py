@@ -134,11 +134,11 @@ else:
                     print(':::audio::: backend dictionary ' + str(backends_dict))
 
     if codec == 'mp3':
-        appendmtype = 'mpeg'
+        append_mtype = 'mpeg'
     else:
-        appendmtype = codec
+        append_mtype = codec
 
-    mtype = 'audio/' + appendmtype
+    mtype = 'audio/' + append_mtype
 
     if sourceurl == None:
         print(colors.options('Selected backend:') + ' ' +  backend)
@@ -173,6 +173,7 @@ else:
                 'mp3',
                 'ogg',
                 'aac',
+                'opus',
                 'wav',
                 'flac'
                 ]
@@ -523,6 +524,55 @@ else:
                     cutoff = ['-cutoff', '18000']
                     for element in cutoff:
                         command.insert(-1, element)
+
+    """
+    OPUS
+    """
+    if  codec == 'opus':
+        if platform == 'Linux' and backends_dict[backend] != 'parec':
+            command = [
+                backend,
+                '-ac', '2',
+                '-ar', '44100',
+                '-frame_size', str(frame_size),
+                '-fragment_size', str(frame_size),
+                '-f', 'pulse',
+                '-i', 'Mkchromecast.monitor',
+                '-f', 'opus',
+                '-acodec', 'libopus',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+            if adevice != None:
+                modalsa()
+
+            if segment_time != None:
+                set_segment_time()
+
+        elif (platform == 'Linux' and backends_dict[backend] == 'parec' or
+                backends_dict[backend] == 'gstreamer'):
+            command = [
+                'opusenc',
+                '-',
+                '--bitrate', bitrate[:-1],
+                '--raw-rate', samplerate,
+                ]
+        else:
+            command = [
+                backend,
+                '-f', 'avfoundation',
+                '-i', ':Soundflower (2ch)',
+                '-f', 'opus',
+                '-acodec', 'libopus',
+                '-ac', '2',
+                '-ar', samplerate,
+                '-b:a', bitrate,
+                'pipe:'
+                ]
+            if segment_time != None:
+                set_segment_time()
 
     """
     WAV 24-Bit
