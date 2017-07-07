@@ -10,6 +10,7 @@
     - TypeError caused by a print statement for Soco devices has been fixed.
       Closes #80.
     - Added Opus codec support.
+    - It is now possible to screencast using mkchromecast.
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 
