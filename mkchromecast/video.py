@@ -24,10 +24,11 @@ import multiprocessing
 import threading
 import os
 from os import getpid
+
+appendtourl = 'stream'
 USER = getpass.getuser()
 
 chunk_size = mkchromecast.__init__.chunk_size
-appendtourl = 'stream'
 platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
@@ -36,6 +37,7 @@ seek = mkchromecast.__init__.seek
 debug = mkchromecast.__init__.debug
 sourceurl = mkchromecast.__init__.sourceurl
 encoder_backend = mkchromecast.__init__.backend
+screencast = mkchromecast.__init__.screencast
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -43,24 +45,52 @@ except AttributeError:
     youtubeurl = None
 
 def resolution(res):
-    if res.lower() == '480p':
+    if res.lower() == '480p' and screencast == False:
         insert = ['-vf', 'scale=853:-1']
         return insert
-    if res.lower() == '720p':
+
+    elif res.lower() == '480p' and screencast == True:
+        screen_size = '480x854'
+        return screen_size
+
+    elif res.lower() == '720p' and screencast == False:
         insert = ['-vf', 'scale=1280:-1']
         return insert
-    if res.lower() == '1080p':
+
+    elif res.lower() == '720p' and screencast == True:
+        screen_size = '1280×720'
+        return screen_size
+
+    elif res.lower() == '1080p' and screencast == False:
         insert = ['-vf', 'scale=1920:-1']
         return insert
-    if res.lower() == '2k':
+
+    elif res.lower() == '1080p' and screencast == True:
+        screen_size = '1920x1080'
+        return screen_size
+
+    elif res.lower() == '2k' and screencast == False:
         insert = ['-vf', 'scale=2048:-1']
         return insert
-    if res.lower() == 'uhd':
+
+    elif res.lower() == '2k' and screencast == True:
+        screen_size = '2048x1080'
+        return screen_size
+
+    elif res.lower() == 'uhd' and screencast == False:
         insert = ['-vf', 'scale=3840:-1']
         return insert
-    if res.lower() == '4k':
+    elif res.lower() == 'uhd' and screencast == True:
+        screen_size = '3840x2160'
+        return screen_size
+
+    elif res.lower() == '4k' and screencast == False:
         insert = ['-vf', 'scale=4096:-1']
         return insert
+
+    elif res.lower() == '4k' and screencast == True:
+        screen_size = '4096x2160'
+        return screen_size
 
 def seeking(seek):
     seek_append = ['-ss', seek]
@@ -81,6 +111,30 @@ if youtubeurl != None:
         ]
     mtype = 'video/mp4'
 
+elif screencast == True:
+    if res == None:
+        screen_size = resolution('1080p')
+    else:
+        screen_size = resolution(res)
+    command = [
+            'ffmpeg',
+            '-f', 'x11grab',
+            '-r', '25',
+            '-s', screen_size,
+            '-i', ':0.0+0,0',
+            '-vcodec', 'libx264',
+            '-preset', 'ultrafast',
+            '-tune', 'zerolatency',
+            '-maxrate', '10000k',
+            '-bufsize', '20000k',
+            '-pix_fmt', 'yuv420p',
+            '-g', '60', #'-c:a', 'copy', '-ac', '2',
+            #'-b', '900k',
+            '-f', 'mp4',
+            '-movflags', 'frag_keyframe+faststart ',
+            'pipe:1'
+            ]
+    mtype = 'video/mp4'
 else:
     """
     The blocks shown below are related to input_files

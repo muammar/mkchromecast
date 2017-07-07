@@ -336,6 +336,21 @@ For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
 )
 
 parser.add_argument(
+'--screencast',
+action='store_true',
+default=False,
+help='''
+Use this flag to cast your Desktop Google cast devices. It is only working with
+ffmpeg. You may want to you use the --resolution option together with this
+flag.
+
+Examples:
+
+    python mkchromecast.py --video --screencast
+'''
+)
+
+parser.add_argument(
 '--seek',
 type=str,
 default=None,
@@ -582,6 +597,8 @@ if args.update is True:
 """
 Check that encoders exist in the list
 """
+screencast = args.screencast
+
 backends = [
     'node',
     'ffmpeg',
