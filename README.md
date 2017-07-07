@@ -103,7 +103,8 @@ following:
 
 * flask (optional).
 * ffmpeg (optional).
-* youtube-dl (option if you plan to cast youtube URLs).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
 
 #### Linux
 
@@ -122,7 +123,8 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (optional if you plan to cast youtube URLs).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
 * soco (this module adds Sonos support to Mkchromecast).
 
 For those who don't like Pulseaudio, it is possible to [cast using
@@ -145,7 +147,8 @@ requirements are:
 * ffmpeg.
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (optional if you plan to cast youtube URLs).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
 * soco (this module adds Sonos support to Mkchromecast).
 
 
@@ -521,7 +524,9 @@ here](https://github.com/muammar/mkchromecast#macos).
 
 #### Playing Youtube URLs in Google Cast devices
 
-You can play Youtube URLs headlessly from the command line:
+You can play Youtube URLs (or [other
+sites](https://rg3.github.io/youtube-dl/supportedsites.html) headlessly from
+the command line:
 
 ```
 python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
@@ -531,7 +536,8 @@ To use this function, you need to install `youtube-dl`. In macOS, this can be
 done with homebrew: `brew install youtube-dl`. In Debian based distros:
 `apt-get install youtube-dl`.
 
-**Note**: you may need to enclose the URL between quotation marks.
+**Note**: you may need to enclose the URL between quotation marks, and only
+URLs over `https` are supported.
 
 #### Playing source URLs in Google Cast devices
 

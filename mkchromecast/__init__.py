@@ -491,13 +491,16 @@ parser.add_argument(
 type=str,
 default=None,
 help='''
-Stream from Youtube URL. This option needs youtube-dl.
+Stream from Youtube URL. This option needs the youtube-dl package, and it also
+gives you access to all its supported websites such as Dailymotion, LiveLeak,
+and Vimeo.
+
+For a comprehensive list, check http://rg3.github.io/youtube-dl/supportedsites.html.
 
 Example:
     python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
 
-As I don't own a Google Cast for TVs, I cannot test this correctly. But in
-principle it should work.
+Note that this is only working for websites running over https.
 '''
 )
 
