@@ -556,8 +556,10 @@ else:
             command = [
                 'opusenc',
                 '-',
+                '--raw',
                 '--bitrate', bitrate[:-1],
                 '--raw-rate', samplerate,
+                '-'
                 ]
         else:
             command = [
