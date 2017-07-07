@@ -62,7 +62,7 @@ def resolution(res):
         return screen_size
 
     elif res.lower() == '1080p' and screencast == False:
-        insert = ['-vf', 'scale=1920:-1']
+        insert = ['-vf', 'scale=1920x1080']
         return insert
 
     elif res.lower() == '1080p' and screencast == True:
@@ -70,16 +70,17 @@ def resolution(res):
         return screen_size
 
     elif res.lower() == '2k' and screencast == False:
-        insert = ['-vf', 'scale=2048:-1']
+        insert = ['-vf', 'scale=2048x1148']
         return insert
 
     elif res.lower() == '2k' and screencast == True:
-        screen_size = '2048x1080'
+        screen_size = '2048x1148'
         return screen_size
 
     elif res.lower() == 'uhd' and screencast == False:
-        insert = ['-vf', 'scale=3840:-1']
+        insert = ['-vf', 'scale=3840x2160']
         return insert
+
     elif res.lower() == 'uhd' and screencast == True:
         screen_size = '3840x2160'
         return screen_size
