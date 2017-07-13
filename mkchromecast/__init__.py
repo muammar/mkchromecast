@@ -491,9 +491,9 @@ parser.add_argument(
 type=str,
 default=None,
 help='''
-Stream from Youtube URL. This option needs the youtube-dl package, and it also
-gives you access to all its supported websites such as Dailymotion, LiveLeak,
-and Vimeo.
+Stream from sources supported by youtube-dl. This option needs the youtube-dl
+package, and it also gives you access to all its supported websites such as
+Dailymotion, LiveLeak, and Vimeo.
 
 For a comprehensive list, check http://rg3.github.io/youtube-dl/supportedsites.html.
 
@@ -776,7 +776,17 @@ Youtube URLs
 """
 if args.youtube != None:
     if 'https' not in args.youtube:
-        print(colors.error('You need to provide a youtube URL'))
+        youtube_error = """
+        You need to provide a URL that is supported by youtube-dl.
+        """
+        message = """
+        For a list of supported sources please visit:
+            https://rg3.github.io/youtube-dl/supportedsites.html
+
+        Note that the URLs have to start with https.
+        """
+        print(colors.error(youtube_error))
+        print(message)
         sys.exit(0)
     else:
         youtubeurl = args.youtube
