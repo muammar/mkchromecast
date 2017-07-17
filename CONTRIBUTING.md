@@ -15,9 +15,8 @@ a Pizza :).
 List of contributors
 --------------------
 
-+-------------------------+--------+------+------+----------------+
 | Author                  |    loc | coms | fils |  distribution  |
-+=========================+========+======+======+================+
+| ----------------------- | ------ | ---- | ---- |  ------------  |
 | Muammar El Khatib       | 354456 |  992 | 1248 |  100/98.8/99.0 |
 | Morten Linderud         |     35 |    2 |    4 |  0.0/ 0.2/ 0.3 |
 | terencode               |     22 |    2 |    1 |  0.0/ 0.2/ 0.1 |
@@ -28,7 +27,11 @@ List of contributors
 | Guillaume Roche         |      1 |    1 |    1 |  0.0/ 0.1/ 0.1 |
 | Steindi01               |      0 |    1 |    0 |  0.0/ 0.1/ 0.0 |
 | Ioan Loosley            |      0 |    1 |    0 |  0.0/ 0.1/ 0.0 |
-+-------------------------+--------+------+------+----------------+
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
 
 Date: Mon Jul 17 18:36:19 EDT 2017.
 
