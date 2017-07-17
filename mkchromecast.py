@@ -13,6 +13,8 @@ import subprocess
 import os.path
 import time
 import atexit
+import signal
+
 
 class mk(object):
     """Class to manage cast process"""
@@ -239,10 +241,11 @@ class mk(object):
             print('')
             print(colors.error('Ctrl-C to kill the Application at any Time'))
             print('')
-            try:
-                input()
-            except KeyboardInterrupt:
-                atexit.register(self.terminate_app())
+            signal.signal(signal.SIGINT,
+                          lambda *_: atexit.register(self.terminate_app()))
+            signal.signal(signal.SIGTERM,
+                          lambda *_: atexit.register(self.terminate_app()))
+            signal.pause()
 
     def backend_handler(self, action, backend):
         """Methods to handle pause and resume state of backends"""
