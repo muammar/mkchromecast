@@ -28,12 +28,8 @@ List of contributors
 | Steindi01               |      0 |    1 |    0 |  0.0/ 0.1/ 0.0 |
 | Ioan Loosley            |      0 |    1 |    0 |  0.0/ 0.1/ 0.0 |
 
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
 
-Date: Mon Jul 17 18:36:19 EDT 2017.
+**Date**: Mon Jul 17 18:36:19 EDT 2017.
 
 A more up-to-date list can be see at
 [mkchromecast/graphs/contributors](https://github.com/muammar/mkchromecast/graphs/contributors).
