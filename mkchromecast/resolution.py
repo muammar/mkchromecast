@@ -2,7 +2,6 @@
 
 # This file is part of mkchromecast.
 
-
 resolutions = {
                '480p': ('scale-853:-1', '480x854'),
                '720p': ('scale=1280:-1', '1280x720'),
@@ -12,7 +11,6 @@ resolutions = {
                'uhd': ('scale=3840x2160', '3840x2160'),
                '4k': ('scale=4096:-1', '4096x2160')
                }
-
 
 def resolution(res, screencast):
         res = resolutions[res.lower()]
