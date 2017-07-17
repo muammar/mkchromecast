@@ -12,6 +12,7 @@
     - Added Opus codec support.
     - It is now possible to screencast using mkchromecast.
     - Using the --youtube flag works with all supported websites by youtube-dl.
+    - Correct signal handling using the `signal` module. PR #87 by @Foxboron.
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 
