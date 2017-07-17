@@ -12,6 +12,7 @@ import mkchromecast.colors as colors
 from mkchromecast.config import *
 from mkchromecast.utils import terminate, is_installed
 from mkchromecast.preferences import ConfigSectionMap
+from mkchromecast.resolution import resolution
 import psutil
 import getpass
 import pickle
@@ -44,54 +45,6 @@ try:
 except AttributeError:
     youtubeurl = None
 
-def resolution(res):
-    if res.lower() == '480p' and screencast == False:
-        insert = ['-vf', 'scale=853:-1']
-        return insert
-
-    elif res.lower() == '480p' and screencast == True:
-        screen_size = '480x854'
-        return screen_size
-
-    elif res.lower() == '720p' and screencast == False:
-        insert = ['-vf', 'scale=1280:-1']
-        return insert
-
-    elif res.lower() == '720p' and screencast == True:
-        screen_size = '1280×720'
-        return screen_size
-
-    elif res.lower() == '1080p' and screencast == False:
-        insert = ['-vf', 'scale=1920x1080']
-        return insert
-
-    elif res.lower() == '1080p' and screencast == True:
-        screen_size = '1920x1080'
-        return screen_size
-
-    elif res.lower() == '2k' and screencast == False:
-        insert = ['-vf', 'scale=2048x1148']
-        return insert
-
-    elif res.lower() == '2k' and screencast == True:
-        screen_size = '2048x1148'
-        return screen_size
-
-    elif res.lower() == 'uhd' and screencast == False:
-        insert = ['-vf', 'scale=3840x2160']
-        return insert
-
-    elif res.lower() == 'uhd' and screencast == True:
-        screen_size = '3840x2160'
-        return screen_size
-
-    elif res.lower() == '4k' and screencast == False:
-        insert = ['-vf', 'scale=4096:-1']
-        return insert
-
-    elif res.lower() == '4k' and screencast == True:
-        screen_size = '4096x2160'
-        return screen_size
 
 def seeking(seek):
     seek_append = ['-ss', seek]
@@ -114,9 +67,9 @@ if youtubeurl != None:
 
 elif screencast == True:
     if res == None:
-        screen_size = resolution('1080p')
+        screen_size = resolution('1080p', screencast)
     else:
-        screen_size = resolution(res)
+        screen_size = resolution(res, screencast)
     command = [
             'ffmpeg',
             '-f', 'x11grab',
@@ -213,7 +166,7 @@ else:
     mtype = 'video/mp4'
     if res != None:
         cindex = command.index(input_file)
-        res_elements = resolution(res)
+        res_elements = resolution(res, screencast)
         for element in res_elements:
             command.insert(-cindex, element)
 

@@ -5,6 +5,7 @@
 import mkchromecast.colors as colors
 from mkchromecast.utils import terminate
 from mkchromecast.version import __version__
+from mkchromecast.resolution import resolutions
 import argparse
 import os.path
 import sys
@@ -276,13 +277,7 @@ default=None,
 help='''
 Set the resolution of the streamed video. The following resolutions are supported:
 
-    - 480p.
-    - 720p (1280x720).
-    - 1080p (1920x1080).
-    - 2K.
-    - UHD (3840x2160).
-    - 4K (4096x2160).
-'''
+'''+"\n".join("    - {0} ({2}).".format(k, *v) for k, v in resolutions.items())
 )
 
 parser.add_argument(
@@ -675,16 +670,8 @@ else:
 """
 Resolution
 """
-resolutions = [
-        '480p',
-        '720p',
-        '1080p',
-        '2K',
-        'UHD',
-        '4K'
-     ]
 
-resolutions = [ r.lower() for r in resolutions ]
+resolutions = [r.lower() for r in resolutions.keys()]
 
 if args.resolution == None:
     resolution = args.resolution
