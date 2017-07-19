@@ -3,8 +3,8 @@ Contributing
 
 If you want to contribute, help me improving this application by [reporting
 issues](https://github.com/muammar/mkchromecast/issues), [creating pull
-requests](https://github.com/muammar/mkchromecast/pulls), or you may also want
-to develop. If your case is the latter, visit
+requests](https://github.com/muammar/mkchromecast/pulls) with your development/improvement. 
+If your case is the latter, visit
 [Development](https://github.com/muammar/mkchromecast/wiki/development) section
 in the Wiki.
 
