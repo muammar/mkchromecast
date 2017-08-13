@@ -53,7 +53,7 @@ class casting(object):
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
-        self.reconnect = mkchromecast.__init__.reconnect
+        self.hijack = mkchromecast.__init__.hijack
         self.tries = mkchromecast.__init__.tries
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
@@ -363,8 +363,8 @@ class casting(object):
             print(' ')
             print(self.cast.status)
             print(' ')
-            if self.reconnect == True:
-                self.r = Thread(target=self.reconnect_cc)
+            if self.hijack == True:
+                self.r = Thread(target=self.hijack_cc)
                 self.r.daemon = True   # This has to be set to True so that we catch KeyboardInterrupt.
                 self.r.start()
         except AttributeError:
@@ -441,8 +441,8 @@ class casting(object):
                 to_append = [self.index, device, types]
             self.availablecc.append(to_append)
 
-    def reconnect_cc(self):
-        """Dummy method to call  _reconnect_cc_().
+    def hijack_cc(self):
+        """Dummy method to call  _hijack_cc_().
 
         In the cast that the self.r thread is alive, we check that the
         chromecast is connected. If it is connected, we check again in
@@ -450,7 +450,7 @@ class casting(object):
         """
         try:
             while self.r.is_alive():
-                self._reconnect_cc_()
+                self._hijack_cc_()
                 time.sleep(5)       #FIXME: I think that this has to be set by users.
         except KeyboardInterrupt:
             self.stop_cast()
@@ -461,11 +461,11 @@ class casting(object):
                 remove_sink()
             terminate()
 
-    def _reconnect_cc_(self):
-        """Check if chromecast is disconnected and reconnect.
+    def _hijack_cc_(self):
+        """Check if chromecast is disconnected and hijack.
 
         This function checks if the chromecast is online. Then, if the display
-        name is different from "Default Media Receiver", it reconnects to the
+        name is different from "Default Media Receiver", it hijacks to the
         chromecast.
         """
         ip = self.cast.host

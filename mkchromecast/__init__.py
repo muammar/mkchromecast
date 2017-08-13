@@ -261,12 +261,12 @@ Reboot the Google Cast device.
 )
 
 parser.add_argument(
-'--reconnect',
+'--hijack',
 action='store_true',
 default=False,
 help='''
 This flag monitors if connection with google cast has been lost, and try to
-reconnect.
+hijack it.
 '''
 )
 
@@ -540,7 +540,7 @@ host = args.host
 input_file = args.input_file
 sourceurl = args.source_url
 subtitles = args.subtitles
-reconnect = args.reconnect
+hijack = args.hijack
 
 ccname = args.name
 if debug == True:
