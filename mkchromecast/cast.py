@@ -54,6 +54,7 @@ class casting(object):
         self.host = mkchromecast.__init__.host
         self.ccname = mkchromecast.__init__.ccname
         self.reconnect = mkchromecast.__init__.reconnect
+        self.tries = mkchromecast.__init__.tries
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
         if self.host == None:
@@ -109,7 +110,7 @@ class casting(object):
         try:
             return list(pychromecast.get_chromecasts_as_dict().keys())
         except AttributeError:
-            self._chromecasts_by_name = {c.name: c for c in pychromecast.get_chromecasts()}
+            self._chromecasts_by_name = {c.name: c for c in pychromecast.get_chromecasts(tries=self.tries)}
             return list(self._chromecasts_by_name.keys())
 
     def _get_chromecast(self, name):

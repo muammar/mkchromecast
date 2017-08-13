@@ -425,6 +425,16 @@ This option let you launch Mkchromecast as a systray menu (beta).
 )
 
 parser.add_argument(
+'--tries',
+type=int,
+default=None,
+help='''
+Limit the number of times the underlying socket associated with your Chromecast
+objects will retry connecting
+'''
+)
+
+parser.add_argument(
 '--update',
 action='store_true',
 help="""
@@ -744,6 +754,12 @@ elif isinstance(args.segment_time, float) or backend in avoid:
     segment_time = None
 else:
     segment_time = None
+
+"""
+Tries
+"""
+
+tries = args.tries
 
 """
 Video
