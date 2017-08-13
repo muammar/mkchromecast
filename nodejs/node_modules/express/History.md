@@ -1,3 +1,22 @@
+4.15.4 / 2017-08-06
+===================
+
+  * deps: debug@2.6.8
+  * deps: depd@~1.1.1
+    - Remove unnecessary `Buffer` loading
+  * deps: finalhandler@~1.0.4
+    - deps: debug@2.6.8
+  * deps: proxy-addr@~1.1.5
+    - Fix array argument being altered
+    - deps: ipaddr.js@1.4.0
+  * deps: qs@6.5.0
+  * deps: send@0.15.4
+    - deps: debug@2.6.8
+    - deps: depd@~1.1.1
+    - deps: http-errors@~1.6.2
+  * deps: serve-static@1.12.4
+    - deps: send@0.15.4
+
 4.15.3 / 2017-05-16
 ===================
 

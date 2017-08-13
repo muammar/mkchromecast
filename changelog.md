@@ -5,7 +5,7 @@
     - Chunk size changed from 1024 to 64. Added two more variables that
       decreases the delay.
     - Improved ffmpeg commands for pulseaudio part of the code.
-    - node streaming updated to work with `node v8.1.4`.
+    - node streaming updated to work with `node v8.3.0`.
     - Manpage is now shipped in main branches.
     - TypeError caused by a print statement for Soco devices has been fixed.
       Closes #80.

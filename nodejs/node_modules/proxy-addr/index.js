@@ -86,11 +86,13 @@ function compile(val) {
     throw new TypeError('argument is required');
   }
 
-  var trust = typeof val === 'string'
-    ? [val]
-    : val;
+  var trust;
 
-  if (!Array.isArray(trust)) {
+  if (typeof val === 'string') {
+    trust = [val];
+  } else if (Array.isArray(val)) {
+    trust = val.slice();
+  } else {
     throw new TypeError('unsupported trust argument');
   }
 

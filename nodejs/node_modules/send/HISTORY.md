@@ -1,3 +1,12 @@
+0.15.4 / 2017-08-05
+===================
+
+  * deps: debug@2.6.8
+  * deps: depd@~1.1.1
+    - Remove unnecessary `Buffer` loading
+  * deps: http-errors@~1.6.2
+    - deps: depd@1.1.1
+
 0.15.3 / 2017-05-16
 ===================
 
