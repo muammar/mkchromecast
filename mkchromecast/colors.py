@@ -3,6 +3,11 @@
 # This file is part of mkchromecast.
 # Credits to https://gist.github.com/Jossef/0ee20314577925b4027f
 
+try:
+    unicode        # Python 2
+except NameError:
+    unicode = str  # Python 3
+
 def color(text, **user_styles):
     styles = {
         # styles
