@@ -83,9 +83,9 @@ def streaming():
         if backend == 'node':
             if int(bitrate) == 192:
                 print(colors.options('Default bitrate used:') + ' ' + bitrate + 'k.')
-            elif int(bitrate) > 320:
-                    print(colors.warning('Maximum bitrate supported by ' + codec + ' is:') + ' ' + str(320) + 'k.')
-                    bitrate = '320'
+            elif int(bitrate) > 500:
+                    print(colors.warning('Maximum bitrate supported by ' + codec + ' is:') + ' ' + str(500) + 'k.')
+                    bitrate = '500'
                     print(colors.warning('Bitrate has been set to maximum!'))
             else:
                 print(colors.options('Selected bitrate: ') + bitrate + 'k.')
