@@ -32,16 +32,16 @@ def outputdev():
 
 def inputint():
     if os.path.exists('./bin/audiodevice') == True:
-        inputinttosf2 = ['./bin/audiodevice input internal']
+        inputinttosf2 = ['./bin/audiodevice input "Internal microphone"']
     else:
-        inputinttosf2 = ['./audiodevice input internal']
+        inputinttosf2 = ['./audiodevice input "Internal microphone"']
     subprocess.call(inputinttosf2, shell=True)
     return
 
 def outputint():
     if os.path.exists('./bin/audiodevice') == True:
-        outputinttosf2 = ['./bin/audiodevice output internal']
+        outputinttosf2 = ['./bin/audiodevice output "Internal Speakers"']
     else:
-        outputinttosf2 = ['./audiodevice output internal']
+        outputinttosf2 = ['./audiodevice output "Internal Speakers"']
     subprocess.call(outputinttosf2, shell=True)
     return
