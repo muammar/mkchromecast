@@ -132,7 +132,7 @@ class casting(object):
         if sonos == True:
             try:
                 self.sonos_list = list(soco.discover())
-                lenght = len(self.cclist)
+                length = len(self.cclist)
                 for self.index, device in enumerate(self.sonos_list):
                     add_sonos = [self.index, device, 'Sonos']
                     self.cclist.append(add_sonos)
