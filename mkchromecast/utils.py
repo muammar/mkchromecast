@@ -6,12 +6,14 @@ from os import getpid
 import psutil
 import os.path
 import mkchromecast.colors as colors
+try:
+    from urlparse import urlparse
+except:
+    from urllib.parse import urlparse
 
 """
-These functions are used to kill main processes and child.
-
 To call them:
-    from mkchromecast.terminate import *
+    from mkchromecast.terminate import name
     name()
 """
 
@@ -50,3 +52,11 @@ def is_installed(name, path, debug):
                 print('Program %s found in %s.' % (name, verifyif))
             return True
     return
+
+def check_url(url):
+    """Check if a URL is correct"""
+    try:
+        result = urlparse(url)
+        return True if [result.scheme, result.netloc, result.path] else False
+    except Exception as e:
+        return False

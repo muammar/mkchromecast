@@ -3,7 +3,7 @@
 # This file is part of Mkchromecast.
 
 import mkchromecast.colors as colors
-from mkchromecast.utils import terminate
+from mkchromecast.utils import terminate, check_url
 from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions
 import argparse
@@ -778,7 +778,7 @@ if args.volume == True:   #FIXME this has to be deleted in future releases.
 Youtube URLs
 """
 if args.youtube != None:
-    if 'https' not in args.youtube:
+    if check_url(args.youtube) is False:
         youtube_error = """
         You need to provide a URL that is supported by youtube-dl.
         """

@@ -32,9 +32,9 @@ def outputdev():
 
 def inputint():
     if os.path.exists('./bin/audiodevice') == True:
-        inputinttosf2 = ['./bin/audiodevice input "Internal microphone"']
+        inputinttosf2 = ['./bin/audiodevice input "Internal Microphone"']
     else:
-        inputinttosf2 = ['./audiodevice input "Internal microphone"']
+        inputinttosf2 = ['./audiodevice input "Internal Microphone"']
     subprocess.call(inputinttosf2, shell=True)
     return
 
