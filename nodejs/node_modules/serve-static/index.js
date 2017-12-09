@@ -132,7 +132,7 @@ function serveStatic (root, options) {
  */
 function collapseLeadingSlashes (str) {
   for (var i = 0; i < str.length; i++) {
-    if (str[i] !== '/') {
+    if (str.charCodeAt(i) !== 0x2f /* / */) {
       break
     }
   }

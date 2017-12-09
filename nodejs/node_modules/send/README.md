@@ -50,7 +50,7 @@ of the `Range` request header.
 ##### cacheControl
 
 Enable or disable setting `Cache-Control` response header, defaults to
-true. Disabling this will ignore the `maxAge` option.
+true. Disabling this will ignore the `immutable` and `maxAge` options.
 
 ##### dotfiles
 
@@ -85,6 +85,14 @@ If a given file doesn't exist, try appending one of the given extensions,
 in the given order. By default, this is disabled (set to `false`). An
 example value that will serve extension-less HTML files: `['html', 'htm']`.
 This is skipped if the requested file already has an extension.
+
+##### immutable
+
+Enable or diable the `immutable` directive in the `Cache-Control` response
+header, defaults to `false`. If set to `true`, the `maxAge` option should
+also be specified to enable caching. The `immutable` directive will prevent
+supported clients from making conditional requests during the life of the
+`maxAge` option to check if the file has changed.
 
 ##### index
 

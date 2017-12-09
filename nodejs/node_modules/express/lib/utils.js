@@ -12,6 +12,7 @@
  * @api private
  */
 
+var Buffer = require('safe-buffer').Buffer
 var contentDisposition = require('content-disposition');
 var contentType = require('content-type');
 var deprecate = require('depd')('express');
@@ -31,13 +32,7 @@ var querystring = require('querystring');
  * @api private
  */
 
-exports.etag = function (body, encoding) {
-  var buf = !Buffer.isBuffer(body)
-    ? new Buffer(body, encoding)
-    : body;
-
-  return etag(buf, {weak: false});
-};
+exports.etag = createETagGenerator({ weak: false })
 
 /**
  * Return weak ETag for `body`.
@@ -48,13 +43,7 @@ exports.etag = function (body, encoding) {
  * @api private
  */
 
-exports.wetag = function wetag(body, encoding){
-  var buf = !Buffer.isBuffer(body)
-    ? new Buffer(body, encoding)
-    : body;
-
-  return etag(buf, {weak: true});
-};
+exports.wetag = createETagGenerator({ weak: true })
 
 /**
  * Check if `path` looks absolute.
@@ -272,6 +261,25 @@ exports.setCharset = function setCharset(type, charset) {
   // format type
   return contentType.format(parsed);
 };
+
+/**
+ * Create an ETag generator function, generating ETags with
+ * the given options.
+ *
+ * @param {object} options
+ * @return {function}
+ * @private
+ */
+
+function createETagGenerator (options) {
+  return function generateETag (body, encoding) {
+    var buf = !Buffer.isBuffer(body)
+      ? Buffer.from(body, encoding)
+      : body
+
+    return etag(buf, options)
+  }
+}
 
 /**
  * Parse an extended query string with qs.

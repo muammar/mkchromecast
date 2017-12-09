@@ -1,3 +1,35 @@
+0.16.1 / 2017-09-29
+===================
+
+  * Fix regression in edge-case behavior for empty `path`
+
+0.16.0 / 2017-09-27
+===================
+
+  * Add `immutable` option
+  * Fix missing `</html>` in default error & redirects
+  * Use instance methods on steam to check for listeners
+  * deps: mime@1.4.1
+    - Add 70 new types for file extensions
+    - Set charset as "UTF-8" for .js and .json
+  * perf: improve path validation speed
+
+0.15.6 / 2017-09-22
+===================
+
+  * deps: debug@2.6.9
+  * perf: improve `If-Match` token parsing
+
+0.15.5 / 2017-09-20
+===================
+
+  * deps: etag@~1.8.1
+    - perf: replace regular expression with substring
+  * deps: fresh@0.5.2
+    - Fix handling of modified headers with invalid dates
+    - perf: improve ETag match loop
+    - perf: improve `If-None-Match` token parsing
+
 0.15.4 / 2017-08-05
 ===================
 
