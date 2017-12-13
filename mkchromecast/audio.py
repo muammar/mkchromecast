@@ -42,6 +42,7 @@ tray = mkchromecast.__init__.tray
 adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
 segment_time = mkchromecast.__init__.segment_time
+port = mkchromecast.__init__.port
 
 frame_size = 32 * chunk_size
 buffer_size = 2 * chunk_size**2
@@ -764,7 +765,7 @@ def start_app():
     """
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host= '0.0.0.0', passthrough_errors=False)
+    app.run(host= '0.0.0.0', port=port, passthrough_errors=False)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):

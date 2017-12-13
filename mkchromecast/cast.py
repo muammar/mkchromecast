@@ -56,6 +56,7 @@ class casting(object):
         self.ccname = mkchromecast.__init__.ccname
         self.hijack = mkchromecast.__init__.hijack
         self.tries = mkchromecast.__init__.tries
+        self.port = mkchromecast.__init__.port
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
         if self.host is None:
@@ -374,7 +375,7 @@ class casting(object):
                 print(colors.options('The media type string used is:') +
                       ' ' + mtype)
                 media_controller.play_media(
-                        'http://' + localip + ':5000/stream',
+                        'http://' + localip + ':' + self.port + '/stream',
                         mtype,
                         title=self.title
                         )
@@ -391,7 +392,8 @@ class casting(object):
                 self.r.start()
         except AttributeError:
             self.sonos = self.cast_to
-            self.sonos.play_uri('x-rincon-mp3radio://' + localip + ':5000/stream', title=self.title)
+            self.sonos.play_uri('x-rincon-mp3radio://' + localip + ':'
+                    + self.port + '/stream', title=self.title)
             if self.tray is True:
                 self.cast = self.sonos
 

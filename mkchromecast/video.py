@@ -39,6 +39,7 @@ debug = mkchromecast.__init__.debug
 sourceurl = mkchromecast.__init__.sourceurl
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
+port = mkchromecast.__init__.port
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -220,7 +221,7 @@ def stream():
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host='0.0.0.0', threaded=True)
+    app.run(host='0.0.0.0', port=port, threaded=True)
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):

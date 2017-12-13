@@ -240,6 +240,22 @@ parser.add_argument(
     '''
     )
 
+parser.add_argument(
+    '-p',
+    '--port',
+    type=int,
+    default='5000',
+    help='''
+    Set the listening port for local webserver.
+
+    Example:
+
+    ffmpeg:
+        python mkchromecast.py --encoder-backend ffmpeg -p 5100
+
+    '''
+    )
+
 
 parser.add_argument(
     '-r',
@@ -543,8 +559,9 @@ input_file = args.input_file
 sourceurl = args.source_url
 subtitles = args.subtitles
 hijack = args.hijack
-
 ccname = args.name
+port = args.port
+
 if debug is True:
     print('Google Cast name: %s.' % ccname)
 
