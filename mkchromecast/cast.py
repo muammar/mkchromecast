@@ -57,6 +57,7 @@ class casting(object):
         self.hijack = mkchromecast.__init__.hijack
         self.tries = mkchromecast.__init__.tries
         self.port = mkchromecast.__init__.port
+        self.port = str(self.port)
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
         if self.host is None:
