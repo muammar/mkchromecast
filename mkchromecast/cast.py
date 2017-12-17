@@ -158,8 +158,8 @@ class casting(object):
             print(' ')
             print(colors.important('List of Devices Available in Network:'))
             print(colors.important('-------------------------------------\n'))
-            print(colors.important('Index \tTypes \tFriendly Name '))
-            print(colors.important('===== \t===== \t============= '))
+            print(colors.important('Index   Types   Friendly Name '))
+            print(colors.important('=====   =====   ============= '))
             self.availablecc()
             print(' ')
             if self.discover is False:
@@ -183,8 +183,8 @@ class casting(object):
                 print(' ')
                 print(colors.important('List of Devices Available in Network:'))
                 print(colors.important('-------------------------------------\n'))
-                print(colors.important('Index \tTypes \tFriendly Name '))
-                print(colors.important('===== \t===== \t============= '))
+                print(colors.important('Index   Types   Friendly Name '))
+                print(colors.important('=====   =====   ============= '))
                 self.availablecc()
             else:
                 if self.debug is True:
@@ -207,8 +207,8 @@ class casting(object):
                 print(' ')
                 print(colors.important('List of Devices Available in Network:'))
                 print(colors.important('-------------------------------------\n'))
-                print(colors.important('Index \tTypes \tFriendly Name '))
-                print(colors.important('===== \t===== \t============= '))
+                print(colors.important('Index   Types   Friendly Name '))
+                print(colors.important('=====   =====   ============= '))
                 self.availablecc()
             else:
                 if self.debug is True:
