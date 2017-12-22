@@ -19,6 +19,8 @@
     - Allow custom server port with ffmpeg or avconv. Related to #122.
     - Error with "width not divisible by 2 (853x480)". Closes issue #119.
     - The `segment_time` flag has been fixed. Closes issue #71.
+    - New flag `command` for setting a custom ffmpeg command. Closes issue
+      #109.
 
 * mkchromecast (0.3.7.1) **2017/05/21**
 

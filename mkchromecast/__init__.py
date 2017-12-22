@@ -132,6 +132,21 @@ parser.add_argument(
     )
 
 parser.add_argument(
+    '--command',
+    type=str,
+    default=None,
+    help='''
+    Set a ffmpeg or avconv command for streaming video.
+
+    Example:
+        python mkchromecast.py --command 'ffmpeg -f video4linux2 -i /dev/video0 -f ogg pipe:1'
+
+    Note that for the output you have to use pipe:1 to stream. This option only
+    works for the ffmpeg, avconv backends.
+    '''
+    )
+
+parser.add_argument(
     '--config',
     action='store_true',
     help='''
@@ -255,7 +270,6 @@ parser.add_argument(
 
     '''
     )
-
 
 parser.add_argument(
     '-r',
@@ -562,6 +576,7 @@ hijack = args.hijack
 ccname = args.name
 port = args.port
 
+
 if debug is True:
     print('Google Cast name: %s.' % ccname)
 
@@ -695,6 +710,21 @@ else:
         for codec in codecs:
             print('- %s.' % codec)
         sys.exit(0)
+
+
+"""
+Command
+"""
+if args.command is not None and args.video is True:
+    safe_commands = ['ffmpeg', 'avconv']
+    command = args.command.split(' ')
+    if command[0] not in safe_commands:
+        print(colors.error('Refusing to execute this.'))
+        sys.exit(0)
+elif args.command is None and args.video is True:
+    command = args.command
+elif args.command is not None and args.video is False:
+    print(colors.warning('The --command option only works for video.'))
 
 """
 Resolution

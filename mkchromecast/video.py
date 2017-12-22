@@ -30,6 +30,7 @@ appendtourl = 'stream'
 USER = getpass.getuser()
 
 chunk_size = mkchromecast.__init__.chunk_size
+user_command = mkchromecast.__init__.command
 platform = mkchromecast.__init__.platform
 subtitles = mkchromecast.__init__.subtitles
 input_file = mkchromecast.__init__.input_file
@@ -166,6 +167,9 @@ else:
             'pipe:1'
         ]
 
+    if user_command is not None:
+        command = user_command
+
     if seek != None:
         seeking(seek)
 
@@ -174,6 +178,7 @@ else:
         command.insert(command.index('panic'),  '-loglevel')
 
     mtype = 'video/mp4'
+
     if res != None:
         cindex = command.index(input_file)
         res_elements = resolution(res, screencast)
