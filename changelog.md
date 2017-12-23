@@ -1,5 +1,6 @@
-* mkchromecast (0.3.8) **UNRELEASED**
+* mkchromecast (0.3.8) **2017/12/23**
 
+    - Improved stability.
     - The macOS bundle is now renamed with capital M, and will not be showing
       in the dock.
     - Chunk size changed from 1024 to 64. Added two more variables that
