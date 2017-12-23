@@ -5,28 +5,26 @@
 
 from __future__ import division
 import mkchromecast.__init__
-from mkchromecast.audio_devices import *
-from mkchromecast.cast import *
-from mkchromecast.config import *
+from mkchromecast.audio_devices import inputint, outputint
+from mkchromecast.cast import casting
+from mkchromecast.config import config_manager
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.node import *
 import mkchromecast.preferences
-from mkchromecast.pulseaudio import *
+import mkchromecast.colors as colors
+from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.utils import del_tmp
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot, Qt)
-from PyQt5.QtWidgets import (QWidget, QSlider, QLabel, QApplication,
-                             QMessageBox, QMainWindow)
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, Qt
+from PyQt5.QtWidgets import QWidget, QMessageBox
 import pychromecast
+import socket
 from pychromecast.dial import reboot
 import signal
 import os.path
 import psutil
 import pickle
 import subprocess
-import threading
 from os import getpid
 """
 Configparser is imported differently in Python3
@@ -556,7 +554,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.kill_child()
             except psutil.NoSuchProcess:
                 pass
-            checkmktmp()
+            mkchromecast.__init__.checkmktmp()
             self.search_cast()
 
             # This is to retry when stopping and
@@ -576,7 +574,7 @@ class menubar(QtWidgets.QMainWindow):
             self.read_config()
 
             if platform == 'Darwin' and self.notifications == 'enabled':
-                if self.pcastfailed == True:
+                if self.pcastfailed is True:
                     stop = [
                         './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
                         '-group',
@@ -629,14 +627,15 @@ class menubar(QtWidgets.QMainWindow):
         self.sl.setGeometry(
                 30 * self.scale_factor,
                 40 * self.scale_factor,
-               260 * self.scale_factor,
+                260 * self.scale_factor,
                 70 * self.scale_factor
                 )
         self.sl.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         try:
             self.maxvolset = 100
             self.sl.setMaximum(self.maxvolset)
-            self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset), 1))
+            self.sl.setValue(round((self.cast.status.volume_level*self.maxvolset),
+                             1))
         except AttributeError:
             self.maxvolset = 100
             self.sl.setMaximum(self.maxvolset)
@@ -900,5 +899,6 @@ def main():
     menubar()
 
 if __name__ == '__main__':
-    checkmktmp()
+    import sys
+    mkchromecast.__init__.checkmktmp()
     main()

@@ -5,6 +5,7 @@
 import subprocess
 import time
 
+
 def create_sink():
     sink_name = 'Mkchromecast'
 
@@ -39,6 +40,7 @@ def create_sink():
     rsoutput, rserror = rs.communicate()
     return
 
+
 def remove_sink():
     remove_sink = [
         'pactl',
@@ -53,6 +55,7 @@ def remove_sink():
             )
     rmsoutput, rmserror = rms.communicate()
     return
+
 
 def check_sink():
     check_sink = [

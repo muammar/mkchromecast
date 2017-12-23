@@ -3,10 +3,9 @@
 # This file is part of mkchromecast.
 
 from __future__ import print_function
-from mkchromecast.__init__ import *
-from mkchromecast.audio_devices import *
+from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.config import *
+from mkchromecast.__init__ import checkmktmp, args
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate
 from mkchromecast.pulseaudio import remove_sink
@@ -17,7 +16,6 @@ import socket
 import os.path
 import pickle
 import subprocess
-import mkchromecast.colors as colors
 from threading import Thread
 
 """
@@ -130,18 +128,16 @@ class casting(object):
     Cast processes
     """
     def initialize_cast(self):
-        import mkchromecast.__init__
         # This fixes the `No handlers could be found for logger
         # "pychromecast.socket_client` warning"`.
         # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         from pychromecast import socket_client
         self.cclist = self._get_chromecasts()
-        self.cclist = [[index, _, 'Gcast'] for index, _ in enumerate(self.cclist)]
+        self.cclist = [[i, _, 'Gcast'] for i, _ in enumerate(self.cclist)]
 
         if sonos is True:
             try:
                 self.sonos_list = list(soco.discover())
-                length = len(self.cclist)
                 for self.index, device in enumerate(self.sonos_list):
                     add_sonos = [self.index, device, 'Sonos']
                     self.cclist.append(add_sonos)
@@ -336,11 +332,12 @@ class casting(object):
             if self.tray is True:
                 config = ConfigParser.RawConfigParser()
                 # Class from mkchromecast.config
+                from mkchromecast.config import config_manager
                 configurations = config_manager()
                 configf = configurations.configf
 
                 if os.path.exists(configf) and self.tray is True:
-                    print(tray)
+                    print(self.tray)
                     print(colors.warning('Configuration file exists'))
                     print(colors.warning('Using defaults set there'))
                     config.read(configf)
@@ -393,8 +390,9 @@ class casting(object):
                 self.r.start()
         except AttributeError:
             self.sonos = self.cast_to
-            self.sonos.play_uri('x-rincon-mp3radio://' + localip + ':'
-                    + self.port + '/stream', title=self.title)
+            self.sonos.play_uri('x-rincon-mp3radio://' + localip +
+                                ':' + self.port + '/stream',
+                                title=self.title)
             if self.tray is True:
                 self.cast = self.sonos
 
@@ -478,13 +476,14 @@ class casting(object):
         try:
             while self.r.is_alive():
                 self._hijack_cc_()
-                time.sleep(5)   # FIXME: I think that this has to be set by users.
+                # FIXME: I think that this has to be set by users.
+                time.sleep(5)
         except KeyboardInterrupt:
             self.stop_cast()
-            if platform == 'Darwin':
+            if self.platform == 'Darwin':
                 inputint()
                 outputint()
-            elif platform == 'Linux' and adevice is None:
+            elif self.platform == 'Linux' and self.adevice is None:
                 remove_sink()
             terminate()
 
@@ -516,7 +515,7 @@ def ping_chromecast(ip):
     Credits: http://stackoverflow.com/a/34455969/1995261
     """
     try:
-        output = subprocess.check_output("ping -c 1 " + ip, shell=True)
+        subprocess.check_output("ping -c 1 " + ip, shell=True)
     except:
         return False
     return True

@@ -34,8 +34,8 @@ class mk(object):
         self.control = mkchromecast.__init__.control
 
         self.cc = casting()
-        checkmktmp()
-        writePidFile()
+        mkchromecast.__init__.checkmktmp()
+        mkchromecast.__init__.writePidFile()
 
         """
         Initializing backend array
@@ -61,7 +61,7 @@ class mk(object):
     def audio_linux(self):
         """This method manages all related to casting audio in Linux"""
         if self.youtubeurl is None and self.source_url is None:
-            if adevice is None:
+            if self.adevice is None:
                 print('Creating Pulseaudio Sink...')
                 print(colors.warning('Open Pavucontrol and Select the '
                       'Mkchromecast Sink.'))
@@ -171,10 +171,10 @@ class mk(object):
     def terminate_app(self):
         """Terminate the app (kill app)"""
         self.cc.stop_cast()
-        if platform == 'Darwin':
+        if self.platform == 'Darwin':
             inputint()
             outputint()
-        elif platform == 'Linux' and adevice is None:
+        elif self.platform == 'Linux' and self.adevice is None:
             remove_sink()
         terminate()
 
@@ -186,7 +186,7 @@ class mk(object):
         print('')
         print(colors.options(           'Volume Up:')+' u')
         print(colors.options(         'Volume Down:')+' d')
-        if videoarg is True:
+        if self.videoarg is True:
             print(colors.options(       'Pause Casting:')+' p')
             print(colors.options(      'Resume Casting:')+' r')
         print(colors.options('Quit the Application:')+' q or Ctrl-C')
@@ -194,7 +194,7 @@ class mk(object):
 
     def show_control(self, control):
         """Method to show controls"""
-        if control is True:
+        if self.control is True:
             from mkchromecast.getch import getch, pause
 
             self.controls_msg()
@@ -275,8 +275,8 @@ class mk(object):
     def start_tray(self):
         """This method starts the system tray"""
         import mkchromecast.systray
-        checkmktmp()
-        writePidFile()
+        mkchromecast.__init__.checkmktmp()
+        mkchromecast.__init__.writePidFile()
         mkchromecast.systray.main()
 
 if __name__ == "__main__":

@@ -17,14 +17,16 @@ To call them:
     name()
 """
 
+
 def terminate():
     del_tmp()
     parent_pid = getpid()
     parent = psutil.Process(parent_pid)
-    for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+    for child in parent.children(recursive=True):
         child.kill()
     parent.kill()
     return
+
 
 def del_tmp():
     """Delete files created in /tmp/"""
@@ -33,7 +35,7 @@ def del_tmp():
     print(colors.important('Cleaning up /tmp/...'))
 
     for f in delete_me:
-        if os.path.exists(f) == True:
+        if os.path.exists(f) is True:
             os.remove(f)
 
     print(colors.success('[Done]'))
@@ -45,13 +47,14 @@ def is_installed(name, path, debug):
     iterate = PATH.split(':')
     for item in iterate:
         verifyif = str(item + '/' + name)
-        if os.path.exists(verifyif) == False:
+        if os.path.exists(verifyif) is False:
             continue
         else:
-            if debug == True:
+            if debug is True:
                 print('Program %s found in %s.' % (name, verifyif))
             return True
     return
+
 
 def check_url(url):
     """Check if a URL is correct"""

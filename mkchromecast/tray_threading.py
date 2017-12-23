@@ -3,18 +3,17 @@
 # This file is part of mkchromecast.
 
 import mkchromecast.__init__
-from mkchromecast.audio_devices import *
-from mkchromecast.cast import *
-from mkchromecast.config import *
+from mkchromecast.audio_devices import inputdev, outputdev
+from mkchromecast.cast import casting
+from mkchromecast.config import config_manager
 import mkchromecast.audio
-from mkchromecast.node import *
+from mkchromecast.node import stream
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
-from mkchromecast.systray import *
-from PyQt5.QtCore import (QThread, QObject, pyqtSignal, pyqtSlot)
+from PyQt5.QtCore import (QObject, pyqtSignal, pyqtSlot)
 import os.path
-import pickle
-import pychromecast
+import socket
+import mkchromecast.colors as colors
 """
 Configparser is imported differently in Python3
 """

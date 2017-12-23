@@ -12,6 +12,7 @@ resolutions = {
         '4k': ('scale=4096:-1', '4096x2160')
         }
 
+
 def resolution(res, screencast):
         res = resolutions[res.lower()]
         if not screencast:

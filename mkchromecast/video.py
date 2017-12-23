@@ -7,11 +7,9 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
-from mkchromecast.audio_devices import *
+from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.config import *
 from mkchromecast.utils import terminate, is_installed
-from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.resolution import resolution
 import psutil
 import getpass
@@ -20,7 +18,7 @@ import sys
 import time
 from functools import partial
 from subprocess import Popen, PIPE
-from flask import Flask, Response, request
+from flask import Flask, Response
 import multiprocessing
 import threading
 import os
@@ -51,14 +49,14 @@ except AttributeError:
 def seeking(seek):
     seek_append = ['-ss', seek]
     for i, _ in enumerate(seek_append):
-       command.insert(i + 1, _)
+        command.insert(i + 1, _)
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
 I think that the command below is sending a file that is too big and the
 browser closes the connection.
 """
-if youtubeurl != None:
+if youtubeurl is not None:
     command = [
         'youtube-dl',
         '-o',
@@ -67,8 +65,8 @@ if youtubeurl != None:
         ]
     mtype = 'video/mp4'
 
-elif screencast == True:
-    if res == None:
+elif screencast is True:
+    if res is None:
         screen_size = resolution('1080p', screencast)
     else:
         screen_size = resolution(res, screencast)
@@ -84,8 +82,8 @@ elif screencast == True:
             '-maxrate', '10000k',
             '-bufsize', '20000k',
             '-pix_fmt', 'yuv420p',
-            '-g', '60', #'-c:a', 'copy', '-ac', '2',
-            #'-b', '900k',
+            '-g', '60',  # '-c:a', 'copy', '-ac', '2',
+            # '-b', '900k',
             '-f', 'mp4',
             '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
@@ -96,7 +94,7 @@ else:
     """
     The blocks shown below are related to input_files
     """
-    if input_file != None and subtitles == None:
+    if input_file is not None and subtitles is None:
         """
         command = [
             'ffmpeg',
@@ -111,7 +109,8 @@ else:
             'pipe:1'
          ]
         """
-        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        # Command taken from
+        # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
             'ffmpeg',
             '-re',
@@ -123,15 +122,15 @@ else:
             '-maxrate', '10000k',
             '-bufsize', '20000k',
             '-pix_fmt', 'yuv420p',
-            '-g', '60', #'-c:a', 'copy', '-ac', '2',
-            #'-b', '900k',
+            '-g', '60',  # '-c:a', 'copy', '-ac', '2',
+            # '-b', '900k',
             '-f', 'mp4',
             '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
 
-    elif input_file != None and subtitles != None:
+    elif input_file is not None and subtitles is not None:
         """
         command = [
             'ffmpeg',
@@ -146,7 +145,8 @@ else:
             'pipe:1'
         ]
         """
-        # Command taken from https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        # Command taken from
+        # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
             'ffmpeg',
             '-re',
@@ -158,8 +158,8 @@ else:
             '-maxrate', '10000k',
             '-bufsize', '20000k',
             '-pix_fmt', 'yuv420p',
-            '-g', '60', #'-c:a', 'copy', '-ac', '2',
-            #'-b', '900k',
+            '-g', '60',  # '-c:a', 'copy', '-ac', '2',
+            # '-b', '900k',
             '-f', 'mp4',
             '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
@@ -170,16 +170,16 @@ else:
     if user_command is not None:
         command = user_command
 
-    if seek != None:
+    if seek is not None:
         seeking(seek)
 
-    if debug == False and sourceurl == None:
+    if debug is False and sourceurl is None:
         command.insert(command.index('-i'), 'panic')
         command.insert(command.index('panic'),  '-loglevel')
 
     mtype = 'video/mp4'
 
-    if res != None:
+    if res is not None:
         cindex = command.index(input_file)
         res_elements = resolution(res, screencast)
         for element in res_elements:
@@ -187,8 +187,9 @@ else:
 
 app = Flask(__name__)
 
-if debug == True:
+if debug is True:
     print(':::ffmpeg::: command: %s.' % command)
+
 
 @app.route('/')
 def index():
@@ -217,16 +218,20 @@ def shutdown():
     return 'Server shutting down...'
 
 """
+
+
 @app.route('/' + appendtourl)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
     read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
     return Response(iter(read_chunk, b''), mimetype=mtype)
 
+
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
     app.run(host='0.0.0.0', port=port, threaded=True)
+
 
 class multi_proc(object):       # I launch ffmpeg in a different process
     def __init__(self):
@@ -241,6 +246,8 @@ application stops.
 A normal running of mkchromecast will have 2 threads in the streaming process
 when ffmpeg is used.
 """
+
+
 class monitor(object):
     def __init__(self):
         self.monitor_d = threading.Thread(target=monitor_daemon)
@@ -249,26 +256,30 @@ class monitor(object):
     def start(self):
         self.monitor_d.start()
 
+
 def monitor_daemon():
     f = open('/tmp/mkchromecast.pid', 'rb')
-    pidnumber=int(pickle.load(f))
+    pidnumber = int(pickle.load(f))
     print(colors.options('PID of main process:') + ' ' + str(pidnumber))
 
-    localpid=getpid()
+    localpid = getpid()
     print(colors.options('PID of streaming process:') + ' ' + str(localpid))
 
-    while psutil.pid_exists(localpid) == True:
+    while psutil.pid_exists(localpid) is True:
         try:
             time.sleep(0.5)
-            if psutil.pid_exists(pidnumber) == False:   # With this I ensure that if the main app fails, everything
-                if platform == 'Darwin':                # will get back to normal
+            # With this I ensure that if the main app fails, everything# With
+            # this I ensure that if the main app fails, everything
+            # will get back to normal
+            if psutil.pid_exists(pidnumber) is False:
+                if platform == 'Darwin':
                     inputint()
                     outputint()
                 else:
                     from mkchromecast.pulseaudio import remove_sink
                     remove_sink()
                 parent = psutil.Process(localpid)
-                for child in parent.children(recursive=True):  # or parent.children() for recursive=False
+                for child in parent.children(recursive=True):
                     child.kill()
                 parent.kill()
         except KeyboardInterrupt:
@@ -281,6 +292,7 @@ def monitor_daemon():
             print('OSError')
             sys.exit(0)
 
+
 def main():
     if encoder_backend != 'node':
         st = multi_proc()
@@ -288,24 +300,27 @@ def main():
     else:
         print('Starting Node')
         if platform == 'Darwin':
-            PATH ='./bin:./nodejs/bin:/Users/'+str(USER)+'/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:'+ os.environ['PATH']
+            PATH = './bin:./nodejs/bin:/Users/' + \
+                   str(USER) + \
+                   '/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' + \
+                   os.environ['PATH']
         else:
             PATH = os.environ['PATH']
 
-        if debug == True:
+        if debug is True:
             print('PATH = %s.' % PATH)
 
-        if platform == 'Darwin' and os.path.exists('./bin/node') == True:
+        if platform == 'Darwin' and os.path.exists('./bin/node') is True:
             webcast = [
                 './bin/node',
                 './nodejs/html5-video-streamer.js',
                 input_file
                 ]
         elif platform == 'Linux':
-            node_names =['node', 'nodejs']
+            node_names = ['node', 'nodejs']
             nodejs_dir = ['./nodejs/', '/usr/share/mkchromecast/nodejs/']
             for name in node_names:
-                if is_installed(name, PATH, debug) == True:
+                if is_installed(name, PATH, debug) is True:
                     for path in nodejs_dir:
                         if os.path.isdir(path):
                             path = path + 'html5-video-streamer.js'
@@ -316,8 +331,9 @@ def main():
                                 ]
                             break
         try:
-            p = subprocess.Popen(webcast)
+            Popen(webcast)
         except:
-            print(colors.warning('Nodejs is not installed in your system. Please, install it to use this backend.'))
+            print(colors.warning('Nodejs is not installed in your system. '
+                  'Please, install it to use this backend.'))
             print(colors.warning('Closing the application...'))
             terminate()

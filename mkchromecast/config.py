@@ -4,15 +4,17 @@
 """
 Configparser is imported differently in Python3
 """
-import mkchromecast.__init__        # This is to verify against some needed variables
+import os
+import getpass
+import mkchromecast.__init__
 try:
     import ConfigParser
 except ImportError:
-    import configparser as ConfigParser # This is for Python3
-import os, getpass
+    import configparser as ConfigParser  # Python3
 
 platform = mkchromecast.__init__.platform
 debug = mkchromecast.__init__.debug
+
 
 class config_manager(object):
     def __init__(self):
@@ -38,13 +40,15 @@ class config_manager(object):
         # Writing our configuration file
 
         """
-        Depeding the platform we create the configuration directory in different
-        locations.
+        Depeding the platform we create the configuration directory in
+        different locations.
         """
         if platform == 'Darwin':
-            self.directory = '/Users/' + self.user + '/Library/Application Support/mkchromecast/'
+            self.directory = '/Users/' + self.user + \
+                             '/Library/Application Support/mkchromecast/'
         else:
-            self.directory = '/home/' + self.user + '/.config/mkchromecast/'      #Linux
+            self.directory = '/home/' + self.user + \
+                             '/.config/mkchromecast/'  # Linux
         self.configf = self.directory + 'mkchromecast.cfg'
 
     def config_defaults(self):
@@ -105,16 +109,17 @@ class config_manager(object):
             try:
                 e = ConfigSectionMap('settings')[str(e)]
             except KeyError:
-                if debug == True:
-                    print(':::config::: the setting %s is not correctly set. Defaults added.' % e)
+                if debug is True:
+                    print(':::config::: the setting %s is not correctly set. '
+                          'Defaults added.' % e)
                 self.config.set('settings', str(e), self.defaultconf[e])
                 with open(self.configf, 'w') as configfile:
                     self.config.write(configfile)
 
         backend = ConfigSectionMap('settings')['backend']
-        codec= ConfigSectionMap('settings')['codec']
+        codec = ConfigSectionMap('settings')['codec']
         bitrate = ConfigSectionMap('settings')['bitrate']
-        samplerate= ConfigSectionMap('settings')['samplerate']
+        samplerate = ConfigSectionMap('settings')['samplerate']
         notifications = ConfigSectionMap('settings')['notifications']
         colors = ConfigSectionMap('settings')['colors']
         searchatlaunch = ConfigSectionMap('settings')['searchatlaunch']
@@ -137,9 +142,11 @@ class config_manager(object):
                 self.config.set('settings', 'codec', str(codec))
                 self.config.set('settings', 'bitrate', '192')
                 self.config.set('settings', 'samplerate', str(samplerate))
-                self.config.set('settings', 'notifications', str(notifications))
+                self.config.set('settings', 'notifications',
+                                str(notifications))
                 self.config.set('settings', 'colors', str(colors))
-                self.config.set('settings', 'searchatlaunch', str(searchatlaunch))
+                self.config.set('settings', 'searchatlaunch',
+                                str(searchatlaunch))
                 self.config.set('settings', 'alsadevice', str(alsadevice))
 
             with open(self.configf, 'w') as configfile:

@@ -10,13 +10,12 @@ To call them:
 """
 
 import mkchromecast.__init__
-from mkchromecast.audio_devices import *
+from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.cast import *
-from mkchromecast.config import *
+from mkchromecast.cast import casting
+from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
-import argparse
 import subprocess
 import multiprocessing
 import time
