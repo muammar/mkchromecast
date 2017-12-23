@@ -3,7 +3,7 @@ Upstream-Name: mkchromecast
 Source: http://mkchromecast.com
 
 Files: *
-Copyright: 2016-2017 Muammar El Khatib <muammarelkhatib@gmail.com>
+Copyright: 2016-2018 Muammar El Khatib <muammarelkhatib@gmail.com>
 License: MIT
 
 Files: mkchromecast/getch/*
