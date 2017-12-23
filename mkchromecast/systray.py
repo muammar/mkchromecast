@@ -26,6 +26,7 @@ import psutil
 import pickle
 import subprocess
 from os import getpid
+import sys
 """
 Configparser is imported differently in Python3
 """
@@ -899,6 +900,5 @@ def main():
     menubar()
 
 if __name__ == '__main__':
-    import sys
     mkchromecast.__init__.checkmktmp()
     main()
