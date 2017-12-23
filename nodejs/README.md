@@ -18,3 +18,6 @@ Example:
 ```
 
 This will install the package at `mkchromecast/nodejs/node-$version`.
+
+**Note**: I am now just using node shipped by Homebrew. I might remove this in
+the future.

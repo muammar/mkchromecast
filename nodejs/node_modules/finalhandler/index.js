@@ -89,7 +89,7 @@ function finalhandler (req, res, options) {
     var status
 
     // ignore 404 on in-flight response
-    if (!err && res._header) {
+    if (!err && headersSent(res)) {
       debug('cannot 404 after headers sent')
       return
     }
@@ -125,7 +125,7 @@ function finalhandler (req, res, options) {
     }
 
     // cannot actually respond
-    if (res._header) {
+    if (headersSent(res)) {
       debug('cannot %d after headers sent', status)
       req.socket.destroy()
       return
@@ -225,6 +225,20 @@ function getResponseStatusCode (res) {
   }
 
   return status
+}
+
+/**
+ * Determine if the response headers have been sent.
+ *
+ * @param {object} res
+ * @returns {boolean}
+ * @private
+ */
+
+function headersSent (res) {
+  return typeof res.headersSent !== 'boolean'
+    ? Boolean(res._header)
+    : res.headersSent
 }
 
 /**

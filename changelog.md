@@ -1,3 +1,28 @@
+* mkchromecast (0.3.8) **2017/12/23**
+
+    - Improved stability.
+    - The macOS bundle is now renamed with capital M, and will not be showing
+      in the dock.
+    - Chunk size changed from 1024 to 64. Added two more variables that
+      decreases the delay considerably.
+    - Improved ffmpeg commands for pulseaudio part of the code.
+    - node streaming updated to work with `node v9.3.0`.
+    - Manpage is now shipped in main branches.
+    - TypeError caused by a print statement for Soco devices has been fixed.
+      Closes #80.
+    - Added Opus codec support.
+    - It is now possible to screencast using mkchromecast.
+    - Using the `--youtube` flag works with all supported websites by youtube-dl.
+    - Correct signal handling using the `signal` module. PR #87 by @Foxboron.
+    - Renamed `--reconnect` to `--hijack`. Closes #25.
+    - New flag `tries` to to limit the number of tries to connect to
+      a chromecast. Closes #54.
+    - Allow custom server port with ffmpeg or avconv. Related to #122.
+    - Error with "width not divisible by 2 (853x480)". Closes issue #119.
+    - The `segment_time` flag has been fixed. Closes issue #71.
+    - New flag `command` for setting a custom ffmpeg command. Closes issue
+      #109.
+
 * mkchromecast (0.3.7.1) **2017/05/21**
 
     - macOS bundle built in Yosemite to add more compatibility.
@@ -276,4 +301,3 @@
 
     - In this beta release, the program casts to the first google cast found in
       the list. If the node streaming server fails, the program reconnects.
-
