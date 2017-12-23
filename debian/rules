@@ -10,7 +10,7 @@ export DH_VERBOSE = 1
 export PYBUILD_NAME=mkchromecast
 
 %:
-	dh $@  --with python2
+	dh $@  --with python3
 
 override_dh_auto_build:
 	touch build
@@ -20,7 +20,7 @@ override_dh_auto_test:
 
 override_dh_install:
 	dh_install
-	dh_python2
+	dh_python3
 	chmod +x debian/mkchromecast/usr/share/mkchromecast/mkchromecast.py
 
 override_dh_auto_clean:

@@ -1,4 +1,4 @@
-mkchromecast for Debian
+Mkchromecast for Debian
 ----------------------
 
 Using this program
@@ -14,9 +14,9 @@ The user interaction from console works as follows:
     1. Execute mkchromecast as a local user.
     2. After startup, the program will detect your google cast devices in your
        LAN that you can select to cast.
-    3. A new sink called mkchromecast is created that need to be selected in
+    3. A new sink called Mkchromecast is created that need to be selected in
        pavucontrol to cast audio (for Pulseaudio users only).
-    4. If you stop mkchromecast, the audio will be back sent to the default
+    4. If you stop Mkchromecast, the audio will be back sent to the default
        playback device.
 
 
@@ -25,7 +25,7 @@ ALSA users
 
 You need to install mkchromecast-alsa to pull the needed dependencies.
 
-mkchromecast can cast to google cast without the need of pulseaudio. One
+Mkchromecast can cast to google cast without the need of pulseaudio. One
 advantage I have seen, is that delay is maximum 4 seconds. For that, you have
 to use the ffmpeg or avconv backends together with the mkhcromecast's
 `--alsa-device` flag.  You also need to install mkchromecast-alsa to pull the
@@ -33,13 +33,13 @@ needed dependencies.
 
 Example:
 
-    python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
+    mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
 
 However, unlike Pulseaudio users, some previous configuration is mandatory. We
 will try to figure out how to build the hw:X1,Y1 alsa device needed to complete
 a .asoundrc configuration file, and the virtual alsa device hw:X2,Y2 needed by
-the --alsa-device flag in mkchromecast. It seems that always Y1 has to be
+the --alsa-device flag in Mkchromecast. It seems that always Y1 has to be
 0 while Y2 is 1.
 
 How to determine hw:X1,Y1
@@ -149,7 +149,7 @@ We now need to load the snd-aloop module:
 ```
 
 This will create a new virtual device called Loopback that we above referenced
-as hw:X2,Y2 and we will pass it to the --alsa-device flag of mkchromecast:
+as hw:X2,Y2 and we will pass it to the --alsa-device flag of Mkchromecast:
 
 
 ```
@@ -167,10 +167,10 @@ As it can be seen, Loopback has an index X2 equals 2. This device is then
 hw:2,1. This won't survive reboot. If you want to make this permanent, add
 snd-aloop to /etc/modules.
 
-Now we can execute mkchromecast passing all desired parameters:
+Now we can execute Mkchromecast passing all desired parameters:
 
 ```
-    python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1 -c aac --volume
+    mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1 -c aac --volume
 ```
 
 Happy Casting!
@@ -187,6 +187,7 @@ Supported encoders
 | flac    | Free Lossless Audio Codec    | flac       |
 | sox     | Waveform Audio File Format   | wav        |
 | faac    | Advanced Audio Coding        | aac        |
+| opus    | Opus Interactive Audio Codec | opus       |
 +---------+------------------------------+------------+
 
 Note: faac is not added as dependency to the Debian package, but you can
