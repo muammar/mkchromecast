@@ -139,7 +139,11 @@ parser.add_argument(
     Set a ffmpeg or avconv command for streaming video.
 
     Example:
-        python mkchromecast.py --video --command 'ffmpeg -f video4linux2 -i /dev/video0 -f ogg pipe:1'
+        python3 mkchromecast.py --video --command 'ffmpeg -re -i \
+        /path/to/myvideo.mp4 -map_chapters -1 -vcodec libx264 -preset ultrafast \
+        -tune zerolatency -maxrate 10000k -bufsize 20000k -pix_fmt yuv420p -g \
+        60 -f mp4 -max_muxing_queue_size 9999 -movflags \
+        frag_keyframe+empty_moov pipe:1'
 
     Note that for the output you have to use pipe:1 to stream. This option only
     works for the ffmpeg, avconv backends.
