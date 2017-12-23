@@ -11,4 +11,4 @@ images/google_nodev_b.png       usr/share/mkchromecast/images
 images/google_w.png             usr/share/mkchromecast/images
 images/google_working_w.png     usr/share/mkchromecast/images
 images/google_nodev_w.png       usr/share/mkchromecast/images
-debian/mkchromecast.desktop     usr/share/applications
+mkchromecast.desktop     usr/share/applications
