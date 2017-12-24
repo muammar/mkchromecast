@@ -23,6 +23,7 @@ except ImportError:
     import configparser as ConfigParser
 
 platform = mkchromecast.__init__.platform
+tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 # Class from mkchromecast.config
@@ -52,6 +53,9 @@ class Worker(QObject):
             pass
         except TypeError:
             pass
+        except OSError:
+            self.cc.availablecc = []
+
         if len(self.cc.availablecc) == 0 and tray is True:
             availablecc = []
             self.intReady.emit(availablecc)
