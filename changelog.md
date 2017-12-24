@@ -1,3 +1,7 @@
+* mkchromecast (0.3.8.1) **2017/12/24**
+
+    - A bug when no devices where found has been fixed in this release.
+
 * mkchromecast (0.3.8) **2017/12/23**
 
     - Improved stability.

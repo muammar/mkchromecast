@@ -1,3 +1,9 @@
+mkchromecast (0.3.8.1-1) unstable; urgency=medium
+
+  * New upstream release fixing bug happening when no devices were found.
+
+ -- Muammar El Khatib <muammar@debian.org>  Sun, 24 Dec 2017 09:31:34 -0500
+
 mkchromecast (0.3.8-1) unstable; urgency=medium
 
   * New upstream release.
