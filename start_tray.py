@@ -9,6 +9,6 @@ from mkchromecast.utils import *
 import os.path, time
 import mkchromecast.systray
 
-checkmktmp()
-writePidFile()
+mkchromecast.__init__.checkmktmp()
+mkchromecast.__init__.writePidFile()
 mkchromecast.systray.main()
