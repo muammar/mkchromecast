@@ -1,8 +1,8 @@
-mkchromecast
+Mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
-[![node](https://img.shields.io/badge/node-7.10.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
+[![node](https://img.shields.io/badge/node-9.3.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
 
@@ -10,14 +10,14 @@ This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
 It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
-`ffmpeg`, or `avconv`.  **mkchromecast** is capable of using lossy and lossless
+`ffmpeg`, or `avconv`.  **Mkchromecast** is capable of using lossy and lossless
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
 playback](https://support.google.com/chromecast/answer/6329016?hl=en), and
  [24-bit/96kHz high audio resolution](https://github.com/muammar/mkchromecast#high-quality-audio).
 Additionally, a system tray menu is available.
 
-By default, **mkchromecast** streams with `node.js` (or `parec` in **Linux**)
+By default, **Mkchromecast** streams with `node.js` (or `parec` in **Linux**)
 together with `mp3` audio coding format at a sample rate of `44100Hz` and
 average bitrate of `192k`.  These defaults can be changed using the
 `--sample-rate` and `-b` flags. It is useful to modify these parameters when
@@ -37,10 +37,10 @@ backends.
 
 Tell me more about it
 ----------------------
-To have an idea of using **mkchromecast** from console [check this
+To have an idea of using **Mkchromecast** from console [check this
 gif](https://github.com/muammar/mkchromecast#usage).
 
-**mkchromecast** provides a **beta** system tray menu. It requires you to
+**Mkchromecast** provides a **beta** system tray menu. It requires you to
 install `PyQt5`. For more information check the
 [Requirements](https://github.com/muammar/mkchromecast#requirements) and
 [Install](https://github.com/muammar/mkchromecast#install) sections.
@@ -66,7 +66,7 @@ Sonos support
 --------------
 
 If you have Sonos speakers, you can play whatever you are listening to in your
-computer with **mkchromecast**. To add Sonos support, install the `soco` python
+computer with **Mkchromecast**. To add Sonos support, install the `soco` python
 module:
 
 ```
@@ -88,7 +88,7 @@ Requirements:
 
 #### macOS
 
-In order to use **mkchromecast** you need the following software to stream with
+In order to use **Mkchromecast** you need the following software to stream with
 `node.js`:
 
 * Python2 (already shipped in OS X), or Python3.
@@ -103,7 +103,8 @@ following:
 
 * flask (optional).
 * ffmpeg (optional).
-* youtube-dl (option if you plan to cast youtube URLs).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
 
 #### Linux
 
@@ -122,8 +123,9 @@ following:
 * ffmpeg (optional).
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (optional if you plan to cast youtube URLs).
-* soco (this module adds Sonos support to mkchromecast).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
+* soco (this module adds Sonos support to Mkchromecast).
 
 For those who don't like Pulseaudio, it is possible to [cast using
 ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA). In that case the
@@ -145,8 +147,9 @@ requirements are:
 * ffmpeg.
 * avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
-* youtube-dl (optional if you plan to cast youtube URLs).
-* soco (this module adds Sonos support to mkchromecast).
+* youtube-dl (option if you plan to cast youtube URLs or [supported
+  websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
+* soco (this module adds Sonos support to Mkchromecast).
 
 
 Install
@@ -185,12 +188,12 @@ here](https://github.com/muammar/mkchromecast/issues).
 * Debian (.deb): [https://packages.debian.org/mkchromecast](https://packages.debian.org/mkchromecast).
 * Ubuntu (.deb): [http://packages.ubuntu.com/search?keywords=mkchromecast](http://packages.ubuntu.com/search?keywords=mkchromecast).
 
-**mkchromecast** is available in the [official Debian
+**Mkchromecast** is available in the [official Debian
 repositories](https://packages.debian.org/mkchromecast). To install
 it, just do:
 
 ```
-apt-get install mkchromecast
+apt install mkchromecast
 ```
 
 Download the latest [deb package
@@ -198,15 +201,10 @@ here](https://github.com/muammar/mkchromecast/releases/), and install it as
 follows:
 
 ```
-sudo dpkg -i mkchromecast_$VERSION_all.deb
+sudo apt -f install ./mkchromecast_$VERSION_all.deb
 ```
 
-where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`. Then, if the dependencies are
-not available you have to do:
-
-```
-sudo apt-get -f install
-```
+where `$VERSION = X.Y.Z-Rev`, _e.g._: `0.2.6-1`.
 
 This should work in Debian Unstable and Testing. I would appreciate Ubuntu
 testers as well. If you find any problems, please [report it
@@ -230,7 +228,7 @@ apt-get install mkchromecast-pulseaudio (Pulseaudio users)
 
 #### From sources
 
-To install **mkchromecast**, clone this repository:
+To install **Mkchromecast**, clone this repository:
 
 ```
 git clone https://github.com/muammar/mkchromecast.git
@@ -241,7 +239,7 @@ here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 ##### Arch Linux
 
-mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
+Mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 
 ```bash
 #install with yaourt
@@ -324,15 +322,14 @@ Homebrew installed in your machine:
 
 Once Homebrew is ready, you can install `ffmpeg`.  As stated in the [ffmpeg
 website](https://trac.ffmpeg.org/wiki/CompilationGuide/MacOSX), and for being
-able to use all audio coding formats in **mkchromecast**, it is better to
+able to use all audio coding formats in **Mkchromecast**, it is better to
 install `ffmpeg` with the following options enabled:
 
 ```
-brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265
-
+brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265 --with-opus
 ```
 
-**mkchromecast** does not support `avconv` in **macOS**.
+**Mkchromecast** does not support `avconv` in **macOS**.
 
 ###### Linux
 
@@ -355,6 +352,7 @@ apt-get install libav-tools
   `mp3`                 | MPEG Audio Layer III (default)    | Lossy compression format (default bitrate: 192k)
   `ogg`                 | Ogg Vorbis                        | Lossy compression format (default bitrate: 192k)
   `aac`                 | Advanced Audio Coding (AAC)       | Lossy compression format (default bitrate: 192k)
+  `opus`                | Opus                              | Lossy compression format (default bitrate: 192k)
   `wav`                 | Waveform Audio File Format        | Lossless format (HQ sound)
   `flac`                | Free Lossless Audio Codec         | Lossless format (HQ sound)
 
@@ -398,14 +396,14 @@ or if you desire it you can do it yourself from the sources.
 Updating
 --------
 
-To update **mkchromecast** sources, just get into the cloned directory and:
+To update **Mkchromecast** sources, just get into the cloned directory and:
 
 ```
 git pull
 ```
 
 or if you prefer it, you can just pass the `--update` argument to
-**mkchromecast**:
+**Mkchromecast**:
 
 ```
 python mkchromecast.py --update
@@ -428,33 +426,33 @@ Usage
 
 #### Audio
 
-Get into the cloned **mkchromecast** directory and execute:
+Get into the cloned **Mkchromecast** directory and execute:
 
 ```
 python mkchromecast.py
 ```
 
-This will launch **mkchromecast** using `node.js` (or `parec` for **Linux**
+This will launch **Mkchromecast** using `node.js` (or `parec` for **Linux**
 users), and will do the streaming part together with the `mp3` audio coding
 format.  `node.js` works decently but the server may tend to _fail_ under certain
-circumstances. In such a case, **mkchromecast** is able to restart the
+circumstances. In such a case, **Mkchromecast** is able to restart the
 _streaming/casting_ process automatically. So, some hiccups are expected.
 
 **Note**: most of the steps described herein are the same for **macOS** and **Linux**
 users. However, if you launch the command above in **Linux**, the process is
 less automatized.  In **Linux**, you need to select with `pavucontrol` the sink
-called `mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).
+called `Mkchromecast` to stream unless you are using [ALSA](https://github.com/muammar/mkchromecast/wiki/ALSA).
 See the [wiki for more information](https://github.com/muammar/mkchromecast/wiki/Linux). tl;dr?, just
 check the gif below.
 
 ![Example of using mkchromecast](https://raw.githubusercontent.com/muammar/mkchromecast/master/images/mkchromecast_linux.gif)
 
 **Note**: the cast process is independent from the selection of the pulseaudio
-sink. This means that **mkchromecast** will tell the cast device to listen your
+sink. This means that **Mkchromecast** will tell the cast device to listen your
 computer but no sound will be heard until you select the sink. For ALSA users, this
 does not apply.
 
-##### Using the `ffmpeg` backend with **mkchromecast** installed from sources
+##### Using the `ffmpeg` backend with **Mkchromecast** installed from sources
 
 Below an example using `mp3`:
 
@@ -485,7 +483,7 @@ than one active network connection or when the automatically ip detection fails:
 python mkchromecast.py --host 192.168.1.1
 ```
 
-##### Other examples with **mkchromecast** installed using the debian package
+##### Other examples with **Mkchromecast** installed using the debian package
 
 To cast using `parec` and `wav` audio coding format:
 ```
@@ -507,7 +505,7 @@ mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
 **Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
 commands above.
 
-##### Using **mkchromecast** from the system tray
+##### Using **Mkchromecast** from the system tray
 
 To launch it:
 
@@ -526,7 +524,9 @@ here](https://github.com/muammar/mkchromecast#macos).
 
 #### Playing Youtube URLs in Google Cast devices
 
-You can play Youtube URLs headlessly from the command line:
+You can play Youtube URLs (or [other
+sites](https://rg3.github.io/youtube-dl/supportedsites.html) headlessly from
+the command line:
 
 ```
 python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
@@ -536,7 +536,8 @@ To use this function, you need to install `youtube-dl`. In macOS, this can be
 done with homebrew: `brew install youtube-dl`. In Debian based distros:
 `apt-get install youtube-dl`.
 
-**Note**: you may need to enclose the URL between quotation marks.
+**Note**: you may need to enclose the URL between quotation marks, and only
+URLs over `https` are supported.
 
 #### Playing source URLs in Google Cast devices
 
@@ -565,7 +566,7 @@ As it can be seen above, **the codec has to be specified with the `-c` flag**.
 #### Controlling the Google Cast's volume and pause/resume options
 
 You can control the volume of your Google Cast device by launching
-**mkchromecast** with the option `--control`:
+**Mkchromecast** with the option `--control`:
 
 ```
 python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --control
@@ -578,7 +579,7 @@ The system tray has a window with a volume slider to do `volume up` and `volume 
 
 #### High quality audio
 
-**mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This
+**Mkchromecast** lets you cast using `24-bit/96kHz` high audio resolution. This
 is the *maximum chromecast audio capability*. The supported codecs are: `wav`
 and `flac`. In spite of the fact that `aac` can use `96000Hz` sample rate, the
 bitrate corresponds to that of a lossy data compression format. Therefore, the
@@ -594,7 +595,7 @@ References:
 
 #### Video
 
-You can now cast videos to your Google cast using **mkchromecast**. This feature works both with `node`
+You can now cast videos to your Google cast using **Mkchromecast**. This feature works both with `node`
 and `ffmpeg` backends and from command line. In the future, they may be a graphical interface
 for this process. [See this project](https://github.com/muammar/mkchromecast/projects/1).
 
@@ -638,7 +639,7 @@ python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
 Killing the application
 -----------------------
 
-To kill **mkchromecast** when you run it from console, just press
+To kill **Mkchromecast** when you run it from console, just press
 <kbd>Ctrl-C</kbd> or <kbd>q</kbd> key to quit (when `--control` flag is passed).
 
 When launching from system tray, use the `Quit` button in the system tray.
@@ -663,7 +664,7 @@ Known issues
 ------------
 ##### General
 
-* **mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
+* **Mkchromecast**'s versions lower than 0.3.7 cannot operate with newer
   versions of pychromecast.
 * When casting videos using the `node` backend, it is not possible to
   use neither the `--subtitle` nor the `--seek` flags.
@@ -673,9 +674,7 @@ Known issues
 
 ##### macOS
 
-* It is not possible to create a macOS app with py2app. For more details see
-  [#36](https://github.com/muammar/mkchromecast/issues/36).
-* **mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
+* **Mkchromecast** v0.3.6 cannot connect to selected chromecast when there are
   more than one available. In that case, you need to use the application from
   sources or build the application as shown
   [here](https://github.com/muammar/mkchromecast/wiki/macOS-standalone-app).

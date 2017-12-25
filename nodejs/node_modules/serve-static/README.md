@@ -44,7 +44,7 @@ of the `Range` request header.
 ##### cacheControl
 
 Enable or disable setting `Cache-Control` response header, defaults to
-true. Disabling this will ignore the `maxAge` option.
+true. Disabling this will ignore the `immutable` and `maxAge` options.
 
 ##### dotfiles
 
@@ -92,6 +92,14 @@ short-circuiting 404s for less overhead. This middleware will also reply to
 all methods.
 
 The default value is `true`.
+
+##### immutable
+
+Enable or diable the `immutable` directive in the `Cache-Control` response
+header, defaults to `false`. If set to `true`, the `maxAge` option should
+also be specified to enable caching. The `immutable` directive will prevent
+supported clients from making conditional requests during the life of the
+`maxAge` option to check if the file has changed.
 
 ##### index
 

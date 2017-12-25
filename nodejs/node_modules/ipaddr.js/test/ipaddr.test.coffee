@@ -21,6 +21,7 @@ module.exports =
   'converts IPv4 to string correctly': (test) ->
     addr = new ipaddr.IPv4([192, 168, 1, 1])
     test.equal(addr.toString(), '192.168.1.1')
+    test.equal(addr.toNormalizedString(), '192.168.1.1')
     test.done()
 
   'returns correct kind for IPv4': (test) ->
@@ -142,6 +143,46 @@ module.exports =
     test.equal(new ipaddr.IPv6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 0]).toString(), '2001:db8::')
     test.done()
 
+  'returns IPv6 zoneIndex': (test) ->
+    addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1], 'utun0')
+    test.equal(addr.toNormalizedString(), '2001:db8:f53a:0:0:0:0:1%utun0')
+    test.equal(addr.toString(), '2001:db8:f53a::1%utun0')
+
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%2').toString(),
+      '2001:db8:f53a::1%2'
+    )
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%WAT').toString(),
+      '2001:db8:f53a::1%WAT'
+    )
+    test.equal(
+      ipaddr.parse('2001:db8:f53a::1%sUp').toString(),
+      '2001:db8:f53a::1%sUp'
+    )
+
+    test.done()
+
+  'returns IPv6 zoneIndex for IPv4-mapped IPv6 addresses': (test) ->
+    addr = ipaddr.parse('::ffff:192.168.1.1%eth0')
+    test.equal(addr.toNormalizedString(), '0:0:0:0:0:ffff:c0a8:101%eth0')
+    test.equal(addr.toString(), '::ffff:c0a8:101%eth0')
+
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%2').toString(),
+      '::ffff:c0a8:101%2'
+    )
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%WAT').toString(),
+      '::ffff:c0a8:101%WAT'
+    )
+    test.equal(
+      ipaddr.parse('::ffff:192.168.1.1%sUp').toString(),
+      '::ffff:c0a8:101%sUp'
+    )
+
+    test.done()
+
   'returns correct kind for IPv6': (test) ->
     addr = new ipaddr.IPv6([0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 1])
     test.equal(addr.kind(), 'ipv6')
@@ -156,21 +197,27 @@ module.exports =
     test.equal(ipaddr.IPv6.isIPv6('2001:db8:F53A::1'),     true)
     test.equal(ipaddr.IPv6.isIPv6('200001::1'),            true)
     test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isIPv6('::ffff:192.168.1.1%z'), true)
     test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1'),   false)
     test.equal(ipaddr.IPv6.isIPv6('::ffff:300.168.1.1:0'), false)
     test.equal(ipaddr.IPv6.isIPv6('fe80::wtf'),            false)
+    test.equal(ipaddr.IPv6.isIPv6('fe80::%'),              false)
     test.done()
 
   'validates IPv6 addresses': (test) ->
     test.equal(ipaddr.IPv6.isValid('2001:db8:F53A::1'),     true)
     test.equal(ipaddr.IPv6.isValid('200001::1'),            false)
     test.equal(ipaddr.IPv6.isValid('::ffff:192.168.1.1'),   true)
+    test.equal(ipaddr.IPv6.isValid('::ffff:192.168.1.1%z'), true)
     test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1'),   false)
     test.equal(ipaddr.IPv6.isValid('::ffff:300.168.1.1:0'), false)
     test.equal(ipaddr.IPv6.isValid('::ffff:222.1.41.9000'), false)
     test.equal(ipaddr.IPv6.isValid('2001:db8::F53A::1'),    false)
     test.equal(ipaddr.IPv6.isValid('fe80::wtf'),            false)
+    test.equal(ipaddr.IPv6.isValid('fe80::%'),              false)
     test.equal(ipaddr.IPv6.isValid('2002::2:'),             false)
+    test.equal(ipaddr.IPv6.isValid('::%z'),                 true)
+
     test.equal(ipaddr.IPv6.isValid(undefined),              false)
     test.done()
 
@@ -180,6 +227,8 @@ module.exports =
     test.deepEqual(ipaddr.IPv6.parse('2001:db8:F53A::').parts, [0x2001, 0xdb8, 0xf53a, 0, 0, 0, 0, 0])
     test.deepEqual(ipaddr.IPv6.parse('::1').parts, [0, 0, 0, 0, 0, 0, 0, 1])
     test.deepEqual(ipaddr.IPv6.parse('::').parts, [0, 0, 0, 0, 0, 0, 0, 0])
+    test.deepEqual(ipaddr.IPv6.parse('::%z').parts, [0, 0, 0, 0, 0, 0, 0, 0])
+    test.deepEqual(ipaddr.IPv6.parse('::%z').zoneId, 'z')
     test.done()
 
   'barfs at invalid IPv6': (test) ->
@@ -194,7 +243,10 @@ module.exports =
     test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f53b::1:1'), 48), false)
     test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f531::1:1'), 44), true)
     test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f500::1'), 40),   true)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db8:f500::1%z'), 40), true)
     test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1'), 40),   false)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1'), 40),   false)
+    test.equal(addr.match(ipaddr.IPv6.parse('2001:db9:f500::1%z'), 40), false)
     test.equal(addr.match(addr, 128), true)
     test.done()
 
@@ -205,7 +257,9 @@ module.exports =
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f53b::1:1/48')), false)
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f531::1:1/44')), true)
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f500::1/40')),   true)
+    test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f500::1%z/40')), true)
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db9:f500::1/40')),   false)
+    test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db9:f500::1%z/40')), false)
     test.equal(addr.match(ipaddr.IPv6.parseCIDR('2001:db8:f53a::1/128')),  true)
     test.throws ->
       ipaddr.IPv6.parseCIDR('2001:db8:f53a::1')
@@ -240,11 +294,13 @@ module.exports =
     test.equal(ipaddr.IPv6.parse('2001::4242').range(),                'teredo')
     test.equal(ipaddr.IPv6.parse('2001:db8::3210').range(),            'reserved')
     test.equal(ipaddr.IPv6.parse('2001:470:8:66::1').range(),          'unicast')
+    test.equal(ipaddr.IPv6.parse('2001:470:8:66::1%z').range(),        'unicast')
     test.done()
 
   'is able to determine IP address type': (test) ->
     test.equal(ipaddr.parse('8.8.8.8').kind(), 'ipv4')
     test.equal(ipaddr.parse('2001:db8:3312::1').kind(), 'ipv6')
+    test.equal(ipaddr.parse('2001:db8:3312::1%z').kind(), 'ipv6')
     test.done()
 
   'throws an error if tried to parse an invalid address': (test) ->
@@ -256,6 +312,7 @@ module.exports =
     test.equal(ipaddr.process('8.8.8.8').kind(), 'ipv4')
     test.equal(ipaddr.process('2001:db8:3312::1').kind(), 'ipv6')
     test.equal(ipaddr.process('::ffff:192.168.1.1').kind(), 'ipv4')
+    test.equal(ipaddr.process('::ffff:192.168.1.1%z').kind(), 'ipv4')
     test.done()
 
   'correctly converts IPv6 and IPv4 addresses to byte arrays': (test) ->
@@ -264,6 +321,9 @@ module.exports =
     # Fuck yeah. The first byte of Google's IPv6 address is 42. 42!
     test.deepEqual(ipaddr.parse('2a00:1450:8007::68').toByteArray(),
           [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x68 ])
+    test.deepEqual(ipaddr.parse('2a00:1450:8007::68%z').toByteArray(),
+          [42, 0x00, 0x14, 0x50, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x68 ])
+
     test.done()
 
   'correctly parses 1 as an IPv4 address': (test) ->
@@ -286,6 +346,7 @@ module.exports =
 
   'does not hang on ::8:8:8:8:8:8:8:8:8': (test) ->
     test.equal(ipaddr.IPv6.isValid('::8:8:8:8:8:8:8:8:8'), false)
+    test.equal(ipaddr.IPv6.isValid('::8:8:8:8:8:8:8:8:8%z'), false)
     test.done()
 
   'subnetMatch does not fail on empty range': (test) ->
@@ -296,6 +357,22 @@ module.exports =
   'subnetMatch returns default subnet on empty range': (test) ->
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {}, false), false)
     test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), {subnet: []}, false), false)
+    test.done()
+
+  'subnetMatch does not fail on IPv4 when looking for IPv6': (test) ->
+    rangelist = {subnet6: ipaddr.parseCIDR('fe80::/64')}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,3,4]), rangelist, false), false)
+    test.done()
+
+  'subnetMatch does not fail on IPv6 when looking for IPv4': (test) ->
+    rangelist = {subnet4: ipaddr.parseCIDR('1.2.3.0/24')}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0xfe80, 0, 0, 0, 0, 0, 0, 1]), rangelist, false), false)
+    test.done()
+
+  'subnetMatch can use a hybrid IPv4/IPv6 range list': (test) ->
+    rangelist = {dual64: [ipaddr.parseCIDR('1.2.4.0/24'), ipaddr.parseCIDR('2001:1:2:3::/64')]}
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv4([1,2,4,1]), rangelist, false), 'dual64')
+    test.equal(ipaddr.subnetMatch(new ipaddr.IPv6([0x2001, 1, 2, 3, 0, 0, 0, 1]), rangelist, false), 'dual64')
     test.done()
 
   'is able to determine IP address type from byte array input': (test) ->
@@ -344,3 +421,63 @@ module.exports =
     test.equal(ipaddr.IPv4.parse('255.0.255.0').prefixLengthFromSubnetMask(), null)
     test.done()
 
+  'prefixLengthFromSubnetMask returns proper CIDR notation for standard IPv6 masks': (test) ->
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff').prefixLengthFromSubnetMask(), 128)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ffff::').prefixLengthFromSubnetMask(), 64)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff:ff80::').prefixLengthFromSubnetMask(), 57)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff::').prefixLengthFromSubnetMask(), 48)
+    test.equal(ipaddr.IPv6.parse('ffff:ffff:ffff::%z').prefixLengthFromSubnetMask(), 48)
+    test.equal(ipaddr.IPv6.parse('::').prefixLengthFromSubnetMask(), 0)
+    test.equal(ipaddr.IPv6.parse('::%z').prefixLengthFromSubnetMask(), 0)
+    # negative cases
+    test.equal(ipaddr.IPv6.parse('2001:db8::').prefixLengthFromSubnetMask(), null)
+    test.equal(ipaddr.IPv6.parse('ffff:0:0:ffff::').prefixLengthFromSubnetMask(), null)
+    test.equal(ipaddr.IPv6.parse('ffff:0:0:ffff::%z').prefixLengthFromSubnetMask(), null)
+    test.done()
+
+  'subnetMaskFromPrefixLength returns correct IPv4 subnet mask given prefix length': (test) ->
+
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(0), "0.0.0.0");
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(1), "128.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(2), "192.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(3), "224.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(4), "240.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(5), "248.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(6), "252.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(7), "254.0.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(8), "255.0.0.0");
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(9), "255.128.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(10), "255.192.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(11), "255.224.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(12), "255.240.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(13), "255.248.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(14), "255.252.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(15), "255.254.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(16), "255.255.0.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(17), "255.255.128.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(18), "255.255.192.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(19), "255.255.224.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(20), "255.255.240.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(21), "255.255.248.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(22), "255.255.252.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(23), "255.255.254.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(24), "255.255.255.0")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(25), "255.255.255.128")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(26), "255.255.255.192")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(27), "255.255.255.224")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(28), "255.255.255.240")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(29), "255.255.255.248")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(30), "255.255.255.252")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(31), "255.255.255.254")
+    test.equal(ipaddr.IPv4.subnetMaskFromPrefixLength(32), "255.255.255.255")
+    test.done()
+
+  'broadcastAddressFromCIDR returns correct IPv4 broadcast address': (test) ->
+    test.equal(ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/24"), "172.0.0.255")
+    test.equal(ipaddr.IPv4.broadcastAddressFromCIDR("172.0.0.1/26"), "172.0.0.63")
+    test.done()
+
+  'networkAddressFromCIDR returns correct IPv4 network address': (test) ->
+    test.equal(ipaddr.IPv4.networkAddressFromCIDR("172.0.0.1/24"), "172.0.0.0")
+    test.equal(ipaddr.IPv4.networkAddressFromCIDR("172.0.0.1/5"), "168.0.0.0")
+    test.done()

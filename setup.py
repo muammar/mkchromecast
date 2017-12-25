@@ -20,7 +20,7 @@ from setuptools import setup
 version=open('mkchromecast/version.py').readlines()[-1].split()[-1].strip("\"'")
 
 APP = ['start_tray.py']
-APP_NAME = 'mkchromecast'
+APP_NAME = 'Mkchromecast'
 DATA_FILES = [
         'images/google.icns',
         'images/google_working.icns',
@@ -54,12 +54,13 @@ OPTIONS = {
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices',
+        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices and Sonos speakers',
         'CFBundleIdentifier': 'com.mkchromecast.osx',
         'CFBundleVersion': version,
         'CFBundleShortVersionString': version,
-        'NSHumanReadableCopyright': u'Copyright (c) 2016, Muammar El Khatib, All Rights Reserved',
-        'LSPrefersPPC': True
+        'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
+        'LSPrefersPPC': True,
+        'LSUIElement': True
     }
 }
 
@@ -67,7 +68,7 @@ setup(
     name=APP_NAME,
     app=APP,
     data_files=DATA_FILES,
-    package='mkchromecast',
+    package='Mkchromecast',
     platforms=['i386', 'x86_64'],
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
