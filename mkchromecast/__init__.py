@@ -262,7 +262,7 @@ parser.add_argument(
     Specify the media type for video streaming.
 
     Example:
-        python mkchromecast.py --video -i "/path/to/file.mp4" --mtype 'video/x-msvideo'
+        python mkchromecast.py --video -i "/path/to/file.avi" --mtype 'video/x-msvideo'
     '''
     )
 
