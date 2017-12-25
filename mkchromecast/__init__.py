@@ -7,10 +7,8 @@ from mkchromecast.utils import terminate, check_url
 from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions
 import argparse
-import os.path
 import sys
 import platform
-import pickle
 import subprocess
 from argparse import RawTextHelpFormatter
 
@@ -870,26 +868,3 @@ if args.youtube is not None:
         backend = 'ffmpeg'
 else:
     youtubeurl = args.youtube
-
-
-"""
-This is to write a PID file
-"""
-
-
-def writePidFile():
-    # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.pid') is True:
-        os.remove('/tmp/mkchromecast.pid')
-    pid = str(os.getpid())
-    f = open('/tmp/mkchromecast.pid', 'wb')
-    pickle.dump(pid, f)
-    f.close()
-    return
-
-
-def checkmktmp():
-    # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.tmp') is True:
-        os.remove('/tmp/mkchromecast.tmp')
-    return

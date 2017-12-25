@@ -12,7 +12,7 @@ from mkchromecast.preferences import ConfigSectionMap
 import mkchromecast.preferences
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import remove_sink
-from mkchromecast.utils import del_tmp
+from mkchromecast.utils import del_tmp, checkmktmp
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, Qt
@@ -555,7 +555,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.kill_child()
             except psutil.NoSuchProcess:
                 pass
-            mkchromecast.__init__.checkmktmp()
+            checkmktmp()
             self.search_cast()
 
             # This is to retry when stopping and
@@ -900,5 +900,5 @@ def main():
     menubar()
 
 if __name__ == '__main__':
-    mkchromecast.__init__.checkmktmp()
+    checkmktmp()
     main()
