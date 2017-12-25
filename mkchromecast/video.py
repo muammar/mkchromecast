@@ -40,6 +40,7 @@ encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
 port = mkchromecast.__init__.port
 loop = mkchromecast.__init__.loop
+mtype = mkchromecast.__init__.mtype
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -64,7 +65,6 @@ if youtubeurl is not None:
         '-',
         youtubeurl
         ]
-    mtype = 'video/mp4'
 
 elif screencast is True:
     if res is None:
@@ -90,7 +90,6 @@ elif screencast is True:
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
             ]
-    mtype = 'video/mp4'
 else:
     """
     The blocks shown below are related to input_files
@@ -182,13 +181,14 @@ else:
         command.insert(1, '-stream_loop')
         command.insert(2, '-1')
 
-    mtype = 'video/mp4'
-
     if res is not None:
         cindex = command.index(input_file)
         res_elements = resolution(res, screencast)
         for element in res_elements:
             command.insert(-cindex, element)
+
+if mtype is None:
+    mtype = 'video/mp4'
 
 app = Flask(__name__)
 

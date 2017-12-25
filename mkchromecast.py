@@ -278,5 +278,6 @@ class mk(object):
         writePidFile()
         mkchromecast.systray.main()
 
+
 if __name__ == "__main__":
     mk()

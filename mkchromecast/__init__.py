@@ -255,6 +255,18 @@ parser.add_argument(
     )
 
 parser.add_argument(
+    '--mtype',
+    type=str,
+    default=None,
+    help='''
+    Specify the media type for video streaming.
+
+    Example:
+        python mkchromecast.py --video -i "/path/to/file.mp4" --mtype 'video/x-msvideo'
+    '''
+    )
+
+parser.add_argument(
     '-n',
     '--name',
     type=str,
@@ -592,6 +604,15 @@ port = args.port
 
 if debug is True:
     print('Google Cast name: %s.' % ccname)
+
+"""
+Media-Type
+"""
+mtype = args.mtype
+
+if args.mtype is not None and args.video is False:
+    print(colors.warning('The media type is not supported for audio.')
+          % args.encoder_backend)
 
 """
 Reset
