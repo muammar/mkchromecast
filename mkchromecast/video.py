@@ -39,6 +39,7 @@ sourceurl = mkchromecast.__init__.sourceurl
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
 port = mkchromecast.__init__.port
+loop = mkchromecast.__init__.loop
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -176,6 +177,10 @@ else:
     if debug is False and sourceurl is None:
         command.insert(command.index('-i'), 'panic')
         command.insert(command.index('panic'),  '-loglevel')
+
+    if loop is True:
+        command.insert(1, '-stream_loop')
+        command.insert(2, '-1')
 
     mtype = 'video/mp4'
 

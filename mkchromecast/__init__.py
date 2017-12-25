@@ -209,6 +209,16 @@ parser.add_argument(
     )
 
 parser.add_argument(
+    '--hijack',
+    action='store_true',
+    default=False,
+    help='''
+    This flag monitors if connection with google cast has been lost, and try to
+    hijack it.
+    '''
+    )
+
+parser.add_argument(
     '--host',
     type=str,
     default=None,
@@ -234,6 +244,15 @@ parser.add_argument(
 
     Example:
         python mkchromecast.py -i /path/to/file.mp4
+    '''
+    )
+
+parser.add_argument(
+    '--loop',
+    action='store_true',
+    default=False,
+    help='''
+    Loop video indefinitely while streaming
     '''
     )
 
@@ -275,6 +294,7 @@ parser.add_argument(
     '''
     )
 
+
 parser.add_argument(
     '-r',
     '--reset',
@@ -285,21 +305,12 @@ parser.add_argument(
     '''
     )
 
+
 parser.add_argument(
     '--reboot',
     action='store_true',
     help='''
     Reboot the Google Cast device.
-    '''
-    )
-
-parser.add_argument(
-    '--hijack',
-    action='store_true',
-    default=False,
-    help='''
-    This flag monitors if connection with google cast has been lost, and try to
-    hijack it.
     '''
     )
 
@@ -715,6 +726,14 @@ else:
             print('- %s.' % codec)
         sys.exit(0)
 
+"""
+Loop
+"""
+loop = args.loop
+
+if args.loop is True and args.video is True:
+    print(colors.warning('The %s backend is not supported.')
+          % args.encoder_backend)
 
 """
 Command

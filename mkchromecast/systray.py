@@ -823,7 +823,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         See the
         <a href=
-        "https://github.com/muammar/mkchromecast/blob/master/LICENSE.rst">
+        "https://github.com/muammar/mkchromecast/blob/master/LICENSE">
         MIT license</a> for details.
         </p>
                 """)
