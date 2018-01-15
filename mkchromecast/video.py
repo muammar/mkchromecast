@@ -197,8 +197,11 @@ else:
         seeking(seek)
 
     if debug is False and sourceurl is None:
-        command.insert(command.index('-i'), 'panic')
-        command.insert(command.index('panic'),  '-loglevel')
+        try:
+            command.insert(command.index('-i'), 'panic')
+            command.insert(command.index('panic'),  '-loglevel')
+        except ValueError:
+            pass
 
     if loop is True:
         command.insert(1, '-stream_loop')

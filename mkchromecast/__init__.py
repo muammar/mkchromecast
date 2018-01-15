@@ -758,7 +758,7 @@ if args.loop is True and args.video is True:
 Command
 """
 if args.command is not None and args.video is True:
-    safe_commands = ['ffmpeg', 'avconv']
+    safe_commands = ['ffmpeg', 'avconv', 'youtube-dl']
     command = args.command.split(' ')
     if command[0] not in safe_commands:
         print(colors.error('Refusing to execute this.'))
