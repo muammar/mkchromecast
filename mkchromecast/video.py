@@ -42,10 +42,13 @@ port = mkchromecast.__init__.port
 loop = mkchromecast.__init__.loop
 mtype = mkchromecast.__init__.mtype
 
-if input_file[-3:] == 'mkv':
-    mkv = True
-else:
-    mkv = False
+try:
+    if input_file[-3:] == 'mkv':
+        mkv = True
+    else:
+        mkv = False
+except TypeError:
+    mvk = False
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
