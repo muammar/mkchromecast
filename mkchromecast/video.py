@@ -85,7 +85,6 @@ elif screencast is True:
             '-g', '60',  # '-c:a', 'copy', '-ac', '2',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
             ]
@@ -104,7 +103,6 @@ else:
             '-map_chapters', '-1',
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
          ]
@@ -125,7 +123,6 @@ else:
             '-g', '60',  # '-c:a', 'copy', '-ac', '2',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
@@ -139,7 +136,6 @@ else:
             '-map_chapters', '-1',
             '-preset', 'ultrafast',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
@@ -161,7 +157,6 @@ else:
             '-g', '60',  # '-c:a', 'copy', '-ac', '2',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             '-vf', 'subtitles='+subtitles,
             'pipe:1'
