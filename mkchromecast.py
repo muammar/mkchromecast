@@ -129,6 +129,12 @@ class mk(object):
 
     def cast_video(self):
         """This method launches video casting"""
+
+        print('Creating Pulseaudio Sink...')
+        print(colors.warning('Open Pavucontrol and Select the '
+              'Mkchromecast Sink.'))
+        create_sink()
+
         print(colors.important('Starting Video Cast Process...'))
         import mkchromecast.video
         mkchromecast.video.main()
@@ -174,7 +180,7 @@ class mk(object):
         if self.platform == 'Darwin':
             inputint()
             outputint()
-        elif self.platform == 'Linux' and self.adevice is None:
+        elif self.platform == 'Linux':
             remove_sink()
         terminate()
 
