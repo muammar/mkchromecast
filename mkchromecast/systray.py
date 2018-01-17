@@ -463,12 +463,12 @@ class menubar(QtWidgets.QMainWindow):
             print('Available Media Streaming Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 try:
-                    self.a = self.ag.addAction(
+                    a = self.ag.addAction(
                             (QtWidgets.QAction(
                                 str(menuentry[1]), self, checkable=True)))
                     self.menuentry = self.menu.addAction(self.a)
                 except UnicodeEncodeError:
-                    self.menuentry = self.menu.addAction(str(
+                    a = self.menuentry = self.menu.addAction(str(
                         unicode(menuentry[1]).encode("utf-8")))
                 # The receiver is a lambda function that passes clicked as
                 # a boolean, and the clicked_item as an argument to the
@@ -478,7 +478,7 @@ class menubar(QtWidgets.QMainWindow):
                 #
                 # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
                 receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
-                self.a.triggered.connect(receiver)
+                a.triggered.connect(receiver)
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
