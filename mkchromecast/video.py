@@ -82,6 +82,13 @@ elif screencast is True:
         screen_size = resolution(res, screencast)
     command = [
             'ffmpeg',
+            '-ac', '2',
+            '-ar', '44100',
+            '-frame_size', '2048',
+            '-fragment_size', '2048',
+            '-f', 'pulse',
+            '-ac', '2',
+            '-i', 'Mkchromecast.monitor',
             '-f', 'x11grab',
             '-r', '25',
             '-s', screen_size,
@@ -95,14 +102,16 @@ elif screencast is True:
             '-g', '60',  # '-c:a', 'copy', '-ac', '2',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
+            '-ar', '44100',
+            '-acodec', 'libvorbis',
             'pipe:1'
             ]
 else:
     """
     The blocks shown below are related to input_files
     """
+
     if input_file is not None and subtitles is None and mkv is False:
         # Command taken from
         # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
@@ -120,7 +129,6 @@ else:
             '-g', '60',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
@@ -136,7 +144,6 @@ else:
             '-vcodec', 'copy',
             '-acodec', 'copy',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
@@ -158,7 +165,6 @@ else:
             '-g', '60',
             # '-b', '900k',
             '-f', 'mp4',
-            '-max_muxing_queue_size', '9999',
             '-movflags', 'frag_keyframe+empty_moov',
             '-vf', 'subtitles=' + subtitles,
             'pipe:1'
