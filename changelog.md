@@ -3,6 +3,10 @@
     - New flag `--loop` to loop video indefinitely while streaming. Closes
       #113.
     - New flag `--mtype` to specify media type. Closes #128.
+    - Modified how pyqt is used to accomodate pyqt 5.5, which is what comes in
+      Ubuntu 16.04 LTS
+    - Removed the -max_muxing_queue_size ffmpeg flag because it's not supported in ffmpeg 2.8.11.
+    - Screencast with audio.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
