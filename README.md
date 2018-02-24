@@ -110,7 +110,8 @@ following:
 
 * Pulseaudio.
 * Pavucontrol.
-* Python2 (if using the official debian package), or Python3.
+* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
+  `0.4.0`), or Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -134,7 +135,8 @@ requirements are:
 * alsa-base
 * alsa-utils
 * alsa-utils
-* Python2 (if using the official debian package), or Python3.
+* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
+  `0.4.0`), or Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -359,9 +361,8 @@ apt-get install libav-tools
 
 ##### PyQt5
 
-These Python bindings are needed if you intend to use the system tray menu. As
-of today April 28th, `pip` is able to install `PyQt5`. Therefore, you can do
-a `pip install pyqt5`.
+These Python bindings are needed if you intend to use the system tray menu.
+Sometimes `pip` is able to install `PyQt5` and`pip install pyqt5` is enough.
 
 If this does not work for you, I suggest you to install it using a package
 manager.
