@@ -82,7 +82,6 @@ elif screencast is True:
         screen_size = resolution(res, screencast)
     command = [
             'ffmpeg',
-
             '-ac', '2',
             '-ar', '44100',
             '-frame_size', '2048',
@@ -104,10 +103,8 @@ elif screencast is True:
             # '-b', '900k',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe+empty_moov',
-
             '-ar', '44100',
             '-acodec', 'libvorbis',
-
             'pipe:1'
             ]
 else:
