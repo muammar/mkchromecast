@@ -4,14 +4,13 @@
 
 import mkchromecast.__init__
 from mkchromecast.version import __version__
-from mkchromecast.audio_devices import *
-from mkchromecast.cast import *
+from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
+                                        outputint)
+from mkchromecast.cast import casting
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, remove_sink
-from mkchromecast.utils import terminate
+from mkchromecast.utils import terminate, checkmktmp, writePidFile
 import subprocess
-import os.path
-import time
 import atexit
 import signal
 
@@ -34,8 +33,8 @@ class mk(object):
         self.control = mkchromecast.__init__.control
 
         self.cc = casting()
-        mkchromecast.__init__.checkmktmp()
-        mkchromecast.__init__.writePidFile()
+        checkmktmp()
+        writePidFile()
 
         """
         Initializing backend array
@@ -82,7 +81,7 @@ class mk(object):
             self.show_control(self.control)
 
         # When casting youtube url, we do it through the audio module
-        elif youtubeurl is not None and self.videoarg is False:
+        elif self.youtubeurl is not None and self.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
@@ -201,7 +200,7 @@ class mk(object):
     def show_control(self, control):
         """Method to show controls"""
         if self.control is True:
-            from mkchromecast.getch import getch, pause
+            from mkchromecast.getch import getch
 
             self.controls_msg()
             try:
@@ -281,9 +280,10 @@ class mk(object):
     def start_tray(self):
         """This method starts the system tray"""
         import mkchromecast.systray
-        mkchromecast.__init__.checkmktmp()
-        mkchromecast.__init__.writePidFile()
+        checkmktmp()
+        writePidFile()
         mkchromecast.systray.main()
+
 
 if __name__ == "__main__":
     mk()

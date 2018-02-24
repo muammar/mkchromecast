@@ -1,3 +1,9 @@
+* Mkchromecast (0.3.9) **unreleased**
+
+    - New flag `--loop` to loop video indefinitely while streaming. Closes
+      #113.
+    - New flag `--mtype` to specify media type. Closes #128.
+
 * mkchromecast (0.3.8.1) **2017/12/24**
 
     - A bug when no devices where found has been fixed in this release.

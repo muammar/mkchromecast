@@ -39,6 +39,16 @@ sourceurl = mkchromecast.__init__.sourceurl
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
 port = mkchromecast.__init__.port
+loop = mkchromecast.__init__.loop
+mtype = mkchromecast.__init__.mtype
+
+try:
+    if input_file[-3:] == 'mkv':
+        mkv = True
+    else:
+        mkv = False
+except TypeError:
+    mvk = False
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
@@ -50,6 +60,7 @@ def seeking(seek):
     seek_append = ['-ss', seek]
     for i, _ in enumerate(seek_append):
         command.insert(i + 1, _)
+    return
 
 """ This command is not working I found this:
 http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer.
@@ -63,7 +74,6 @@ if youtubeurl is not None:
         '-',
         youtubeurl
         ]
-    mtype = 'video/mp4'
 
 elif screencast is True:
     if res is None:
@@ -80,7 +90,6 @@ elif screencast is True:
             '-f', 'pulse',
             '-ac', '2',
             '-i', 'Mkchromecast.monitor',
-
             '-f', 'x11grab',
             '-r', '25',
             '-s', screen_size,
@@ -101,25 +110,12 @@ elif screencast is True:
 
             'pipe:1'
             ]
-    mtype = 'video/mp4'
 else:
     """
     The blocks shown below are related to input_files
     """
-    if input_file is not None and subtitles is None:
-        """
-        command = [
-            'ffmpeg',
-            '-re',
-            #'-loglevel', 'panic',
-            '-i', input_file,
-            '-map_chapters', '-1',
-            '-preset', 'ultrafast',
-            '-f', 'mp4',
-            '-movflags', 'frag_keyframe+empty_moov',
-            'pipe:1'
-         ]
-        """
+
+    if input_file is not None and subtitles is None and mkv is False:
         # Command taken from
         # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
@@ -133,27 +129,29 @@ else:
             '-maxrate', '10000k',
             '-bufsize', '20000k',
             '-pix_fmt', 'yuv420p',
-            '-g', '60',  # '-c:a', 'copy', '-ac', '2',
+            '-g', '60',
             # '-b', '900k',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
 
-    elif input_file is not None and subtitles is not None:
-        """
+    elif input_file is not None and subtitles is None and mkv is True:
+        # Command taken from
+        # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
             'ffmpeg',
             '-re',
             '-i', input_file,
             '-map_chapters', '-1',
-            '-preset', 'ultrafast',
+            '-vcodec', 'copy',
+            '-acodec', 'copy',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe+empty_moov',
-            '-vf', 'subtitles='+subtitles,
             'pipe:1'
         ]
-        """
+
+    elif input_file is not None and subtitles is not None and mkv is False:
         # Command taken from
         # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         command = [
@@ -167,11 +165,37 @@ else:
             '-maxrate', '10000k',
             '-bufsize', '20000k',
             '-pix_fmt', 'yuv420p',
-            '-g', '60',  # '-c:a', 'copy', '-ac', '2',
+            '-g', '60',
             # '-b', '900k',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe+empty_moov',
-            '-vf', 'subtitles='+subtitles,
+            '-vf', 'subtitles=' + subtitles,
+            'pipe:1'
+        ]
+
+    elif input_file is not None and subtitles is not None and mkv is True:
+        print(colors.warning('Subtitles with mkv are not supported yet.'))
+        command = [
+            'ffmpeg',
+            '-re',
+            '-i', input_file,
+            '-i', subtitles,
+            #'-map_chapters', '-1',
+            '-c:v', 'copy',
+            '-c:a', 'copy',
+            '-c:s', 'mov_text',
+            '-map', '0:0',
+            '-map', '0:1',
+            '-map', '1:0',
+            '-preset', 'ultrafast',
+            '-tune', 'zerolatency',
+            '-maxrate', '10000k',
+            '-bufsize', '20000k',
+            '-pix_fmt', 'yuv420p',
+            '-g', '60',
+            '-f', 'mp4',
+            '-max_muxing_queue_size', '9999',
+            '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
 
@@ -182,16 +206,24 @@ else:
         seeking(seek)
 
     if debug is False and sourceurl is None:
-        command.insert(command.index('-i'), 'panic')
-        command.insert(command.index('panic'),  '-loglevel')
+        try:
+            command.insert(command.index('-i'), 'panic')
+            command.insert(command.index('panic'),  '-loglevel')
+        except ValueError:
+            pass
 
-    mtype = 'video/mp4'
+    if loop is True:
+        command.insert(1, '-stream_loop')
+        command.insert(2, '-1')
 
     if res is not None:
         cindex = command.index(input_file)
         res_elements = resolution(res, screencast)
         for element in res_elements:
             command.insert(-cindex, element)
+
+if mtype is None:
+    mtype = 'video/mp4'
 
 app = Flask(__name__)
 

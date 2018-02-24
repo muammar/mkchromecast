@@ -7,10 +7,8 @@ from mkchromecast.utils import terminate, check_url
 from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions
 import argparse
-import os.path
 import sys
 import platform
-import pickle
 import subprocess
 from argparse import RawTextHelpFormatter
 
@@ -209,6 +207,16 @@ parser.add_argument(
     )
 
 parser.add_argument(
+    '--hijack',
+    action='store_true',
+    default=False,
+    help='''
+    This flag monitors if connection with google cast has been lost, and try to
+    hijack it.
+    '''
+    )
+
+parser.add_argument(
     '--host',
     type=str,
     default=None,
@@ -234,6 +242,27 @@ parser.add_argument(
 
     Example:
         python mkchromecast.py -i /path/to/file.mp4
+    '''
+    )
+
+parser.add_argument(
+    '--loop',
+    action='store_true',
+    default=False,
+    help='''
+    Loop video indefinitely while streaming
+    '''
+    )
+
+parser.add_argument(
+    '--mtype',
+    type=str,
+    default=None,
+    help='''
+    Specify the media type for video streaming.
+
+    Example:
+        python mkchromecast.py --video -i "/path/to/file.avi" --mtype 'video/x-msvideo'
     '''
     )
 
@@ -275,6 +304,7 @@ parser.add_argument(
     '''
     )
 
+
 parser.add_argument(
     '-r',
     '--reset',
@@ -285,21 +315,12 @@ parser.add_argument(
     '''
     )
 
+
 parser.add_argument(
     '--reboot',
     action='store_true',
     help='''
     Reboot the Google Cast device.
-    '''
-    )
-
-parser.add_argument(
-    '--hijack',
-    action='store_true',
-    default=False,
-    help='''
-    This flag monitors if connection with google cast has been lost, and try to
-    hijack it.
     '''
     )
 
@@ -585,6 +606,15 @@ if debug is True:
     print('Google Cast name: %s.' % ccname)
 
 """
+Media-Type
+"""
+mtype = args.mtype
+
+if args.mtype is not None and args.video is False:
+    print(colors.warning('The media type is not supported for audio.')
+          % args.encoder_backend)
+
+"""
 Reset
 """
 if args.reset is True:
@@ -715,12 +745,20 @@ else:
             print('- %s.' % codec)
         sys.exit(0)
 
+"""
+Loop
+"""
+loop = args.loop
+
+if args.loop is True and args.video is True:
+    print(colors.warning('The %s backend is not supported.')
+          % args.encoder_backend)
 
 """
 Command
 """
 if args.command is not None and args.video is True:
-    safe_commands = ['ffmpeg', 'avconv']
+    safe_commands = ['ffmpeg', 'avconv', 'youtube-dl']
     command = args.command.split(' ')
     if command[0] not in safe_commands:
         print(colors.error('Refusing to execute this.'))
@@ -851,26 +889,3 @@ if args.youtube is not None:
         backend = 'ffmpeg'
 else:
     youtubeurl = args.youtube
-
-
-"""
-This is to write a PID file
-"""
-
-
-def writePidFile():
-    # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.pid') is True:
-        os.remove('/tmp/mkchromecast.pid')
-    pid = str(os.getpid())
-    f = open('/tmp/mkchromecast.pid', 'wb')
-    pickle.dump(pid, f)
-    f.close()
-    return
-
-
-def checkmktmp():
-    # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.tmp') is True:
-        os.remove('/tmp/mkchromecast.tmp')
-    return

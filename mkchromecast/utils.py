@@ -2,10 +2,12 @@
 
 # This file is part of mkchromecast.
 
-from os import getpid
 import psutil
+import pickle
+from os import getpid
 import os.path
 import mkchromecast.colors as colors
+
 try:
     from urlparse import urlparse
 except:
@@ -63,3 +65,21 @@ def check_url(url):
         return True if [result.scheme, result.netloc, result.path] else False
     except Exception as e:
         return False
+
+
+def writePidFile():
+    # This is to verify that pickle tmp file exists
+    if os.path.exists('/tmp/mkchromecast.pid') is True:
+        os.remove('/tmp/mkchromecast.pid')
+    pid = str(os.getpid())
+    f = open('/tmp/mkchromecast.pid', 'wb')
+    pickle.dump(pid, f)
+    f.close()
+    return
+
+
+def checkmktmp():
+    # This is to verify that pickle tmp file exists
+    if os.path.exists('/tmp/mkchromecast.tmp') is True:
+        os.remove('/tmp/mkchromecast.tmp')
+    return
