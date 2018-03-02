@@ -22,6 +22,7 @@ try:
 except ImportError:
     import configparser as ConfigParser
 
+adevice = mkchromecast.__init__.adevice
 platform = mkchromecast.__init__.platform
 tray = mkchromecast.__init__.tray
 debug = mkchromecast.__init__.debug
@@ -95,7 +96,7 @@ class Player(QObject):
             mkchromecast.audio.main()
         if platform == 'Linux':
             # We create the sink only if it is not available
-            if check_sink() is False:
+            if check_sink() is False and adevice is None:
                 create_sink()
 
         start = casting()
