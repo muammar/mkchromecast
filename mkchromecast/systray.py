@@ -466,7 +466,7 @@ class menubar(QtWidgets.QMainWindow):
                     a = self.ag.addAction(
                             (QtWidgets.QAction(
                                 str(menuentry[1]), self, checkable=True)))
-                    self.menuentry = self.menu.addAction(self.a)
+                    self.menuentry = self.menu.addAction(a)
                 except UnicodeEncodeError:
                     a = self.menuentry = self.menu.addAction(str(
                         unicode(menuentry[1]).encode("utf-8")))
