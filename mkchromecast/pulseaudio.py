@@ -58,16 +58,19 @@ def remove_sink():
 
 
 def check_sink():
-    check_sink = [
-        'pacmd',
-        'list-sinks'
-        ]
-    chk = subprocess.Popen(
-            check_sink,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-            )
-    chkoutput, chkerror = chk.communicate()
+    try:
+        check_sink = [
+            'pacmd',
+            'list-sinks'
+            ]
+        chk = subprocess.Popen(
+                check_sink,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+                )
+        chkoutput, chkerror = chk.communicate()
+    except FileNotFoundError:
+        return None
 
     try:
         if 'Mkchromecast' in chkoutput:
