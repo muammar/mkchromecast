@@ -48,7 +48,7 @@ try:
     else:
         mkv = False
 except TypeError:
-    mvk = False
+    mkv = False
 
 try:
     youtubeurl = mkchromecast.__init__.youtubeurl
