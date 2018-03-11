@@ -142,7 +142,8 @@ else:
             '-i', input_file,
             '-map_chapters', '-1',
             '-vcodec', 'copy',
-            '-acodec', 'copy',
+            '-acodec', 'libmp3lame',
+            '-q:a', '0',
             '-f', 'mp4',
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
