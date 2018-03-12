@@ -153,6 +153,17 @@ else:
         if bit_depth == 'yuv420p10le':
             vcodec_index = command.index('-vcodec') + 1
             command[vcodec_index] = 'libx264'
+            add = [
+                    '-preset', 'ultrafast',
+                    '-tune', 'zerolatency',
+                    '-maxrate', '10000k',
+                    '-bufsize', '20000k',
+                    '-pix_fmt', 'yuv420p',
+                    '-g', '60',
+                    ]
+            for a in add:
+                vcodec_index += 1
+                command.insert(vcodec_index, a)
 
     elif input_file is not None and subtitles is not None and mkv is False:
         # Command taken from
