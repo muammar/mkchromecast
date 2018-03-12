@@ -7,6 +7,7 @@
       Ubuntu 16.04 LTS
     - Removed the -max_muxing_queue_size ffmpeg flag because it's not supported in ffmpeg 2.8.11.
     - Screencast with audio.
+    - 10bits mkv files are now encoded to 8bits. This fixes #156.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 

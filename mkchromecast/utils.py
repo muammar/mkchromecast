@@ -7,6 +7,8 @@ import pickle
 from os import getpid
 import os.path
 import mkchromecast.colors as colors
+import subprocess
+import json
 
 try:
     from urlparse import urlparse
@@ -83,3 +85,21 @@ def checkmktmp():
     if os.path.exists('/tmp/mkchromecast.tmp') is True:
         os.remove('/tmp/mkchromecast.tmp')
     return
+
+def check_file_info(name, what=None):
+    """Check things about files"""
+
+    command = ['ffprobe', '-show_format', '-show_streams', '-loglevel', 'quiet',
+               '-print_format', 'json', name]
+
+    info = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+            )
+    info_out, info_error = info.communicate()
+    d = json.loads(info_out)
+
+    if what == 'bit-depth':
+        bit_depth = d['streams'][0]['pix_fmt']
+        return bit_depth

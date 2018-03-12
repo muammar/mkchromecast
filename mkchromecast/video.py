@@ -9,7 +9,7 @@ Google Cast device has to point out to http://ip:5000/stream
 import mkchromecast.__init__
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.utils import terminate, is_installed
+from mkchromecast.utils import terminate, is_installed, check_file_info
 from mkchromecast.resolution import resolution
 import psutil
 import getpass
@@ -148,6 +148,11 @@ else:
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
+
+        bit_depth = check_file_info(input_file, what='bit-depth')
+        if bit_depth == 'yuv420p10le':
+            vcodec_index = command.index('-vcodec') + 1
+            command[vcodec_index] = 'libx264'
 
     elif input_file is not None and subtitles is not None and mkv is False:
         # Command taken from
