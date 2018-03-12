@@ -10,6 +10,7 @@ import argparse
 import sys
 import platform
 import subprocess
+import os.path
 from argparse import RawTextHelpFormatter
 
 parser = argparse.ArgumentParser(
@@ -604,6 +605,21 @@ port = args.port
 
 if debug is True:
     print('Google Cast name: %s.' % ccname)
+
+"""
+Check that input file exists
+"""
+if input_file != None and os.path.isfile(input_file) is False:
+    if platform == 'Darwin':
+        from mkchromecast.audio_devices import inputint, outputint
+        inputint()
+        outputint()
+    else:
+        from mkchromecast.pulseaudio import remove_sink
+        remove_sink()
+
+    print(colors.warning('File not found!'))
+    terminate()
 
 """
 Media-Type
