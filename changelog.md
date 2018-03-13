@@ -9,6 +9,7 @@
     - Screencast with audio.
     - 10bits mkv files are now encoded to 8bits. This fixes #156.
     - node streaming updated to work with `node v9.8.0`.
+    - Improved pause/resume when casting videos. Closes #97.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 

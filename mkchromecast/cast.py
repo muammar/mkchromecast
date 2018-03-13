@@ -396,6 +396,16 @@ class casting(object):
             if self.tray is True:
                 self.cast = self.sonos
 
+    def pause(self):
+        """ Pause casting """
+        media_controller = self.cast.media_controller
+        media_controller.pause()
+
+    def play(self):
+        """ Play casting """
+        media_controller = self.cast.media_controller
+        media_controller.play()
+
     def stop_cast(self):
         try:
             self.cast.quit_app()

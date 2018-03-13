@@ -278,6 +278,11 @@ class mk(object):
               self.platform == 'Darwin'):
             subprocess.call(['pkill', '-CONT', '-f', 'node'])
 
+        if action == 'pause':
+            self.cc.pause()
+        elif action == 'resume':
+            self.cc.play()
+
     def start_tray(self):
         """This method starts the system tray"""
         import mkchromecast.systray
