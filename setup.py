@@ -32,6 +32,7 @@ DATA_FILES = [
         'images/google_working_w.icns',
         'images/google_nodev_w.icns',
         'bin/audiodevice',
+        'bin/mkchromecast',
         'nodejs',
         'notifier'
         ]
