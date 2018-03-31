@@ -1,6 +1,12 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This file is part of mkchromecast.
+import os.path
+import sys
+
+HERE = os.path.dirname(__file__)
+if os.path.exists(os.path.join(HERE, '..', 'mkchromecast')):
+    sys.path.insert(0, os.path.join(HERE, '..'))
 
 import mkchromecast.__init__
 from mkchromecast.version import __version__
@@ -10,7 +16,6 @@ import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, remove_sink
 from mkchromecast.utils import terminate
 import subprocess
-import os.path
 import time
 import atexit
 import signal
