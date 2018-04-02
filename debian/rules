@@ -1,6 +1,4 @@
 #!/usr/bin/make -f
-# See debhelper(7) (uncomment to enable)
-# output every command that modifies files on the build system.
 
 GIT='https://github.com/muammar/mkchromecast'
 # The full changelog version number, used for the orig.tar.gz
@@ -12,20 +10,19 @@ export PYBUILD_NAME=mkchromecast
 %:
 	dh $@  --with python3
 
-override_dh_auto_build:
-	touch build
-
 override_dh_auto_test:
-	echo 'Do nothing'
+	echo "No tests defined."
 
-override_dh_install:
-	dh_install
-	dh_python3
-	chmod +x debian/mkchromecast/usr/share/mkchromecast/mkchromecast.py
+override_dh_auto_install:
+	python3 setup.py install --root=debian/tmp --install-layout=deb
+	py3clean debian/tmp
 
 override_dh_auto_clean:
-	echo 'Cleaning *.pyc'
-	find . -name \*.pyc -exec rm {} \;
+	dh_clean
+	rm -rf build dist install *.egg-info
+
+override_dh_missing:
+	dh_missing --fail-missing
 
 get-orig-source:
 	rm -rf mkchromecast-$(VER)
