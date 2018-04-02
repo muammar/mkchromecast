@@ -1,12 +1,5 @@
 #!/usr/bin/make -f
 
-GIT='https://github.com/muammar/mkchromecast'
-# The full changelog version number, used for the orig.tar.gz
-VER=$(shell dpkg-parsechangelog -ldebian/changelog -SVersion | cut -d- -f1)
-export DH_VERBOSE = 1
-
-export PYBUILD_NAME=mkchromecast
-
 %:
 	dh $@  --with python3
 
@@ -23,12 +16,3 @@ override_dh_auto_clean:
 
 override_dh_missing:
 	dh_missing --fail-missing
-
-get-orig-source:
-	rm -rf mkchromecast-$(VER)
-	git clone -b debian $(GIT) mkchromecast-$(VER)
-	cd mkchromecast-$(VER)
-	git archive --format=tar --prefix=mkchromecast-$(VER)/ HEAD > mkchromecast_$(VER).orig.tar
-	gzip --best mkchromecast_$(VER).orig.tar
-	mv mkchromecast_$(VER).orig.tar.gz ..
-	rm -rf mkchromecast-$(VER)
