@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Re-create a debian source tarball from current git tree. Usage:
+#
+#    make-tarball [treeish [tarball verion]]
+#
+#  - Invoked without parameters,  produces a tarball using HEAD as commit
+#    and marked according to the version from version.py.
+#  - With a single parameter, uses this as git commit to package.
+#  - A second parameter, if present, defines the tarball visible version.
+
+here=$(dirname $(readlink -fn $0))
+cd $here/..
+
+script='import version; print(version.__version__)'
+pkg_version=$(cd mkchromecast; python -c "$script" )
+
+tar_version=${2:-$pkg_version}
+treeish=${1:-'HEAD'}
+
+tarfile="../mkchromecast_${tar_version}.orig.tar"
+git archive --prefix=mkchromecast-${tar_version}/ $treeish > $tarfile
+gzip -f $tarfile
+echo "Created $tarfile.gz"
