@@ -10,6 +10,8 @@
     - 10bits mkv files are now encoded to 8bits. This fixes #156.
     - node streaming updated to work with `node v9.8.0`.
     - Improved pause/resume when casting videos. Closes #97.
+    - Added support for Fedora packages. Thanks to @leamas.
+    - setup.py Linux support. Closes #173. Thanks to @leamas.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
