@@ -3,7 +3,6 @@
 """
 Linux/MacOS build script for mkchromecast
 
-
 MacOS usage:
     python3 setup.py py2app
     cp -R /usr/local/Cellar/qt5/5.6.0/plugins \
@@ -29,11 +28,10 @@ import platform
 from glob import glob
 from setuptools import setup
 
+exec(open('mkchromecast/version.py').read())
+
 ROOT = os.path.dirname(__file__)
 ROOT = ROOT if ROOT else '.'
-
-VERSION = \
-    open('mkchromecast/version.py').readlines()[-1].split()[-1].strip("\"'")
 
 LINUX_DATA = [
     ('share/mkchromecast/nodejs', glob('nodejs/*')),
@@ -95,8 +93,8 @@ OPTIONS = {
         'CFBundleDisplayName': APP_NAME,
         'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices and Sonos speakers',
         'CFBundleIdentifier': 'com.mkchromecast.osx',
-        'CFBundleVersion': VERSION,
-        'CFBundleShortVersionString': VERSION,
+        'CFBundleVersion': __version__,
+        'CFBundleShortVersionString': __version__,
         'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
         'LSPrefersPPC': True,
         'LSUIElement': True
@@ -117,7 +115,7 @@ if platform.system() == 'Darwin':
 elif platform.system() == 'Linux':
     setup(
         name='mkchromecast',
-        version=VERSION,
+        version=__version__,
         description='Cast Linux audio or video to Google Cast devices',
         long_description=open(ROOT + '/README.md').read(),
         include_package_data=True,
