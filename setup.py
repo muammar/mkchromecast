@@ -1,7 +1,5 @@
-# This file is part of mkchromecast.
-
-"""
-Linux/MacOS build script for mkchromecast
+r"""
+Linux/MacOS build script for mkchromecast.
 
 MacOS usage:
     python3 setup.py py2app
@@ -62,7 +60,7 @@ DATA_FILES.extend(glob('images/google*.icns'))
 
 OPTIONS = {
     'argv_emulation': True,
-        'prefer_ppc': True,
+    'prefer_ppc': True,
     'iconfile': 'images/google.icns',
     'includes': [
         'google',
@@ -73,16 +71,18 @@ OPTIONS = {
         'PyQt5.QtWidgets',
         'Flask',
         'configparser'
-        ],
+    ],
     'packages': ['requests'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices and Sonos speakers',
+        'CFBundleGetInfoString':
+            'Cast macOS audio to your Google cast devices and Sonos speakers',
         'CFBundleIdentifier': 'com.mkchromecast.osx',
         'CFBundleVersion': __version__,
         'CFBundleShortVersionString': __version__,
-        'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
+        'NSHumanReadableCopyright':
+            u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
         'LSPrefersPPC': True,
         'LSUIElement': True
     }
