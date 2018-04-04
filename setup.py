@@ -57,21 +57,8 @@ LINUX_CLASSIFIERS = [
 
 APP = ['start_tray.py']
 APP_NAME = 'Mkchromecast'
-DATA_FILES = [
-        'images/google.icns',
-        'images/google_working.icns',
-        'images/google_nodev.icns',
-        'images/google_b.icns',
-        'images/google_working_b.icns',
-        'images/google_nodev_b.icns',
-        'images/google_w.icns',
-        'images/google_working_w.icns',
-        'images/google_nodev_w.icns',
-        'bin/audiodevice',
-        'bin/mkchromecast',
-        'nodejs',
-        'notifier'
-        ]
+DATA_FILES = ['bin/audiodevice', 'bin/mkchromecast', 'nodejs', 'notifier']
+DATA_FILES.extend(glob('images/google*.icns'))
 
 OPTIONS = {
     'argv_emulation': True,
