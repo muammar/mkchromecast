@@ -110,7 +110,7 @@ if platform.system() == 'Darwin':
         name=APP_NAME,
         app=APP,
         data_files=DATA_FILES,
-        package='Mkchromecast',
+        packages=['Mkchromecast'],
         platforms=['i386', 'x86_64'],
         options={'py2app': OPTIONS},
         setup_requires=['py2app'],
