@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 # Credits to https://gist.github.com/Jossef/0ee20314577925b4027f
