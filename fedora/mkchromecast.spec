@@ -1,3 +1,5 @@
+#  Builds upcoming 0.9.0 release, or current devel from 6f7dfe1be
+
 %global     __python     %{__python3}
 
 %global     commit       965c6e80672d192439e09da64346a8f9a014f6f9
@@ -18,8 +20,6 @@ URL:        http://mkchromecast.com/
 #Source0:    %%{repo}/archive/%%{commit}/%%{name}-%%{shortcommit}.tar.gz
 Source0:    %{repo}/archive/%{gittag}/%{name}-%{version}.tar.gz
 Source1:    README.fedora
-Patch1:     0001-Move-mkchromecast.py-to-bin-mkchromecast-shebang-fix.patch
-Patch2:     0002-setup.py-Support-linux-installations.patch
 
 BuildRequires:  python%{python3_pkgversion}-devel
 BuildRequires:  python%{python3_pkgversion}-setuptools
