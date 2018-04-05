@@ -1,10 +1,5 @@
-#!/usr/bin/env python
-
-# This file is part of mkchromecast.
-
-"""
-Linux/MacOS build script for mkchromecast
-
+r"""
+Linux/MacOS build script for mkchromecast.
 
 MacOS usage:
     python3 setup.py py2app
@@ -19,6 +14,7 @@ On MacOS you need to install using pip3 the following:
 
 On Linux, this is a standard distutils script supporting
 
+   rm -r nodejs/bin nodejs/node_modules
    python3 setup.py build
    python3 setup.py install
 
@@ -31,11 +27,10 @@ import platform
 from glob import glob
 from setuptools import setup
 
+exec(open('mkchromecast/version.py').read())
+
 ROOT = os.path.dirname(__file__)
 ROOT = ROOT if ROOT else '.'
-
-VERSION = \
-    open('mkchromecast/version.py').readlines()[-1].split()[-1].strip("\"'")
 
 LINUX_DATA = [
     ('share/mkchromecast/nodejs', glob('nodejs/*')),
@@ -61,25 +56,12 @@ LINUX_CLASSIFIERS = [
 
 APP = ['start_tray.py']
 APP_NAME = 'Mkchromecast'
-DATA_FILES = [
-        'images/google.icns',
-        'images/google_working.icns',
-        'images/google_nodev.icns',
-        'images/google_b.icns',
-        'images/google_working_b.icns',
-        'images/google_nodev_b.icns',
-        'images/google_w.icns',
-        'images/google_working_w.icns',
-        'images/google_nodev_w.icns',
-        'bin/audiodevice',
-        'bin/mkchromecast',
-        'nodejs',
-        'notifier'
-        ]
+DATA_FILES = ['bin/audiodevice', 'bin/mkchromecast', 'nodejs', 'notifier']
+DATA_FILES.extend(glob('images/google*.icns'))
 
 OPTIONS = {
     'argv_emulation': True,
-        'prefer_ppc': True,
+    'prefer_ppc': True,
     'iconfile': 'images/google.icns',
     'includes': [
         'google',
@@ -90,16 +72,18 @@ OPTIONS = {
         'PyQt5.QtWidgets',
         'Flask',
         'configparser'
-        ],
+    ],
     'packages': ['requests'],
     'plist': {
         'CFBundleName': APP_NAME,
         'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString': 'Cast macOS audio to your Google cast devices and Sonos speakers',
+        'CFBundleGetInfoString':
+            'Cast macOS audio to your Google cast devices and Sonos speakers',
         'CFBundleIdentifier': 'com.mkchromecast.osx',
-        'CFBundleVersion': VERSION,
-        'CFBundleShortVersionString': VERSION,
-        'NSHumanReadableCopyright': u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
+        'CFBundleVersion': __version__,
+        'CFBundleShortVersionString': __version__,
+        'NSHumanReadableCopyright':
+            u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
         'LSPrefersPPC': True,
         'LSUIElement': True
     }
@@ -119,7 +103,7 @@ if platform.system() == 'Darwin':
 elif platform.system() == 'Linux':
     setup(
         name='mkchromecast',
-        version=VERSION,
+        version=__version__,
         description='Cast Linux audio or video to Google Cast devices',
         long_description=open(ROOT + '/README.md').read(),
         include_package_data=True,
