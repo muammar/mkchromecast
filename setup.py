@@ -33,7 +33,11 @@ ROOT = os.path.dirname(__file__)
 ROOT = ROOT if ROOT else '.'
 
 LINUX_DATA = [
-    ('share/mkchromecast/nodejs', glob('nodejs/*')),
+    ('share/mkchromecast/nodejs', [ 
+        'nodejs/package.json',    
+        'nodejs/package-lock.json',    
+        'nodejs/html5-video-streamer.js',    
+    ]),
     ('share/mkchromecast/images', glob('images/google*.png')),
     ('share/applications/', ['mkchromecast.desktop']),
     ('share/man/man1', ['mkchromecast.1']),
