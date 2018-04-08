@@ -1,6 +1,0 @@
-
-The "config.h" file on each platform is generated with these flags:
-
-  ./configure --enable-static --disable-shared --with-pic --disable-rpath --disable-frontend --disable-gtktest
-
-On Windows, the "config.h" file is simply the "configMS.h" file in the root of the lame repo
