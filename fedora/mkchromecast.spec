@@ -2,23 +2,24 @@
 
 %global     __python     %{__python3}
 
-%global     commit       965c6e80672d192439e09da64346a8f9a014f6f9
-%global     gittag       0.3.8.1
+%global     commit       9eb5cf1bc8127c46d81c089237d0fcbe8d151025
+#global     gittag       0.3.9
 %global     shortcommit  %(c=%{commit}; echo ${c:0:7})
+%global     shortdir     %{?gittag}%{?shortcommit}
+%global     srcdir       %{?gittag}%{?commit}
 
 %global     repo         https://github.com/muammar/mkchromecast/
 
 Name:       mkchromecast
-Version:    0.3.8.1
-Release:    1%{?dist}
+Version:    0.3.9
+Release:    0.1%{?dist}
 Summary:    Cast linux sound and video to a chromecast device
 
 Group:      Applications/Multimedia
 License:    MIT
 BuildArch:  noarch
 URL:        http://mkchromecast.com/
-#Source0:    %%{repo}/archive/%%{commit}/%%{name}-%%{shortcommit}.tar.gz
-Source0:    %{repo}/archive/%{gittag}/%{name}-%{version}.tar.gz
+Source0:    %{repo}/archive/%{commit}/%{name}-%{shortdir}.tar.gz
 Source1:    README.fedora
 
 BuildRequires:  python%{python3_pkgversion}-devel
@@ -81,9 +82,7 @@ server.
 
 
 %prep
-%autosetup -p1 -n %{name}-%{gittag}
-#%%autosetup -p1 -n %%{name}-%%{commit}
-rm -rf nodejs
+%autosetup -p1 -n %{name}-%{srcdir}
 
 
 %build
@@ -93,9 +92,6 @@ rm -rf nodejs
 %install
 %py3_install
 cp -a %SOURCE1 .
-for lib in $RPM_BUILD_ROOT/%{python_sitelib}/mkchromecast/*.py; do
-    sed -i '1{\@^#!/usr/bin/env python@d}' $lib  || :
-done
 
 
 %files
@@ -115,5 +111,10 @@ done
 
 
 %changelog
+* Mon Apr 09 2018 Alec Leamas <leamas.alec@gmail.com> - 0.3.9-0.1
+- Merge current master
+- Clean up disttag/commit macro mess.
+- Drop upstreamed fixes.
+
 * Sun Apr 01 2018 Alec Leamas <leamas.alec@gmail.com> - 0.3.8.1-1
 - Initial release
