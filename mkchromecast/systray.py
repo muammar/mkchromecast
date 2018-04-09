@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
@@ -12,7 +11,7 @@ from mkchromecast.preferences import ConfigSectionMap
 import mkchromecast.preferences
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import remove_sink
-from mkchromecast.utils import del_tmp
+from mkchromecast.utils import del_tmp, checkmktmp
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, Qt
@@ -463,12 +462,12 @@ class menubar(QtWidgets.QMainWindow):
             print('Available Media Streaming Devices', self.availablecc)
             for index, menuentry in enumerate(self.availablecc):
                 try:
-                    self.a = self.ag.addAction(
+                    a = self.ag.addAction(
                             (QtWidgets.QAction(
                                 str(menuentry[1]), self, checkable=True)))
-                    self.menuentry = self.menu.addAction(self.a)
+                    self.menuentry = self.menu.addAction(a)
                 except UnicodeEncodeError:
-                    self.menuentry = self.menu.addAction(str(
+                    a = self.menuentry = self.menu.addAction(str(
                         unicode(menuentry[1]).encode("utf-8")))
                 # The receiver is a lambda function that passes clicked as
                 # a boolean, and the clicked_item as an argument to the
@@ -478,7 +477,7 @@ class menubar(QtWidgets.QMainWindow):
                 #
                 # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
                 receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(clicked_item)
-                self.a.triggered.connect(receiver)
+                a.triggered.connect(receiver)
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
@@ -555,7 +554,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.kill_child()
             except psutil.NoSuchProcess:
                 pass
-            mkchromecast.__init__.checkmktmp()
+            checkmktmp()
             self.search_cast()
 
             # This is to retry when stopping and
@@ -823,7 +822,7 @@ class menubar(QtWidgets.QMainWindow):
         <br>
         See the
         <a href=
-        "https://github.com/muammar/mkchromecast/blob/master/LICENSE.rst">
+        "https://github.com/muammar/mkchromecast/blob/master/LICENSE">
         MIT license</a> for details.
         </p>
                 """)
@@ -900,5 +899,5 @@ def main():
     menubar()
 
 if __name__ == '__main__':
-    mkchromecast.__init__.checkmktmp()
+    checkmktmp()
     main()

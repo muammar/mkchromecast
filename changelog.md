@@ -1,3 +1,22 @@
+* Mkchromecast (0.3.9) **unreleased**
+
+    - New flag `--loop` to loop video indefinitely while streaming. Closes
+      #113.
+    - New flag `--mtype` to specify media type. Closes #128.
+    - Modified how pyqt is used to accomodate pyqt 5.5, which is what comes in
+      Ubuntu 16.04 LTS
+    - Removed the -max_muxing_queue_size ffmpeg flag because it's not supported
+      in ffmpeg 2.8.11.
+    - Screencast with audio.
+    - 10bits mkv files are now encoded to 8bits. This fixes #156.
+    - node streaming updated to work with `node v9.8.0`.
+    - Improved pause/resume when casting videos. Closes #97.
+    - Added support for Fedora packages. Thanks to @leamas.
+    - setup.py Linux support. Closes #173. Thanks to @leamas.
+    - `nodejs` content is dropped. We provide now `package.json` and
+      `package-lock.json` files. This will considerably reduce repository size.
+      Thanks to @leamas.
+
 * mkchromecast (0.3.8.1) **2017/12/24**
 
     - A bug when no devices where found has been fixed in this release.

@@ -6,5 +6,5 @@ setuptools==36.6.0
 requests==2.18.4
 mutagen==1.38
 psutil==5.4.0
-PyQt5==5.9
+PyQt5
 gi==1.2
