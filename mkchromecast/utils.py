@@ -1,11 +1,14 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 
-from os import getpid
 import psutil
+import pickle
+from os import getpid
 import os.path
 import mkchromecast.colors as colors
+import subprocess
+import json
+
 try:
     from urlparse import urlparse
 except:
@@ -63,3 +66,39 @@ def check_url(url):
         return True if [result.scheme, result.netloc, result.path] else False
     except Exception as e:
         return False
+
+
+def writePidFile():
+    # This is to verify that pickle tmp file exists
+    if os.path.exists('/tmp/mkchromecast.pid') is True:
+        os.remove('/tmp/mkchromecast.pid')
+    pid = str(os.getpid())
+    f = open('/tmp/mkchromecast.pid', 'wb')
+    pickle.dump(pid, f)
+    f.close()
+    return
+
+
+def checkmktmp():
+    # This is to verify that pickle tmp file exists
+    if os.path.exists('/tmp/mkchromecast.tmp') is True:
+        os.remove('/tmp/mkchromecast.tmp')
+    return
+
+def check_file_info(name, what=None):
+    """Check things about files"""
+
+    command = ['ffprobe', '-show_format', '-show_streams', '-loglevel', 'quiet',
+               '-print_format', 'json', name]
+
+    info = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+            )
+    info_out, info_error = info.communicate()
+    d = json.loads(info_out)
+
+    if what == 'bit-depth':
+        bit_depth = d['streams'][0]['pix_fmt']
+        return bit_depth

@@ -1,13 +1,12 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 
 from __future__ import print_function
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.__init__ import checkmktmp, args
+from mkchromecast.__init__ import args
 from mkchromecast.preferences import ConfigSectionMap
-from mkchromecast.utils import terminate
+from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
 import time
 import pychromecast
@@ -395,6 +394,16 @@ class casting(object):
                                 title=self.title)
             if self.tray is True:
                 self.cast = self.sonos
+
+    def pause(self):
+        """ Pause casting """
+        media_controller = self.cast.media_controller
+        media_controller.pause()
+
+    def play(self):
+        """ Play casting """
+        media_controller = self.cast.media_controller
+        media_controller.play()
 
     def stop_cast(self):
         try:
