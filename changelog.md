@@ -16,6 +16,7 @@
     - `nodejs` content is dropped. We provide now `package.json` and
       `package-lock.json` files. This will considerably reduce repository size.
       Thanks to @leamas.
+    - Using the `--youtube` flag works for audio-only streaming.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
