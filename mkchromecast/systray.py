@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
