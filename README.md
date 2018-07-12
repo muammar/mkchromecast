@@ -239,16 +239,18 @@ here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 ##### Arch Linux
 
-Mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
+Mkchromecast is available at the AUR : 
+- Release version: [https://aur.archlinux.org/packages/mkchromecast/](https://aur.archlinux.org/packages/mkchromecast/).
+- Development version: [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 
 ```bash
-#install with yaourt
-yaourt mkchromecast-git
+#install with aurman
+aurman -S mkchromecast
 ```
 
 ```bash
-#install with pacaur
-pacaur -S mkchromecast-git
+#install with aurutils
+aur sync mkchromecast
 ```
 
 If you get the error `cannot import name 'DependencyWarning'` in Arch Linux,
