@@ -154,32 +154,25 @@ def streaming():
     """
     Node section
     """
-    if os.path.exists('./bin/node') is True:
-        webcast = [
-            './bin/node',
-            './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
-            '-b',
-            bitrate,
-            '-s',
-            samplerate,
-            '-p',
-            '5000',
-            '-u',
-            'stream'
-            ]
+    paths = ['/usr/local/bin/node', './bin/node', './nodejs/bin/node']
+
+    for path in paths:
+        if os.path.exists(path) is True:
+            webcast = [
+                    path,
+                    './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
+                    '-b',
+                    bitrate,
+                    '-s',
+                    samplerate,
+                    '-p',
+                    '5000',
+                    '-u',
+                    'stream']
+        break
     else:
-        webcast = [
-            './nodejs/bin/node',
-            './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
-            '-b',
-            bitrate,
-            '-s',
-            samplerate,
-            '-p',
-            '5000',
-            '-u',
-            'stream'
-            ]
+        pass
+
     p = subprocess.Popen(webcast)
     if debug is True:
         print(':::node::: node command: %s.' % webcast)
