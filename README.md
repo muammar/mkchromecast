@@ -110,7 +110,8 @@ following:
 
 * Pulseaudio.
 * Pavucontrol.
-* Python2 (if using the official debian package), or Python3.
+* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
+  `0.4.0`), or Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -134,7 +135,8 @@ requirements are:
 * alsa-base
 * alsa-utils
 * alsa-utils
-* Python2 (if using the official debian package), or Python3.
+* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
+  `0.4.0`), or Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -361,9 +363,8 @@ apt-get install libav-tools
 
 ##### PyQt5
 
-These Python bindings are needed if you intend to use the system tray menu. As
-of today April 28th, `pip` is able to install `PyQt5`. Therefore, you can do
-a `pip install pyqt5`.
+These Python bindings are needed if you intend to use the system tray menu.
+Sometimes `pip` is able to install `PyQt5` and`pip install pyqt5` is enough.
 
 If this does not work for you, I suggest you to install it using a package
 manager.
@@ -408,7 +409,7 @@ or if you prefer it, you can just pass the `--update` argument to
 **Mkchromecast**:
 
 ```
-python mkchromecast.py --update
+bin/mkchromecast --update
 ```
 
 If you are using the **macOS** application:
@@ -431,7 +432,7 @@ Usage
 Get into the cloned **Mkchromecast** directory and execute:
 
 ```
-python mkchromecast.py
+bin/mkchromecast
 ```
 
 This will launch **Mkchromecast** using `node.js` (or `parec` for **Linux**
@@ -459,19 +460,19 @@ does not apply.
 Below an example using `mp3`:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg
+bin/mkchromecast --encoder-backend ffmpeg
 ```
 
 With `ffmpeg` you can modify the codec:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c aac
+bin/mkchromecast --encoder-backend ffmpeg -c aac
 ```
 
 change the bitrate and sample rate:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
+bin/mkchromecast --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
 check the section [Soundflower (macOS users
@@ -482,7 +483,7 @@ You also can set the host ip manually which is a useful option when having more
 than one active network connection or when the automatically ip detection fails:
 
 ```
-python mkchromecast.py --host 192.168.1.1
+bin/mkchromecast --host 192.168.1.1
 ```
 
 ##### Other examples with **Mkchromecast** installed using the debian package
@@ -512,7 +513,7 @@ commands above.
 To launch it:
 
 ```
-python mkchromecast.py -t
+bin/mkchromecast -t
 ```
 or
 
@@ -531,7 +532,7 @@ sites](https://rg3.github.io/youtube-dl/supportedsites.html) headlessly from
 the command line:
 
 ```
-python mkchromecast.py -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
+bin/mkchromecast -y https://www.youtube.com/watch\?v\=NVvAJhZVBT
 ```
 
 To use this function, you need to install `youtube-dl`. In macOS, this can be
@@ -546,7 +547,7 @@ URLs over `https` are supported.
 You can play any source URLs headlessly from the command line:
 
 ```
-python mkchromecast.py --source-url SOURCE_URL
+bin/mkchromecast --source-url SOURCE_URL
 ```
 
 This option is useful for:
@@ -557,7 +558,7 @@ This option is useful for:
 Example:
 
 ```
-python mkchromecast.py --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
+bin/mkchromecast --source-url http://192.99.131.205:8000/pvfm1.ogg -c ogg --control
 
 ```
 
@@ -571,7 +572,7 @@ You can control the volume of your Google Cast device by launching
 **Mkchromecast** with the option `--control`:
 
 ```
-python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 320 --control
+bin/mkchromecast --encoder-backend ffmpeg -c ogg -b 320 --control
 ```
 
 This will allow you to press <kbd>u</kbd> and <kbd>d</kbd> keys for `volume up`
@@ -604,11 +605,11 @@ for this process. [See this project](https://github.com/muammar/mkchromecast/pro
 * Cast a file from your computer to your chromecast:
 
 ```
-python mkchromecast.py --video -i "/path/to/file.mp4"
+bin/mkchromecast --video -i "/path/to/file.mp4"
 ```
 
 ```
-python mkchromecast.py --video -i "/path/to/file.mp4" --encoder-backend node
+bin/mkchromecast --video -i "/path/to/file.mp4" --encoder-backend node
 ```
 
 **Note**: the format of the file can be whatever is supported by `ffmpeg` and not exclusively mp4.
@@ -616,25 +617,25 @@ python mkchromecast.py --video -i "/path/to/file.mp4" --encoder-backend node
 * Subtitles
 
 ```
-python mkchromecast.py --video -i "/tmp/Homeland.S06E01.Fair.Game.1080p.AMZN.WEBRip.HEVC.DD5.1.x265.mkv" --subtitles /tmp/Homeland.S06E01.Fair\ Game.HDTV.x264-BATV.en.HI.srt
+bin/mkchromecast --video -i "/tmp/Homeland.S06E01.Fair.Game.1080p.AMZN.WEBRip.HEVC.DD5.1.x265.mkv" --subtitles /tmp/Homeland.S06E01.Fair\ Game.HDTV.x264-BATV.en.HI.srt
 ```
 
 * Set the resolution
 
 ```
-python mkchromecast.py --video --resolution 4k -i /path/to/myvideo.something --subtitles /path/to/my.srt
+bin/mkchromecast --video --resolution 4k -i /path/to/myvideo.something --subtitles /path/to/my.srt
 ```
 
 * Cast from a source url:
 
 ```
-python mkchromecast.py --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --volume --video
+bin/mkchromecast --source-url http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 -c mp4 --volume --video
 ```
 
 * Youtube Video
 
 ```
-python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
+bin/mkchromecast -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
 ```
 
 
@@ -653,7 +654,7 @@ More help
 To get more help:
 
 ```
-python mkchromecast.py -h
+bin/mkchromecast -h
 ```
 
 or when installing the debian package:

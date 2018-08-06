@@ -1,23 +1,8 @@
 Building node and npm
 =====================
 
-This directory contains all related to nodejs. **mkchromecast**  ships a local
-version of `node` and also `npm` to operate correctly and ease the updating of
-`node_modules` directory.
+To build this you need node and npm. Install them directly from
+https://nodejs.org/en/download/, using Homebrew on MacOS or with
+package managers on Linux.
 
-To build node, just execute:
-
-```
-./recompile_node.sh $version
-```
-
-Example:
-
-```
-./recompile_node.sh 6.3.0
-```
-
-This will install the package at `mkchromecast/nodejs/node-$version`.
-
-**Note**: I am now just using node shipped by Homebrew. I might remove this in
-the future.
+From that point, just use *npm install* to load the dependencies.

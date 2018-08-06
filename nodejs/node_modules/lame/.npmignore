@@ -1,9 +1,0 @@
-build
-.lock-wscript
-/node_modules
-/npm-debug.log
-
-# Ignore root level development test files
-/*.wav
-/*.mp3
-/*.f32le

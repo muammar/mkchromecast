@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 # This file is part of mkchromecast.
 
@@ -43,6 +42,7 @@ adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
 segment_time = mkchromecast.__init__.segment_time
 port = mkchromecast.__init__.port
+platform = mkchromecast.__init__.platform
 
 frame_size = 32 * chunk_size
 buffer_size = 2 * chunk_size**2
@@ -280,7 +280,6 @@ else:
     """
     We verify platform and other options
     """
-    platform = mkchromecast.__init__.platform
 
     # This function add some more flags to the ffmpeg command
     # when user passes --debug option.
