@@ -1,5 +1,4 @@
 netifaces==0.10.6
-soco==0.12
 requests==2.18.4
 Flask==0.12.2
 setuptools==39.2.0
