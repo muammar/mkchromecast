@@ -180,7 +180,16 @@ class menubar(QtWidgets.QMainWindow):
         self.about_menu()
         self.exit_menu()
         self.tray.setContextMenu(self.menu)
-        self.tray.show()
+
+        if platform == 'Linux':
+            while self.tray.isSystemTrayAvailable() is False:
+                pass
+            else:
+                self.tray.show()
+
+        else:
+            self.tray.show()
+
         """
         This is for the search at launch
         """
