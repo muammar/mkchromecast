@@ -9,7 +9,7 @@ Mkchromecast
 This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
-It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
+It is written for Python3, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **Mkchromecast** is capable of using lossy and lossless
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
@@ -91,7 +91,7 @@ Requirements:
 In order to use **Mkchromecast** you need the following software to stream with
 `node.js`:
 
-* Python2 (already shipped in OS X), or Python3.
+* Python3.
 * pychromecast.
 * psutil.
 * mutagen.
@@ -110,8 +110,7 @@ following:
 
 * Pulseaudio.
 * Pavucontrol.
-* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
-  `0.4.0`), or Python3 (if using the official debian package).
+* Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -135,8 +134,7 @@ requirements are:
 * alsa-base
 * alsa-utils
 * alsa-utils
-* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
-  `0.4.0`), or Python3 (if using the official debian package).
+* Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -241,7 +239,7 @@ here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 ##### Arch Linux
 
-Mkchromecast is available at the AUR : 
+Mkchromecast is available at the AUR :
 - Release version: [https://aur.archlinux.org/packages/mkchromecast/](https://aur.archlinux.org/packages/mkchromecast/).
 - Development version: [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 
@@ -281,10 +279,10 @@ managers coming with their distributions.
 Example for Debian based distros:
 
 ```
-sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
+sudo apt-get install python3.6 python3-pip python3-pychromecast python3-flask python3-psutil python3-setuptools python3-mutagen python3-gi vorbis-tools sox lame flac faac opus-tools
 ```
 
-**Note**: if `python-pychromecast` is not available in your repository,
+**Note**: if `python3-pychromecast` is not available in your repository,
 follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
 ##### Soundflower (macOS users only)
@@ -374,20 +372,12 @@ manager.
 Example with Homebrew:
 
 ```
-brew install pyqt5 --with-python
+brew install pyqt5 --with-python3
 ```
 
 ###### Linux
 
 * **Debian**
-
-For Python2:
-
-```
-apt-get install python-pyqt5
-```
-
-For Python3:
 
 ```
 apt-get install python3-pyqt5
