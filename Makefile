@@ -70,3 +70,9 @@ clean:
 	git clean -f -d
 	git checkout mkchromecast/__init__.py
 	rm -f mkchromecast/*.pyc
+
+deepclean:
+	git clean -f -d
+	git checkout mkchromecast/__init__.py
+	rm -f mkchromecast/*.pyc
+	rm -rf dist build
