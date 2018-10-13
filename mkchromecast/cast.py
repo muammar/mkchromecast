@@ -9,8 +9,6 @@ from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
 import time
-import pychromecast
-from pychromecast.dial import reboot
 import socket
 import os.path
 import pickle
@@ -33,6 +31,16 @@ try:
     sonos = True
 except ImportError:
     sonos = False
+
+"""
+We verify that pychromecast is installed
+"""
+try:
+    import pychromecast
+    from pychromecast.dial import reboot
+    chromecast = True
+except ImportError:
+    chromecast = False
 
 
 class casting(object):
@@ -130,11 +138,14 @@ class casting(object):
         # This fixes the `No handlers could be found for logger
         # "pychromecast.socket_client` warning"`.
         # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
-        from pychromecast import socket_client
-        self.cclist = self._get_chromecasts()
-        self.cclist = [[i, _, 'Gcast'] for i, _ in enumerate(self.cclist)]
+        if chromecast:
+            from pychromecast import socket_client
+            self.cclist = self._get_chromecasts()
+            self.cclist = [[i, _, 'Gcast'] for i, _ in enumerate(self.cclist)]
+        else:
+            self.cclist = []
 
-        if sonos is True:
+        if sonos:
             try:
                 self.sonos_list = list(soco.discover())
                 for self.index, device in enumerate(self.sonos_list):
@@ -176,10 +187,14 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important('List of Devices Available in Network:'))
-                print(colors.important('-------------------------------------\n'))
-                print(colors.important('Index   Types   Friendly Name '))
-                print(colors.important('=====   =====   ============= '))
+                print(colors.important(
+                    'List of Devices Available in Network:'))
+                print(colors.important(
+                    '-------------------------------------\n'))
+                print(colors.important(
+                    'Index   Types   Friendly Name '))
+                print(colors.important(
+                    '=====   =====   ============= '))
                 self.availablecc()
             else:
                 if self.debug is True:
@@ -200,10 +215,14 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important('List of Devices Available in Network:'))
-                print(colors.important('-------------------------------------\n'))
-                print(colors.important('Index   Types   Friendly Name '))
-                print(colors.important('=====   =====   ============= '))
+                print(colors.important(
+                    'List of Devices Available in Network:'))
+                print(colors.important(
+                    '-------------------------------------\n'))
+                print(colors.important(
+                    'Index   Types   Friendly Name '))
+                print(colors.important(
+                    '=====   =====   ============= '))
                 self.availablecc()
             else:
                 if self.debug is True:
@@ -261,42 +280,44 @@ class casting(object):
     def get_cc(self):
         if self.debug is True:
             print('def get_cc(self):')
-        try:
-            if self.ccname is not None:
-                self.cast_to = self.ccname
-            self.cast = self._get_chromecast(self.cast_to)
-            # Wait for cast device to be ready
-            self.cast.wait()
-            print(' ')
-            print(colors.important('Information about ') + ' ' +
-                  colors.success(self.cast_to))
-            print(' ')
-            print(self.cast.device)
-            print(' ')
-            print(colors.important('Status of device ') + ' ' +
-                  colors.success(self.cast_to))
-            print(' ')
-            print(self.cast.status)
-            print(' ')
-        except pychromecast.error.NoChromecastFoundError:
-            print(colors.error('No Chromecasts matching filter criteria'
-                               ' were found!'))
-            if self.platform == 'Darwin':
-                inputint()
-                outputint()
-            elif self.platform == 'Linux':
-                remove_sink()
-            # In the case that the tray is used, we don't kill the application
-            if self.tray is False:
-                print(colors.error('Finishing the application...'))
-                terminate()
-                exit()
-            else:
-                self.stop_cast()
-        except AttributeError:
-            pass
-        except KeyError:
-            pass
+        if chromecast:
+            try:
+                if self.ccname is not None:
+                    self.cast_to = self.ccname
+                self.cast = self._get_chromecast(self.cast_to)
+                # Wait for cast device to be ready
+                self.cast.wait()
+                print(' ')
+                print(colors.important('Information about ') + ' ' +
+                      colors.success(self.cast_to))
+                print(' ')
+                print(self.cast.device)
+                print(' ')
+                print(colors.important('Status of device ') + ' ' +
+                      colors.success(self.cast_to))
+                print(' ')
+                print(self.cast.status)
+                print(' ')
+            except pychromecast.error.NoChromecastFoundError:
+                print(colors.error('No Chromecasts matching filter criteria'
+                                   ' were found!'))
+                if self.platform == 'Darwin':
+                    inputint()
+                    outputint()
+                elif self.platform == 'Linux':
+                    remove_sink()
+                # In the case that the tray is used, we don't kill the
+                # application
+                if self.tray is False:
+                    print(colors.error('Finishing the application...'))
+                    terminate()
+                    exit()
+                else:
+                    self.stop_cast()
+            except AttributeError:
+                pass
+            except KeyError:
+                pass
 
     def play_cast(self):
         if self.debug is True:

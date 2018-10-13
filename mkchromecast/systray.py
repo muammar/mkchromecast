@@ -16,9 +16,7 @@ import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, Qt
 from PyQt5.QtWidgets import QWidget, QMessageBox
-import pychromecast
 import socket
-from pychromecast.dial import reboot
 import signal
 import os.path
 import psutil
@@ -26,6 +24,17 @@ import pickle
 import subprocess
 from os import getpid
 import sys
+
+"""
+We verify that pychromecast is installed
+"""
+try:
+    import pychromecast
+    from pychromecast.dial import reboot
+    chromecast = True
+except ImportError:
+    chromecast = False
+
 """
 Configparser is imported differently in Python3
 """
@@ -559,16 +568,17 @@ class menubar(QtWidgets.QMainWindow):
 
             # This is to retry when stopping and
             # pychromecast.error.NotConnected raises.
-            while True:
-                try:
-                    self.cast.quit_app()
-                except pychromecast.error.NotConnected:
-                    continue
-                except AttributeError:
-                    # This is for sonos. The thing is that if we are at this
-                    # point, user requested an stop or cast failed.
-                    self.cast.stop()
-                break
+            if chromecast:
+                while True:
+                    try:
+                        self.cast.quit_app()
+                    except pychromecast.error.NotConnected:
+                        continue
+                    except AttributeError:
+                        # This is for sonos. The thing is that if we are at this
+                        # point, user requested an stop or cast failed.
+                        self.cast.stop()
+                    break
 
             self.stopped = True
             self.read_config()
