@@ -193,7 +193,6 @@ else:
             '-re',
             '-i', input_file,
             '-i', subtitles,
-            #'-map_chapters', '-1',
             '-c:v', 'copy',
             '-c:a', 'copy',
             '-c:s', 'mov_text',
@@ -355,7 +354,9 @@ def main():
         if platform == 'Darwin':
             PATH = './bin:./nodejs/bin:/Users/' + \
                    str(USER) + \
-                   '/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' + \
+                   '/bin:/usr/local/bin:/usr/local/sbin:' + \
+                   '/usr/bin:/bin:/usr/sbin:' + \
+                   '/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:' + \
                    os.environ['PATH']
         else:
             PATH = os.environ['PATH']
@@ -363,26 +364,24 @@ def main():
         if debug is True:
             print('PATH = %s.' % PATH)
 
-        if platform == 'Darwin' and os.path.exists('./bin/node') is True:
-            webcast = [
-                './bin/node',
-                './nodejs/html5-video-streamer.js',
-                input_file
-                ]
+        if platform == 'Darwin':
+            node_names = ['node']
+            nodejs_dir = ['./nodejs/']
         elif platform == 'Linux':
-            node_names = ['node', 'nodejs']
-            nodejs_dir = ['./nodejs/', '/usr/share/mkchromecast/nodejs/']
-            for name in node_names:
-                if is_installed(name, PATH, debug) is True:
-                    for path in nodejs_dir:
-                        if os.path.isdir(path):
-                            path = path + 'html5-video-streamer.js'
-                            webcast = [
-                                name,
-                                path,
-                                input_file
-                                ]
-                            break
+            node_names.append('nodejs')
+            nodejs_dir.append('/usr/share/mkchromecast/nodejs/')
+
+        for name in node_names:
+            if is_installed(name, PATH, debug) is True:
+                for path in nodejs_dir:
+                    if os.path.isdir(path):
+                        path = path + 'html5-video-streamer.js'
+                        webcast = [
+                            name,
+                            path,
+                            input_file
+                            ]
+                        break
         try:
             Popen(webcast)
         except:
