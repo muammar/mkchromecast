@@ -1,3 +1,12 @@
+mkchromecast (0.3.8.1-2) unstable; urgency=medium
+
+  * Changing the way mkchromecast-* packages recommend installation of
+    mkchromecast. Closes #909822. Thanks to Ruben Undheim for providing
+    a patch.
+  * The Debian packaging also was adapted and improved by Alec Leamas.
+
+ -- Muammar El Khatib <muammar@debian.org>  Sun, 21 Oct 2018 15:22:01 -0400
+
 mkchromecast (0.3.8.1-1) unstable; urgency=medium
 
   * New upstream release fixing bug happening when no devices were found.

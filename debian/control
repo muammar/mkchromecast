@@ -27,11 +27,10 @@ Depends: ${python3:Depends},
          opus-tools,
          youtube-dl,
          nodejs,
-         gir1.2-notify-0.7
+         gir1.2-notify-0.7,
+         mkchromecast-pulseaudio | mkchromecast-alsa | mkchromecast-gstreamer
 Suggests: libav-tools,
-          ffmpeg,
-          mkchromecast-pulseaudio,
-          mkchromecast-alsa
+          ffmpeg
 Description: Cast your Linux audio or video to your Google Cast devices
  It is written in Python, and it streams via node.js, ffmpeg, or avconv.
  mkchromecast is capable of using lossy and lossless audio formats provided
@@ -57,8 +56,8 @@ Depends: ${python3:Depends},
          ${misc:Depends},
          pavucontrol,
          pulseaudio-utils,
-         pulseaudio,
-         mkchromecast
+         pulseaudio
+Recommends: mkchromecast
 Description: Pulseaudio dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
  considered essential for using mkchromecast together with pulseaudio sound
@@ -71,8 +70,8 @@ Depends: ${python3:Depends},
          alsa-utils,
          alsa-tools,
          kmod,
-         ffmpeg,
-         mkchromecast
+         ffmpeg
+Recommends: mkchromecast
 Description: ALSA dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
  considered essential for using mkchromecast together with ALSA software
@@ -85,8 +84,8 @@ Package: mkchromecast-gstreamer
 Architecture: all
 Depends: ${python3:Depends},
          ${misc:Depends},
-         gstreamer1.0-tools,
-         mkchromecast
+         gstreamer1.0-tools
+Recommends: mkchromecast
 Description: GStreamer dependencies to cast with mkchromecast
  This dependency package contains an informational list of packages which are
  considered essential for using mkchromecast together with GStreamer software
