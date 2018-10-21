@@ -364,10 +364,10 @@ def main():
         if debug is True:
             print('PATH = %s.' % PATH)
 
-        if platform == 'Darwin':
-            node_names = ['node']
-            nodejs_dir = ['./nodejs/']
-        elif platform == 'Linux':
+        node_names = ['node']
+        nodejs_dir = ['./nodejs/']
+
+        if platform == 'Linux':
             node_names.append('nodejs')
             nodejs_dir.append('/usr/share/mkchromecast/nodejs/')
 
