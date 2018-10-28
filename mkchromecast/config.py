@@ -46,7 +46,7 @@ class config_manager(object):
             self.directory = '/Users/' + self.user + \
                              '/Library/Application Support/mkchromecast/'
         else:
-            self.directory = '/home/' + self.user + \
+            self.directory = os.environ['HOME'] + \
                              '/.config/mkchromecast/'  # Linux
         self.configf = self.directory + 'mkchromecast.cfg'
 
