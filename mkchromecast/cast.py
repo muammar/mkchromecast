@@ -66,11 +66,7 @@ class casting(object):
         self.port = str(mkchromecast.__init__.port)
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
-        self.ip = self.host
-        if self.host is None:
-            self.ip = utils.get_resolved_ip(self.platform)
-        else:
-            self.ip = self.host
+        self.ip = utils.get_effective_ip(self.platform, host_override=self.host)
 
     def _get_chromecasts(self):
         # compatibility

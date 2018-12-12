@@ -105,13 +105,20 @@ def check_file_info(name, what=None):
         return bit_depth
 
 
-def resolve_ip(platform):
+def get_effective_ip(platform, host_override=None, fallback_ip='127.0.0.1'):
+    if host_override is None:
+        return resolve_ip(platform, fallback_ip=fallback_ip)
+    else:
+        return host_override
+
+
+def resolve_ip(platform, fallback_ip):
     if platform == 'Linux':
         resolved_ip = _resolve_ip_linux()
     else:
         resolved_ip = _resolve_ip_nonlinux()
     if resolved_ip is None:
-        resolved_ip = '127.0.0.1'
+        resolved_ip = fallback_ip
     return resolved_ip
 
 

@@ -6,6 +6,7 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
+from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
 from mkchromecast.utils import terminate, is_installed, check_file_info
@@ -37,9 +38,12 @@ debug = mkchromecast.__init__.debug
 sourceurl = mkchromecast.__init__.sourceurl
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
+host = mkchromecast.__init__.host
 port = mkchromecast.__init__.port
 loop = mkchromecast.__init__.loop
 mtype = mkchromecast.__init__.mtype
+
+ip = utils.get_effective_ip(platform, host_override=host, fallback_ip='0.0.0.0')
 
 try:
     if input_file[-3:] == 'mkv':
@@ -282,7 +286,7 @@ def stream():
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    app.run(host=ip, port=port, threaded=True)
 
 
 class multi_proc(object):       # I launch ffmpeg in a different process
