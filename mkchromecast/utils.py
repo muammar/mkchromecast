@@ -7,6 +7,7 @@ from os import getpid
 import os.path
 import mkchromecast.colors as colors
 import subprocess
+import socket
 import json
 
 try:
@@ -102,3 +103,42 @@ def check_file_info(name, what=None):
     if what == 'bit-depth':
         bit_depth = d['streams'][0]['pix_fmt']
         return bit_depth
+
+
+def resolve_ip(platform):
+    if platform == 'Linux':
+        resolved_ip = _resolve_ip_linux()
+    else:
+        resolved_ip = _resolve_ip_nonlinux()
+    if resolved_ip is None:
+        resolved_ip = '127.0.0.1'
+    return resolved_ip
+
+
+def _resolve_ip_linux():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    try:
+        s.connect(("8.8.8.8", 80))
+    except socket.error:
+        return None
+    return s.getsockname()[0]
+
+
+def _resolve_ip_nonlinux():
+    try:
+        return socket.gethostbyname(socket.gethostname())
+    except socket.gaierror:
+        return _get_first_network_ip_by_netifaces()
+
+
+def _get_first_network_ip_by_netifaces():
+    import netifaces
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if interface == 'lo':
+            continue
+        iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
+        if iface is not None and iface[0]['addr'] is not '127.0.0.1':
+            for e in iface:
+                return str(e['addr'])

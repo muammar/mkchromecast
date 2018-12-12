@@ -2,6 +2,8 @@
 # This file is part of mkchromecast.
 
 from __future__ import print_function
+
+from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
 from mkchromecast.__init__ import args
@@ -61,58 +63,14 @@ class casting(object):
         self.ccname = mkchromecast.__init__.ccname
         self.hijack = mkchromecast.__init__.hijack
         self.tries = mkchromecast.__init__.tries
-        self.port = mkchromecast.__init__.port
-        self.port = str(self.port)
+        self.port = str(mkchromecast.__init__.port)
         self.title = 'Mkchromecast v' + mkchromecast.__init__.__version__
 
+        self.ip = self.host
         if self.host is None:
-            if self.platform == 'Linux':
-                self.getnetworkip()
-                try:
-                    self.ip = self.discovered_ip
-                except AttributeError:
-                    self.ip = '127.0.0.1'
-            else:
-                try:
-                    self.ip = socket.gethostbyname(socket.gethostname())
-                    if self.debug is True:
-                        print(':::cast::: sockets method', self.ip)
-                except socket.gaierror:
-                    self.netifaces_ip()
-                    try:
-                        self.ip = self.discovered_ip
-                    except AttributeError:
-                        self.ip = '127.0.0.1'
+            self.ip = utils.get_resolved_ip(self.platform)
         else:
             self.ip = self.host
-
-    """
-    Methods to discover local IP
-    """
-    def getnetworkip(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        try:
-            s.connect(("8.8.8.8", 80))
-        except socket.error:
-            self.ip = '127.0.0.1'
-        self.discovered_ip = s.getsockname()[0]
-        if self.debug is True:
-            print(':::cast::: sockets method', self.discovered_ip)
-
-    def netifaces_ip(self):
-        import netifaces
-        interfaces = netifaces.interfaces()
-        for interface in interfaces:
-            if interface == 'lo':
-                continue
-            iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
-            if iface is not None and iface[0]['addr'] is not '127.0.0.1':
-                for e in iface:
-                    self.discovered_ip = str(e['addr'])
-                    if self.debug is True:
-                        print(':::cast::: netifaces method',
-                              self.discovered_ip)
 
     def _get_chromecasts(self):
         # compatibility
