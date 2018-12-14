@@ -14,7 +14,6 @@ On MacOS you need to install using pip3 the following:
 
 On Linux, this is a standard distutils script supporting
 
-   rm -r nodejs/bin nodejs/node_modules
    python3 setup.py build
    python3 setup.py install
 
@@ -47,7 +46,6 @@ LINUX_REQUIRES = [
     'mutagen',
     'netifaces',
     'psutil',
-    'PyChromecast',
     'PyQt5',
     'requests'
 ]
