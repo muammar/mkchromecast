@@ -6,6 +6,7 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import mkchromecast.__init__
+from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.config import config_manager
 import mkchromecast.colors as colors
@@ -41,8 +42,11 @@ tray = mkchromecast.__init__.tray
 adevice = mkchromecast.__init__.adevice
 chunk_size = mkchromecast.__init__.chunk_size
 segment_time = mkchromecast.__init__.segment_time
+host = mkchromecast.__init__.host
 port = mkchromecast.__init__.port
 platform = mkchromecast.__init__.platform
+
+ip = utils.get_effective_ip(platform, host_override=host, fallback_ip='0.0.0.0')
 
 frame_size = 32 * chunk_size
 buffer_size = 2 * chunk_size**2
@@ -785,7 +789,7 @@ def start_app():
     """
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host='0.0.0.0', port=port, passthrough_errors=False)
+    app.run(host=ip, port=port, passthrough_errors=False)
 
 
 class multi_proc(object):       # I launch ffmpeg in a different process
