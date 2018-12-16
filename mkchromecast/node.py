@@ -169,76 +169,83 @@ def streaming():
                     '5000',
                     '-u',
                     'stream']
-        break
+            break
     else:
+        webcast = None
+        print(colors.warning('Node is not installed...'))
+        print(colors.warning('Use your package manager or their official '
+                             'installer...'))
         pass
 
-    p = subprocess.Popen(webcast)
-    if debug is True:
-        print(':::node::: node command: %s.' % webcast)
+    if webcast is not None:
+        p = subprocess.Popen(webcast)
 
-    f = open('/tmp/mkchromecast.pid', 'rb')
-    pidnumber = int(pickle.load(f))
-    print(colors.options('PID of main process:') + ' ' + str(pidnumber))
-
-    localpid = getpid()
-    print(colors.options('PID of streaming process:') + ' ' + str(localpid))
-
-    while p.poll() is None:
-        try:
-            time.sleep(0.5)
-            # With this I ensure that if the main app fails, everything
-            # will get back to normal
-            if psutil.pid_exists(pidnumber) is False:
-                inputint()
-                outputint()
-                parent = psutil.Process(localpid)
-                # or parent.children() for recursive=False
-                for child in parent.children(recursive=True):
-                    child.kill()
-                parent.kill()
-        except KeyboardInterrupt:
-            print('Ctrl-c was requested')
-            sys.exit(0)
-        except IOError:
-            print('I/O Error')
-            sys.exit(0)
-        except OSError:
-            print('OSError')
-            sys.exit(0)
-    else:
-        print(colors.warning('Reconnecting node streaming...'))
-        if platform == 'Darwin' and notifications == 'enabled':
-            if os.path.exists('images/google.icns') is True:
-                noticon = 'images/google.icns'
-            else:
-                noticon = 'google.icns'
         if debug is True:
-            print(':::node::: platform, tray, notifications: %s, %s, %s.'
-                  % (platform, tray, notifications))
+            print(':::node::: node command: %s.' % webcast)
 
-        if (platform == 'Darwin' and tray is True and notifications ==
-                'enabled'):
-            reconnecting = [
-                './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
-                '-group',
-                'cast',
-                '-contentImage',
-                noticon,
-                '-title',
-                'mkchromecast',
-                '-subtitle',
-                'node server failed',
-                '-message',
-                'Reconnecting...'
-                ]
-            subprocess.Popen(reconnecting)
+        f = open('/tmp/mkchromecast.pid', 'rb')
+        pidnumber = int(pickle.load(f))
+        print(colors.options('PID of main process:') + ' ' + str(pidnumber))
 
+        localpid = getpid()
+        print(colors.options('PID of streaming process: ') +
+                             str(localpid))
+
+        while p.poll() is None:
+            try:
+                time.sleep(0.5)
+                # With this I ensure that if the main app fails, everything
+                # will get back to normal
+                if psutil.pid_exists(pidnumber) is False:
+                    inputint()
+                    outputint()
+                    parent = psutil.Process(localpid)
+                    # or parent.children() for recursive=False
+                    for child in parent.children(recursive=True):
+                        child.kill()
+                    parent.kill()
+            except KeyboardInterrupt:
+                print('Ctrl-c was requested')
+                sys.exit(0)
+            except IOError:
+                print('I/O Error')
+                sys.exit(0)
+            except OSError:
+                print('OSError')
+                sys.exit(0)
+        else:
+            print(colors.warning('Reconnecting node streaming...'))
+            if platform == 'Darwin' and notifications == 'enabled':
+                if os.path.exists('images/google.icns') is True:
+                    noticon = 'images/google.icns'
+                else:
+                    noticon = 'google.icns'
             if debug is True:
-                print(':::node::: reconnecting notifier command: %s.'
-                      % reconnecting)
-        relaunch(stream, recasting, kill)
-    return
+                print(':::node::: platform, tray, notifications: %s, %s, %s.'
+                      % (platform, tray, notifications))
+
+            if (platform == 'Darwin' and tray is True and notifications ==
+                    'enabled'):
+                reconnecting = [
+                    './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
+                    '-group',
+                    'cast',
+                    '-contentImage',
+                    noticon,
+                    '-title',
+                    'mkchromecast',
+                    '-subtitle',
+                    'node server failed',
+                    '-message',
+                    'Reconnecting...'
+                    ]
+                subprocess.Popen(reconnecting)
+
+                if debug is True:
+                    print(':::node::: reconnecting notifier command: %s.'
+                          % reconnecting)
+            relaunch(stream, recasting, kill)
+        return
 
 
 class multi_proc(object):

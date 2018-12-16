@@ -95,13 +95,8 @@ if tray is True:
             """
             Backend
             """
-            backends_supported = [
-                'node',
-                'ffmpeg',
-                'avconv',
-                'parec',
-                'gstreamer'
-                ]
+            backends_supported = ['node', 'ffmpeg', 'avconv', 'parec',
+                                  'gstreamer']
             self.backends = []
             if platform == 'Darwin':
                 for item in backends_supported:
@@ -117,7 +112,12 @@ if tray is True:
                     elif (is_installed('gst-launch-1.0', PATH, debug) is
                           True and item == 'gstreamer'):
                         self.backends.append(item)
-            backendindex = self.backends.index(self.backendconf)
+            try:
+                backend_index = self.backends.index(self.backend_conf)
+            except ValueError:
+                # No backend found
+                backend_index = None
+                pass
             self.backend = QLabel('Select Backend', self)
             self.backend.move(20 * self.scale_factor, 24 * self.scale_factor)
             self.qcbackend = QComboBox(self)
@@ -126,7 +126,10 @@ if tray is True:
             self.qcbackend.setMinimumContentsLength(7)
             for item in self.backends:
                 self.qcbackend.addItem(item)
-            self.qcbackend.setCurrentIndex(backendindex)
+
+            if backend_index:
+                self.qcbackend.setCurrentIndex(backend_index)
+
             self.qcbackend.activated[str].connect(self.onActivatedbk)
 
         def codec(self):
@@ -137,7 +140,7 @@ if tray is True:
             self.codec.move(20 * self.scale_factor, 56 * self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
-            if self.backendconf == 'node':
+            if self.backend_conf == 'node':
                 self.codecs = ['mp3']
             else:
                 self.codecs = [
@@ -343,7 +346,7 @@ if tray is True:
             """
             Indexes of QCombo boxes are reset
             """
-            backendindex = self.backends.index(self.backendconf)
+            backend_index = self.backends.index(self.backend_conf)
             codecindex = self.codecs.index(self.codecconf)
             self.bitrates = [
                 '128',
@@ -362,7 +365,7 @@ if tray is True:
             colorsindex = self.colors_list.index(self.searchcolorsconf)
             notindex = self.notifications_list.index(self.notifconf)
             launchindex = self.atlaunch_list.index(self.satlaunchconf)
-            self.qcbackend.setCurrentIndex(backendindex)
+            self.qcbackend.setCurrentIndex(backend_index)
             self.qccodec.setCurrentIndex(codecindex)
             self.qcbitrate.setCurrentIndex(bitrateindex)
             self.qcsamplerate.setCurrentIndex(sampleratesindex)
@@ -376,7 +379,7 @@ if tray is True:
             self.write_config()
             self.read_defaults()
             self.qccodec.clear()
-            if self.backendconf == 'node':
+            if self.backend_conf == 'node':
                 codecs = ['mp3']
                 self.config.read(self.configf)
                 self.config.set('settings', 'codec', 'mp3')
@@ -468,9 +471,9 @@ if tray is True:
             self.read_defaults()
 
         def read_defaults(self):
-            self.backendconf = ConfigSectionMap('settings')['backend']
+            self.backend_conf = ConfigSectionMap('settings')['backend']
             self.codecconf = ConfigSectionMap('settings')['codec']
-            if self.backendconf == 'node' and self.codecconf != 'mp3':
+            if self.backend_conf == 'node' and self.codecconf != 'mp3':
                 self.config.read(self.configf)
                 self.config.set('settings', 'codec', 'mp3')
                 self.write_config()
@@ -482,7 +485,7 @@ if tray is True:
             self.satlaunchconf = ConfigSectionMap('settings')['searchatlaunch']
             self.alsadeviceconf = ConfigSectionMap('settings')['alsadevice']
             if debug is True:
-                print(self.backendconf, self.codecconf, self.bitrateconf,
+                print(self.backend_conf, self.codecconf, self.bitrateconf,
                       self.samplerateconf, self.notifconf,
                       self.satlaunchconf, self.searchcolorsconf,
                       self.alsadeviceconf)

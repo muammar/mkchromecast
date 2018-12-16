@@ -17,6 +17,8 @@
       `package-lock.json` files. This will considerably reduce repository size.
       Thanks to @leamas.
     - Using the `--youtube` flag works for audio-only streaming.
+    - Fixed inconsistency when node is not installed.
+    - Refactored IP assignment. Thanks to Rick Brown.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
