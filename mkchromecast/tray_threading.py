@@ -3,7 +3,7 @@
 
 import mkchromecast.__init__
 from mkchromecast.audio_devices import inputdev, outputdev
-from mkchromecast.cast import casting
+from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
 import mkchromecast.audio
 from mkchromecast.node import stream
@@ -43,7 +43,7 @@ class Worker(QObject):
         # This should fix the error socket.gaierror making the system tray to
         # be closed.
         try:
-            self.cc = casting()
+            self.cc = Casting()
             self.cc.initialize_cast()
             self.cc.available_devices()
         except socket.gaierror:
@@ -98,10 +98,10 @@ class Player(QObject):
             if check_sink() is False and adevice is None:
                 create_sink()
 
-        start = casting()
+        start = Casting()
         start.initialize_cast()
         try:
-            start.get_cc()
+            start.get_devices()
             start.play_cast()
             cast = start.cast
             # Let's change inputs at the end to avoid muting sound too early.

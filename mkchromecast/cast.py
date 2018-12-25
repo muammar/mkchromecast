@@ -46,7 +46,7 @@ except ImportError:
     chromecast = False
 
 
-class casting(object):
+class Casting(object):
     """Main casting class.
     """
     def __init__(self):
@@ -54,14 +54,14 @@ class casting(object):
         import mkchromecast.__init__
         self.platform = mkchromecast.__init__.platform
         self.tray = mkchromecast.__init__.tray
-        self.select_cc = mkchromecast.__init__.select_cc
+        self.select_device = mkchromecast.__init__.select_device
         self.debug = mkchromecast.__init__.debug
         self.backend = mkchromecast.__init__.backend
         self.adevice = mkchromecast.__init__.adevice
         self.sourceurl = mkchromecast.__init__.sourceurl
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
-        self.ccname = mkchromecast.__init__.ccname
+        self.device_name = mkchromecast.__init__.device_name
         self.hijack = mkchromecast.__init__.hijack
         self.tries = mkchromecast.__init__.tries
         self.port = str(mkchromecast.__init__.port)
@@ -112,10 +112,10 @@ class casting(object):
         if self.debug is True:
             print('self.cclist', self.cclist)
 
-        if (len(self.cclist) != 0 and self.select_cc is False and
-                self.ccname is None):
+        if (len(self.cclist) != 0 and self.select_device is False and
+                self.device_name is None):
             if self.debug is True:
-                print('if len(self.cclist) != 0 and self.select_cc == False:')
+                print('if len(self.cclist) != 0 and self.select_device == False:')
             print(' ')
             print_available_devices(self.available_devices())
             print(' ')
@@ -130,10 +130,10 @@ class casting(object):
                     print(colors.success(self.cast_to))
                 print(' ')
 
-        elif (len(self.cclist) != 0 and self.select_cc is True and
-                self.tray is False and self.ccname is None):
+        elif (len(self.cclist) != 0 and self.select_device is True and
+                self.tray is False and self.device_name is None):
             if self.debug is True:
-                print('elif len(self.cclist) != 0 and self.select_cc == True'
+                print('elif len(self.cclist) != 0 and self.select_device == True'
                       ' and self.tray == False:')
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
@@ -150,10 +150,10 @@ class casting(object):
                       colors.success(self.cast_to))
                 print(' ')
 
-        elif (len(self.cclist) != 0 and self.select_cc is True and
+        elif (len(self.cclist) != 0 and self.select_device is True and
                 self.tray is True):
             if self.debug is True:
-                print('elif len(self.cclist) != 0 and self.select_cc == True'
+                print('elif len(self.cclist) != 0 and self.select_device == True'
                       '  and self.tray == True:')
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
@@ -186,13 +186,13 @@ class casting(object):
             print(colors.error(':::Tray::: No devices found!'))
             self.available_devices = []
 
-    def sel_cc(self):
+    def select_a_device(self):
         print(' ')
         print('Please, select the ' + colors.important('Index') +
               ' of the Google Cast device that you want to use:')
         self.index = input()
 
-    def inp_cc(self):
+    def input_device(self):
         while True:
             try:
                 pickle.dump(self.index, self.tf)
@@ -208,17 +208,17 @@ class casting(object):
             except IndexError:
                 checkmktmp()
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
-                self.sel_cc()
+                self.select_device()
                 continue
             break
 
-    def get_cc(self):
+    def get_devices(self):
         if self.debug is True:
-            print('def get_cc(self):')
+            print('def get_devices(self):')
         if chromecast:
             try:
-                if self.ccname is not None:
-                    self.cast_to = self.ccname
+                if self.device_name is not None:
+                    self.cast_to = self.device_name
                 self.cast = self._get_chromecast(self.cast_to)
                 # Wait for cast device to be ready
                 self.cast.wait()
@@ -459,13 +459,13 @@ class casting(object):
         ip = self.cast.host
         if ping_chromecast(ip) is True:     # The chromecast is online.
             if str(self.cast.status.display_name) != "Default Media Receiver":
-                self.ccname = self.cast_to
-                self.get_cc()
+                self.device_name = self.cast_to
+                self.get_devices()
                 self.play_cast()
         else:                               # The chromecast is offline.
             try:
-                self.ccname = self.cast_to
-                self.get_cc()
+                self.device_name = self.cast_to
+                self.get_devices()
                 self.play_cast()
             except AttributeError:
                 pass

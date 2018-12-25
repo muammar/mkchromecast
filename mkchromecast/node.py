@@ -11,7 +11,7 @@ To call them:
 import mkchromecast.__init__
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.cast import casting
+from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
@@ -271,9 +271,9 @@ def relaunch(func1, func2, func3):
 
 
 def recasting():
-    start = casting()
+    start = Casting()
     start.initialize_cast()
-    start.get_cc()
+    start.get_devices()
     start.play_cast()
     return
 

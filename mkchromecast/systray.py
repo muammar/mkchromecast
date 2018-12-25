@@ -5,7 +5,7 @@
 from __future__ import division
 import mkchromecast.__init__
 from mkchromecast.audio_devices import inputint, outputint
-from mkchromecast.cast import casting
+from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
 from mkchromecast.preferences import ConfigSectionMap
 import mkchromecast.preferences
@@ -57,7 +57,7 @@ debug = mkchromecast.__init__.debug
 
 class menubar(QtWidgets.QMainWindow):
     def __init__(self):
-        self.cc = casting()
+        self.cc = Casting()
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False

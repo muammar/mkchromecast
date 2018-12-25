@@ -338,7 +338,7 @@ parser.add_argument(
 
 parser.add_argument(
     '-s',
-    '--select-cc',
+    '--select-device',
     action='store_true',
     help='''
     If you have more than one Google Cast device use this option.
@@ -578,9 +578,9 @@ Assignment of args to variables
 """
 tray = args.tray
 if tray is True:
-    select_cc = True
+    select_device = True
 else:
-    select_cc = args.select_cc
+    select_device = args.select_device
 debug = args.debug
 
 if args.notifications is True:
@@ -598,12 +598,12 @@ input_file = args.input_file
 sourceurl = args.source_url
 subtitles = args.subtitles
 hijack = args.hijack
-ccname = args.name
+device_name = args.name
 port = args.port
 
 
 if debug is True:
-    print('Google Cast name: %s.' % ccname)
+    print('Google Cast name: %s.' % device_name)
 
 """
 Check that input file exists
