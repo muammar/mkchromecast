@@ -45,7 +45,7 @@ class Worker(QObject):
         try:
             self.cc = casting()
             self.cc.initialize_cast()
-            self.cc.availablecc()
+            self.cc.available_devices()
         except socket.gaierror:
             if debug is True:
                 print(colors.warning(
@@ -54,15 +54,15 @@ class Worker(QObject):
         except TypeError:
             pass
         except OSError:
-            self.cc.availablecc = []
+            self.cc.available_devices = []
 
-        if len(self.cc.availablecc) == 0 and tray is True:
-            availablecc = []
-            self.intReady.emit(availablecc)
+        if len(self.cc.available_devices) == 0 and tray is True:
+            available_devices = []
+            self.intReady.emit(available_devices)
             self.finished.emit()
         else:
-            availablecc = self.cc.availablecc
-            self.intReady.emit(availablecc)
+            available_devices = self.cc.available_devices
+            self.intReady.emit(available_devices)
             self.finished.emit()
 
 

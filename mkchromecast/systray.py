@@ -270,9 +270,9 @@ class menubar(QtWidgets.QMainWindow):
     These are methods for interacting with the mkchromecast objects
     """
 
-    def onIntReady(self, availablecc):
-        print('availablecc received')
-        self.availablecc = availablecc
+    def onIntReady(self, available_devices):
+        print('available_devices received')
+        self.available_devices = available_devices
         self.cast_list()
 
     def set_icon_working(self):
@@ -409,7 +409,7 @@ class menubar(QtWidgets.QMainWindow):
     def cast_list(self):
         self.set_icon_idle()
 
-        if len(self.availablecc) == 0:
+        if len(self.available_devices) == 0:
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -468,8 +468,8 @@ class menubar(QtWidgets.QMainWindow):
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
-            print('Available Media Streaming Devices', self.availablecc)
-            for index, menuentry in enumerate(self.availablecc):
+            print('Available Media Streaming Devices', self.available_devices)
+            for index, menuentry in enumerate(self.available_devices):
                 try:
                     a = self.ag.addAction(
                             (QtWidgets.QAction(
@@ -728,7 +728,7 @@ class menubar(QtWidgets.QMainWindow):
                 self.reset_audio()
                 self.stop_cast()
                 try:
-                    for device in self.availablecc:
+                    for device in self.available_devices:
                         if self.cast_to in device:
                             ip = device[3]
                             print('Sonos device IP: %s' % str(ip))

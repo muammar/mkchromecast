@@ -197,8 +197,10 @@ class mk(object):
         print(colors.important('Controls:'))
         print(colors.important('========='))
         print('')
-        print(colors.options(           'Volume Up:')+' u')
-        print(colors.options(         'Volume Down:')+' d')
+        print(colors.options(           'Volume Up:') + ' u')
+        print(colors.options(         'Volume Down:') + ' d')
+        print(colors.options(       'Attach device:') + ' a')
+
         if self.videoarg is True:
             print(colors.options(       'Pause Casting:')+' p')
             print(colors.options(      'Resume Casting:')+' r')
@@ -211,6 +213,8 @@ class mk(object):
             from mkchromecast.getch import getch
 
             self.controls_msg()
+
+            # We capture keys
             try:
                 while(True):
                     key = getch()
@@ -224,6 +228,8 @@ class mk(object):
                         if self.encoder_backend == 'ffmpeg':
                             if self.debug is True:
                                 self.controls_msg()
+                    elif (key == 'a'):
+                        print('lets attach')
                     elif(key == 'p'):
                         if self.videoarg is True:
                             print('Pausing Casting Process...')

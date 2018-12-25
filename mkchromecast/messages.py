@@ -1,4 +1,3 @@
-
 # This file is part of mkchromecast.
 import mkchromecast.__init__
 import mkchromecast.colors as colors
@@ -65,3 +64,15 @@ def samplerate_no96(codec):
               str(44100) + 'Hz or, ' +
               str(48000) + 'Hz.'))
     return
+
+def print_available_devices(list_of_devices):
+    """docstring for print_available_devices"""
+    print(colors.important('List of Devices Available in Network:'))
+    print(colors.important('-------------------------------------\n'))
+    print(colors.important('Index   Types   Friendly Name '))
+    print(colors.important('=====   =====   ============= '))
+    for device in list_of_devices:
+        device_index = device[0]
+        device_name = device[1]
+        device_type = device[2]
+        print('%s \t%s \t%s' % ( device_index, device_type, device_name))

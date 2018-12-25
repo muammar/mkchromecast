@@ -10,6 +10,7 @@ from mkchromecast.__init__ import args
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
+from mkchromecast.messages import print_available_devices
 import time
 import socket
 import os.path
@@ -116,11 +117,7 @@ class casting(object):
             if self.debug is True:
                 print('if len(self.cclist) != 0 and self.select_cc == False:')
             print(' ')
-            print(colors.important('List of Devices Available in Network:'))
-            print(colors.important('-------------------------------------\n'))
-            print(colors.important('Index   Types   Friendly Name '))
-            print(colors.important('=====   =====   ============= '))
-            self.availablecc()
+            print_available_devices(self.available_devices())
             print(' ')
             if self.discover is False:
                 print(colors.important('Casting to first device shown above!'))
@@ -141,15 +138,7 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important(
-                    'List of Devices Available in Network:'))
-                print(colors.important(
-                    '-------------------------------------\n'))
-                print(colors.important(
-                    'Index   Types   Friendly Name '))
-                print(colors.important(
-                    '=====   =====   ============= '))
-                self.availablecc()
+                print_available_devices(self.available_devices())
             else:
                 if self.debug is True:
                     print('else:')
@@ -169,21 +158,13 @@ class casting(object):
             if os.path.exists('/tmp/mkchromecast.tmp') is False:
                 self.tf = open('/tmp/mkchromecast.tmp', 'wb')
                 print(' ')
-                print(colors.important(
-                    'List of Devices Available in Network:'))
-                print(colors.important(
-                    '-------------------------------------\n'))
-                print(colors.important(
-                    'Index   Types   Friendly Name '))
-                print(colors.important(
-                    '=====   =====   ============= '))
-                self.availablecc()
+                print_available_devices(self.available_devices())
             else:
                 if self.debug is True:
                     print('else:')
                 self.tf = open('/tmp/mkchromecast.tmp', 'rb')
                 self.cast_to = pickle.load(self.tf)
-                self.availablecc()
+                print_available_devices(self.available_devices())
                 print(' ')
                 print(colors.options('Casting to:') + ' ' +
                       colors.success(self.cast_to))
@@ -203,7 +184,7 @@ class casting(object):
 
         elif len(self.cclist) == 0 and self.tray is True:
             print(colors.error(':::Tray::: No devices found!'))
-            self.availablecc = []
+            self.available_devices = []
 
     def sel_cc(self):
         print(' ')
@@ -419,11 +400,11 @@ class casting(object):
         else:
             print(colors.error('This method is not supported in Linux yet.'))
 
-    def availablecc(self):
-        """This method is used for populating the self.availablecc array
+    def available_devices(self):
+        """This method is used for populating the self.available_devices array
         needed for the system tray.
         """
-        self.availablecc = []
+        self.available_devices = []
         for (self.index, device) in enumerate(self.cclist):
             try:
                 types = device[2]
@@ -432,7 +413,6 @@ class casting(object):
                     device = device[1].player_name
                 else:
                     device = device[1]
-                print('%s \t%s \t%s' % (self.index, types, device))
             except UnicodeEncodeError:
                 types = device[2]
                 if types == 'Sonos':
@@ -440,15 +420,13 @@ class casting(object):
                     device = device[1].player_name
                 else:
                     device = device[1]
-                print('%s \t%s \t%s' %
-                      (self.index, device[2],
-                       str(unicode(device).encode("utf-8"))))
-
             if types == 'Sonos':
                 to_append = [self.index, device, types, device_ip]
             else:
                 to_append = [self.index, device, types]
-            self.availablecc.append(to_append)
+            self.available_devices.append(to_append)
+
+        return self.available_devices
 
     def hijack_cc(self):
         """Dummy method to call  _hijack_cc_().
