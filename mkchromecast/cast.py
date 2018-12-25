@@ -288,7 +288,7 @@ class casting(object):
                   colors.options(' is:') + ' ' + self.cast_to.ip_address)
         except AttributeError:
             for _ in self.sonos_list:
-                if self.cast_to in _.player_name:
+                if self.cast_to == _.player_name:
                     self.cast_to = _
             print(colors.options('The IP of ') +
                   colors.success(self.cast_to.player_name) +
