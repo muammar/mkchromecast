@@ -192,11 +192,12 @@ class Casting(object):
               ' of the Google Cast device that you want to use:')
         self.index = input()
 
-    def input_device(self):
+    def input_device(self, write_to_pickle=True):
         while True:
             try:
-                pickle.dump(self.index, self.tf)
-                self.tf.close()
+                if write_to_pickle:
+                    pickle.dump(self.index, self.tf)
+                    self.tf.close()
                 self.cast_to = self.cclist[int(self.index)][1]
                 print(' ')
                 print(colors.options('Casting to:') + ' ' +

@@ -16,6 +16,7 @@ from mkchromecast.cast import Casting
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
+from mkchromecast.messages import print_available_devices
 import subprocess
 import time
 import atexit
@@ -25,7 +26,7 @@ import signal
 class mk(object):
     """Class to manage cast process"""
     def __init__(self):
-        print(colors.bold('Mkchromecast ')+'v'+__version__)
+        print(colors.bold('Mkchromecast ') + 'v' + __version__)
         self.platform = mkchromecast.__init__.platform
         self.adevice = mkchromecast.__init__.adevice
         self.debug = mkchromecast.__init__.debug
@@ -150,14 +151,14 @@ class mk(object):
         self.cc.play_cast()
         self.show_control(self.control)
 
-    def get_devices(self, select_device):
+    def get_devices(self, select_device, write_to_pickle=True):
         """Get chromecast name, and let user select one from a list if
         select_device flag is True.
         """
         # This is done for the case that -s is passed
         if select_device is True:
             self.cc.select_a_device()
-            self.cc.input_device()
+            self.cc.input_device(write_to_pickle=write_to_pickle)
             self.cc.get_devices()
         else:
             self.cc.get_devices()
@@ -229,7 +230,10 @@ class mk(object):
                             if self.debug is True:
                                 self.controls_msg()
                     elif (key == 'a'):
-                        print('lets attach')
+                        print(self.cc.available_devices)
+                        self.get_devices(self.select_device, write_to_pickle=False)
+                        self.cc.play_cast()
+                        self.show_control(self.control)
                     elif(key == 'p'):
                         if self.videoarg is True:
                             print('Pausing Casting Process...')
