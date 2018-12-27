@@ -72,11 +72,11 @@ def streaming():
               (backend, rcodec, bitrate, samplerate, notifications))
 
     try:
-        youtubeurl = mkchromecast.__init__.youtubeurl
+        youtube_url = mkchromecast.__init__.youtube_url
     except AttributeError:
-        youtubeurl = None
+        youtube_url = None
 
-    if youtubeurl is None:
+    if youtube_url is None:
         if backend == 'node' and rcodec != 'mp3':
             print(colors.warning('Codec ' +
                   rcodec + ' is not supported by the node server!'))

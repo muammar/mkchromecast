@@ -63,21 +63,21 @@ configf = configurations.configf
 appendtourl = 'stream'
 
 try:
-    youtubeurl = mkchromecast.__init__.youtubeurl
+    youtube_url = mkchromecast.__init__.youtube_url
 except AttributeError:
-    youtubeurl = None
+    youtube_url = None
 
 # This is to take the youtube URL
-if youtubeurl is not None:
-    print(colors.options('The Youtube URL chosen:')+' '+youtubeurl)
+if youtube_url is not None:
+    print(colors.options('The Youtube URL chosen: ') + youtube_url)
 
     try:
         import urlparse
-        url_data = urlparse.urlparse(youtubeurl)
+        url_data = urlparse.urlparse(youtube_url)
         query = urlparse.parse_qs(url_data.query)
     except ImportError:
         import urllib.parse
-        url_data = urllib.parse.urlparse(youtubeurl)
+        url_data = urllib.parse.urlparse(youtube_url)
         query = urllib.parse.parse_qs(url_data.query)
     video = query['v'][0]
     print(colors.options('Playing video:') + ' ' + video)
@@ -85,7 +85,7 @@ if youtubeurl is not None:
         'youtube-dl',
         '-o',
         '-',
-        youtubeurl
+        youtube_url
         ]
     mtype = 'audio/mp4'
 else:

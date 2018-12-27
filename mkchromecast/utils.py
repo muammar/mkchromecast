@@ -103,7 +103,10 @@ def check_file_info(name, what=None):
     if what == 'bit-depth':
         bit_depth = d['streams'][0]['pix_fmt']
         return bit_depth
-
+    elif what == 'resolution':
+        resolution = d['streams'][0]['height']
+        resolution = str(resolution) + 'p'
+        return resolution
 
 def get_effective_ip(platform, host_override=None, fallback_ip='127.0.0.1'):
     if host_override is None:

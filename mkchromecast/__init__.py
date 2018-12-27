@@ -900,7 +900,7 @@ if args.youtube is not None:
         print(message)
         sys.exit(0)
     else:
-        youtubeurl = args.youtube
+        youtube_url = args.youtube
         backend = 'ffmpeg'
 else:
-    youtubeurl = args.youtube
+    youtube_url = args.youtube

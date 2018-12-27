@@ -32,7 +32,7 @@ class mk(object):
         self.debug = mkchromecast.__init__.debug
         self.device_name = mkchromecast.__init__.device_name
         self.videoarg = mkchromecast.__init__.videoarg
-        self.youtubeurl = mkchromecast.__init__.youtubeurl
+        self.youtube_url = mkchromecast.__init__.youtube_url
         self.tray = mkchromecast.__init__.tray
         self.discover = mkchromecast.__init__.discover
         self.source_url = mkchromecast.__init__.sourceurl
@@ -67,7 +67,7 @@ class mk(object):
 
     def audio_linux(self):
         """This method manages all related to casting audio in Linux"""
-        if self.youtubeurl is None and self.source_url is None:
+        if self.youtube_url is None and self.source_url is None:
             if self.adevice is None:
                 print('Creating Pulseaudio Sink...')
                 print(colors.warning('Open Pavucontrol and Select the '
@@ -81,7 +81,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif self.youtubeurl is None and self.source_url is not None:
+        elif self.youtube_url is None and self.source_url is not None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
             self.get_devices(self.select_device)
@@ -89,7 +89,7 @@ class mk(object):
             self.show_control(self.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtubeurl is not None and self.videoarg is False:
+        elif self.youtube_url is not None and self.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
@@ -99,7 +99,7 @@ class mk(object):
 
     def audio_macOS(self):
         """This method manages all related to casting audio in macOS"""
-        if self.youtubeurl is None and self.source_url is None:
+        if self.youtube_url is None and self.source_url is None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
             self.get_devices(self.select_device)
@@ -111,7 +111,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif self.youtubeurl is None and self.source_url is not None:
+        elif self.youtube_url is None and self.source_url is not None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
             self.get_devices(self.select_device)
@@ -126,7 +126,7 @@ class mk(object):
             self.show_control(self.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtubeurl is not None and self.videoarg is False:
+        elif self.youtube_url is not None and self.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
