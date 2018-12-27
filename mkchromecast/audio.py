@@ -56,7 +56,7 @@ debug = mkchromecast.__init__.debug
 if debug is True:
     print(':::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s'
           % (chunk_size, frame_size, buffer_size))
-sourceurl = mkchromecast.__init__.sourceurl
+source_url = mkchromecast.__init__.source_url
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()    # Class from mkchromecast.config
 configf = configurations.configf
@@ -146,7 +146,7 @@ else:
 
     mtype = 'audio/' + append_mtype
 
-    if sourceurl is None:
+    if source_url is None:
         print(colors.options('Selected backend:') + ' ' + backend)
         print(colors.options('Selected audio codec:') + ' ' + codec)
 
@@ -169,7 +169,7 @@ else:
             else:
                 bitrate = bitrate + 'k'
 
-            if sourceurl is None:
+            if source_url is None:
                 print(colors.options('Selected bitrate:') + ' ' + bitrate)
 
         if samplerate == '44100':
@@ -223,7 +223,7 @@ else:
                     msg.samplerate_no96(codec)
                 else:
                     msg.samplerate_info(codec)
-                if sourceurl is None:
+                if source_url is None:
                     print(colors.warning('Sample rate set to default!'))
 
             elif (codec in codecs_sr and int(samplerate) > 43000 and
@@ -251,7 +251,7 @@ else:
                     samplerate = '96000'
                     msg.samplerate_info(codec)
 
-                if sourceurl is None:
+                if source_url is None:
                     print(colors.warning('Sample rate set to maximum!'))
 
             elif (codec in codecs_sr and int(samplerate) > 96000 and
@@ -263,7 +263,7 @@ else:
                     samplerate = '176000'
                     msg.samplerate_info(codec)
 
-                if sourceurl is None:
+                if source_url is None:
                     print(colors.warning('Sample rate set to maximum!'))
 
             elif codec in codecs_sr and int(samplerate) > 176000:
@@ -274,10 +274,10 @@ else:
                     samplerate = '192000'
                     msg.samplerate_info(codec)
 
-                if sourceurl is None:
+                if source_url is None:
                     print(colors.warning('Sample rate set to maximum!'))
 
-            if sourceurl is None:
+            if source_url is None:
                 print(colors.options('Sample rate set to:') + ' ' +
                       samplerate + 'Hz')
 

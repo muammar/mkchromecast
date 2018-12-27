@@ -35,7 +35,7 @@ class mk(object):
         self.youtube_url = mkchromecast.__init__.youtube_url
         self.tray = mkchromecast.__init__.tray
         self.discover = mkchromecast.__init__.discover
-        self.source_url = mkchromecast.__init__.sourceurl
+        self.source_url = mkchromecast.__init__.source_url
         self.encoder_backend = mkchromecast.__init__.backend
         self.select_device = mkchromecast.__init__.select_device
         self.control = mkchromecast.__init__.control

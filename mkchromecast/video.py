@@ -35,7 +35,7 @@ input_file = mkchromecast.__init__.input_file
 res = mkchromecast.__init__.resolution
 seek = mkchromecast.__init__.seek
 debug = mkchromecast.__init__.debug
-sourceurl = mkchromecast.__init__.sourceurl
+source_url = mkchromecast.__init__.source_url
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
 host = mkchromecast.__init__.host
@@ -114,7 +114,7 @@ else:
     """
     The blocks shown below are related to input_files
     """
-    file_resolution = check_file_info(input_file, what='resolution')
+    #file_resolution = check_file_info(input_file, what='resolution')
 
     if res is None and subtitles is None:
         command = [
@@ -258,7 +258,7 @@ else:
         if seek is not None:
             seeking(seek)
 
-        if debug is False and sourceurl is None:
+        if debug is False and source_url is None:
             try:
                 command.insert(command.index('-i'), 'panic')
                 command.insert(command.index('panic'),  '-loglevel')

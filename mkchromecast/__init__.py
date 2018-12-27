@@ -595,7 +595,7 @@ if debug is True:
 discover = args.discover
 host = args.host
 input_file = args.input_file
-sourceurl = args.source_url
+source_url = args.source_url
 subtitles = args.subtitles
 hijack = args.hijack
 device_name = args.name
@@ -741,13 +741,13 @@ codecs = [
     'flac'
     ]
 
-if backend == 'node' and args.codec != 'mp3' and sourceurl is None:
+if backend == 'node' and args.codec != 'mp3' and source_url is None:
     rcodec = args.codec
     codec = 'mp3'
-elif backend == 'node' and args.codec == 'mp3' and sourceurl is None:
+elif backend == 'node' and args.codec == 'mp3' and source_url is None:
     rcodec = args.codec
     codec = 'mp3'
-elif sourceurl is not None:
+elif source_url is not None:
     codec = args.codec
 else:
     rcodec = None

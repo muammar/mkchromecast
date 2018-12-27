@@ -2,30 +2,30 @@
 import mkchromecast.__init__
 import mkchromecast.colors as colors
 
-sourceurl = mkchromecast.__init__.sourceurl
+source_url = mkchromecast.__init__.source_url
 
 
 def bitrate_default(bitrate):
     """Bitrate messages
     Printing default bitrate message
     """
-    if sourceurl is None:
+    if source_url is None:
         print(colors.options('Default bitrate used:') + ' ' + bitrate)
     return
 
 
 def no_bitrate(codec):
-    if sourceurl is None:
+    if source_url is None:
         print(colors.warning('The ' + codec +
                              ' codec does not require the bitrate argument.'))
     return
 
 
 def maxbitrate(codec, bitrate):
-    if sourceurl is None:
+    if source_url is None:
         print(colors.warning('Maximum bitrate supported by ' + codec +
                              ' is: ' + bitrate + 'k.'))
-    if codec == 'aac' and sourceurl is None:
+    if codec == 'aac' and source_url is None:
         print(colors.warning('At about 128-256k is already considered as '
               '"transparent" for ' + codec + '.'))
         print(colors.warning('You may try lossless audio coding formats.'))
@@ -36,7 +36,7 @@ def maxbitrate(codec, bitrate):
 def samplerate_default(samplerate):
     """Sample rate messages
     Printing default sample rate message"""
-    if sourceurl is None:
+    if source_url is None:
         print(colors.options('Default sample rate used:') + ' ' +
               samplerate + 'Hz.')
     return
@@ -44,7 +44,7 @@ def samplerate_default(samplerate):
 
 def samplerate_info(codec):
     """This prints warning when sample rates are set incorrectly"""
-    if sourceurl is None:
+    if source_url is None:
         print(colors.warning('Sample rates supported by ' + codec + ' are: ' +
               str(22050) + 'Hz, ' +
               str(32000) + 'Hz, ' +
@@ -57,7 +57,7 @@ def samplerate_info(codec):
 
 def samplerate_no96(codec):
     """This prints warning when sample rates are set incorrectly and no 96k"""
-    if sourceurl is None:
+    if source_url is None:
         print(colors.warning('Sample rates supported by ' + codec + ' are: ' +
               str(22050) + 'Hz, ' +
               str(32000) + 'Hz, ' +

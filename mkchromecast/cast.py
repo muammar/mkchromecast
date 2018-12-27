@@ -58,7 +58,7 @@ class Casting(object):
         self.debug = mkchromecast.__init__.debug
         self.backend = mkchromecast.__init__.backend
         self.adevice = mkchromecast.__init__.adevice
-        self.sourceurl = mkchromecast.__init__.sourceurl
+        self.source_url = mkchromecast.__init__.source_url
         self.discover = mkchromecast.__init__.discover
         self.host = mkchromecast.__init__.host
         self.device_name = mkchromecast.__init__.device_name
@@ -299,7 +299,7 @@ class Casting(object):
                     config.read(configf)
                     self.backend = ConfigSectionMap('settings')['backend']
 
-            if self.sourceurl is not None:
+            if self.source_url is not None:
                 if args.video is True:
                     import mkchromecast.video
                     mtype = mkchromecast.video.mtype
@@ -308,17 +308,17 @@ class Casting(object):
                     mtype = mkchromecast.audio.mtype
                 print(' ')
                 print(colors.options('Casting from stream URL:') + ' ' +
-                      self.sourceurl)
+                      self.source_url)
                 print(colors.options('Using media type:') + ' ' +
                       mtype)
                 media_controller.play_media(
-                        self.sourceurl,
+                        self.source_url,
                         mtype,
                         title=self.title
                         )
             elif (self.backend == 'ffmpeg' or self.backend == 'node' or
                     self.backend == 'avconv' or self.backend == 'parec' or
-                    self.backend == 'gstreamer' and self.sourceurl is None):
+                    self.backend == 'gstreamer' and self.source_url is None):
                 if args.video is True:
                     import mkchromecast.video
                     mtype = mkchromecast.video.mtype
