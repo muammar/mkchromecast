@@ -116,7 +116,7 @@ else:
     """
     #file_resolution = check_file_info(input_file, what='resolution')
 
-    if res is None and subtitles is None:
+    if res is None and subtitles is None and user_command is None:
         command = [
             'ffmpeg',
             '-re',
@@ -133,7 +133,7 @@ else:
             '-movflags', 'frag_keyframe+empty_moov',
             'pipe:1'
         ]
-    elif res is None and subtitles is not None:
+    elif res is None and subtitles is not None and user_command is None:
         command = [
             'ffmpeg',
             '-re',
