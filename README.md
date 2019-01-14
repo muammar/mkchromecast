@@ -70,7 +70,7 @@ computer with **Mkchromecast**. To add Sonos support, install the `soco` python
 module:
 
 ```
-pip install soco
+pip3 install soco
 ```
 
 Contribute
