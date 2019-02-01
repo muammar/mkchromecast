@@ -231,7 +231,7 @@ apt-get install mkchromecast-pulseaudio (Pulseaudio users)
 To install **Mkchromecast**, clone this repository:
 
 ```
-git clone https://github.com/muammar/mkchromecast.git
+git clone https://github.com/muammar/mkchromecast.git --depth 1
 ```
 
 Or you may download one of the [stable releases
