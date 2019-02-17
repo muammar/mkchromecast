@@ -530,7 +530,7 @@ else:
                 '-i', ':Soundflower (2ch)',
                 '-f', 'adts',
                 '-ac', '2',
-                '-acodec', 'libfdk_aac',
+                '-acodec', 'aac',
                 '-ar', samplerate,
                 '-b:a', bitrate,
                 'pipe:'
