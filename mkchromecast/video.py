@@ -423,6 +423,12 @@ def main():
                             input_file
                             ]
                         break
+
+        if input_file == None:
+            print(colors.warning('Please specify an input file with -i'))
+            print(colors.warning('Closing the application...'))
+            terminate()
+
         try:
             Popen(webcast)
         except:
