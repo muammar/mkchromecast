@@ -314,8 +314,10 @@ class Casting(object):
                 media_controller.play_media(
                         self.source_url,
                         mtype,
-                        title=self.title
+                        title=self.title,
+                        stream_type='LIVE'
                         )
+                media_controller.play()
             elif (self.backend == 'ffmpeg' or self.backend == 'node' or
                     self.backend == 'avconv' or self.backend == 'parec' or
                     self.backend == 'gstreamer' and self.source_url is None):
@@ -331,8 +333,13 @@ class Casting(object):
                 media_controller.play_media(
                         'http://' + localip + ':' + self.port + '/stream',
                         mtype,
-                        title=self.title
+                        title=self.title,
+                        stream_type='LIVE'
                         )
+                if media_controller.is_active:
+                    import time
+                    time.sleep(2)
+                    media_controller.play()
             print(' ')
             print(colors.important('Cast media controller status'))
             print(' ')
