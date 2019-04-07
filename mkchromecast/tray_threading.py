@@ -130,7 +130,7 @@ class Updater(QObject):
 
     @pyqtSlot()
     def _updater_(self):
-        chk = casting()
+        chk = Casting()
         if chk.ip == '127.0.0.1' or None:       # We verify the local IP.
             self.updateready.emit('None')
         else:
