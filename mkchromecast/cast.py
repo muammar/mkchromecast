@@ -336,10 +336,12 @@ class Casting(object):
                         title=self.title,
                         stream_type='LIVE'
                         )
-                if media_controller.is_active:
-                    import time
-                    time.sleep(2)
-                    media_controller.play()
+
+            if media_controller.is_active:
+                import time
+                time.sleep(2)
+                media_controller.play()
+
             print(' ')
             print(colors.important('Cast media controller status'))
             print(' ')
