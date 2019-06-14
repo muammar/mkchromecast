@@ -756,7 +756,14 @@ def stream():
             '-d', 'Mkchromecast.monitor'
             ]
         parec = Popen(c_parec, stdout=PIPE)
-        process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+
+        try:
+           process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+        except FileNotFoundError:
+            print('Failed to execute {}'.format(command))
+            message =  'Have you installed lame, see https://github.com/muammar/mkchromecast#linux-1?'
+            raise message
+
     elif (platform == 'Linux' and bool(backends_dict) is True and
             backends_dict[backend] == 'gstreamer'):
         c_gst = [
