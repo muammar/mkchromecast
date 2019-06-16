@@ -1,4 +1,3 @@
-
 # This file is part of mkchromecast.
 """
 These functions are used to get up the streaming server using node.
@@ -25,6 +24,7 @@ import pickle
 import os
 from os import getpid
 import os.path
+
 """
 Configparser is imported differently in Python3
 """
@@ -49,14 +49,14 @@ def streaming():
 
     if os.path.exists(configf) and tray is True:
         configurations.chk_config()
-        print(colors.warning('Configuration file exists'))
-        print(colors.warning('Using defaults set there'))
+        print(colors.warning("Configuration file exists"))
+        print(colors.warning("Using defaults set there"))
         config.read(configf)
-        backend = ConfigSectionMap('settings')['backend']
-        rcodec = ConfigSectionMap('settings')['codec']
-        bitrate = ConfigSectionMap('settings')['bitrate']
-        samplerate = ConfigSectionMap('settings')['samplerate']
-        notifications = ConfigSectionMap('settings')['notifications']
+        backend = ConfigSectionMap("settings")["backend"]
+        rcodec = ConfigSectionMap("settings")["codec"]
+        bitrate = ConfigSectionMap("settings")["bitrate"]
+        samplerate = ConfigSectionMap("settings")["samplerate"]
+        notifications = ConfigSectionMap("settings")["notifications"]
     else:
         backend = mkchromecast.__init__.backend
         rcodec = mkchromecast.__init__.rcodec
@@ -65,11 +65,13 @@ def streaming():
         samplerate = str(mkchromecast.__init__.samplerate)
         notifications = mkchromecast.__init__.notifications
 
-    print(colors.options('Selected backend:') + ' ' + backend)
+    print(colors.options("Selected backend:") + " " + backend)
 
     if debug is True:
-        print(':::node::: variables %s, %s, %s, %s, %s' %
-              (backend, rcodec, bitrate, samplerate, notifications))
+        print(
+            ":::node::: variables %s, %s, %s, %s, %s"
+            % (backend, rcodec, bitrate, samplerate, notifications)
+        )
 
     try:
         youtube_url = mkchromecast.__init__.youtube_url
@@ -77,119 +79,143 @@ def streaming():
         youtube_url = None
 
     if youtube_url is None:
-        if backend == 'node' and rcodec != 'mp3':
-            print(colors.warning('Codec ' +
-                  rcodec + ' is not supported by the node server!'))
-            print('Using ' + codec + ' as default.')
+        if backend == "node" and rcodec != "mp3":
+            print(
+                colors.warning(
+                    "Codec " + rcodec + " is not supported by the node server!"
+                )
+            )
+            print("Using " + codec + " as default.")
 
-        if backend == 'node':
+        if backend == "node":
             if int(bitrate) == 192:
-                print(colors.options('Default bitrate used:') +
-                      ' ' + bitrate + 'k.')
+                print(colors.options("Default bitrate used:") + " " + bitrate + "k.")
             elif int(bitrate) > 500:
-                    print(colors.warning('Maximum bitrate supported by ' +
-                          codec + ' is:') + ' ' + str(500) + 'k.')
-                    bitrate = '500'
-                    print(colors.warning('Bitrate has been set to maximum!'))
+                print(
+                    colors.warning("Maximum bitrate supported by " + codec + " is:")
+                    + " "
+                    + str(500)
+                    + "k."
+                )
+                bitrate = "500"
+                print(colors.warning("Bitrate has been set to maximum!"))
             else:
-                print(colors.options('Selected bitrate: ') + bitrate + 'k.')
+                print(colors.options("Selected bitrate: ") + bitrate + "k.")
 
-            if samplerate == '44100':
-                print(colors.options('Default sample rate used:') +
-                      ' ' + samplerate + 'Hz.')
+            if samplerate == "44100":
+                print(
+                    colors.options("Default sample rate used:")
+                    + " "
+                    + samplerate
+                    + "Hz."
+                )
             else:
-                codecs_sr = [
-                    'mp3',
-                    'ogg',
-                    'aac',
-                    'wav',
-                    'flac'
-                    ]
+                codecs_sr = ["mp3", "ogg", "aac", "wav", "flac"]
 
-                '''
+                """
                 The codecs below do not support 96000Hz
-                '''
-                no96k = [
-                    'mp3',
-                    'ogg'
-                    ]
+                """
+                no96k = ["mp3", "ogg"]
 
-                if (codec in codecs_sr and int(samplerate) > 22000 and
-                        int(samplerate) <= 27050):
-                    samplerate = '22050'
+                if (
+                    codec in codecs_sr
+                    and int(samplerate) > 22000
+                    and int(samplerate) <= 27050
+                ):
+                    samplerate = "22050"
                     msg.samplerate_no96(codec)
 
-                if (codec in codecs_sr and int(samplerate) > 27050 and
-                        int(samplerate) <= 32000):
-                    samplerate = '32000'
+                if (
+                    codec in codecs_sr
+                    and int(samplerate) > 27050
+                    and int(samplerate) <= 32000
+                ):
+                    samplerate = "32000"
                     msg.samplerate_no96(codec)
 
-                elif (codec in codecs_sr and int(samplerate) > 32000 and
-                        int(samplerate) <= 36000):
-                    samplerate = '32000'
+                elif (
+                    codec in codecs_sr
+                    and int(samplerate) > 32000
+                    and int(samplerate) <= 36000
+                ):
+                    samplerate = "32000"
                     msg.samplerate_no96(codec)
 
-                elif (codec in codecs_sr and int(samplerate) > 36000 and
-                        int(samplerate) <= 43000):
-                    samplerate = '44100'
+                elif (
+                    codec in codecs_sr
+                    and int(samplerate) > 36000
+                    and int(samplerate) <= 43000
+                ):
+                    samplerate = "44100"
                     msg.samplerate_no96(codec)
-                    print(colors.warning('Sample rate has been set to \
-                        default!'))
+                    print(
+                        colors.warning(
+                            "Sample rate has been set to \
+                        default!"
+                        )
+                    )
 
-                elif (codec in codecs_sr and int(samplerate) > 43000 and
-                        int(samplerate) <= 72000):
-                    samplerate = '48000'
+                elif (
+                    codec in codecs_sr
+                    and int(samplerate) > 43000
+                    and int(samplerate) <= 72000
+                ):
+                    samplerate = "48000"
                     msg.samplerate_no96(codec)
 
                 elif codec in codecs_sr and int(samplerate) > 72000:
                     if codec in no96k:
                         msg.samplerate_no96(codec)
-                        samplerate = '48000'
-                    print(colors.warning('Sample rate has been set to \
-                        maximum!'))
+                        samplerate = "48000"
+                    print(
+                        colors.warning(
+                            "Sample rate has been set to \
+                        maximum!"
+                        )
+                    )
 
-                print(colors.options('Sample rate set to:') +
-                      ' ' + samplerate + 'Hz.')
+                print(colors.options("Sample rate set to:") + " " + samplerate + "Hz.")
 
     """
     Node section
     """
-    paths = ['/usr/local/bin/node', './bin/node', './nodejs/bin/node']
+    paths = ["/usr/local/bin/node", "./bin/node", "./nodejs/bin/node"]
 
     for path in paths:
         if os.path.exists(path) is True:
             webcast = [
-                    path,
-                    './nodejs/node_modules/webcast-osx-audio/bin/webcast.js',
-                    '-b',
-                    bitrate,
-                    '-s',
-                    samplerate,
-                    '-p',
-                    '5000',
-                    '-u',
-                    'stream']
+                path,
+                "./nodejs/node_modules/webcast-osx-audio/bin/webcast.js",
+                "-b",
+                bitrate,
+                "-s",
+                samplerate,
+                "-p",
+                "5000",
+                "-u",
+                "stream",
+            ]
             break
     else:
         webcast = None
-        print(colors.warning('Node is not installed...'))
-        print(colors.warning('Use your package manager or their official '
-                             'installer...'))
+        print(colors.warning("Node is not installed..."))
+        print(
+            colors.warning("Use your package manager or their official " "installer...")
+        )
         pass
 
     if webcast is not None:
         p = subprocess.Popen(webcast)
 
         if debug is True:
-            print(':::node::: node command: %s.' % webcast)
+            print(":::node::: node command: %s." % webcast)
 
-        f = open('/tmp/mkchromecast.pid', 'rb')
+        f = open("/tmp/mkchromecast.pid", "rb")
         pidnumber = int(pickle.load(f))
-        print(colors.options('PID of main process:') + ' ' + str(pidnumber))
+        print(colors.options("PID of main process:") + " " + str(pidnumber))
 
         localpid = getpid()
-        print(colors.options('PID of streaming process: ') +
-                             str(localpid))
+        print(colors.options("PID of streaming process: ") + str(localpid))
 
         while p.poll() is None:
             try:
@@ -205,45 +231,47 @@ def streaming():
                         child.kill()
                     parent.kill()
             except KeyboardInterrupt:
-                print('Ctrl-c was requested')
+                print("Ctrl-c was requested")
                 sys.exit(0)
             except IOError:
-                print('I/O Error')
+                print("I/O Error")
                 sys.exit(0)
             except OSError:
-                print('OSError')
+                print("OSError")
                 sys.exit(0)
         else:
-            print(colors.warning('Reconnecting node streaming...'))
-            if platform == 'Darwin' and notifications == 'enabled':
-                if os.path.exists('images/google.icns') is True:
-                    noticon = 'images/google.icns'
+            print(colors.warning("Reconnecting node streaming..."))
+            if platform == "Darwin" and notifications == "enabled":
+                if os.path.exists("images/google.icns") is True:
+                    noticon = "images/google.icns"
                 else:
-                    noticon = 'google.icns'
+                    noticon = "google.icns"
             if debug is True:
-                print(':::node::: platform, tray, notifications: %s, %s, %s.'
-                      % (platform, tray, notifications))
+                print(
+                    ":::node::: platform, tray, notifications: %s, %s, %s."
+                    % (platform, tray, notifications)
+                )
 
-            if (platform == 'Darwin' and tray is True and notifications ==
-                    'enabled'):
+            if platform == "Darwin" and tray is True and notifications == "enabled":
                 reconnecting = [
-                    './notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier',
-                    '-group',
-                    'cast',
-                    '-contentImage',
+                    "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
+                    "-group",
+                    "cast",
+                    "-contentImage",
                     noticon,
-                    '-title',
-                    'mkchromecast',
-                    '-subtitle',
-                    'node server failed',
-                    '-message',
-                    'Reconnecting...'
-                    ]
+                    "-title",
+                    "mkchromecast",
+                    "-subtitle",
+                    "node server failed",
+                    "-message",
+                    "Reconnecting...",
+                ]
                 subprocess.Popen(reconnecting)
 
                 if debug is True:
-                    print(':::node::: reconnecting notifier command: %s.'
-                          % reconnecting)
+                    print(
+                        ":::node::: reconnecting notifier command: %s." % reconnecting
+                    )
             relaunch(stream, recasting, kill)
         return
 

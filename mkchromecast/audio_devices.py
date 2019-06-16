@@ -1,4 +1,3 @@
-
 # This file is part of mkchromecast.
 
 import subprocess
@@ -14,7 +13,7 @@ To call them:
 
 
 def inputdev():
-    if os.path.exists('./bin/audiodevice') is True:
+    if os.path.exists("./bin/audiodevice") is True:
         inputdevtosf2 = ['./bin/audiodevice input "Soundflower (2ch)"']
     else:
         inputdevtosf2 = ['./audiodevice input "Soundflower (2ch)"']
@@ -23,7 +22,7 @@ def inputdev():
 
 
 def outputdev():
-    if os.path.exists('./bin/audiodevice') is True:
+    if os.path.exists("./bin/audiodevice") is True:
         outputdevtosf2 = ['./bin/audiodevice output "Soundflower (2ch)"']
     else:
         outputdevtosf2 = ['./audiodevice output "Soundflower (2ch)"']
@@ -32,7 +31,7 @@ def outputdev():
 
 
 def inputint():
-    if os.path.exists('./bin/audiodevice') is True:
+    if os.path.exists("./bin/audiodevice") is True:
         inputinttosf2 = ['./bin/audiodevice input "Internal Microphone"']
     else:
         inputinttosf2 = ['./audiodevice input "Internal Microphone"']
@@ -41,7 +40,7 @@ def inputint():
 
 
 def outputint():
-    if os.path.exists('./bin/audiodevice') is True:
+    if os.path.exists("./bin/audiodevice") is True:
         outputinttosf2 = ['./bin/audiodevice output "Internal Speakers"']
     else:
         outputinttosf2 = ['./audiodevice output "Internal Speakers"']

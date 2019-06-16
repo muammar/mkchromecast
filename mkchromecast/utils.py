@@ -1,4 +1,3 @@
-
 # This file is part of mkchromecast.
 
 import psutil
@@ -34,28 +33,28 @@ def terminate():
 
 def del_tmp():
     """Delete files created in /tmp/"""
-    delete_me = ['/tmp/mkchromecast.tmp', '/tmp/mkchromecast.pid']
+    delete_me = ["/tmp/mkchromecast.tmp", "/tmp/mkchromecast.pid"]
 
-    print(colors.important('Cleaning up /tmp/...'))
+    print(colors.important("Cleaning up /tmp/..."))
 
     for f in delete_me:
         if os.path.exists(f) is True:
             os.remove(f)
 
-    print(colors.success('[Done]'))
+    print(colors.success("[Done]"))
     return
 
 
 def is_installed(name, path, debug):
     PATH = path
-    iterate = PATH.split(':')
+    iterate = PATH.split(":")
     for item in iterate:
-        verifyif = str(item + '/' + name)
+        verifyif = str(item + "/" + name)
         if os.path.exists(verifyif) is False:
             continue
         else:
             if debug is True:
-                print('Program %s found in %s.' % (name, verifyif))
+                print("Program %s found in %s." % (name, verifyif))
             return True
     return
 
@@ -71,10 +70,10 @@ def check_url(url):
 
 def writePidFile():
     # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.pid') is True:
-        os.remove('/tmp/mkchromecast.pid')
+    if os.path.exists("/tmp/mkchromecast.pid") is True:
+        os.remove("/tmp/mkchromecast.pid")
     pid = str(os.getpid())
-    f = open('/tmp/mkchromecast.pid', 'wb')
+    f = open("/tmp/mkchromecast.pid", "wb")
     pickle.dump(pid, f)
     f.close()
     return
@@ -82,33 +81,39 @@ def writePidFile():
 
 def checkmktmp():
     # This is to verify that pickle tmp file exists
-    if os.path.exists('/tmp/mkchromecast.tmp') is True:
-        os.remove('/tmp/mkchromecast.tmp')
+    if os.path.exists("/tmp/mkchromecast.tmp") is True:
+        os.remove("/tmp/mkchromecast.tmp")
     return
+
 
 def check_file_info(name, what=None):
     """Check things about files"""
 
-    command = ['ffprobe', '-show_format', '-show_streams', '-loglevel', 'quiet',
-               '-print_format', 'json', name]
+    command = [
+        "ffprobe",
+        "-show_format",
+        "-show_streams",
+        "-loglevel",
+        "quiet",
+        "-print_format",
+        "json",
+        name,
+    ]
 
-    info = subprocess.Popen(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-            )
+    info = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     info_out, info_error = info.communicate()
     d = json.loads(info_out)
 
-    if what == 'bit-depth':
-        bit_depth = d['streams'][0]['pix_fmt']
+    if what == "bit-depth":
+        bit_depth = d["streams"][0]["pix_fmt"]
         return bit_depth
-    elif what == 'resolution':
-        resolution = d['streams'][0]['height']
-        resolution = str(resolution) + 'p'
+    elif what == "resolution":
+        resolution = d["streams"][0]["height"]
+        resolution = str(resolution) + "p"
         return resolution
 
-def get_effective_ip(platform, host_override=None, fallback_ip='127.0.0.1'):
+
+def get_effective_ip(platform, host_override=None, fallback_ip="127.0.0.1"):
     if host_override is None:
         return resolve_ip(platform, fallback_ip=fallback_ip)
     else:
@@ -116,7 +121,7 @@ def get_effective_ip(platform, host_override=None, fallback_ip='127.0.0.1'):
 
 
 def resolve_ip(platform, fallback_ip):
-    if platform == 'Linux':
+    if platform == "Linux":
         resolved_ip = _resolve_ip_linux()
     else:
         resolved_ip = _resolve_ip_nonlinux()
@@ -144,11 +149,12 @@ def _resolve_ip_nonlinux():
 
 def _get_first_network_ip_by_netifaces():
     import netifaces
+
     interfaces = netifaces.interfaces()
     for interface in interfaces:
-        if interface == 'lo':
+        if interface == "lo":
             continue
         iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
-        if iface is not None and iface[0]['addr'] is not '127.0.0.1':
+        if iface is not None and iface[0]["addr"] is not "127.0.0.1":
             for e in iface:
-                return str(e['addr'])
+                return str(e["addr"])

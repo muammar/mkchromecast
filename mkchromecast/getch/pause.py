@@ -4,18 +4,18 @@ import sys
 from .getch import getch
 
 
-def pause(message='Press any key to continue . . . '):
+def pause(message="Press any key to continue . . . "):
     """
     Prints the specified message if it's not None and waits for a keypress.
     """
     if message is not None:
-        print(message, end='')
+        print(message, end="")
         sys.stdout.flush()
     getch()
     print()
 
 
-def pause_exit(status=None, message='Press any key to exit'):
+def pause_exit(status=None, message="Press any key to exit"):
     """
     Prints the specified message if it is not None, waits for a keypress, then
     exits the interpreter by raising SystemExit(status).

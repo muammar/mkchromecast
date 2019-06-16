@@ -1,4 +1,3 @@
-
 # This file is part of Mkchromecast.
 
 import mkchromecast.colors as colors
@@ -13,7 +12,7 @@ import os.path
 from argparse import RawTextHelpFormatter
 
 parser = argparse.ArgumentParser(
-    description='''
+    description="""
     This is a program to cast your macOS audio, or Linux audio to your Google
     Cast devices.
 
@@ -42,15 +41,15 @@ parser = argparse.ArgumentParser(
     wiki and the FAQ https://github.com/muammar/mkchromecast/wiki/.
 
 
-    ''',
-    formatter_class=RawTextHelpFormatter
-    )
+    """,
+    formatter_class=RawTextHelpFormatter,
+)
 
 parser.add_argument(
-    '--alsa-device',
+    "--alsa-device",
     type=str,
     default=None,
-    help='''
+    help="""
     Set the ALSA device name. This option is useful when you are using pure
     ALSA in your system.
 
@@ -60,15 +59,15 @@ parser.add_argument(
     It only works for the ffmpeg and avconv backends, and it is not useful for
     pulseaudio users. For more information read the README.Debian file shipped
     in the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-b',
-    '--bitrate',
+    "-b",
+    "--bitrate",
     type=int,
-    default='192',
-    help='''
+    default="192",
+    help="""
     Set the audio encoder's bitrate. The default is set to be 192k average
     bitrate.
 
@@ -82,14 +81,14 @@ parser.add_argument(
 
     This option works with all backends. The example above sets the average
     bitrate to 128k.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--chunk-size',
+    "--chunk-size",
     type=int,
-    default='64',
-    help='''
+    default="64",
+    help="""
     Set the chunk size base for streaming in the Flask server. Default to 64.
     This option only works when using the ffmpeg or avconv backends. This
     number is the base to set both the buffer_size (defined by
@@ -104,15 +103,15 @@ parser.add_argument(
     avconv:
         python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 64
 
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-c',
-    '--codec',
+    "-c",
+    "--codec",
     type=str,
-    default='mp3',
-    help='''
+    default="mp3",
+    help="""
     Set the audio codec.
 
     Example:
@@ -126,14 +125,14 @@ parser.add_argument(
         - flac [HQ]     Free Lossless Audio Codec
 
     This option only works for the ffmpeg, avconv and parec backends.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--command',
+    "--command",
     type=str,
     default=None,
-    help='''
+    help="""
     Set a ffmpeg or avconv command for streaming video.
 
     Example:
@@ -145,54 +144,54 @@ parser.add_argument(
 
     Note that for the output you have to use pipe:1 to stream. This option only
     works for the ffmpeg, avconv backends.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--config',
-    action='store_true',
-    help='''
+    "--config",
+    action="store_true",
+    help="""
     Use this option to connect from configuration file.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--control',
-    action='store_true',
+    "--control",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     Control some actions of your Google Cast Devices. Use the 'u' and 'd' keys
     to perform volume up and volume down respectively, or press 'p' and 'r' to
     pause and resume cast process (only works with ffmpeg). Note that to kill
     the application using this option, you need to press the 'q' key or
     'Ctrl-c'.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--debug',
-    action='store_true',
-    help='''
+    "--debug",
+    action="store_true",
+    help="""
     Option for debugging purposes.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-d',
-    '--discover',
-    action='store_true',
+    "-d",
+    "--discover",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     Use this option if you want to know the friendly name of a Google Cast
     device.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--encoder-backend',
+    "--encoder-backend",
     type=str,
     default=None,
-    help='''
+    help="""
     Set the backend for all encoders.
     Possible backends:
         - node (default in macOS)
@@ -203,24 +202,24 @@ parser.add_argument(
 
     Example:
         python mkchromecast.py --encoder-backend ffmpeg
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--hijack',
-    action='store_true',
+    "--hijack",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     This flag monitors if connection with google cast has been lost, and try to
     hijack it.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--host',
+    "--host",
     type=str,
     default=None,
-    help='''
+    help="""
     Set the ip of the local host. This option is useful if the local ip of your
     computer is not being detected correctly, or in the case you have more than
     one network device available.
@@ -229,71 +228,71 @@ parser.add_argument(
         python mkchromecast.py --encoder-backend ffmpeg --host 192.168.1.1
 
     You can pass it to all available backends.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-i',
-    '--input-file',
+    "-i",
+    "--input-file",
     type=str,
     default=None,
-    help='''
+    help="""
     Stream a file.
 
     Example:
         python mkchromecast.py -i /path/to/file.mp4
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--loop',
-    action='store_true',
+    "--loop",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     Loop video indefinitely while streaming
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--mtype',
+    "--mtype",
     type=str,
     default=None,
-    help='''
+    help="""
     Specify the media type for video streaming.
 
     Example:
         python mkchromecast.py --video -i "/path/to/file.avi" --mtype 'video/x-msvideo'
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-n',
-    '--name',
+    "-n",
+    "--name",
     type=str,
     default=None,
-    help='''
+    help="""
     Use this option if you know the name of the Google Cast you want to
     connect.
 
     Example:
         python mkchromecast.py -n mychromecast
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--notifications',
-    action='store_true',
-    help='''
+    "--notifications",
+    action="store_true",
+    help="""
     Use this flag to enable the notifications.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-p',
-    '--port',
+    "-p",
+    "--port",
     type=int,
-    default='5000',
-    help='''
+    default="5000",
+    help="""
     Set the listening port for local webserver.
 
     Example:
@@ -301,55 +300,55 @@ parser.add_argument(
     ffmpeg:
         python mkchromecast.py --encoder-backend ffmpeg -p 5100
 
-    '''
-    )
+    """,
+)
 
 
 parser.add_argument(
-    '-r',
-    '--reset',
-    action='store_true',
-    help='''
+    "-r",
+    "--reset",
+    action="store_true",
+    help="""
     When the application fails, and you have no audio in your computer, use
     this option to reset the computer's audio.
-    '''
-    )
+    """,
+)
 
 
 parser.add_argument(
-    '--reboot',
-    action='store_true',
-    help='''
+    "--reboot",
+    action="store_true",
+    help="""
     Reboot the Google Cast device.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--resolution',
+    "--resolution",
     type=str,
     default=None,
-    help='''
+    help="""
     Set the resolution of the streamed video. The following resolutions are
     supported:
 
-    ''' +
-    "\n".join("    - {0} ({2}).".format(k, *v) for k, v in resolutions.items())
-    )
+    """
+    + "\n".join("    - {0} ({2}).".format(k, *v) for k, v in resolutions.items()),
+)
 
 parser.add_argument(
-    '-s',
-    '--select-device',
-    action='store_true',
-    help='''
+    "-s",
+    "--select-device",
+    action="store_true",
+    help="""
     If you have more than one Google Cast device use this option.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--sample-rate',
+    "--sample-rate",
     type=int,
-    default='44100',
-    help='''
+    default="44100",
+    help="""
     Set the sample rate. The default sample rate obtained from avfoundation
     audio device input in ffmpeg using soundflower for macOS is 44100Hz (in
     Linux can be 44100Hz or 48000Hz). You can change this in the Audio MIDI
@@ -387,14 +386,14 @@ parser.add_argument(
         - 22050Hz: sampling rate of audio quality of AM radio.
 
     For more information see: http://wiki.audacityteam.org/wiki/Sample_Rates.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--screencast',
-    action='store_true',
+    "--screencast",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     Use this flag to cast your Desktop Google cast devices. It is only working
     with ffmpeg. You may want to you use the --resolution option together with
     this flag.
@@ -402,41 +401,41 @@ parser.add_argument(
     Examples:
 
         python mkchromecast.py --video --screencast
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--seek',
+    "--seek",
     type=str,
     default=None,
-    help='''
+    help="""
     Option to seeking when casting video. The format to set the time is
     HH:MM:SS.
 
     Example:
         python mkchromecast.py --video -i "/path/to/file.mp4" --seek 00:23:00
 
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--segment-time',
+    "--segment-time",
     type=int,
     default=None,
-    help='''
+    help="""
     Segmentate audio for improved live streaming when using ffmpeg.
 
     Example:
         python mkchromecast.py --encoder-backend ffmpeg --segment-time 2
 
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--source-url',
+    "--source-url",
     type=str,
     default=None,
-    help='''
+    help="""
     This option allows you to pass any source URL to your Google Cast device.
     You have to specify the codec with -c flag when using it.
 
@@ -460,40 +459,40 @@ parser.add_argument(
         - http://url:port/name.flac
 
     .m3u or .pls are not yet available.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--subtitles',
+    "--subtitles",
     type=str,
     default=None,
-    help='''
+    help="""
     Set subtitles.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-t',
-    '--tray',
-    action='store_true',
-    help='''
+    "-t",
+    "--tray",
+    action="store_true",
+    help="""
     This option let you launch Mkchromecast as a systray menu (beta).
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--tries',
+    "--tries",
     type=int,
     default=None,
-    help='''
+    help="""
     Limit the number of times the underlying socket associated with your
     Chromecast objects will retry connecting
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '--update',
-    action='store_true',
+    "--update",
+    action="store_true",
     help="""
     Update Mkchromecast git repository.
 
@@ -504,22 +503,22 @@ parser.add_argument(
 
         git pull --all
         git fetch -p
-    """
-    )
+    """,
+)
 
 parser.add_argument(
-    '-v',
-    '--version',
-    action='store_true',
-    help='''
-    Show the version'''
-    )
+    "-v",
+    "--version",
+    action="store_true",
+    help="""
+    Show the version""",
+)
 
 parser.add_argument(
-    '--video',
-    action='store_true',
+    "--video",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     Use this flag to cast video to your Google cast devices. It is only working
     with ffmpeg.
 
@@ -534,24 +533,24 @@ parser.add_argument(
     Cast a youtube-url:
         python mkchromecast.py -y https://www.youtube.com/watch\?v\=VuMBaAZn3II --video
 
-    '''
-    )
+    """,
+)
 parser.add_argument(
-    '--volume',
-    action='store_true',
+    "--volume",
+    action="store_true",
     default=False,
-    help='''
+    help="""
     This option has been changed to --control. It will be deleted in following
     releases.
-    '''
-    )
+    """,
+)
 
 parser.add_argument(
-    '-y',
-    '--youtube',
+    "-y",
+    "--youtube",
     type=str,
     default=None,
-    help='''
+    help="""
     Stream from sources supported by youtube-dl. This option needs
     the youtube-dl package, and it also gives you access to all its
     supported websites such as Dailymotion, LiveLeak, and Vimeo.
@@ -563,8 +562,8 @@ parser.add_argument(
         python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
 
     Note that this is only working for websites running over https.
-        '''
-    )
+        """,
+)
 
 args = parser.parse_args()
 
@@ -584,13 +583,13 @@ else:
 debug = args.debug
 
 if args.notifications is True:
-    notifications = 'enabled'
+    notifications = "enabled"
 else:
-    notifications = 'disabled'
+    notifications = "disabled"
 
 adevice = args.alsa_device
 if debug is True:
-    print('ALSA device name: %s.' % adevice)
+    print("ALSA device name: %s." % adevice)
 
 discover = args.discover
 host = args.host
@@ -603,21 +602,23 @@ port = args.port
 
 
 if debug is True:
-    print('Google Cast name: %s.' % device_name)
+    print("Google Cast name: %s." % device_name)
 
 """
 Check that input file exists
 """
 if input_file != None and os.path.isfile(input_file) is False:
-    if platform == 'Darwin':
+    if platform == "Darwin":
         from mkchromecast.audio_devices import inputint, outputint
+
         inputint()
         outputint()
     else:
         from mkchromecast.pulseaudio import remove_sink
+
         remove_sink()
 
-    print(colors.warning('File not found!'))
+    print(colors.warning("File not found!"))
     terminate()
 
 """
@@ -626,19 +627,23 @@ Media-Type
 mtype = args.mtype
 
 if args.mtype is not None and args.video is False:
-    print(colors.warning('The media type is not supported for audio.')
-          % args.encoder_backend)
+    print(
+        colors.warning("The media type is not supported for audio.")
+        % args.encoder_backend
+    )
 
 """
 Reset
 """
 if args.reset is True:
-    if platform == 'Darwin':
+    if platform == "Darwin":
         from mkchromecast.audio_devices import inputint, outputint
+
         inputint()
         outputint()
     else:
         from mkchromecast.pulseaudio import remove_sink
+
         remove_sink()
     terminate()
 
@@ -646,43 +651,39 @@ if args.reset is True:
 Reboot
 """
 if args.reboot is True:
-    print(colors.error('This option is not implemented yet.'))
+    print(colors.error("This option is not implemented yet."))
     sys.exit(0)
 
 """
 Not yet implemented
 """
 if args.config is True:
-    print(colors.error('This option is not implemented yet.'))
+    print(colors.error("This option is not implemented yet."))
     sys.exit(0)
 
 """
 Version
 """
 if args.version is True:
-    print('mkchromecast '+'v'+colors.success(__version__))
+    print("mkchromecast " + "v" + colors.success(__version__))
     sys.exit(0)
 
 """
 Update
 """
 if args.update is True:
-    print(colors.warning('Updating Mkchromecast'))
-    print(colors.important('git pull --all'))
+    print(colors.warning("Updating Mkchromecast"))
+    print(colors.important("git pull --all"))
     pull = subprocess.Popen(
-        ['git', 'pull', '--all'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-        )
+        ["git", "pull", "--all"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
 
-    print(pull.stdout.read().decode('utf-8').strip())
-    print(colors.important('git fetch -p'))
+    print(pull.stdout.read().decode("utf-8").strip())
+    print(colors.important("git fetch -p"))
     prune = subprocess.Popen(
-        ['git', 'fetch', '-p'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-        )
-    print(prune.stdout.read().decode('utf-8').strip())
+        ["git", "fetch", "-p"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    print(prune.stdout.read().decode("utf-8").strip())
     sys.exit(0)
 
 """
@@ -690,74 +691,63 @@ Check that encoders exist in the list
 """
 screencast = args.screencast
 
-backends = [
-    'node',
-    'ffmpeg',
-    'avconv'
-    ]
-if platform == 'Darwin':
-    backends.remove('avconv')
-elif platform == 'Linux' and args.video is True:
+backends = ["node", "ffmpeg", "avconv"]
+if platform == "Darwin":
+    backends.remove("avconv")
+elif platform == "Linux" and args.video is True:
     pass
 else:
-    backends.remove('node')
-    backends.append('parec')
-    backends.append('gstreamer')
+    backends.remove("node")
+    backends.append("parec")
+    backends.append("gstreamer")
 
 if args.debug is True:
-    print('backends: ', backends)
+    print("backends: ", backends)
 
 if args.encoder_backend not in backends and args.encoder_backend is not None:
-    print(colors.error('Supported backends are: '))
+    print(colors.error("Supported backends are: "))
     for backend in backends:
-        print('- %s.' % backend)
+        print("- %s." % backend)
     sys.exit(0)
 
 if args.encoder_backend in backends:
     backend = args.encoder_backend
-elif args.encoder_backend is None:     # This is to define defaults
-    if platform == 'Linux' and args.video is False:
-        args.encoder_backend = 'parec'
+elif args.encoder_backend is None:  # This is to define defaults
+    if platform == "Linux" and args.video is False:
+        args.encoder_backend = "parec"
         backend = args.encoder_backend
-    if platform == 'Linux' and args.video is True:
-        args.encoder_backend = 'ffmpeg'
+    if platform == "Linux" and args.video is True:
+        args.encoder_backend = "ffmpeg"
         backend = args.encoder_backend
-    elif platform == 'Darwin' and args.video is True:
-        args.encoder_backend = 'ffmpeg'
+    elif platform == "Darwin" and args.video is True:
+        args.encoder_backend = "ffmpeg"
         backend = args.encoder_backend
-    elif platform == 'Darwin' and args.video is False:
-        args.encoder_backend = 'node'
+    elif platform == "Darwin" and args.video is False:
+        args.encoder_backend = "node"
         backend = args.encoder_backend
 
 """
 Codecs
 """
-codecs = [
-    'mp3',
-    'ogg',
-    'aac',
-    'opus',
-    'wav',
-    'flac'
-    ]
+codecs = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
 
-if backend == 'node' and args.codec != 'mp3' and source_url is None:
+if backend == "node" and args.codec != "mp3" and source_url is None:
     rcodec = args.codec
-    codec = 'mp3'
-elif backend == 'node' and args.codec == 'mp3' and source_url is None:
+    codec = "mp3"
+elif backend == "node" and args.codec == "mp3" and source_url is None:
     rcodec = args.codec
-    codec = 'mp3'
+    codec = "mp3"
 elif source_url is not None:
     codec = args.codec
 else:
     rcodec = None
-    if backend != 'node' and args.codec in codecs:
+    if backend != "node" and args.codec in codecs:
         codec = args.codec
     else:
-        print(colors.options('Selected audio codec: %s.') % args.codec)
-        print(colors.error('Supported audio codecs are: '))
+        print(colors.options("Selected audio codec: %s.") % args.codec)
+        print(colors.error("Supported audio codecs are: "))
         for codec in codecs:
-            print('- %s.' % codec)
+            print("- %s." % codec)
         sys.exit(0)
 
 """
@@ -766,22 +756,21 @@ Loop
 loop = args.loop
 
 if args.loop is True and args.video is True:
-    print(colors.warning('The %s backend is not supported.')
-          % args.encoder_backend)
+    print(colors.warning("The %s backend is not supported.") % args.encoder_backend)
 
 """
 Command
 """
 if args.command is not None and args.video is True:
-    safe_commands = ['ffmpeg', 'avconv', 'youtube-dl']
-    command = args.command.split(' ')
+    safe_commands = ["ffmpeg", "avconv", "youtube-dl"]
+    command = args.command.split(" ")
     if command[0] not in safe_commands:
-        print(colors.error('Refusing to execute this.'))
+        print(colors.error("Refusing to execute this."))
         sys.exit(0)
 elif args.command is None and args.video is True:
     command = args.command
 elif args.command is not None and args.video is False:
-    print(colors.warning('The --command option only works for video.'))
+    print(colors.warning("The --command option only works for video."))
 
 """
 Resolution
@@ -794,22 +783,16 @@ if args.resolution is None:
 elif args.resolution.lower() in resolutions:
     resolution = args.resolution.lower()
 else:
-    print(colors.error('Supported resolutions are: '))
+    print(colors.error("Supported resolutions are: "))
     for res in resolutions:
         if res is not False:
-            print('- %s.' % res)
+            print("- %s." % res)
     sys.exit(0)
 
 """
 Bitrate
 """
-codecs_br = [
-    'mp3',
-    'ogg',
-    'aac',
-    'opus',
-    'flac'
-    ]
+codecs_br = ["mp3", "ogg", "aac", "opus", "flac"]
 
 if codec in codecs_br:
     if args.bitrate != 0:
@@ -827,7 +810,7 @@ Chunk size
 """
 if args.chunk_size <= 0:
     chunk_size = 64
-    print(colors.warning('Chunk size set to default: %s.' % chunk_size))
+    print(colors.warning("Chunk size set to default: %s." % chunk_size))
 else:
     chunk_size = abs(args.chunk_size)
 
@@ -836,9 +819,9 @@ Sample rate
 """
 if args.sample_rate != 0:
     if args.sample_rate < 22050:
-        print(colors.error('The sample rate has to be greater than 22049.'))
+        print(colors.error("The sample rate has to be greater than 22049."))
         sys.exit(0)
-    elif args.codec == 'opus':
+    elif args.codec == "opus":
         samplerate = 48000
     else:
         samplerate = abs(args.sample_rate)
@@ -853,7 +836,7 @@ seek = args.seek
 """
 Segment time
 """
-avoid = ['parec', 'node']
+avoid = ["parec", "node"]
 
 if isinstance(args.segment_time, int) and backend not in avoid:
     segment_time = args.segment_time
@@ -877,10 +860,14 @@ videoarg = args.video
 Volume
 """
 control = args.control
-if args.volume is True:   # FIXME this has to be deleted in future releases.
+if args.volume is True:  # FIXME this has to be deleted in future releases.
     control = args.volume
-    print(colors.warning('The --volume flag is going to be renamed to \
-          --control.'))
+    print(
+        colors.warning(
+            "The --volume flag is going to be renamed to \
+          --control."
+        )
+    )
 
 """
 Youtube URLs
@@ -901,6 +888,6 @@ if args.youtube is not None:
         sys.exit(0)
     else:
         youtube_url = args.youtube
-        backend = 'ffmpeg'
+        backend = "ffmpeg"
 else:
     youtube_url = args.youtube
