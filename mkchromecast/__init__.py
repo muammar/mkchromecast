@@ -526,6 +526,15 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--vcodec",
+    type=str,
+    default="libx264",
+    help="""
+    Set a custom vcodec for ffmpeg when capturing screen.  Defaults to libx264
+    """
+)
+
+parser.add_argument(
     "--video",
     action="store_true",
     default=False,
@@ -702,6 +711,7 @@ Check that encoders exist in the list
 """
 screencast = args.screencast
 display = args.display
+vcodec = args.vcodec
 
 backends = ["node", "ffmpeg", "avconv"]
 if platform == "Darwin":

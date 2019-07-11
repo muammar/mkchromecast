@@ -38,6 +38,7 @@ source_url = mkchromecast.__init__.source_url
 encoder_backend = mkchromecast.__init__.backend
 screencast = mkchromecast.__init__.screencast
 display = mkchromecast.__init__.display
+vcodec = mkchromecast.__init__.vcodec
 host = mkchromecast.__init__.host
 port = mkchromecast.__init__.port
 loop = mkchromecast.__init__.loop
@@ -104,9 +105,12 @@ elif screencast is True:
         "-i",
         "{}.0+0,0".format(display),
         "-vcodec",
-        "libx264",
-        "-preset",
-        "veryfast",
+        vcodec
+    ]
+    if vcodec != "h264_nvenc":
+        command.append("-preset")
+        command.append("veryfast")
+    command.extend([
         "-tune",
         "zerolatency",
         "-maxrate",
@@ -127,7 +131,7 @@ elif screencast is True:
         "-acodec",
         "libvorbis",
         "pipe:1",
-    ]
+    ])
 else:
     """
     The blocks shown below are related to input_files
