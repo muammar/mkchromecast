@@ -8,6 +8,7 @@ import argparse
 import sys
 import platform
 import subprocess
+import os
 import os.path
 from argparse import RawTextHelpFormatter
 
@@ -184,6 +185,16 @@ parser.add_argument(
     help="""
     Use this option if you want to know the friendly name of a Google Cast
     device.
+    """,
+)
+
+parser.add_argument(
+    "--display",
+    type=str,
+    default=os.environ.get("DISPLAY", ":0"),
+    help="""
+    Set the DISPLAY for screen captures.  Defaults to current environment
+    value of DISPLAY or ':0' if DISPLAY is unset.
     """,
 )
 
@@ -690,6 +701,7 @@ if args.update is True:
 Check that encoders exist in the list
 """
 screencast = args.screencast
+display = args.display
 
 backends = ["node", "ffmpeg", "avconv"]
 if platform == "Darwin":
