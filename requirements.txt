@@ -1,6 +1,6 @@
 netifaces==0.10.6
 requests>=2.20.0
-Flask==0.12.3
+Flask==1.0
 setuptools==39.2.0
 PyQt5==5.11.2
 psutil==5.4.7
