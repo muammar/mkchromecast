@@ -341,9 +341,6 @@ else:
         if user_command is not None:
             command = user_command
 
-        if seek is not None:
-            seeking(seek)
-
         if debug is False and source_url is None:
             try:
                 command.insert(command.index("-i"), "panic")
@@ -360,6 +357,9 @@ else:
             res_elements = resolution(res, screencast)
             for element in res_elements:
                 command.insert(-command_index, element)
+
+    if seek is not None:
+        seeking(seek)
 
 if mtype is None:
     mtype = "video/mp4"
