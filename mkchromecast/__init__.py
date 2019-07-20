@@ -11,6 +11,7 @@ import subprocess
 import os
 import os.path
 from argparse import RawTextHelpFormatter
+import shlex
 
 parser = argparse.ArgumentParser(
     description="""
@@ -785,7 +786,7 @@ Command
 """
 if args.command is not None and args.video is True:
     safe_commands = ["ffmpeg", "avconv", "youtube-dl"]
-    command = args.command.split(" ")
+    command = shlex.split(args.command)
     if command[0] not in safe_commands:
         print(colors.error("Refusing to execute this."))
         sys.exit(0)
