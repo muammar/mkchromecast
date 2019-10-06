@@ -167,6 +167,17 @@ else:
     elif input_file is not None and subtitles is not None and mkv is False:
         # Command taken from
         # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        if seek is not None:
+            fixsubs = [
+                'ffmpeg',
+                '-y',
+                '-i', subtitles,
+                '-ss', seek,
+                '/tmp/fixedsubs.srt'
+                ]
+            Popen(fixsubs).communicate()
+            subtitles="/tmp/fixedsubs.srt"
+
         command = [
             'ffmpeg',
             '-re',
