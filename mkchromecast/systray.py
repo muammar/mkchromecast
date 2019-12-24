@@ -160,7 +160,7 @@ class menubar(QtWidgets.QMainWindow):
     def createUI(self):
         self.tray = QtWidgets.QSystemTrayIcon(self.icon)
         self.menu = QtWidgets.QMenu()
-        self.ag = QtWidgets.QActionGroup(self, exclusive=True)
+        self.ag = QtWidgets.QActionGroup(self)
         self.search_menu()
         self.separator_menu()
         self.populating_menu()
