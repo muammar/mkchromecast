@@ -104,7 +104,7 @@ class mk(object):
             self.cc.initialize_cast()
             self.get_devices(self.select_device)
 
-            print('Switching to SoundFlower...')
+            print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
@@ -118,7 +118,7 @@ class mk(object):
             self.cc.play_cast()
             self.show_control(self.control)
 
-            print('Switching to SoundFlower...')
+            print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))

@@ -362,9 +362,9 @@ parser.add_argument(
     default="44100",
     help="""
     Set the sample rate. The default sample rate obtained from avfoundation
-    audio device input in ffmpeg using soundflower for macOS is 44100Hz (in
+    audio device input in ffmpeg using BlackHole for macOS is 44100Hz (in
     Linux can be 44100Hz or 48000Hz). You can change this in the Audio MIDI
-    Setup in the "Soundflower (2ch)" audio device. You need to change the
+    Setup in the "BlackHole 16ch" audio device. You need to change the
     "Format" in both input/output from 44100Hz to maximum 96000Hz.  I think
     that more than 48000Hz is not necessary, but this is up to the users'
     preferences.

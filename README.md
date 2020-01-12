@@ -95,7 +95,7 @@ In order to use **Mkchromecast** you need the following software to stream with
 * pychromecast.
 * psutil.
 * mutagen.
-* [Soundflower](https://github.com/mattingalls/Soundflower/).
+* [BlackHole](https://github.com/ExistentialAudio/BlackHole )
 * PyQt5 (optional if you want to use the system tray menu).
 
 For more control, you need `ffmpeg` as backend.  In that case install the
@@ -170,7 +170,7 @@ There is a standalone application for **macOS** users. You need to drag it to yo
 [Download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/latest/).
 You need also to [install
-Soundflower](https://github.com/muammar/mkchromecast#soundflower-macos-users-only).
+BlackHole](https://github.com/muammar/mkchromecast#BlackHole-macos-users-only).
 
 ###### Homebrew Cask
 
@@ -285,21 +285,21 @@ sudo apt-get install python3.6 python3-pip python3-pychromecast python3-flask py
 **Note**: if `python3-pychromecast` is not available in your repository,
 follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
-##### Soundflower (macOS users only)
+##### BlackHole (macOS users only)
 
-For installing Soundflower you can check
-[https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
+For installing BlackHole you can check
+[https://github.com/ExistentialAudio/BlackHole ](https://github.com/ExistentialAudio/BlackHole)
 and just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases).
+file](https://github.com/ExistentialAudio/BlackHole/releases).
 
 If you have [Homebrew](http://brew.sh/) you can use [brew
 cask](https://caskroom.github.io/) as follows:
 
 ```
-brew cask install soundflower
+brew cask install blackhole
 ```
 
-By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
+By default, the sample rate in BlackHole is set to `44100Hz`. If you desire
 to stream at higher sample rates follow the [instructions in the
 wiki](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
@@ -465,8 +465,8 @@ change the bitrate and sample rate:
 bin/mkchromecast --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-check the section [Soundflower (macOS users
-only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
+check the section [BlackHole (macOS users
+only)](https://github.com/muammar/mkchromecast#BlackHole-macos-users-only)
 for more about sample rates.
 
 You also can set the host ip manually which is a useful option when having more

@@ -21,6 +21,7 @@
     - Refactored IP assignment. Thanks to Rick Brown.
     - You can attach devices to a running streaming audio session
       (experimental).
+    -  Move from SoundFlower to BlackHole for macOS. Closes #289.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 

@@ -4,7 +4,7 @@ import subprocess
 import os.path
 
 """
-These functions are used to switch input/out to Soundflower back and forth.
+These functions are used to switch input/out to BlackHole back and forth.
 
 To call them:
     from mkchromecast.audio_devices import *
@@ -14,18 +14,18 @@ To call them:
 
 def inputdev():
     if os.path.exists("./bin/audiodevice") is True:
-        inputdevtosf2 = ['./bin/audiodevice input "Soundflower (2ch)"']
+        inputdevtosf2 = ['./bin/audiodevice input "BlackHole 16ch"']
     else:
-        inputdevtosf2 = ['./audiodevice input "Soundflower (2ch)"']
+        inputdevtosf2 = ['./audiodevice input "BlackHole 16ch"']
     subprocess.Popen(inputdevtosf2, shell=True)
     return
 
 
 def outputdev():
     if os.path.exists("./bin/audiodevice") is True:
-        outputdevtosf2 = ['./bin/audiodevice output "Soundflower (2ch)"']
+        outputdevtosf2 = ['./bin/audiodevice output "BlackHole 16ch"']
     else:
-        outputdevtosf2 = ['./audiodevice output "Soundflower (2ch)"']
+        outputdevtosf2 = ['./audiodevice output "BlackHole 16ch"']
     subprocess.Popen(outputdevtosf2, shell=True)
     return
 
