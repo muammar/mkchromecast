@@ -3,5 +3,5 @@ requests>=2.20.0
 Flask==1.0
 setuptools==39.2.0
 PyQt5==5.11.2
-psutil==5.4.7
+psutil==5.6.6
 pychromecast==2.2.0
