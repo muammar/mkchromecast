@@ -105,33 +105,35 @@ elif screencast is True:
         "-i",
         "{}.0+0,0".format(display),
         "-vcodec",
-        vcodec
+        vcodec,
     ]
     if vcodec != "h264_nvenc":
         command.append("-preset")
         command.append("veryfast")
-    command.extend([
-        "-tune",
-        "zerolatency",
-        "-maxrate",
-        "10000k",
-        "-bufsize",
-        "20000k",
-        "-pix_fmt",
-        "yuv420p",
-        "-g",
-        "60",  # '-c:a', 'copy', '-ac', '2',
-        # '-b', '900k',
-        "-f",
-        "mp4",
-        "-movflags",
-        "frag_keyframe+empty_moov",
-        "-ar",
-        "44100",
-        "-acodec",
-        "libvorbis",
-        "pipe:1",
-    ])
+    command.extend(
+        [
+            "-tune",
+            "zerolatency",
+            "-maxrate",
+            "10000k",
+            "-bufsize",
+            "20000k",
+            "-pix_fmt",
+            "yuv420p",
+            "-g",
+            "60",  # '-c:a', 'copy', '-ac', '2',
+            # '-b', '900k',
+            "-f",
+            "mp4",
+            "-movflags",
+            "frag_keyframe+empty_moov",
+            "-ar",
+            "44100",
+            "-acodec",
+            "libvorbis",
+            "pipe:1",
+        ]
+    )
 else:
     """
     The blocks shown below are related to input_files

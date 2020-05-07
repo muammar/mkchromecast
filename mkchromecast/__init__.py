@@ -532,7 +532,7 @@ parser.add_argument(
     default="libx264",
     help="""
     Set a custom vcodec for ffmpeg when capturing screen.  Defaults to libx264
-    """
+    """,
 )
 
 parser.add_argument(

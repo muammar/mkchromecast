@@ -388,9 +388,6 @@ class Casting(object):
                 )
 
             if media_controller.is_active:
-                import time
-
-                time.sleep(2)
                 media_controller.play()
 
             print(" ")
@@ -398,12 +395,17 @@ class Casting(object):
             print(" ")
             print(self.cast.status)
             print(" ")
+
+            time.sleep(2.5)
+            media_controller.play()
+
             if self.hijack is True:
                 self.r = Thread(target=self.hijack_cc)
                 # This has to be set to True so that we catch
                 # KeyboardInterrupt.
                 self.r.daemon = True
                 self.r.start()
+
         except AttributeError:
             self.sonos = self.cast_to
             self.sonos.play_uri(
