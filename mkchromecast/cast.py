@@ -107,9 +107,13 @@ class Casting(object):
 
         if sonos:
             try:
-                self.sonos_list = list(soco.discover())
-                for self.index, device in enumerate(self.sonos_list):
-                    add_sonos = [self.index, device, "Sonos"]
+                # Checking groups
+                zone = soco.discovery.any_soco()
+
+                self.sonos_list = zone.all_groups
+
+                for self.index, group in enumerate(self.sonos_list):
+                    add_sonos = [self.index, group.coordinator, "Sonos"]
                     self.cclist.append(add_sonos)
             except TypeError:
                 pass
@@ -396,7 +400,7 @@ class Casting(object):
             print(self.cast.status)
             print(" ")
 
-            time.sleep(2.5)
+            time.sleep(5.0)
             media_controller.play()
 
             if self.hijack is True:
@@ -465,7 +469,7 @@ class Casting(object):
             print(colors.error("This method is not supported in Linux yet."))
 
     def available_devices(self):
-        """This method is used for populating the self.available_devices array
+        """This method is uplay_mediased for populating the self.available_devices array
         needed for the system tray.
         """
         self.available_devices = []
