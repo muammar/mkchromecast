@@ -115,7 +115,7 @@ class Casting(object):
                 for self.index, group in enumerate(self.sonos_list):
                     add_sonos = [self.index, group.coordinator, "Sonos"]
                     self.cclist.append(add_sonos)
-            except TypeError:
+            except (TypeError, AttributeError):
                 pass
 
         if self.debug is True:
