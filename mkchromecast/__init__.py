@@ -663,8 +663,9 @@ if args.reset is True:
         inputint()
         outputint()
     else:
-        from mkchromecast.pulseaudio import remove_sink
+        from mkchromecast.pulseaudio import remove_sink, get_sink_list
 
+        get_sink_list()
         remove_sink()
     terminate()
 

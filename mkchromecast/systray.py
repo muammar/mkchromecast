@@ -29,7 +29,6 @@ We verify that pychromecast is installed
 """
 try:
     import pychromecast
-    from pychromecast.dial import reboot
 
     chromecast = True
 except ImportError:
@@ -657,6 +656,15 @@ class menubar(QtWidgets.QMainWindow):
             remove_sink()
 
     def reboot(self):
+
+        try:
+            from pychromecast.dial import reboot
+        except ImportError:
+            # reboot is removed from pychromecast.dial since PR394
+            # see: https://github.com/home-assistant-libs/pychromecast/pull/394
+            print(colors.warning("This version of pychromecast does not support reboot. Will do nothing."))
+            reboot = lambda x: None
+
         if platform == "Darwin":
             try:
                 self.cast.host_ = socket.gethostbyname(self.cast_to + ".local")

@@ -40,7 +40,6 @@ We verify that pychromecast is installed
 """
 try:
     import pychromecast
-    from pychromecast.dial import reboot
 
     chromecast = True
 except ImportError:
@@ -77,9 +76,14 @@ class Casting(object):
         try:
             return list(pychromecast.get_chromecasts_as_dict().keys())
         except AttributeError:
-            self._chromecasts_by_name = {
-                c.name: c for c in pychromecast.get_chromecasts(tries=self.tries)
-            }
+            _chromecasts = pychromecast.get_chromecasts(tries=self.tries)
+
+            # since PR380, pychromecast.get_chromecasts returns a tuple
+            # see: https://github.com/home-assistant-libs/pychromecast/pull/380
+            if type(_chromecasts) == tuple:
+                _chromecasts = _chromecasts[0]
+
+            self._chromecasts_by_name = {c.name: c for c in _chromecasts}
             return list(self._chromecasts_by_name.keys())
 
     def _get_chromecast(self, name):
@@ -298,12 +302,22 @@ class Casting(object):
         localip = self.ip
 
         try:
+            # for pychromecast compatibility
+            try:
+                host = self.cast.host
+            except AttributeError as err:
+                # since PR395, host is not an attribute of Chromecast anymore
+                # see: https://github.com/home-assistant-libs/pychromecast/pull/395
+                if str(err) == "'Chromecast' object has no attribute 'host'":
+                    host = self.cast.socket_client.host
+                else:
+                    raise
             print(
                 colors.options("The IP of ")
                 + colors.success(self.cast_to)
                 + colors.options(" is:")
                 + " "
-                + self.cast.host
+                + host
             )
         except TypeError:
             print(
@@ -313,7 +327,7 @@ class Casting(object):
                 + " "
                 + self.cast_to.ip_address
             )
-        except AttributeError:
+        except AttributeError: # what AttributeError is being expected?
             for _ in self.sonos_list:
                 if self.cast_to == _.player_name:
                     self.cast_to = _
@@ -462,6 +476,15 @@ class Casting(object):
             self.sonos.play()
 
     def reboot(self):
+
+        try:
+            from pychromecast.dial import reboot
+        except ImportError:
+            # reboot is removed from pychromecast.dial since PR394
+            # see: https://github.com/home-assistant-libs/pychromecast/pull/394
+            print(colors.warning("This version of pychromecast does not support reboot. Will do nothing."))
+            reboot = lambda x: None
+
         if self.platform == "Darwin":
             self.cast.host = socket.gethostbyname(self.cast_to + ".local")
             reboot(self.cast.host)
