@@ -76,15 +76,18 @@ class Casting(object):
         try:
             return list(pychromecast.get_chromecasts_as_dict().keys())
         except AttributeError:
-            _chromecasts = pychromecast.get_chromecasts(tries=self.tries)
+            pass
 
-            # since PR380, pychromecast.get_chromecasts returns a tuple
-            # see: https://github.com/home-assistant-libs/pychromecast/pull/380
-            if type(_chromecasts) == tuple:
-                _chromecasts = _chromecasts[0]
+        _chromecasts = pychromecast.get_chromecasts(tries=self.tries)
 
-            self._chromecasts_by_name = {c.name: c for c in _chromecasts}
-            return list(self._chromecasts_by_name.keys())
+        # since PR380, pychromecast.get_chromecasts returns a tuple
+        # see: https://github.com/home-assistant-libs/pychromecast/pull/380
+        if type(_chromecasts) == tuple:
+            _chromecasts = _chromecasts[0]
+
+        self._chromecasts_by_name = {c.name: c for c in _chromecasts}
+
+        return list(self._chromecasts_by_name.keys())
 
     def _get_chromecast(self, name):
         # compatibility
@@ -302,22 +305,12 @@ class Casting(object):
         localip = self.ip
 
         try:
-            # for pychromecast compatibility
-            try:
-                host = self.cast.host
-            except AttributeError as err:
-                # since PR395, host is not an attribute of Chromecast anymore
-                # see: https://github.com/home-assistant-libs/pychromecast/pull/395
-                if str(err) == "'Chromecast' object has no attribute 'host'":
-                    host = self.cast.socket_client.host
-                else:
-                    raise
             print(
                 colors.options("The IP of ")
                 + colors.success(self.cast_to)
                 + colors.options(" is:")
                 + " "
-                + host
+                + self.cast.socket_client.host # valid since at least v3.0.0
             )
         except TypeError:
             print(
@@ -547,7 +540,9 @@ class Casting(object):
         name is different from "Default Media Receiver", it hijacks to the
         chromecast.
         """
-        ip = self.cast.host
+
+        ip = self.cast.socket_client.host # valid since at least v3.0.0
+
         if ping_chromecast(ip) is True:  # The chromecast is online.
             if str(self.cast.status.display_name) != "Default Media Receiver":
                 self.device_name = self.cast_to
