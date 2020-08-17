@@ -12,7 +12,13 @@ def create_sink():
 
     sink_name = "Mkchromecast"
 
-    create_sink = ["pactl", "load-module", "module-null-sink", "sink_name=" + sink_name, "sink_properties=device.description=" + sink_name]
+    create_sink = [
+        "pactl",
+        "load-module",
+        "module-null-sink",
+        "sink_name=" + sink_name,
+        "sink_properties=device.description=" + sink_name,
+    ]
 
     cs = subprocess.Popen(create_sink, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     csoutput, cserror = cs.communicate()
@@ -33,11 +39,17 @@ def remove_sink():
 
     for num in _sink_num:
         remove_sink = [
-            "pactl", "unload-module",
-            num.decode("utf-8") if type(num) == bytes else str(num)]
+            "pactl",
+            "unload-module",
+            num.decode("utf-8") if type(num) == bytes else str(num),
+        ]
         rms = subprocess.run(
-            remove_sink, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            timeout=60, check=True)
+            remove_sink,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=60,
+            check=True,
+        )
 
 
 def check_sink():
@@ -71,12 +83,15 @@ def get_sink_list():
     global _sink_num
 
     cmd = ["pacmd", "list-sinks"]
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60, check=True)
+    result = subprocess.run(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60, check=True
+    )
 
     pattern = re.compile(
-        r"\s*?index:\s*?\d+\s*$\s*?name:\s*?<Mkchromecast.*>" +
-        r"\s*?$(?:\n^.*?$)*?\n^\s*?module: (?P<module>\d+?)\s*?$",
-        re.MULTILINE)
+        r"\s*?index:\s*?\d+\s*$\s*?name:\s*?<Mkchromecast.*>"
+        + r"\s*?$(?:\n^.*?$)*?\n^\s*?module: (?P<module>\d+?)\s*?$",
+        re.MULTILINE,
+    )
     matches = pattern.findall(result.stdout.decode("utf-8"), re.MULTILINE)
 
     _sink_num = [int(i) for i in matches]

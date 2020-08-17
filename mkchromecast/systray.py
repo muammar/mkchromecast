@@ -662,7 +662,11 @@ class menubar(QtWidgets.QMainWindow):
         except ImportError:
             # reboot is removed from pychromecast.dial since PR394
             # see: https://github.com/home-assistant-libs/pychromecast/pull/394
-            print(colors.warning("This version of pychromecast does not support reboot. Will do nothing."))
+            print(
+                colors.warning(
+                    "This version of pychromecast does not support reboot. Will do nothing."
+                )
+            )
             reboot = lambda x: None
 
         if platform == "Darwin":
@@ -757,13 +761,13 @@ class menubar(QtWidgets.QMainWindow):
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         # This is useful when launching from git repo
         if os.path.exists("images/google.icns") is True:
-            if platform is "Darwin":
+            if platform == "Darwin":
                 self.about_icon = "images/google.icns"
             else:
                 self.about_icon = "images/google.png"
         # This is useful for applications
         else:
-            if platform is "Linux":
+            if platform == "Linux":
                 self.about_icon = "/usr/share/mkchromecast/images/google.png"
             else:
                 self.about_icon = "google.icns"
@@ -827,7 +831,7 @@ class menubar(QtWidgets.QMainWindow):
     """
 
     def search_notification(self):
-        if platform is "Darwin" and self.notifications is "enabled":
+        if platform == "Darwin" and self.notifications == "enabled":
             if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
                 noticon = "images/" + self.google[self.colors] + ".icns"
             else:

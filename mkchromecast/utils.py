@@ -155,6 +155,6 @@ def _get_first_network_ip_by_netifaces():
         if interface == "lo":
             continue
         iface = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
-        if iface is not None and iface[0]["addr"] is not "127.0.0.1":
+        if iface != None and iface[0]["addr"] != "127.0.0.1":
             for e in iface:
                 return str(e["addr"])

@@ -18,7 +18,6 @@ from mkchromecast.pulseaudio import create_sink, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
 from mkchromecast.messages import print_available_devices
 import subprocess
-import time
 import atexit
 import signal
 

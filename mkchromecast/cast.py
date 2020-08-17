@@ -310,7 +310,7 @@ class Casting(object):
                 + colors.success(self.cast_to)
                 + colors.options(" is:")
                 + " "
-                + self.cast.socket_client.host # valid since at least v3.0.0
+                + self.cast.socket_client.host  # valid since at least v3.0.0
             )
         except TypeError:
             print(
@@ -320,7 +320,7 @@ class Casting(object):
                 + " "
                 + self.cast_to.ip_address
             )
-        except AttributeError: # what AttributeError is being expected?
+        except AttributeError:  # what AttributeError is being expected?
             for _ in self.sonos_list:
                 if self.cast_to == _.player_name:
                     self.cast_to = _
@@ -475,7 +475,11 @@ class Casting(object):
         except ImportError:
             # reboot is removed from pychromecast.dial since PR394
             # see: https://github.com/home-assistant-libs/pychromecast/pull/394
-            print(colors.warning("This version of pychromecast does not support reboot. Will do nothing."))
+            print(
+                colors.warning(
+                    "This version of pychromecast does not support reboot. Will do nothing."
+                )
+            )
             reboot = lambda x: None
 
         if self.platform == "Darwin":
@@ -541,7 +545,7 @@ class Casting(object):
         chromecast.
         """
 
-        ip = self.cast.socket_client.host # valid since at least v3.0.0
+        ip = self.cast.socket_client.host  # valid since at least v3.0.0
 
         if ping_chromecast(ip) is True:  # The chromecast is online.
             if str(self.cast.status.display_name) != "Default Media Receiver":
