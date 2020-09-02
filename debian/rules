@@ -13,6 +13,3 @@ override_dh_auto_install:
 override_dh_auto_clean:
 	dh_clean
 	rm -rf build dist install *.egg-info
-
-override_dh_missing:
-	dh_missing --fail-missing
