@@ -37,6 +37,14 @@
 # Muammar El Khatib
 #
 
+.PHONY: sed \
+        sed_notray \
+        test \
+        debug \
+        deploy \
+        clean \
+        deepclean
+
 # This target is used to test the start_tray.py script that is used to deploy
 # the macOS app
 sed:
