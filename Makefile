@@ -41,7 +41,7 @@
 # the macOS app
 sed:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
-	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
 
 # This target creates the app just to be used locally
 test:
