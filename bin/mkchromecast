@@ -4,7 +4,7 @@
 import os.path
 import sys
 
-HERE = os.path.dirname(__file__)
+HERE = os.path.dirname(os.path.realpath(__file__))
 if os.path.exists(os.path.join(HERE, '..', 'mkchromecast')):
     sys.path.insert(0, os.path.join(HERE, '..'))
 
@@ -12,12 +12,12 @@ import mkchromecast.__init__
 from mkchromecast.version import __version__
 from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
                                         outputint)
-from mkchromecast.cast import casting
+from mkchromecast.cast import Casting
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
+from mkchromecast.messages import print_available_devices
 import subprocess
-import time
 import atexit
 import signal
 
@@ -25,21 +25,21 @@ import signal
 class mk(object):
     """Class to manage cast process"""
     def __init__(self):
-        print(colors.bold('Mkchromecast ')+'v'+__version__)
+        print(colors.bold('Mkchromecast ') + 'v' + __version__)
         self.platform = mkchromecast.__init__.platform
         self.adevice = mkchromecast.__init__.adevice
         self.debug = mkchromecast.__init__.debug
-        self.ccname = mkchromecast.__init__.ccname
+        self.device_name = mkchromecast.__init__.device_name
         self.videoarg = mkchromecast.__init__.videoarg
-        self.youtubeurl = mkchromecast.__init__.youtubeurl
+        self.youtube_url = mkchromecast.__init__.youtube_url
         self.tray = mkchromecast.__init__.tray
         self.discover = mkchromecast.__init__.discover
-        self.source_url = mkchromecast.__init__.sourceurl
+        self.source_url = mkchromecast.__init__.source_url
         self.encoder_backend = mkchromecast.__init__.backend
-        self.select_cc = mkchromecast.__init__.select_cc
+        self.select_device = mkchromecast.__init__.select_device
         self.control = mkchromecast.__init__.control
 
-        self.cc = casting()
+        self.cc = Casting()
         checkmktmp()
         writePidFile()
 
@@ -66,7 +66,7 @@ class mk(object):
 
     def audio_linux(self):
         """This method manages all related to casting audio in Linux"""
-        if self.youtubeurl is None and self.source_url is None:
+        if self.youtube_url is None and self.source_url is None:
             if self.adevice is None:
                 print('Creating Pulseaudio Sink...')
                 print(colors.warning('Open Pavucontrol and Select the '
@@ -76,48 +76,48 @@ class mk(object):
             print(colors.success('[Done]'))
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif self.youtubeurl is None and self.source_url is not None:
+        elif self.youtube_url is None and self.source_url is not None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
             self.cc.play_cast()
             self.show_control(self.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtubeurl is not None and self.videoarg is False:
+        elif self.youtube_url is not None and self.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
             self.cc.play_cast()
             self.show_control(self.control)
 
     def audio_macOS(self):
         """This method manages all related to casting audio in macOS"""
-        if self.youtubeurl is None and self.source_url is None:
+        if self.youtube_url is None and self.source_url is None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
 
-            print('Switching to SoundFlower...')
+            print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
             self.cc.play_cast()
             self.show_control(self.control)
 
-        elif self.youtubeurl is None and self.source_url is not None:
+        elif self.youtube_url is None and self.source_url is not None:
             self.start_backend(self.encoder_backend)
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
             self.cc.play_cast()
             self.show_control(self.control)
 
-            print('Switching to SoundFlower...')
+            print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
@@ -125,11 +125,11 @@ class mk(object):
             self.show_control(self.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtubeurl is not None and self.videoarg is False:
+        elif self.youtube_url is not None and self.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
-            self.get_cc(self.select_cc)
+            self.get_devices(self.select_device)
             self.cc.play_cast()
             self.show_control(self.control)
 
@@ -146,21 +146,21 @@ class mk(object):
         import mkchromecast.video
         mkchromecast.video.main()
         self.cc.initialize_cast()
-        self.get_cc(self.select_cc)
+        self.get_devices(self.select_device)
         self.cc.play_cast()
         self.show_control(self.control)
 
-    def get_cc(self, select_cc):
+    def get_devices(self, select_device, write_to_pickle=True):
         """Get chromecast name, and let user select one from a list if
-        select_cc flag is True.
+        select_device flag is True.
         """
         # This is done for the case that -s is passed
-        if select_cc is True:
-            self.cc.sel_cc()
-            self.cc.inp_cc()
-            self.cc.get_cc()
+        if select_device is True:
+            self.cc.select_a_device()
+            self.cc.input_device(write_to_pickle=write_to_pickle)
+            self.cc.get_devices()
         else:
-            self.cc.get_cc()
+            self.cc.get_devices()
 
     def start_backend(self, encoder_backend):
         """Starting backends"""
@@ -197,8 +197,10 @@ class mk(object):
         print(colors.important('Controls:'))
         print(colors.important('========='))
         print('')
-        print(colors.options(           'Volume Up:')+' u')
-        print(colors.options(         'Volume Down:')+' d')
+        print(colors.options(           'Volume Up:') + ' u')
+        print(colors.options(         'Volume Down:') + ' d')
+        print(colors.options(       'Attach device:') + ' a')
+
         if self.videoarg is True:
             print(colors.options(       'Pause Casting:')+' p')
             print(colors.options(      'Resume Casting:')+' r')
@@ -211,6 +213,8 @@ class mk(object):
             from mkchromecast.getch import getch
 
             self.controls_msg()
+
+            # We capture keys
             try:
                 while(True):
                     key = getch()
@@ -224,6 +228,11 @@ class mk(object):
                         if self.encoder_backend == 'ffmpeg':
                             if self.debug is True:
                                 self.controls_msg()
+                    elif (key == 'a'):
+                        print(self.cc.available_devices)
+                        self.get_devices(self.select_device, write_to_pickle=False)
+                        self.cc.play_cast()
+                        self.show_control(self.control)
                     elif(key == 'p'):
                         if self.videoarg is True:
                             print('Pausing Casting Process...')

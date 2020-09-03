@@ -1,7 +1,7 @@
 Mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
-[![PyPI](https://img.shields.io/pypi/pyversions/pychromecast.svg?maxAge=2592000)](https://github.com/muammar/mkchromecast/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg)](https://github.com/muammar/mkchromecast/)
 [![node](https://img.shields.io/badge/node-9.3.0-yellow.svg)](https://github.com/muammar/mkchromecast/blob/master/nodejs/)
 [![Downloads](https://img.shields.io/github/downloads/muammar/mkchromecast/total.svg?maxAge=2592000?style=flat-square)](https://github.com/muammar/mkchromecast/releases)
 [![GitHub release](https://img.shields.io/github/release/muammar/mkchromecast.svg)](https://github.com/muammar/mkchromecast/releases/latest)
@@ -9,7 +9,7 @@ Mkchromecast
 This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
-It is written in Python, and it can stream via `node.js`, `parec` (**Linux**),
+It is written for Python3, and it can stream via `node.js`, `parec` (**Linux**),
 `ffmpeg`, or `avconv`.  **Mkchromecast** is capable of using lossy and lossless
 audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
 (**Linux**) are installed. It also supports [Multi-room group
@@ -70,7 +70,7 @@ computer with **Mkchromecast**. To add Sonos support, install the `soco` python
 module:
 
 ```
-pip install soco
+pip3 install soco
 ```
 
 Contribute
@@ -91,11 +91,11 @@ Requirements:
 In order to use **Mkchromecast** you need the following software to stream with
 `node.js`:
 
-* Python2 (already shipped in OS X), or Python3.
+* Python3.
 * pychromecast.
 * psutil.
 * mutagen.
-* [Soundflower](https://github.com/mattingalls/Soundflower/).
+* [BlackHole](https://github.com/ExistentialAudio/BlackHole )
 * PyQt5 (optional if you want to use the system tray menu).
 
 For more control, you need `ffmpeg` as backend.  In that case install the
@@ -110,8 +110,7 @@ following:
 
 * Pulseaudio.
 * Pavucontrol.
-* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
-  `0.4.0`), or Python3 (if using the official debian package).
+* Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -135,8 +134,7 @@ requirements are:
 * alsa-base
 * alsa-utils
 * alsa-utils
-* Python2 (you need `pychromecast` < 2.0.0 deprecated from mkchromecast
-  `0.4.0`), or Python3 (if using the official debian package).
+* Python3 (if using the official debian package).
 * pychromecast.
 * psutil.
 * mutagen.
@@ -172,7 +170,7 @@ There is a standalone application for **macOS** users. You need to drag it to yo
 [Download the latest dmg
 here](https://github.com/muammar/mkchromecast/releases/latest/).
 You need also to [install
-Soundflower](https://github.com/muammar/mkchromecast#soundflower-macos-users-only).
+BlackHole](https://github.com/muammar/mkchromecast#BlackHole-macos-users-only).
 
 ###### Homebrew Cask
 
@@ -233,7 +231,7 @@ apt-get install mkchromecast-pulseaudio (Pulseaudio users)
 To install **Mkchromecast**, clone this repository:
 
 ```
-git clone https://github.com/muammar/mkchromecast.git
+git clone https://github.com/muammar/mkchromecast.git --depth 1
 ```
 
 Or you may download one of the [stable releases
@@ -241,16 +239,18 @@ here](https://github.com/muammar/mkchromecast/releases), and unzip the file.
 
 ##### Arch Linux
 
-Mkchromecast is available at the AUR : [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
+Mkchromecast is available at the AUR :
+- Release version: [https://aur.archlinux.org/packages/mkchromecast/](https://aur.archlinux.org/packages/mkchromecast/).
+- Development version: [https://aur.archlinux.org/packages/mkchromecast-git/](https://aur.archlinux.org/packages/mkchromecast-git/).
 
 ```bash
-#install with yaourt
-yaourt mkchromecast-git
+#install with aurman
+aurman -S mkchromecast
 ```
 
 ```bash
-#install with pacaur
-pacaur -S mkchromecast-git
+#install with aurutils
+aur sync mkchromecast
 ```
 
 If you get the error `cannot import name 'DependencyWarning'` in Arch Linux,
@@ -279,27 +279,27 @@ managers coming with their distributions.
 Example for Debian based distros:
 
 ```
-sudo apt-get install python2.7 python-pip python-pychromecast python-flask python-psutil python-setuptools python-mutagen python-gi vorbis-tools sox lame flac faac opus-tools
+sudo apt-get install python3.6 python3-pip python3-pychromecast python3-flask python3-psutil python3-setuptools python3-mutagen python3-gi vorbis-tools sox lame flac faac opus-tools
 ```
 
-**Note**: if `python-pychromecast` is not available in your repository,
+**Note**: if `python3-pychromecast` is not available in your repository,
 follow instructions in [#9](https://github.com/muammar/mkchromecast/issues/9).
 
-##### Soundflower (macOS users only)
+##### BlackHole (macOS users only)
 
-For installing Soundflower you can check
-[https://github.com/mattingalls/Soundflower/](https://github.com/mattingalls/Soundflower/)
+For installing BlackHole you can check
+[https://github.com/ExistentialAudio/BlackHole ](https://github.com/ExistentialAudio/BlackHole)
 and just download the [latest dmg
-file](https://github.com/mattingalls/Soundflower/releases).
+file](https://github.com/ExistentialAudio/BlackHole/releases).
 
 If you have [Homebrew](http://brew.sh/) you can use [brew
 cask](https://caskroom.github.io/) as follows:
 
 ```
-brew cask install soundflower
+brew cask install blackhole
 ```
 
-By default, the sample rate in Soundflower is set to `44100Hz`. If you desire
+By default, the sample rate in BlackHole is set to `44100Hz`. If you desire
 to stream at higher sample rates follow the [instructions in the
 wiki](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
@@ -372,20 +372,12 @@ manager.
 Example with Homebrew:
 
 ```
-brew install pyqt5 --with-python
+brew install pyqt5 --with-python3
 ```
 
 ###### Linux
 
 * **Debian**
-
-For Python2:
-
-```
-apt-get install python-pyqt5
-```
-
-For Python3:
 
 ```
 apt-get install python3-pyqt5
@@ -473,8 +465,8 @@ change the bitrate and sample rate:
 bin/mkchromecast --encoder-backend ffmpeg -c mp3 -b 128 --sample-rate 31000
 ```
 
-check the section [Soundflower (macOS users
-only)](https://github.com/muammar/mkchromecast#soundflower-macos-users-only)
+check the section [BlackHole (macOS users
+only)](https://github.com/muammar/mkchromecast#BlackHole-macos-users-only)
 for more about sample rates.
 
 You also can set the host ip manually which is a useful option when having more

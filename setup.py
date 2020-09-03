@@ -14,7 +14,6 @@ On MacOS you need to install using pip3 the following:
 
 On Linux, this is a standard distutils script supporting
 
-   rm -r nodejs/bin nodejs/node_modules
    python3 setup.py build
    python3 setup.py install
 
@@ -27,98 +26,91 @@ import platform
 from glob import glob
 from setuptools import setup
 
-exec(open('mkchromecast/version.py').read())
+exec(open("mkchromecast/version.py").read())
 
 ROOT = os.path.dirname(__file__)
-ROOT = ROOT if ROOT else '.'
+ROOT = ROOT if ROOT else "."
 
 LINUX_DATA = [
-    ('share/mkchromecast/nodejs', [ 
-        'nodejs/package.json',    
-        'nodejs/package-lock.json',    
-        'nodejs/html5-video-streamer.js',    
-    ]),
-    ('share/mkchromecast/images', glob('images/google*.png')),
-    ('share/applications/', ['mkchromecast.desktop']),
-    ('share/man/man1', ['mkchromecast.1']),
+    (
+        "share/mkchromecast/nodejs",
+        [
+            "nodejs/package.json",
+            "nodejs/package-lock.json",
+            "nodejs/html5-video-streamer.js",
+        ],
+    ),
+    ("share/mkchromecast/images", glob("images/google*.png")),
+    ("share/applications/", ["mkchromecast.desktop"]),
+    ("share/man/man1", ["mkchromecast.1"]),
 ]
-LINUX_REQUIRES = [
-    'flask',
-    'mutagen',
-    'netifaces',
-    'psutil',
-    'PyChromecast',
-    'PyQt5',
-    'requests'
-]
+LINUX_REQUIRES = ["flask", "mutagen", "netifaces", "psutil", "PyQt5", "requests"]
 LINUX_CLASSIFIERS = [
-    'Development Status :: 4 - Beta',
-    'Intended Audience :: End Users/Desktop',
-    'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 3.6',
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.6",
 ]
 
-APP = ['start_tray.py']
-APP_NAME = 'Mkchromecast'
-DATA_FILES = ['bin/audiodevice', 'bin/mkchromecast', 'nodejs', 'notifier']
-DATA_FILES.extend(glob('images/google*.icns'))
+APP = ["start_tray.py"]
+APP_NAME = "Mkchromecast"
+DATA_FILES = ["bin/audiodevice", "bin/mkchromecast", "nodejs", "notifier"]
+DATA_FILES.extend(glob("images/google*.icns"))
 
 OPTIONS = {
-    'argv_emulation': True,
-    'prefer_ppc': True,
-    'iconfile': 'images/google.icns',
-    'includes': [
-        'google',
-        'sip',
-        'PyQt5',
-        'PyQt5.QtCore',
-        'PyQt5.QtGui',
-        'PyQt5.QtWidgets',
-        'Flask',
-        'configparser'
+    "argv_emulation": True,
+    "prefer_ppc": True,
+    "iconfile": "images/google.icns",
+    "includes": [
+        "google",
+        "sip",
+        "PyQt5",
+        "PyQt5.QtCore",
+        "PyQt5.QtGui",
+        "PyQt5.QtWidgets",
+        "Flask",
+        "configparser",
     ],
-    'packages': ['requests'],
-    'plist': {
-        'CFBundleName': APP_NAME,
-        'CFBundleDisplayName': APP_NAME,
-        'CFBundleGetInfoString':
-            'Cast macOS audio to your Google cast devices and Sonos speakers',
-        'CFBundleIdentifier': 'com.mkchromecast.osx',
-        'CFBundleVersion': __version__,
-        'CFBundleShortVersionString': __version__,
-        'NSHumanReadableCopyright':
-            u'Copyright (c) 2017, Muammar El Khatib, All Rights Reserved',
-        'LSPrefersPPC': True,
-        'LSUIElement': True
-    }
+    "packages": ["requests"],
+    "plist": {
+        "CFBundleName": APP_NAME,
+        "CFBundleDisplayName": APP_NAME,
+        "CFBundleGetInfoString": "Cast macOS audio to your Google cast devices and Sonos speakers",
+        "CFBundleIdentifier": "com.mkchromecast.osx",
+        "CFBundleVersion": __version__,
+        "CFBundleShortVersionString": __version__,
+        "NSHumanReadableCopyright": u"Copyright (c) 2017, Muammar El Khatib, All Rights Reserved",
+        "LSPrefersPPC": True,
+        "LSUIElement": True,
+    },
 }
 
-if platform.system() == 'Darwin':
+if platform.system() == "Darwin":
     setup(
         name=APP_NAME,
         app=APP,
         data_files=DATA_FILES,
-        packages=['Mkchromecast'],
-        platforms=['i386', 'x86_64'],
-        options={'py2app': OPTIONS},
-        setup_requires=['py2app'],
+        packages=["Mkchromecast"],
+        platforms=["i386", "x86_64"],
+        options={"py2app": OPTIONS},
+        setup_requires=["py2app"],
     )
 
-elif platform.system() == 'Linux':
+elif platform.system() == "Linux":
     setup(
-        name='mkchromecast',
+        name="mkchromecast",
         version=__version__,
-        description='Cast Linux audio or video to Google Cast devices',
-        long_description=open(ROOT + '/README.md').read(),
+        description="Cast Linux audio or video to Google Cast devices",
+        long_description=open(ROOT + "/README.md").read(),
         include_package_data=True,
-        license='MIT',
-        url='http://mkchromecast.com/',
-        author='Muammar El Khatib',
-        author_email='http://muammar.me/',
-        keywords=['chromecast'],
-        packages=['mkchromecast'],
-        scripts=['bin/mkchromecast'],
+        license="MIT",
+        url="http://mkchromecast.com/",
+        author="Muammar El Khatib",
+        author_email="http://muammar.me/",
+        keywords=["chromecast"],
+        packages=["mkchromecast"],
+        scripts=["bin/mkchromecast"],
         classifiers=LINUX_CLASSIFIERS,
         data_files=LINUX_DATA,
-        requires=LINUX_REQUIRES
+        requires=LINUX_REQUIRES,
     )
