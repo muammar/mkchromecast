@@ -1,10 +1,8 @@
-PyChromecast==0.8.2
-soco==0.12
-Flask==0.12.2
-netifaces==0.10.6
-setuptools==36.6.0
-requests==2.18.4
-mutagen==1.38
-psutil==5.4.0
+PyGObject
+requests
+psutil
+Flask
+netifaces
+pychromecast
 PyQt5
-gi==1.2
+soco

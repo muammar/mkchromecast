@@ -3,6 +3,9 @@
 %:
 	dh $@  --with python3
 
+override_dh_auto_build:
+	 make sed_notray
+
 override_dh_auto_test:
 	echo "No tests defined."
 
@@ -13,6 +16,3 @@ override_dh_auto_install:
 override_dh_auto_clean:
 	dh_clean
 	rm -rf build dist install *.egg-info
-
-override_dh_missing:
-	dh_missing --fail-missing

@@ -37,11 +37,25 @@
 # Muammar El Khatib
 #
 
+.PHONY: sed \
+        sed_notray \
+        test \
+        debug \
+        deploy \
+        clean \
+        deepclean
+
 # This target is used to test the start_tray.py script that is used to deploy
 # the macOS app
 sed:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
-	sed -i -e  's/debug = args.debug/debug = True /g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
+
+# This target is used when the tray should be disabled
+sed_notray:
+	sed -i -e  's/tray = args.tray/tray = False/g' mkchromecast/__init__.py
+	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
+
 
 # This target creates the app just to be used locally
 test:
@@ -54,19 +68,27 @@ debug:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = True/g' mkchromecast/__init__.py
 	python3 setup.py py2app
-	cp -R /usr/local/Cellar/qt/5.10.1/plugins dist/Mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt/5.10.1/bin/macdeployqt dist/Mkchromecast.app
+	cp -R /usr/local/Cellar/qt/5.15.0/plugins dist/Mkchromecast.app/Contents/PlugIns
+	/usr/local/Cellar/qt/5.15.0/bin/macdeployqt dist/Mkchromecast.app
 
 # This target creates a standalone app with debugging disabled
 deploy:
 	sed -i -e  's/tray = args.tray/tray = True/g' mkchromecast/__init__.py
 	sed -i -e  's/debug = args.debug/debug = False/g' mkchromecast/__init__.py
 	python3 setup.py py2app
-	cp -R /usr/local/Cellar/qt/5.10.1/plugins dist/Mkchromecast.app/Contents/PlugIns
-	/usr/local/Cellar/qt/5.10.1/bin/macdeployqt dist/Mkchromecast.app -dmg
+	cp -R /usr/local/Cellar/qt/5.15.0/plugins dist/Mkchromecast.app/Contents/PlugIns
+	/usr/local/Cellar/qt/5.15.0/bin/macdeployqt dist/Mkchromecast.app -dmg
 
 # This cleans
 clean:
 	git clean -f -d
 	git checkout mkchromecast/__init__.py
 	rm -f mkchromecast/*.pyc
+	rm -fr .eggs/
+
+deepclean:
+	git clean -f -d
+	git checkout mkchromecast/__init__.py
+	rm -f mkchromecast/*.pyc
+	rm -rf dist build
+	rm -fr .eggs/

@@ -8,10 +8,10 @@ Portable getch() for Python.
 :license: MIT, see LICENSE for more details.
 """
 
-__version__ = '1.0.1'
+__version__ = "1.0.1"
 
 from .getch import getch
 from .pause import pause, pause_exit
 
 
-__all__ = ['__version__', 'getch', 'pause', 'pause_exit']
+__all__ = ["__version__", "getch", "pause", "pause_exit"]
