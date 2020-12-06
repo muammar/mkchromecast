@@ -3,6 +3,6 @@ requests
 psutil
 Flask
 netifaces
-pychromecast
+pychromecast>=4.2
 PyQt5
 soco
