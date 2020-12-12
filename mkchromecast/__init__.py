@@ -539,7 +539,7 @@ parser.add_argument(
     "--video",
     action="store_true",
     default=False,
-    help="""
+    help=r"""
     Use this flag to cast video to your Google cast devices. It is only working
     with ffmpeg.
 
