@@ -103,7 +103,7 @@ elif screencast is True:
         "-s",
         screen_size,
         "-i",
-        "{}.0+0,0".format(display),
+        "{}+0,0".format(display),
         "-vcodec",
         vcodec,
     ]
