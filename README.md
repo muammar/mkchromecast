@@ -177,7 +177,7 @@ BlackHole](https://github.com/muammar/mkchromecast#BlackHole-macos-users-only).
 If you are using homebrew,  it is possible to install the binary as follows:
 
 ```
-brew cask install mkchromecast
+brew install --cask mkchromecast
 ```
 
 If you find any problem with the application, please [report it
@@ -296,7 +296,7 @@ If you have [Homebrew](http://brew.sh/) you can use [brew
 cask](https://caskroom.github.io/) as follows:
 
 ```
-brew cask install blackhole
+brew install --cask blackhole
 ```
 
 By default, the sample rate in BlackHole is set to `44100Hz`. If you desire
