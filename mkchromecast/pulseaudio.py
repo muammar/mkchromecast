@@ -88,8 +88,8 @@ def get_sink_list():
     )
 
     pattern = re.compile(
-        r"\s*?index:\s*?\d+\s*$\s*?name:\s*?<Mkchromecast.*>"
-        + r"\s*?$(?:\n^.*?$)*?\n^\s*?module: (?P<module>\d+?)\s*?$",
+        r"^Sink\s*#\d+\s*$(?:\n^.*?$)*?\n\s*?Name:\s*?Mkchromecast.*"
+        + r"\s*?$(?:\n^.*?$)*?\n^\s*?Owner Module: (?P<module>\d+?)\s*?$",
         re.MULTILINE,
     )
     matches = pattern.findall(result.stdout.decode("utf-8"), re.MULTILINE)
