@@ -1,3 +1,10 @@
+Looking for help!
+=================
+
+I don't have too much time recently to take care of the project. If you would be interested in helping, please comment on https://github.com/muammar/mkchromecast/issues/398
+
+
+
 Mkchromecast
 ============
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/muammar/mkchromecast/master/LICENSE)
