@@ -586,6 +586,15 @@ parser.add_argument(
         """,
 )
 
+parser.add_argument(
+    "--fps",
+    type=str,
+    default="25",
+    help="""
+    Frames per second to use when --screencast is used. Defaults to 25.
+    """
+)
+
 args = parser.parse_args()
 
 """
@@ -620,6 +629,7 @@ subtitles = args.subtitles
 hijack = args.hijack
 device_name = args.name
 port = args.port
+fps = args.fps
 
 
 if debug is True:
