@@ -43,6 +43,7 @@ host = mkchromecast.__init__.host
 port = mkchromecast.__init__.port
 loop = mkchromecast.__init__.loop
 mtype = mkchromecast.__init__.mtype
+fps = mkchromecast.__init__.fps
 
 ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
 
@@ -99,7 +100,7 @@ elif screencast is True:
         "-f",
         "x11grab",
         "-r",
-        "25",
+        fps,
         "-s",
         screen_size,
         "-i",
