@@ -142,7 +142,7 @@ def _resolve_ip_linux():
 
 def _resolve_ip_nonlinux():
     try:
-        return socket.gethostbyname(socket.gethostname())
+        return socket.gethostbyname(f"{socket.gethostname()}.local")
     except socket.gaierror:
         return _get_first_network_ip_by_netifaces()
 
