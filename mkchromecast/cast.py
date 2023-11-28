@@ -47,8 +47,7 @@ except ImportError:
 
 
 class Casting(object):
-    """Main casting class.
-    """
+    """Main casting class."""
 
     def __init__(self):
         # This is to verify against some needed variables
@@ -427,12 +426,12 @@ class Casting(object):
                 self.cast = self.sonos
 
     def pause(self):
-        """ Pause casting """
+        """Pause casting"""
         media_controller = self.cast.media_controller
         media_controller.pause()
 
     def play(self):
-        """ Play casting """
+        """Play casting"""
         media_controller = self.cast.media_controller
         media_controller.play()
 
@@ -443,7 +442,7 @@ class Casting(object):
             self.sonos.stop()
 
     def volume_up(self):
-        """ Increment volume by 0.1 unless it is already maxed.
+        """Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
         if self.debug is True:
@@ -456,7 +455,7 @@ class Casting(object):
             self.sonos.play()
 
     def volume_down(self):
-        """ Decrement the volume by 0.1 unless it is already 0.
+        """Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
         if self.debug is True:
@@ -469,7 +468,6 @@ class Casting(object):
             self.sonos.play()
 
     def reboot(self):
-
         try:
             from pychromecast.dial import reboot
         except ImportError:
@@ -493,7 +491,7 @@ class Casting(object):
         needed for the system tray.
         """
         self.available_devices = []
-        for (self.index, device) in enumerate(self.cclist):
+        for self.index, device in enumerate(self.cclist):
             try:
                 types = device[2]
                 if types == "Sonos":

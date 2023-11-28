@@ -15,35 +15,34 @@ import pychromecast
 # This argument parser will steal arguments from unittest.  So we only define
 # arguments that are needed for the integration test, and that won't collide
 # with arguments that unittest cares about (like --help).
-integration_arg_parser = argparse.ArgumentParser(
-    add_help=False, allow_abbrev=False
-)
+integration_arg_parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
 
 integration_arg_parser.add_argument(
     "--test-connect-to",
     type=str,
-    help=("Enables integration test mode, and attempts to connect to the "
-          "Chromecast with the specified friendly name"),
+    help=(
+        "Enables integration test mode, and attempts to connect to the "
+        "Chromecast with the specified friendly name"
+    ),
 )
 
 integration_args = ...
 
 
 class MkchromecastTests(unittest.TestCase):
-
     def testPytype(self):
         # TODO(xsdg): Do something better than just listing files by hand.
         target_names = ["mkchromecast/", "setup.py", "start_tray.py", "test.py"]
 
         # Makes target names absolute.
         parent_dir = pathlib.Path(__file__).parent
-        targets = [parent_dir/target for target in target_names]
+        targets = [parent_dir / target for target in target_names]
 
         pytype_result = subprocess.run(
             ["pytype", "-k", "-j", "auto", "--no-cache"] + targets,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
-            encoding="utf8"
+            encoding="utf8",
         )
 
         if pytype_result.returncode:

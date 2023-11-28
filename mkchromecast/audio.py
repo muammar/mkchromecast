@@ -48,7 +48,7 @@ platform = mkchromecast.__init__.platform
 ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
 
 frame_size = 32 * chunk_size
-buffer_size = 2 * chunk_size ** 2
+buffer_size = 2 * chunk_size**2
 
 debug = mkchromecast.__init__.debug
 
@@ -322,7 +322,6 @@ else:
     MP3 192k
     """
     if codec == "mp3":
-
         if (
             platform == "Linux"
             and backends_dict[backend] != "parec"

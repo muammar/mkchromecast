@@ -28,7 +28,6 @@ def create_sink():
 
 
 def remove_sink():
-
     global _sink_num
 
     if _sink_num is None:

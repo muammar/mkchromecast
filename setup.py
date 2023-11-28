@@ -79,7 +79,7 @@ OPTIONS = {
         "CFBundleIdentifier": "com.mkchromecast.osx",
         "CFBundleVersion": __version__,
         "CFBundleShortVersionString": __version__,
-        "NSHumanReadableCopyright": u"Copyright (c) 2017, Muammar El Khatib, All Rights Reserved",
+        "NSHumanReadableCopyright": "Copyright (c) 2017, Muammar El Khatib, All Rights Reserved",
         "LSPrefersPPC": True,
         "LSUIElement": True,
     },

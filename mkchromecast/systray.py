@@ -656,7 +656,6 @@ class menubar(QtWidgets.QMainWindow):
             remove_sink()
 
     def reboot(self):
-
         try:
             from pychromecast.dial import reboot
         except ImportError:

@@ -592,7 +592,7 @@ parser.add_argument(
     default="25",
     help="""
     Frames per second to use when --screencast is used. Defaults to 25.
-    """
+    """,
 )
 
 args = parser.parse_args()
