@@ -5,6 +5,7 @@
 import argparse
 import logging
 import pathlib
+import shutil
 import subprocess
 import sys
 import time
@@ -30,16 +31,43 @@ integration_args = ...
 
 
 class MkchromecastTests(unittest.TestCase):
-    def testPytype(self):
+    def setUp(self):
         # TODO(xsdg): Do something better than just listing files by hand.
         target_names = ["mkchromecast/", "setup.py", "start_tray.py", "test.py"]
 
         # Makes target names absolute.
         parent_dir = pathlib.Path(__file__).parent
-        targets = [parent_dir / target for target in target_names]
+        self.type_targets = [parent_dir / target for target in target_names]
 
+    def testMyPy(self):
+        """Runs the mypy static type analyzer, if it's installed."""
+        if not shutil.which("mypy"):
+            self.skipTest("mypy not installed")
+
+        mypy_cmd = [
+            "mypy", "--ignore-missing-imports", "--no-namespace-packages"]
+
+        mypy_result = subprocess.run(
+            mypy_cmd + self.type_targets,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf8",
+        )
+
+        if mypy_result.returncode:
+            self.fail(mypy_result.stdout)
+        else:
+            # Debug-log for diagnostic purposes.
+            logging.debug(mypy_result.stdout)
+
+    def testPytype(self):
+        """Runs the pytype static type analyzer, if it's installed."""
+        if not shutil.which("pytype"):
+            self.skipTest("pytype not installed")
+
+        pytype_cmd = ["pytype", "-k", "-j", "auto", "--no-cache"]
         pytype_result = subprocess.run(
-            ["pytype", "-k", "-j", "auto", "--no-cache"] + targets,
+            pytype_cmd + self.type_targets,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             encoding="utf8",
