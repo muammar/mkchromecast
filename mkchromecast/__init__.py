@@ -8,337 +8,270 @@ from mkchromecast.resolution import resolutions
 import sys
 import platform
 import subprocess
+from typing import Optional
 import os
 import shlex
 
+class _Mkchromeast:
+    """An object that encapsulates Mkchromecast state."""
 
-args = _arg_parsing.Parser.parse_args()
+    args = ...
+    debug: bool = ...
 
-"""
-Guess the platform
-"""
-platform = platform.system()
+    adevice: Optional[str] = ...
+    notifications: str = ...
+    platform: str = ...
+    select_device: bool = ...
+    tray: bool = ...
 
-"""
-Assignment of args to variables
-"""
-tray = args.tray
-if tray is True:
-    select_device = True
-else:
-    select_device = args.select_device
-debug = args.debug
+    discover: bool = ...
+    host: Optional[str] = ...
+    input_file: Optional[str] = ...  # TODO(xsdg): switch to pathlib.Path.
+    source_url: Optional[str] = ...
+    subtitles: Optional[str] = ...
+    hijack: bool = ...
+    device_name: Optional[str] = ...
+    port: int = ...  # TODO(xsdg): Validate port range 1..65535.
+    fps: str = ...  # TODO(xsdg): Why is this typed as a str?
 
-if args.notifications is True:
-    notifications = "enabled"
-else:
-    notifications = "disabled"
+    mtype: Optional[str] = ...
+    reset: bool = ...
 
-adevice = args.alsa_device
-if debug is True:
-    print("ALSA device name: %s." % adevice)
+    screencast: bool = ...
+    display: Optional[str] = ...
+    vcodec: str = ...
+    rcodec: Optional[str] = ...
+    codec: str = ...
+    backend: Optional[str] = ...
+    loop: bool = ...
 
-discover = args.discover
-host = args.host
-input_file = args.input_file
-source_url = args.source_url
-subtitles = args.subtitles
-hijack = args.hijack
-device_name = args.name
-port = args.port
-fps = args.fps
+    command: Optional[str] = ...
+    bitrate: Optional[int] = ...
+    chunk_size: int = ...
+    samplerate: int = ...
+    seek: Optional[str] = ...
+    segment_time: Optional[int] = ...
+
+    tries: Optional[int] = ...
+    videoarg: bool = ...
+    youtube_url: Optional[str] = ...
+
+    def __init__(self):
+        # TODO(xsdg): Args parsing should happen outside of this class, and the
+        # parsed args should be passed in.
+        self.args = _arg_parsing.Parser.parse_args()
+        self.debug = args.debug
+
+        # Arguments with no dependencies.
+        # Groupings are mostly carried over from earlier code; unclear how
+        # meaningful they are.
+        self.adevice = args.alsa_device
+        self.notifications = "enabled" if args.notifications else "disabled"
+        self.platform = platform.system()  # Guess the platform.
+        self.tray = args.tray
+
+        self.discover = args.discover
+        self.host = args.host
+        self.input_file = args.input_file
+        self.subtitles = args.subtitles
+        self.hijack = args.hijack
+        self.device_name = args.name
+        self.port = args.port
+        self.fps = args.fps
+
+        self.mtype = args.mtype
+        self.reset = args.reset
+
+        self.screencast = args.screencast
+        self.display = args.display
+        self.vcodec = args.vcodec
+        self.loop = args.loop
+        self.seek = args.seek
+
+        self.tries = args.tries
+        self.videoarg = args.video
+
+        # Arguments that depend on other arguments.
+        self.select_device = True if self.tray else args.select_device
+
+        if self.platform == "Darwin":
+            backend_options = ["node", "ffmpeg"]
+        else:  # platform == "Linux"
+            if args.video:
+                backend_options = ["node", "ffmpeg", "avconv"]
+            else:
+                backend_options = ["ffmpeg", "avconv", "parec", "gstreamer"]
+
+        if args.encoder_backend:
+            if args.encoder_backend not in backend_options:
+                print(colors.error(f"Backend {args.encoder_backend} is not in "
+                                   "supported backends: "))
+                for backend in backend_options:
+                    print(f"- {backend}.")
+                sys.exit(0)
+
+            # encoder_backend is reasonable.
+            self.backend = args.encoder_backend
+        else:
+            if args.video:
+                self.backend = "ffmpeg"
+            elif self.platform == "Darwin":
+                self.backend = "node"
+            else:  # self.platform == "Linux"
+                self.backend = "parec"
+
+        codec_choices = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
+        if self.source_url:
+            self.codec = args.codec
+            self.rcodec = None
+        elif self.backend == "node":
+            self.codec = "mp3"
+            self.rcodec = args.codec
+        else:  # not source_url and backend != "node"
+            if args.codec not in codec_choices:
+                print(colors.options(f"Selected audio codec: {args.codec}."))
+                print(colors.error("Supported audio codecs are: "))
+                for codec in codecs:  # DO NOT SUBMIT
+                    print(f"- {codec}")
+                sys.exit(0)
+
+            self.codec = args.codec
+            self.rcodec = None
+
+        # TODO(xsdg): Add support for yt-dlp
+        command_choices = ["ffmpeg", "avconv", "youtube-dl"]
+        if not args.command:
+            self.command = None
+        else:
+            if args.command not in command_choices:
+                print(colors.options(f"Configured command: {args.command}"))
+                print(colors.error("Supported commands are: "))
+                for command in command_choices:
+                    print(f"- {command}")
+                sys.exit(0)
+
+            self.command = args.command
+
+        resolution_choices = [r.lower() for r in resolutions.keys()]
+        if not args.resolution:
+            self.resolution = None
+        else:
+            if args.resolution.lower() not in resolution_choices:
+                print(colors.options(
+                        f"Configured resolution: {args.resolution.lower()}"))
+                print(colors.error("Supported resolutions are: "))
+                for resolution in resolution_choices:
+                    print(f"- {resolution}")
+                sys.exit(0)
+
+        if self.codec in ["mp3", "ogg", "acc", "opus", "flac"]:
+            if args.bitrate <= 0:
+                print(colors.error("Bitrate must be a positive integer"))
+                sys.exit(0)
+
+            self.bitrate = args.bitrate
+        else:
+            # When the codec doesn't require bitrate, we set it to None.
+            self.bitrate = None
+
+        if args.chunk_size <= 0:
+            print(colors.error("Chunk size must be a positive integer"))
+            sys.exit(0)
+        self.chunk_size = args.chunk_size
+
+        if args.sample_rate < 22050:
+            print(colors.error("Sample rate must be at least 22050"))
+            sys.exit(0)
+        if self.codec == "opus":
+            self.samplerate = 48000
+        else:
+            self.samplerate = args.sample_rate
+
+        if args.segment_time and self.backend not in ["parec", "node"]:
+            self.segment_time = args.segment_time
+        else:
+            self.segment_time = None
+
+        if not args.youtube:
+            self.youtube_url = None
+        else:
+            if not check_url(args.youtube):
+                youtube_error = """
+                You need to provide a URL that is supported by youtube-dl.
+                """
+
+                # TODO(xsdg): Switch to yt-dlp.
+                message = """
+                For a list of supported sources please visit:
+                    https://rg3.github.io/youtube-dl/supportedsites.html
+
+                Note that the URLs have to start with https.
+                """
+                print(colors.error(youtube_error))
+                print(message)
+
+                sys.exit(0)
+
+            # TODO(xsdg): Warn that we're overriding the backend here.
+            # Especially since this doesn't account for platform.
+            self.youtube_url = args.youtube
+            self.backend = "ffmpeg"
+
+        # Argument validation.
+        self._validate_input_file()
 
 
-if debug is True:
-    print("Google Cast name: %s." % device_name)
+        # Diagnostic messages
+        self._debug(f"ALSA device name: {self.adevice}")
+        self._debug(f"Google Cast name: {self.device_name}")
+        self._debug(f"backends: {self.backends}")
 
-"""
-Check that input file exists
-"""
-if input_file != None and os.path.isfile(input_file) is False:
-    if platform == "Darwin":
-        from mkchromecast.audio_devices import inputint, outputint
+        # TODO(xsdg): These were just printed warnings in the original, but
+        # should they be errors?
+        if self.mtype and not self.video:
+            print(colors.warning(
+                "The media type argument is only supported for video."))
 
-        inputint()
-        outputint()
-    else:
-        from mkchromecast.pulseaudio import remove_sink
+        if self.loop and self.video:
+            print(colors.warning(
+                "The loop and video arguments aren't compatible."))
 
-        remove_sink()
+        if self.command and not self.video:
+            print(colors.warning(
+                "The --command option only works for video."))
 
-    print(colors.warning("File not found!"))
-    terminate()
+    def _validate_input_file(self) -> None:
+        return if not self.input_file
+        return if os.path.isfile(self.input_file)
 
-"""
-Media-Type
-"""
-mtype = args.mtype
+        # NOTE: Prior implementation did a reset in the case that input_file was
+        # specified by did not exist.  That... doesn't really make much sense,
+        # since it should be treated as an argument parsing/validation error. So
+        # I've dropped that behavior.
+        self._fatal_error(colors.warning(
+            "Specified input file does not exist or is not a file."))
 
-if args.mtype is not None and args.video is False:
-    print(
-        colors.warning("The media type is not supported for audio.")
-        % args.encoder_backend
-    )
+    def _debug(self, msg: str) -> None:
+        return if not self.debug
+        # TODO(xsdg): Maybe use stderr for debug messages?
+        print(msg)
 
-"""
-Reset
-"""
-if args.reset is True:
-    if platform == "Darwin":
-        from mkchromecast.audio_devices import inputint, outputint
+    def _fatal_error(self, msg: str) -> None:
+        """Prints the specified message and then exits."""
+        print(colors.warning(msg))
+        sys.exit()
 
-        inputint()
-        outputint()
-    else:
-        from mkchromecast.pulseaudio import remove_sink, get_sink_list
+    def __enter__(self):
+        """Starts performing whatever task is requested."""
 
-        get_sink_list()
-        remove_sink()
-    terminate()
+class Mkchromecast:
+    """A singleton object that encapsulates Mkchromecast state."""
+    _instance: Optional[_Mkchromecast] = None
 
-"""
-Reboot
-"""
-if args.reboot is True:
-    print(colors.error("This option is not implemented yet."))
-    sys.exit(0)
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = _Mkchromecast()
 
-"""
-Not yet implemented
-"""
-if args.config is True:
-    print(colors.error("This option is not implemented yet."))
-    sys.exit(0)
+        return cls._instance
 
-"""
-Version
-"""
-if args.version is True:
-    print("mkchromecast " + "v" + colors.success(__version__))
-    sys.exit(0)
-
-"""
-Update
-"""
-if args.update is True:
-    print(colors.warning("Updating Mkchromecast"))
-    print(colors.important("git pull --all"))
-    pull = subprocess.Popen(
-        ["git", "pull", "--all"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-
-    print(pull.stdout.read().decode("utf-8").strip())
-    print(colors.important("git fetch -p"))
-    prune = subprocess.Popen(
-        ["git", "fetch", "-p"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-    print(prune.stdout.read().decode("utf-8").strip())
-    sys.exit(0)
-
-"""
-Check that encoders exist in the list
-"""
-screencast = args.screencast
-display = args.display
-vcodec = args.vcodec
-
-backends = ["node", "ffmpeg", "avconv"]
-if platform == "Darwin":
-    backends.remove("avconv")
-elif platform == "Linux" and args.video is True:
-    pass
-else:
-    backends.remove("node")
-    backends.append("parec")
-    backends.append("gstreamer")
-
-if args.debug is True:
-    print("backends: ", backends)
-
-if args.encoder_backend not in backends and args.encoder_backend is not None:
-    print(colors.error("Supported backends are: "))
-    for backend in backends:
-        print("- %s." % backend)
-    sys.exit(0)
-
-if args.encoder_backend in backends:
-    backend = args.encoder_backend
-elif args.encoder_backend is None:  # This is to define defaults
-    if platform == "Linux" and args.video is False:
-        args.encoder_backend = "parec"
-        backend = args.encoder_backend
-    if platform == "Linux" and args.video is True:
-        args.encoder_backend = "ffmpeg"
-        backend = args.encoder_backend
-    elif platform == "Darwin" and args.video is True:
-        args.encoder_backend = "ffmpeg"
-        backend = args.encoder_backend
-    elif platform == "Darwin" and args.video is False:
-        args.encoder_backend = "node"
-        backend = args.encoder_backend
-
-"""
-Codecs
-"""
-codecs = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
-
-if backend == "node" and args.codec != "mp3" and source_url is None:
-    rcodec = args.codec
-    codec = "mp3"
-elif backend == "node" and args.codec == "mp3" and source_url is None:
-    rcodec = args.codec
-    codec = "mp3"
-elif source_url is not None:
-    codec = args.codec
-else:
-    rcodec = None
-    if backend != "node" and args.codec in codecs:
-        codec = args.codec
-    else:
-        print(colors.options("Selected audio codec: %s.") % args.codec)
-        print(colors.error("Supported audio codecs are: "))
-        for codec in codecs:
-            print("- %s." % codec)
-        sys.exit(0)
-
-"""
-Loop
-"""
-loop = args.loop
-
-if args.loop is True and args.video is True:
-    print(colors.warning("The %s backend is not supported.") % args.encoder_backend)
-
-"""
-Command
-"""
-if args.command is not None and args.video is True:
-    safe_commands = ["ffmpeg", "avconv", "youtube-dl"]
-    command = shlex.split(args.command)
-    if command[0] not in safe_commands:
-        print(colors.error("Refusing to execute this."))
-        sys.exit(0)
-elif args.command is None and args.video is True:
-    command = args.command
-elif args.command is not None and args.video is False:
-    print(colors.warning("The --command option only works for video."))
-
-"""
-Resolution
-"""
-
-resolutions = [r.lower() for r in resolutions.keys()]
-
-if args.resolution is None:
-    resolution = args.resolution
-elif args.resolution.lower() in resolutions:
-    resolution = args.resolution.lower()
-else:
-    print(colors.error("Supported resolutions are: "))
-    for res in resolutions:
-        if res is not False:
-            print("- %s." % res)
-    sys.exit(0)
-
-"""
-Bitrate
-"""
-codecs_br = ["mp3", "ogg", "aac", "opus", "flac"]
-
-if codec in codecs_br:
-    if args.bitrate != 0:
-        bitrate = abs(args.bitrate)
-    elif args.bitrate == 0:
-        bitrate = 192
-    else:
-        bitrate = args.bit_rate
-else:
-    # When the codec does not require bitrate I set it to None
-    bitrate = None
-
-"""
-Chunk size
-"""
-if args.chunk_size <= 0:
-    chunk_size = 64
-    print(colors.warning("Chunk size set to default: %s." % chunk_size))
-else:
-    chunk_size = abs(args.chunk_size)
-
-"""
-Sample rate
-"""
-if args.sample_rate != 0:
-    if args.sample_rate < 22050:
-        print(colors.error("The sample rate has to be greater than 22049."))
-        sys.exit(0)
-    elif args.codec == "opus":
-        samplerate = 48000
-    else:
-        samplerate = abs(args.sample_rate)
-elif args.sample_rate == 0:
-    samplerate = 44100
-
-"""
-Seek
-"""
-seek = args.seek
-
-"""
-Segment time
-"""
-avoid = ["parec", "node"]
-
-if isinstance(args.segment_time, int) and backend not in avoid:
-    segment_time = args.segment_time
-elif isinstance(args.segment_time, float) or backend in avoid:
-    segment_time = None
-else:
-    segment_time = None
-
-"""
-Tries
-"""
-
-tries = args.tries
-
-"""
-Video
-"""
-videoarg = args.video
-
-"""
-Volume
-"""
-control = args.control
-if args.volume is True:  # FIXME this has to be deleted in future releases.
-    control = args.volume
-    print(
-        colors.warning(
-            "The --volume flag is going to be renamed to \
-          --control."
-        )
-    )
-
-"""
-Youtube URLs
-"""
-if args.youtube is not None:
-    if check_url(args.youtube) is False:
-        youtube_error = """
-        You need to provide a URL that is supported by youtube-dl.
-        """
-        message = """
-        For a list of supported sources please visit:
-            https://rg3.github.io/youtube-dl/supportedsites.html
-
-        Note that the URLs have to start with https.
-        """
-        print(colors.error(youtube_error))
-        print(message)
-        sys.exit(0)
-    else:
-        youtube_url = args.youtube
-        backend = "ffmpeg"
-else:
-    youtube_url = args.youtube
+    
