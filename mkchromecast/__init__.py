@@ -12,10 +12,17 @@ from typing import Optional
 import os
 import shlex
 
-class _Mkchromecast:
-    """An object that encapsulates Mkchromecast state."""
+class Mkchromecast:
+    """A singleton object that encapsulates Mkchromecast state."""
+    _parsed_args = None
 
-    def __init__(self, args):
+    def __init__(self, args = None):
+        # TODO(xsdg): Require arg parsing to be done outside of this class.
+        if not args:
+            if not self._parsed_args:
+                self._parsed_args = _arg_parsing.Parser.parse_args()
+            args = self._parsed_args
+
         self.args = args
         self.debug: bool = args.debug
 
@@ -236,20 +243,5 @@ class _Mkchromecast:
 
     def __enter__(self):
         """Starts performing whatever task is requested."""
-
-class Mkchromecast:
-    """A singleton object that encapsulates Mkchromecast state."""
-    _instance: Optional[_Mkchromecast] = None
-
-    def __new__(cls, args = None):
-        if cls._instance is None:
-            if not args:
-                # TODO(xsdg): Args parsing should only ever happen outside of
-                # this class.
-                args = _arg_parsing.Parser.parse_args()
-
-            cls._instance = _Mkchromecast(args)
-
-        return cls._instance
 
     
