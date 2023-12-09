@@ -47,6 +47,7 @@ class Mkchromecast:
 
         self.mtype: Optional[str] = args.mtype
         self.reset: bool = args.reset
+        self.version: bool = args.version
 
         self.screencast: bool = args.screencast
         self.display: Optional[str] = args.display
@@ -54,6 +55,7 @@ class Mkchromecast:
         self.loop: bool = args.loop
         self.seek: Optional[str] = args.seek
 
+        self.control: bool = args.control
         self.tries: Optional[int] = args.tries
         self.videoarg: bool = args.video
 
