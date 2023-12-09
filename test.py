@@ -45,7 +45,11 @@ class MkchromecastTests(unittest.TestCase):
             self.skipTest("mypy not installed")
 
         mypy_cmd = [
-            "mypy", "--ignore-missing-imports", "--no-namespace-packages"]
+            "mypy",
+            "--ignore-missing-imports",
+            "--no-namespace-packages",
+            "--check-untyped-defs"
+        ]
 
         mypy_result = subprocess.run(
             mypy_cmd + self.type_targets,
