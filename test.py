@@ -14,6 +14,10 @@ import unittest
 
 import pychromecast
 
+
+# Modify this to enable debug logging of test outputs.
+ENABLE_DEBUG_LOGGING = False
+
 # This argument parser will steal arguments from unittest.  So we only define
 # arguments that are needed for the integration test, and that won't collide
 # with arguments that unittest cares about (like --help).
@@ -117,8 +121,8 @@ class MkchromecastTests(unittest.TestCase):
         if pytest_result.returncode:
             self.fail(pytest_result.stdout)
         else:
-            # Debug-log for diagnostic purposes.
-            logging.debug(pytest_result.stdout)
+            # Always show unit test output, even when they pass.
+            logging.info("\n" + pytest_result.stdout)
 
     # "ZZ" prefix so this runs last.
     def testZZEndToEndIntegration(self):
@@ -155,6 +159,9 @@ class MkchromecastTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    loglevel = logging.INFO if not ENABLE_DEBUG_LOGGING else logging.DEBUG
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=loglevel)
+
     # Steals known arguments from unittest in order to properly configure the
     # integration test.
     integration_args, skipped_argv = integration_arg_parser.parse_known_args()
