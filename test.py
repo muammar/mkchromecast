@@ -89,6 +89,22 @@ class MkchromecastTests(unittest.TestCase):
             # Debug-log for diagnostic purposes.
             logging.debug(pytype_result.stdout)
 
+    def testExecUnitTests(self):
+        """Runs the Mkchromecast unit test suite."""
+        pytest_cmd = ["python3", "-m", "unittest", "discover", "-s", "tests"]
+        pytest_result = subprocess.run(
+            pytest_cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf8",
+        )
+
+        if pytest_result.returncode:
+            self.fail(pytest_result.stdout)
+        else:
+            # Debug-log for diagnostic purposes.
+            logging.debug(pytest_result.stdout)
+
     # "ZZ" prefix so this runs last.
     def testZZEndToEndIntegration(self):
         args = integration_args  # Shorthand.
