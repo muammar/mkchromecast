@@ -1,29 +1,23 @@
 # This file is part of mkchromecast.
 
-from __future__ import print_function
+import configparser as ConfigParser
+import os
+import pickle
+import socket
+import subprocess
+from threading import Thread
+import time
 
+import mkchromecast
 from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
-from mkchromecast.__init__ import args
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.messages import print_available_devices
-import time
-import socket
-import os.path
-import pickle
-import subprocess
-from threading import Thread
+from mkchromecast.version import __version__
 
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser  # This is for Python3
 
 """
 We verify that soco is installed to give Sonos support
@@ -49,35 +43,24 @@ except ImportError:
 class Casting(object):
     """Main casting class."""
 
-    def __init__(self):
-        # This is to verify against some needed variables
-        import mkchromecast.__init__
+    def __init__(self, mkcc: mkchromecast.Mkchromecast):
+        self.mkcc = mkcc
 
-        self.platform = mkchromecast.__init__.platform
-        self.tray = mkchromecast.__init__.tray
-        self.select_device = mkchromecast.__init__.select_device
-        self.debug = mkchromecast.__init__.debug
-        self.backend = mkchromecast.__init__.backend
-        self.adevice = mkchromecast.__init__.adevice
-        self.source_url = mkchromecast.__init__.source_url
-        self.discover = mkchromecast.__init__.discover
-        self.host = mkchromecast.__init__.host
-        self.device_name = mkchromecast.__init__.device_name
-        self.hijack = mkchromecast.__init__.hijack
-        self.tries = mkchromecast.__init__.tries
-        self.port = str(mkchromecast.__init__.port)
-        self.title = "Mkchromecast v" + mkchromecast.__init__.__version__
+        self.title = "Mkchromecast v" + __version__
 
-        self.ip = utils.get_effective_ip(self.platform, host_override=self.host)
+        self.ip = utils.get_effective_ip(self.mkcc.platform, host_override=self.mkcc.host)
 
     def _get_chromecasts(self):
+        # TODO(xsdg): Drop backwards compatibility with old versions of
+        # pychromecast
+
         # compatibility
         try:
             return list(pychromecast.get_chromecasts_as_dict().keys())
         except AttributeError:
             pass
 
-        _chromecasts = pychromecast.get_chromecasts(tries=self.tries)
+        _chromecasts = pychromecast.get_chromecasts(tries=self.mkcc.tries)
 
         # since PR380, pychromecast.get_chromecasts returns a tuple
         # see: https://github.com/home-assistant-libs/pychromecast/pull/380
@@ -124,20 +107,20 @@ class Casting(object):
             except (TypeError, AttributeError):
                 pass
 
-        if self.debug is True:
+        if self.mkcc.debug is True:
             print("self.cclist", self.cclist)
 
         if (
             len(self.cclist) != 0
-            and self.select_device is False
-            and self.device_name is None
+            and self.mkcc.select_device is False
+            and self.mkcc.device_name is None
         ):
-            if self.debug is True:
-                print("if len(self.cclist) != 0 and self.select_device == False:")
+            if self.mkcc.debug is True:
+                print("if len(self.cclist) != 0 and self.mkcc.select_device == False:")
             print(" ")
             print_available_devices(self.available_devices())
             print(" ")
-            if self.discover is False:
+            if self.mkcc.discover is False:
                 print(colors.important("Casting to first device shown above!"))
                 print(colors.important("Select devices by using the -s flag."))
                 print(" ")
@@ -150,21 +133,21 @@ class Casting(object):
 
         elif (
             len(self.cclist) != 0
-            and self.select_device is True
-            and self.tray is False
-            and self.device_name is None
+            and self.mkcc.select_device is True
+            and self.mkcc.tray is False
+            and self.mkcc.device_name is None
         ):
-            if self.debug is True:
+            if self.mkcc.debug is True:
                 print(
-                    "elif len(self.cclist) != 0 and self.select_device == True"
-                    " and self.tray == False:"
+                    "elif len(self.cclist) != 0 and self.mkcc.select_device == True"
+                    " and self.mkcc.tray == False:"
                 )
             if os.path.exists("/tmp/mkchromecast.tmp") is False:
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
                 print(" ")
                 print_available_devices(self.available_devices())
             else:
-                if self.debug is True:
+                if self.mkcc.debug is True:
                     print("else:")
                 self.tf = open("/tmp/mkchromecast.tmp", "rb")
                 self.index = pickle.load(self.tf)
@@ -175,18 +158,18 @@ class Casting(object):
                 )
                 print(" ")
 
-        elif len(self.cclist) != 0 and self.select_device is True and self.tray is True:
-            if self.debug is True:
+        elif len(self.cclist) != 0 and self.mkcc.select_device is True and self.mkcc.tray is True:
+            if self.mkcc.debug is True:
                 print(
-                    "elif len(self.cclist) != 0 and self.select_device == True"
-                    "  and self.tray == True:"
+                    "elif len(self.cclist) != 0 and self.mkcc.select_device == True"
+                    "  and self.mkcc.tray == True:"
                 )
             if os.path.exists("/tmp/mkchromecast.tmp") is False:
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
                 print(" ")
                 print_available_devices(self.available_devices())
             else:
-                if self.debug is True:
+                if self.mkcc.debug is True:
                     print("else:")
                 self.tf = open("/tmp/mkchromecast.tmp", "rb")
                 self.cast_to = pickle.load(self.tf)
@@ -197,19 +180,19 @@ class Casting(object):
                 )
                 print(" ")
 
-        elif len(self.cclist) == 0 and self.tray is False:
-            if self.debug is True:
-                print("elif len(self.cclist) == 0 and self.tray == False:")
+        elif len(self.cclist) == 0 and self.mkcc.tray is False:
+            if self.mkcc.debug is True:
+                print("elif len(self.cclist) == 0 and self.mkcc.tray == False:")
             print(colors.error("No devices found!"))
-            if self.platform == "Linux" and self.adevice is None:
+            if self.mkcc.platform == "Linux" and self.mkcc.adevice is None:
                 remove_sink()
-            elif self.platform == "Darwin":
+            elif self.mkcc.platform == "Darwin":
                 inputint()
                 outputint()
             terminate()
             exit()
 
-        elif len(self.cclist) == 0 and self.tray is True:
+        elif len(self.cclist) == 0 and self.mkcc.tray is True:
             print(colors.error(":::Tray::: No devices found!"))
             self.available_devices = []
 
@@ -243,17 +226,17 @@ class Casting(object):
             except IndexError:
                 checkmktmp()
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
-                self.select_device()
+                self.mkcc.select_device()
                 continue
             break
 
     def get_devices(self):
-        if self.debug is True:
+        if self.mkcc.debug is True:
             print("def get_devices(self):")
         if chromecast:
             try:
-                if self.device_name is not None:
-                    self.cast_to = self.device_name
+                if self.mkcc.device_name is not None:
+                    self.cast_to = self.mkcc.device_name
                 self.cast = self._get_chromecast(self.cast_to)
                 # Wait for cast device to be ready
                 self.cast.wait()
@@ -280,14 +263,14 @@ class Casting(object):
                         "No Chromecasts matching filter criteria" " were found!"
                     )
                 )
-                if self.platform == "Darwin":
+                if self.mkcc.platform == "Darwin":
                     inputint()
                     outputint()
-                elif self.platform == "Linux":
+                elif self.mkcc.platform == "Linux":
                     remove_sink()
                 # In the case that the tray is used, we don't kill the
                 # application
-                if self.tray is False:
+                if self.mkcc.tray is False:
                     print(colors.error("Finishing the application..."))
                     terminate()
                     exit()
@@ -299,7 +282,7 @@ class Casting(object):
                 pass
 
     def play_cast(self):
-        if self.debug is True:
+        if self.mkcc.debug is True:
             print("def play_cast(self):")
         localip = self.ip
 
@@ -331,7 +314,7 @@ class Casting(object):
                 + self.cast_to.ip_address
             )
 
-        if self.host is None:
+        if self.mkcc.host is None:
             print(colors.options("Your local IP is:") + " " + localip)
         else:
             print(colors.options("Your manually entered local IP is:") + " " + localip)
@@ -339,7 +322,7 @@ class Casting(object):
         try:
             media_controller = self.cast.media_controller
 
-            if self.tray is True:
+            if self.mkcc.tray is True:
                 config = ConfigParser.RawConfigParser()
                 # Class from mkchromecast.config
                 from mkchromecast.config import config_manager
@@ -347,15 +330,15 @@ class Casting(object):
                 configurations = config_manager()
                 configf = configurations.configf
 
-                if os.path.exists(configf) and self.tray is True:
-                    print(self.tray)
+                if os.path.exists(configf) and self.mkcc.tray is True:
+                    print(self.mkcc.tray)
                     print(colors.warning("Configuration file exists"))
                     print(colors.warning("Using defaults set there"))
                     config.read(configf)
-                    self.backend = ConfigSectionMap("settings")["backend"]
+                    self.mkcc.backend = ConfigSectionMap("settings")["backend"]
 
-            if self.source_url is not None:
-                if args.video is True:
+            if self.mkcc.source_url is not None:
+                if self.mkcc.videoarg is True:
                     import mkchromecast.video
 
                     mtype = mkchromecast.video.mtype
@@ -365,22 +348,22 @@ class Casting(object):
                     mtype = mkchromecast.audio.mtype
                 print(" ")
                 print(
-                    colors.options("Casting from stream URL:") + " " + self.source_url
+                    colors.options("Casting from stream URL:") + " " + self.mkcc.source_url
                 )
                 print(colors.options("Using media type:") + " " + mtype)
                 media_controller.play_media(
-                    self.source_url, mtype, title=self.title, stream_type="LIVE"
+                    self.mkcc.source_url, mtype, title=self.title, stream_type="LIVE"
                 )
                 media_controller.play()
             elif (
-                self.backend == "ffmpeg"
-                or self.backend == "node"
-                or self.backend == "avconv"
-                or self.backend == "parec"
-                or self.backend == "gstreamer"
-                and self.source_url is None
+                self.mkcc.backend == "ffmpeg"
+                or self.mkcc.backend == "node"
+                or self.mkcc.backend == "avconv"
+                or self.mkcc.backend == "parec"
+                or self.mkcc.backend == "gstreamer"
+                and self.mkcc.source_url is None
             ):
-                if args.video is True:
+                if self.mkcc.videoarg is True:
                     import mkchromecast.video
 
                     mtype = mkchromecast.video.mtype
@@ -391,7 +374,7 @@ class Casting(object):
                 print(" ")
                 print(colors.options("The media type string used is:") + " " + mtype)
                 media_controller.play_media(
-                    "http://" + localip + ":" + self.port + "/stream",
+                    "http://" + localip + ":" + self.mkcc.port + "/stream",
                     mtype,
                     title=self.title,
                     stream_type="LIVE",
@@ -409,7 +392,7 @@ class Casting(object):
             time.sleep(5.0)
             media_controller.play()
 
-            if self.hijack is True:
+            if self.mkcc.hijack is True:
                 self.r = Thread(target=self.hijack_cc)
                 # This has to be set to True so that we catch
                 # KeyboardInterrupt.
@@ -419,10 +402,10 @@ class Casting(object):
         except AttributeError:
             self.sonos = self.cast_to
             self.sonos.play_uri(
-                "x-rincon-mp3radio://" + localip + ":" + self.port + "/stream",
+                "x-rincon-mp3radio://" + localip + ":" + self.mkcc.port + "/stream",
                 title=self.title,
             )
-            if self.tray is True:
+            if self.mkcc.tray is True:
                 self.cast = self.sonos
 
     def pause(self):
@@ -445,7 +428,7 @@ class Casting(object):
         """Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
-        if self.debug is True:
+        if self.mkcc.debug is True:
             print("Increasing volume... \n")
         try:
             volume = round(self.cast.status.volume_level, 1)
@@ -458,7 +441,7 @@ class Casting(object):
         """Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
-        if self.debug is True:
+        if self.mkcc.debug is True:
             print("Decreasing volume... \n")
         try:
             volume = round(self.cast.status.volume_level, 1)
@@ -480,12 +463,14 @@ class Casting(object):
             )
             reboot = lambda x: None
 
-        if self.platform == "Darwin":
+        if self.mkcc.platform == "Darwin":
             self.cast.host = socket.gethostbyname(self.cast_to + ".local")
             reboot(self.cast.host)
         else:
             print(colors.error("This method is not supported in Linux yet."))
 
+    # TOOD(xsdg): Unclear how this works, but the self.available_devices method
+    # and the self.available_devices attribute are in obvious conflict.
     def available_devices(self):
         """This method is uplay_mediased for populating the self.available_devices array
         needed for the system tray.
@@ -528,10 +513,10 @@ class Casting(object):
                 time.sleep(5)
         except KeyboardInterrupt:
             self.stop_cast()
-            if self.platform == "Darwin":
+            if self.mkcc.platform == "Darwin":
                 inputint()
                 outputint()
-            elif self.platform == "Linux" and self.adevice is None:
+            elif self.mkcc.platform == "Linux" and self.mkcc.adevice is None:
                 remove_sink()
             terminate()
 
@@ -547,12 +532,12 @@ class Casting(object):
 
         if ping_chromecast(ip) is True:  # The chromecast is online.
             if str(self.cast.status.display_name) != "Default Media Receiver":
-                self.device_name = self.cast_to
+                self.mkcc.device_name = self.cast_to
                 self.get_devices()
                 self.play_cast()
         else:  # The chromecast is offline.
             try:
-                self.device_name = self.cast_to
+                self.mkcc.device_name = self.cast_to
                 self.get_devices()
                 self.play_cast()
             except AttributeError:
