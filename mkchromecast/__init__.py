@@ -19,6 +19,8 @@ class _Mkchromecast:
         # TODO(xsdg): Args parsing should happen outside of this class, and the
         # parsed args should be passed in.
         self.args = _arg_parsing.Parser.parse_args()
+        args = self.args  # Shorthand, since it's used frequently below.
+
         self.debug: bool = args.debug
 
         # Arguments with no dependencies.
@@ -96,7 +98,7 @@ class _Mkchromecast:
             if args.codec not in codec_choices:
                 print(colors.options(f"Selected audio codec: {args.codec}."))
                 print(colors.error("Supported audio codecs are: "))
-                for codec in codecs:  # DO NOT SUBMIT
+                for codec in codec_choices:
                     print(f"- {codec}")
                 sys.exit(0)
 
@@ -196,19 +198,19 @@ class _Mkchromecast:
         # Diagnostic messages
         self._debug(f"ALSA device name: {self.adevice}")
         self._debug(f"Google Cast name: {self.device_name}")
-        self._debug(f"backends: {self.backends}")
+        self._debug(f"backend: {self.backend}")
 
         # TODO(xsdg): These were just printed warnings in the original, but
         # should they be errors?
-        if self.mtype and not self.video:
+        if self.mtype and not self.videoarg:
             print(colors.warning(
                 "The media type argument is only supported for video."))
 
-        if self.loop and self.video:
+        if self.loop and self.videoarg:
             print(colors.warning(
                 "The loop and video arguments aren't compatible."))
 
-        if self.command and not self.video:
+        if self.command and not self.videoarg:
             print(colors.warning(
                 "The --command option only works for video."))
 
