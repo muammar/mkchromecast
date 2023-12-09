@@ -33,7 +33,13 @@ integration_args = ...
 class MkchromecastTests(unittest.TestCase):
     def setUp(self):
         # TODO(xsdg): Do something better than just listing files by hand.
-        target_names = ["mkchromecast/", "setup.py", "start_tray.py", "test.py"]
+        target_names = [
+            "bin/mkchromecast",
+            "mkchromecast/",
+            "setup.py",
+            "start_tray.py",
+            "test.py"
+        ]
 
         # Makes target names absolute.
         parent_dir = pathlib.Path(__file__).parent
