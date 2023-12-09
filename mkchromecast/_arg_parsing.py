@@ -500,7 +500,6 @@ Parser.add_argument(
 Parser.add_argument(
     "--update",
     type=invalid_arg("Argument dropped."),
-    action="store_true",
     help="Do not use.  Argument dropped.",
 )
 
