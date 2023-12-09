@@ -19,7 +19,9 @@ def invalid_arg(error_msg: str):
             ArgumentTypeError.
     """
 
-    return lambda value: raise argparse.ArgumentTypeError(error_msg)
+    def raise_arg_type_error():
+        raise argparse.ArgumentTypeError(error_msg)
+    return raise_arg_type_error
 
 
 Parser = argparse.ArgumentParser(

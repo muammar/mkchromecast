@@ -12,87 +12,88 @@ from typing import Optional
 import os
 import shlex
 
-class _Mkchromeast:
+class _Mkchromecast:
     """An object that encapsulates Mkchromecast state."""
 
-    args = ...
-    debug: bool = ...
+    #args = ...
+    #debug: bool = ...
 
-    adevice: Optional[str] = ...
-    notifications: str = ...
-    platform: str = ...
-    select_device: bool = ...
-    tray: bool = ...
+    #adevice: Optional[str] = ...
+    #notifications: str = ...
+    #platform: str = ...
+    #select_device: bool = ...
+    #tray: bool = ...
 
-    discover: bool = ...
-    host: Optional[str] = ...
-    input_file: Optional[str] = ...  # TODO(xsdg): switch to pathlib.Path.
+    #discover: bool = ...
+    #host: Optional[str] = ...
+    #input_file: Optional[str] = ...  # TODO(xsdg): switch to pathlib.Path.
     source_url: Optional[str] = ...
-    subtitles: Optional[str] = ...
-    hijack: bool = ...
-    device_name: Optional[str] = ...
-    port: int = ...  # TODO(xsdg): Validate port range 1..65535.
-    fps: str = ...  # TODO(xsdg): Why is this typed as a str?
+    #subtitles: Optional[str] = ...
+    #hijack: bool = ...
+    #device_name: Optional[str] = ...
+    #port: int = ...  # TODO(xsdg): Validate port range 1..65535.
+    #fps: str = ...  # TODO(xsdg): Why is this typed as a str?
 
-    mtype: Optional[str] = ...
-    reset: bool = ...
+    #mtype: Optional[str] = ...
+    #reset: bool = ...
 
-    screencast: bool = ...
-    display: Optional[str] = ...
-    vcodec: str = ...
-    rcodec: Optional[str] = ...
-    codec: str = ...
-    backend: Optional[str] = ...
-    loop: bool = ...
+    #screencast: bool = ...
+    #display: Optional[str] = ...
+    #vcodec: str = ...
+    #rcodec: Optional[str] = ...
+    #codec: str = ...
+    #backend: Optional[str] = ...
+    #loop: bool = ...
 
-    command: Optional[str] = ...
-    bitrate: Optional[int] = ...
-    chunk_size: int = ...
-    samplerate: int = ...
-    seek: Optional[str] = ...
-    segment_time: Optional[int] = ...
+    #command: Optional[str] = ...
+    #bitrate: Optional[int] = ...
+    #chunk_size: int = ...
+    #samplerate: int = ...
+    #seek: Optional[str] = ...
+    #segment_time: Optional[int] = ...
 
-    tries: Optional[int] = ...
-    videoarg: bool = ...
-    youtube_url: Optional[str] = ...
+    #tries: Optional[int] = ...
+    #videoarg: bool = ...
+    #youtube_url: Optional[str] = ...
 
     def __init__(self):
         # TODO(xsdg): Args parsing should happen outside of this class, and the
         # parsed args should be passed in.
         self.args = _arg_parsing.Parser.parse_args()
-        self.debug = args.debug
+        self.debug: bool = args.debug
 
         # Arguments with no dependencies.
         # Groupings are mostly carried over from earlier code; unclear how
         # meaningful they are.
-        self.adevice = args.alsa_device
-        self.notifications = "enabled" if args.notifications else "disabled"
-        self.platform = platform.system()  # Guess the platform.
-        self.tray = args.tray
+        self.adevice: Optional[str] = args.alsa_device
+        self.notifications: str = "enabled" if args.notifications else "disabled"
+        self.platform: str = platform.system()  # Guess the platform.
+        self.tray: bool = args.tray
 
-        self.discover = args.discover
-        self.host = args.host
-        self.input_file = args.input_file
-        self.subtitles = args.subtitles
-        self.hijack = args.hijack
-        self.device_name = args.name
-        self.port = args.port
-        self.fps = args.fps
+        self.discover: bool = args.discover
+        self.host: Optional[str] = args.host
+        # TODO(xsdg): Switch input_file to pathlib.Path
+        self.input_file: Optional[str] = args.input_file
+        self.subtitles: Optional[str] = args.subtitles
+        self.hijack: bool = args.hijack
+        self.device_name: Optional[str] = args.name
+        self.port: int = args.port  # TODO(xsdg): Validate range 0..65535.
+        self.fps: str = args.fps  # TODO(xsdg): Why is this typed as a str?
 
-        self.mtype = args.mtype
-        self.reset = args.reset
+        self.mtype: Optional[str] = args.mtype
+        self.reset: bool = args.reset
 
-        self.screencast = args.screencast
-        self.display = args.display
-        self.vcodec = args.vcodec
-        self.loop = args.loop
-        self.seek = args.seek
+        self.screencast: bool = args.screencast
+        self.display: Optional[str] = args.display
+        self.vcodec: str = args.vcodec
+        self.loop: bool = args.loop
+        self.seek: Optional[str] = args.seek
 
-        self.tries = args.tries
-        self.videoarg = args.video
+        self.tries: Optional[int] = args.tries
+        self.videoarg: bool = args.video
 
         # Arguments that depend on other arguments.
-        self.select_device = True if self.tray else args.select_device
+        self.select_device: bool = True if self.tray else args.select_device
 
         if self.platform == "Darwin":
             backend_options = ["node", "ffmpeg"]
@@ -102,6 +103,7 @@ class _Mkchromeast:
             else:
                 backend_options = ["ffmpeg", "avconv", "parec", "gstreamer"]
 
+        self.backend: Optional[str]
         if args.encoder_backend:
             if args.encoder_backend not in backend_options:
                 print(colors.error(f"Backend {args.encoder_backend} is not in "
@@ -121,6 +123,9 @@ class _Mkchromeast:
                 self.backend = "parec"
 
         codec_choices = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
+        self.codec: str
+        self.rcodec: Optional[str]
+
         if self.source_url:
             self.codec = args.codec
             self.rcodec = None
@@ -140,6 +145,7 @@ class _Mkchromeast:
 
         # TODO(xsdg): Add support for yt-dlp
         command_choices = ["ffmpeg", "avconv", "youtube-dl"]
+        self.command: Optional[str]
         if not args.command:
             self.command = None
         else:
@@ -153,6 +159,7 @@ class _Mkchromeast:
             self.command = args.command
 
         resolution_choices = [r.lower() for r in resolutions.keys()]
+        self.resolution: Optional[str]
         if not args.resolution:
             self.resolution = None
         else:
@@ -164,6 +171,7 @@ class _Mkchromeast:
                     print(f"- {resolution}")
                 sys.exit(0)
 
+        self.bitrate: Optional[int]
         if self.codec in ["mp3", "ogg", "acc", "opus", "flac"]:
             if args.bitrate <= 0:
                 print(colors.error("Bitrate must be a positive integer"))
@@ -177,21 +185,25 @@ class _Mkchromeast:
         if args.chunk_size <= 0:
             print(colors.error("Chunk size must be a positive integer"))
             sys.exit(0)
-        self.chunk_size = args.chunk_size
+        self.chunk_size: int = args.chunk_size
 
         if args.sample_rate < 22050:
             print(colors.error("Sample rate must be at least 22050"))
             sys.exit(0)
+
+        self.samplerate: int
         if self.codec == "opus":
             self.samplerate = 48000
         else:
             self.samplerate = args.sample_rate
 
+        self.segment_time: Optional[int]
         if args.segment_time and self.backend not in ["parec", "node"]:
             self.segment_time = args.segment_time
         else:
             self.segment_time = None
 
+        self.youtube_url: Optional[str]
         if not args.youtube:
             self.youtube_url = None
         else:
@@ -241,8 +253,10 @@ class _Mkchromeast:
                 "The --command option only works for video."))
 
     def _validate_input_file(self) -> None:
-        return if not self.input_file
-        return if os.path.isfile(self.input_file)
+        if not self.input_file:
+            return
+        if os.path.isfile(self.input_file):
+            return
 
         # NOTE: Prior implementation did a reset in the case that input_file was
         # specified by did not exist.  That... doesn't really make much sense,
@@ -252,7 +266,8 @@ class _Mkchromeast:
             "Specified input file does not exist or is not a file."))
 
     def _debug(self, msg: str) -> None:
-        return if not self.debug
+        if not self.debug:
+            return
         # TODO(xsdg): Maybe use stderr for debug messages?
         print(msg)
 
