@@ -4,6 +4,7 @@
 
 import argparse
 import logging
+import os
 import pathlib
 import shutil
 import subprocess
@@ -42,8 +43,8 @@ class MkchromecastTests(unittest.TestCase):
         ]
 
         # Makes target names absolute.
-        parent_dir = pathlib.Path(__file__).parent
-        self.type_targets = [parent_dir / target for target in target_names]
+        self.parent_dir = pathlib.Path(__file__).parent
+        self.type_targets = [self.parent_dir / name for name in target_names]
 
     def testMyPy(self):
         """Runs the mypy static type analyzer, if it's installed."""
@@ -91,9 +92,23 @@ class MkchromecastTests(unittest.TestCase):
 
     def testExecUnitTests(self):
         """Runs the Mkchromecast unit test suite."""
-        pytest_cmd = ["python3", "-m", "unittest", "discover", "-s", "tests"]
+        tests_dir = self.parent_dir / "tests"
+        pytest_cmd = [
+            "python3",
+            "-m", "unittest",
+            "discover",
+            "-s", tests_dir,
+            "-t", tests_dir,
+        ]
+
+        # Set PYTHONPATH to include parentdir, so that the unit tests can
+        # import mkchromecast regardless of how the current file is executed.
+        custom_env = os.environ.copy()
+        orig_python_path = os.environ.get("PYTHONPATH", "")
+        custom_env["PYTHONPATH"] = f"{self.parent_dir}:{orig_python_path}"
         pytest_result = subprocess.run(
             pytest_cmd,
+            env=custom_env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             encoding="utf8",
