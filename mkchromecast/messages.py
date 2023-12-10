@@ -1,21 +1,23 @@
 # This file is part of mkchromecast.
-import mkchromecast.__init__
+
+import mkchromecast
 import mkchromecast.colors as colors
 
-source_url = mkchromecast.__init__.source_url
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
 
 
 def bitrate_default(bitrate):
     """Bitrate messages
     Printing default bitrate message
     """
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(colors.options("Default bitrate used:") + " " + bitrate)
     return
 
 
 def no_bitrate(codec):
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(
             colors.warning(
                 "The " + codec + " codec does not require the bitrate argument."
@@ -25,13 +27,13 @@ def no_bitrate(codec):
 
 
 def maxbitrate(codec, bitrate):
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(
             colors.warning(
                 "Maximum bitrate supported by " + codec + " is: " + bitrate + "k."
             )
         )
-    if codec == "aac" and source_url is None:
+    if codec == "aac" and _mkcc.source_url is None:
         print(
             colors.warning(
                 "At about 128-256k is already considered as "
@@ -46,14 +48,14 @@ def maxbitrate(codec, bitrate):
 def samplerate_default(samplerate):
     """Sample rate messages
     Printing default sample rate message"""
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(colors.options("Default sample rate used:") + " " + samplerate + "Hz.")
     return
 
 
 def samplerate_info(codec):
     """This prints warning when sample rates are set incorrectly"""
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(
             colors.warning(
                 "Sample rates supported by "
@@ -78,7 +80,7 @@ def samplerate_info(codec):
 
 def samplerate_no96(codec):
     """This prints warning when sample rates are set incorrectly and no 96k"""
-    if source_url is None:
+    if _mkcc.source_url is None:
         print(
             colors.warning(
                 "Sample rates supported by "

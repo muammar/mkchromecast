@@ -4,87 +4,77 @@
 Google Cast device has to point out to http://ip:5000/stream
 """
 
-import mkchromecast.__init__
+import configparser as ConfigParser
+from flask import Flask, Response
+from functools import partial
+import multiprocessing
+import os
+import pickle
+import psutil
+from subprocess import Popen, PIPE
+import sys
+import threading
+import time
+
+import mkchromecast
 from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.config import config_manager
 import mkchromecast.colors as colors
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
-import psutil
-import pickle
-import sys
-import time
-from functools import partial
-from subprocess import Popen, PIPE
-from flask import Flask, Response
-import multiprocessing
-import threading
-import os
-from os import getpid
-
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser  # This is for Python3
 
 backends_dict = {}
 
 
-"""
-In this block we check variables from __init__.py
-"""
-tray = mkchromecast.__init__.tray
-adevice = mkchromecast.__init__.adevice
-chunk_size = mkchromecast.__init__.chunk_size
-segment_time = mkchromecast.__init__.segment_time
-host = mkchromecast.__init__.host
-port = mkchromecast.__init__.port
-platform = mkchromecast.__init__.platform
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
+
+# We make local copies of these attributes because they are sometimes modified.
+# TODO(xsdg): clean this up more when we refactor this file.
+tray = _mkcc.tray
+adevice = _mkcc.adevice
+chunk_size = _mkcc.chunk_size
+segment_time = _mkcc.segment_time
+host = _mkcc.host
+port = _mkcc.port
+platform = _mkcc.platform
 
 ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
 
 frame_size = 32 * chunk_size
 buffer_size = 2 * chunk_size**2
 
-debug = mkchromecast.__init__.debug
+debug = _mkcc.debug
 
 if debug is True:
     print(
         ":::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s"
         % (chunk_size, frame_size, buffer_size)
     )
-source_url = mkchromecast.__init__.source_url
+source_url = _mkcc.source_url
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()  # Class from mkchromecast.config
 configf = configurations.configf
 appendtourl = "stream"
 
-try:
-    youtube_url = mkchromecast.__init__.youtube_url
-except AttributeError:
-    youtube_url = None
-
 # This is to take the youtube URL
-if youtube_url is not None:
-    print(colors.options("The Youtube URL chosen: ") + youtube_url)
+if _mkcc.youtube_url is not None:
+    print(colors.options("The Youtube URL chosen: ") + _mkcc.youtube_url)
 
     try:
         import urlparse
 
-        url_data = urlparse.urlparse(youtube_url)
+        url_data = urlparse.urlparse(_mkcc.youtube_url)
         query = urlparse.parse_qs(url_data.query)
     except ImportError:
         import urllib.parse
 
-        url_data = urllib.parse.urlparse(youtube_url)
+        url_data = urllib.parse.urlparse(_mkcc.youtube_url)
         query = urllib.parse.parse_qs(url_data.query)
     video = query["v"][0]
     print(colors.options("Playing video:") + " " + video)
-    command = ["youtube-dl", "-o", "-", youtube_url]
+    command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
     mtype = "audio/mp4"
 else:
     if os.path.exists(configf) and tray is True:
@@ -104,11 +94,11 @@ else:
             print(colors.warning("Using defaults set there"))
             print(backend, codec, bitrate, samplerate, adevice)
     else:
-        backend = mkchromecast.__init__.backend
+        backend = _mkcc.backend
         backends_dict[backend] = backend
-        codec = mkchromecast.__init__.codec
-        bitrate = str(mkchromecast.__init__.bitrate)
-        samplerate = str(mkchromecast.__init__.samplerate)
+        codec = _mkcc.codec
+        bitrate = str(_mkcc.bitrate)
+        samplerate = str(_mkcc.samplerate)
 
     backends = ["ffmpeg", "avconv", "parec"]
     if tray is True and backend in backends:
@@ -918,7 +908,7 @@ def stream():
         except FileNotFoundError:
             print("Failed to execute {}".format(command))
             message = "Have you installed lame, see https://github.com/muammar/mkchromecast#linux-1?"
-            raise message
+            raise Exception(message)
 
     elif (
         platform == "Linux"
@@ -988,7 +978,7 @@ def monitor_daemon():
     pidnumber = int(pickle.load(f))
     print(colors.options("PID of main process:") + " " + str(pidnumber))
 
-    localpid = getpid()
+    localpid = os.getpid()
     print(colors.options("PID of streaming process:") + " " + str(localpid))
 
     while psutil.pid_exists(localpid) is True:

@@ -1,22 +1,16 @@
 # This file is part of mkchromecast.
-"""
-Configparser is imported differently in Python3
-"""
-import os
+
+import configparser as ConfigParser
 import getpass
-import mkchromecast.__init__
+import os
 
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser  # Python3
-
-platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
+import mkchromecast
 
 
 class config_manager(object):
     def __init__(self):
+        self._mkcc = mkchromecast.Mkchromecast()
+
         self.user = getpass.getuser()
         self.config = ConfigParser.RawConfigParser()
 
@@ -31,7 +25,7 @@ class config_manager(object):
             "alsadevice": None,
         }
 
-        if platform == "Darwin":
+        if self._mkcc.platform == "Darwin":
             self.defaultconf["backend"] = "node"
         else:
             self.defaultconf["backend"] = "parec"
@@ -42,7 +36,9 @@ class config_manager(object):
         Depeding the platform we create the configuration directory in
         different locations.
         """
-        if platform == "Darwin":
+        if self._mkcc.platform == "Darwin":
+            # TODO(xsdg): Use $HOME instead of generating a path that might not
+            # be correct.
             self.directory = (
                 "/Users/" + self.user + "/Library/Application Support/mkchromecast/"
             )
@@ -64,7 +60,7 @@ class config_manager(object):
             self.write_defaults()
 
     def write_defaults(self):
-        if platform == "Darwin":
+        if self._mkcc.platform == "Darwin":
             self.config.set("settings", "backend", "node")
             self.config.set("settings", "codec", "mp3")
             self.config.set("settings", "bitrate", "192")
@@ -109,7 +105,7 @@ class config_manager(object):
             try:
                 e = ConfigSectionMap("settings")[str(e)]
             except KeyError:
-                if debug is True:
+                if self._mkcc.debug is True:
                     print(
                         ":::config::: the setting %s is not correctly set. "
                         "Defaults added." % e

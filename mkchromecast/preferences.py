@@ -1,23 +1,27 @@
 # This file is part of mkchromecast.
 
+import configparser as ConfigParser
+import getpass
+import os
 import sys
-import mkchromecast.__init__
+import webbrowser
+
+import mkchromecast
 from mkchromecast.config import config_manager
 from mkchromecast.utils import is_installed
-import os
-import getpass
-import webbrowser
 
 """
 Check if external programs are available to build the preferences
 """
 
-platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
-tray = mkchromecast.__init__.tray
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
 USER = getpass.getuser()
 
-if platform == "Darwin":
+if _mkcc.platform == "Darwin":
+    # TODO(xsdg): This seems really inappropriate.  We should be respecting the
+    # user's PATH rather than potentially running binaries that they don't
+    # expect.
     PATH = (
         "./bin:./nodejs/bin:/Users/"
         + str(USER)
@@ -27,17 +31,9 @@ if platform == "Darwin":
 else:
     PATH = os.environ["PATH"]
 
-if debug is True:
+if _mkcc.debug is True:
     print("USER =" + str(USER))
     print("PATH =" + str(PATH))
-
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser  # Python3
 
 
 def ConfigSectionMap(section):
@@ -58,7 +54,7 @@ def ConfigSectionMap(section):
     return dict1
 
 
-if tray is True:
+if _mkcc.tray is True:
     from PyQt5.QtWidgets import (
         QWidget,
         QLabel,
@@ -94,7 +90,7 @@ if tray is True:
             self.iconcolors()
             self.notifications()
             self.searchatlaunch()
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.alsadevice()
             self.buttons()
             self.window()
@@ -105,10 +101,10 @@ if tray is True:
             """
             backends_supported = ["node", "ffmpeg", "avconv", "parec", "gstreamer"]
             self.backends = []
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 for item in backends_supported:
                     if (
-                        is_installed(item, PATH, debug) is True
+                        is_installed(item, PATH, _mkcc.debug) is True
                         and item != "avconv"
                         and item != "gstreamer"
                     ):
@@ -116,14 +112,14 @@ if tray is True:
             else:
                 for item in backends_supported:
                     if (
-                        is_installed(item, PATH, debug) is True
+                        is_installed(item, PATH, _mkcc.debug) is True
                         and item != "node"
                         and item != "gstreamer"
                     ):
                         self.backends.append(item)
                     # hardcoded gst-launch-1.0 for gstreamer
                     elif (
-                        is_installed("gst-launch-1.0", PATH, debug) is True
+                        is_installed("gst-launch-1.0", PATH, _mkcc.debug) is True
                         and item == "gstreamer"
                     ):
                         self.backends.append(item)
@@ -158,7 +154,7 @@ if tray is True:
                 self.codecs = ["mp3"]
             else:
                 self.codecs = ["mp3", "ogg", "aac", "wav", "flac"]
-            if debug is True:
+            if _mkcc.debug is True:
                 print(self.codecs)
             codecindex = self.codecs.index(self.codecconf)
             self.qccodec.move(180 * self.scale_factor, 54 * self.scale_factor)
@@ -310,7 +306,7 @@ if tray is True:
                 300 * self.scale_factor,
                 200 * self.scale_factor,
             )
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 # This is to fix the size of the window
                 self.setFixedSize(310 * self.scale_factor, 320 * self.scale_factor)
             else:
@@ -368,7 +364,7 @@ if tray is True:
                 self.write_config()
             else:
                 codecs = ["mp3", "ogg", "aac", "wav", "flac"]
-            if debug is True:
+            if _mkcc.debug is True:
                 print("Codecs: %s." % codecs)
             codecindex = codecs.index(self.codecconf)
             self.qccodec.move(180 * self.scale_factor, 54 * self.scale_factor)
@@ -451,7 +447,7 @@ if tray is True:
             self.searchcolorsconf = ConfigSectionMap("settings")["colors"]
             self.satlaunchconf = ConfigSectionMap("settings")["searchatlaunch"]
             self.alsadeviceconf = ConfigSectionMap("settings")["alsadevice"]
-            if debug is True:
+            if _mkcc.debug is True:
                 print(
                     self.backend_conf,
                     self.codecconf,

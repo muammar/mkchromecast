@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
 # This file is part of mkchromecast.
-import os.path
+import atexit
+import os
+import signal
+import subprocess
 import sys
+from typing import List, Optional
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 if os.path.exists(os.path.join(HERE, '..', 'mkchromecast')):
     sys.path.insert(0, os.path.join(HERE, '..'))
 
-import mkchromecast.__init__
+import mkchromecast
 from mkchromecast.version import __version__
 from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
                                         outputint)
@@ -17,45 +21,39 @@ import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import create_sink, get_sink_list, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
 from mkchromecast.messages import print_available_devices
-import subprocess
-import atexit
-import signal
 
-def maybe_execute_single_action():
+def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
     """Potentially executes a one-off action, followed by exiting."""
 
-    if mkchromecast.__init__.reset:
+    if mkcc.reset:
         # TODO(xsdg): unify the various entry and cleanup codepaths.
-        if platform == "Darwin":
+        if mkcc.platform == "Darwin":
             inputint()
             outputint()
         else:
             get_sink_list()
             remove_sink()
         terminate()
-    elif mkchromecast.__init__.version:
+        sys.exit(0)
+
+    if mkcc.version:
         print("mkchromecast " + "v" + colors.success(__version__))
-    sys.exit(0)
+        sys.exit(0)
 
 
-class mk(object):
+# TODO(xsdg): Stop using conditional imports all over the place.
+class CastProcess(object):
     """Class to manage cast process"""
-    def __init__(self):
+    def __init__(self, mkcc: mkchromecast.Mkchromecast):
         print(colors.bold('Mkchromecast ') + 'v' + __version__)
-        self.platform = mkchromecast.__init__.platform
-        self.adevice = mkchromecast.__init__.adevice
-        self.debug = mkchromecast.__init__.debug
-        self.device_name = mkchromecast.__init__.device_name
-        self.videoarg = mkchromecast.__init__.videoarg
-        self.youtube_url = mkchromecast.__init__.youtube_url
-        self.tray = mkchromecast.__init__.tray
-        self.discover = mkchromecast.__init__.discover
-        self.source_url = mkchromecast.__init__.source_url
-        self.encoder_backend = mkchromecast.__init__.backend
-        self.select_device = mkchromecast.__init__.select_device
-        self.control = mkchromecast.__init__.control
+        self.mkcc = mkcc
 
-        self.cc = Casting()
+        # Type declarations
+        self.cc: Casting
+        self.backends: List[str]
+
+    def run(self):
+        self.cc = Casting(self.mkcc)
         checkmktmp()
         writePidFile()
 
@@ -70,89 +68,89 @@ class mk(object):
           ]
 
         self.check_connection()
-        if self.tray is False and self.videoarg is False:
-            if self.platform == 'Linux':
+        if self.mkcc.tray is False and self.mkcc.videoarg is False:
+            if self.mkcc.platform == 'Linux':
                 self.audio_linux()
             else:
                 self.audio_macOS()
-        elif self.tray is False and self.videoarg is True:
+        elif self.mkcc.tray is False and self.mkcc.videoarg is True:
             self.cast_video()
         else:
             self.start_tray()
 
     def audio_linux(self):
         """This method manages all related to casting audio in Linux"""
-        if self.youtube_url is None and self.source_url is None:
-            if self.adevice is None:
+        if self.mkcc.youtube_url is None and self.mkcc.source_url is None:
+            if self.mkcc.adevice is None:
                 print('Creating Pulseaudio Sink...')
                 print(colors.warning('Open Pavucontrol and Select the '
                       'Mkchromecast Sink.'))
                 create_sink()
             print(colors.important('Starting Local Streaming Server'))
             print(colors.success('[Done]'))
-            self.start_backend(self.encoder_backend)
+            self.start_backend(self.mkcc.backend)
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
-        elif self.youtube_url is None and self.source_url is not None:
-            self.start_backend(self.encoder_backend)
+        elif self.mkcc.youtube_url is None and self.mkcc.source_url is not None:
+            self.start_backend(self.mkcc.backend)
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtube_url is not None and self.videoarg is False:
+        elif self.mkcc.youtube_url is not None and self.mkcc.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
     def audio_macOS(self):
         """This method manages all related to casting audio in macOS"""
-        if self.youtube_url is None and self.source_url is None:
-            self.start_backend(self.encoder_backend)
+        if self.mkcc.youtube_url is None and self.mkcc.source_url is None:
+            self.start_backend(self.mkcc.backend)
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
 
             print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
-        elif self.youtube_url is None and self.source_url is not None:
-            self.start_backend(self.encoder_backend)
+        elif self.mkcc.youtube_url is None and self.mkcc.source_url is not None:
+            self.start_backend(self.mkcc.backend)
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
             print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
         # When casting youtube url, we do it through the audio module
-        elif self.youtube_url is not None and self.videoarg is False:
+        elif self.mkcc.youtube_url is not None and self.mkcc.videoarg is False:
             import mkchromecast.audio
             mkchromecast.audio.main()
             self.cc.initialize_cast()
-            self.get_devices(self.select_device)
+            self.get_devices(self.mkcc.select_device)
             self.cc.play_cast()
-            self.show_control(self.control)
+            self.show_control(self.mkcc.control)
 
     def cast_video(self):
         """This method launches video casting"""
 
-        if self.platform == 'Linux':
+        if self.mkcc.platform == 'Linux':
             print('Creating Pulseaudio Sink...')
             print(colors.warning('Open Pavucontrol and Select the '
                   'Mkchromecast Sink.'))
@@ -162,11 +160,11 @@ class mk(object):
         import mkchromecast.video
         mkchromecast.video.main()
         self.cc.initialize_cast()
-        self.get_devices(self.select_device)
+        self.get_devices(self.mkcc.select_device)
         self.cc.play_cast()
-        self.show_control(self.control)
+        self.show_control(self.mkcc.control)
 
-    def get_devices(self, select_device, write_to_pickle=True):
+    def get_devices(self, select_device: bool, write_to_pickle: bool = True):
         """Get chromecast name, and let user select one from a list if
         select_device flag is True.
         """
@@ -178,12 +176,16 @@ class mk(object):
         else:
             self.cc.get_devices()
 
-    def start_backend(self, encoder_backend):
+    def start_backend(self, backend: Optional[str]):
         """Starting backends"""
-        if encoder_backend == 'node' and self.source_url is None:
+        if not backend:
+            print(colors.error('Internal error: failed to select a backend.'))
+            terminate()
+
+        if backend == 'node' and self.mkcc.source_url is None:
             from mkchromecast.node import stream
             stream()
-        elif encoder_backend in self.backends and self.source_url is None:
+        elif backend in self.backends and self.mkcc.source_url is None:
             import mkchromecast.audio
             mkchromecast.audio.main()
 
@@ -193,17 +195,18 @@ class mk(object):
             print(colors.error('Your Computer is not Connected to Any '
                   'Network'))
             terminate()
-        elif self.cc.ip != '127.0.0.1' and self.discover is True:
+        elif self.cc.ip != '127.0.0.1' and self.mkcc.discover is True:
+            # TODO(xsdg): Move this to maybe_execute_single_action.
             self.cc.initialize_cast()
             terminate()
 
     def terminate_app(self):
         """Terminate the app (kill app)"""
         self.cc.stop_cast()
-        if self.platform == 'Darwin':
+        if self.mkcc.platform == 'Darwin':
             inputint()
             outputint()
-        elif self.platform == 'Linux':
+        elif self.mkcc.platform == 'Linux':
             remove_sink()
         terminate()
 
@@ -217,7 +220,7 @@ class mk(object):
         print(colors.options(         'Volume Down:') + ' d')
         print(colors.options(       'Attach device:') + ' a')
 
-        if self.videoarg is True:
+        if self.mkcc.videoarg is True:
             print(colors.options(       'Pause Casting:')+' p')
             print(colors.options(      'Resume Casting:')+' r')
         print(colors.options('Quit the Application:')+' q or Ctrl-C')
@@ -225,7 +228,7 @@ class mk(object):
 
     def show_control(self, control):
         """Method to show controls"""
-        if self.control is True:
+        if control is True:
             from mkchromecast.getch import getch
 
             self.controls_msg()
@@ -236,36 +239,38 @@ class mk(object):
                     key = getch()
                     if(key == 'u'):
                         self.cc.volume_up()
-                        if self.encoder_backend == 'ffmpeg':
-                            if self.debug is True:
+                        if self.mkcc.backend == 'ffmpeg':
+                            if self.mkcc.debug is True:
                                 self.controls_msg()
                     elif(key == 'd'):
                         self.cc.volume_down()
-                        if self.encoder_backend == 'ffmpeg':
-                            if self.debug is True:
+                        if self.mkcc.backend == 'ffmpeg':
+                            if self.mkcc.debug is True:
                                 self.controls_msg()
                     elif (key == 'a'):
                         print(self.cc.available_devices)
-                        self.get_devices(self.select_device, write_to_pickle=False)
+                        self.get_devices(self.mkcc.select_device,
+                                         write_to_pickle=False)
                         self.cc.play_cast()
-                        self.show_control(self.control)
+                        # TODO(xsdg): Why is this recursing?
+                        self.show_control(control)
                     elif(key == 'p'):
-                        if self.videoarg is True:
+                        if self.mkcc.videoarg is True:
                             print('Pausing Casting Process...')
                             action = 'pause'
-                            self.backend_handler(action, self.encoder_backend)
-                            if self.encoder_backend == 'ffmpeg':
-                                if self.debug is True:
+                            self.backend_handler(action, self.mkcc.backend)
+                            if self.mkcc.backend == 'ffmpeg':
+                                if self.mkcc.debug is True:
                                     self.controls_msg()
                         else:
                             pass
                     elif(key == 'r'):
-                        if self.videoarg is True:
+                        if self.mkcc.videoarg is True:
                             print('Resuming Casting Process...')
                             action = 'resume'
-                            self.backend_handler(action, self.encoder_backend)
-                            if self.encoder_backend == 'ffmpeg':
-                                if self.debug is True:
+                            self.backend_handler(action, self.mkcc.backend)
+                            if self.mkcc.backend == 'ffmpeg':
+                                if self.mkcc.debug is True:
                                     self.controls_msg()
                         else:
                             pass
@@ -274,17 +279,20 @@ class mk(object):
                         self.terminate_app()
                     elif(key == '\x03'):
                         raise KeyboardInterrupt
+                        # TODO(xsdg): Move atexit to run() method.
                         atexit.register(self.terminate_app())
             except KeyboardInterrupt:
                 self.terminate_app()
 
         else:
-            if self.platform == 'Linux' and self.adevice is None:
+            if self.mkcc.platform == 'Linux' and self.mkcc.adevice is None:
                 print(colors.warning('Remember to open pavucontrol and select '
                       'the mkchromecast sink.'))
             print('')
             print(colors.error('Ctrl-C to kill the Application at any Time'))
             print('')
+            # TODO(xsdg): atexit is incorrect here.  The signal handlers should
+            # directly call terminate_app.
             signal.signal(signal.SIGINT,
                           lambda *_: atexit.register(self.terminate_app()))
             signal.signal(signal.SIGTERM,
@@ -293,21 +301,24 @@ class mk(object):
 
     def backend_handler(self, action, backend):
         """Methods to handle pause and resume state of backends"""
+        # TODO(xsdg): Woah, this isn't right.  We should specifically only
+        # send signals to processes that are our children (and we should do so
+        # by using the Popen library, and not by shelling out to pkill).
         if action == 'pause' and backend == 'ffmpeg':
             subprocess.call(['pkill', '-STOP', '-f', 'ffmpeg'])
         elif action == 'resume' and backend == 'ffmpeg':
             subprocess.call(['pkill', '-CONT', '-f', 'ffmpeg'])
         elif (action == 'pause' and backend == 'node' and
-              self.platform == 'Linux'):
+              self.mkcc.platform == 'Linux'):
             subprocess.call(['pkill', '-STOP', '-f', 'nodejs'])
         elif (action == 'resume' and backend == 'node' and
-              self.platform == 'Linux'):
+              self.mkcc.platform == 'Linux'):
             subprocess.call(['pkill', '-CONT', '-f', 'nodejs'])
         elif (action == 'pause' and backend == 'node' and
-              self.platform == 'Darwin'):
+              self.mkcc.platform == 'Darwin'):
             subprocess.call(['pkill', '-STOP', '-f', 'node'])
         elif (action == 'resume' and backend == 'node' and
-              self.platform == 'Darwin'):
+              self.mkcc.platform == 'Darwin'):
             subprocess.call(['pkill', '-CONT', '-f', 'node'])
 
         if action == 'pause':
@@ -318,10 +329,15 @@ class mk(object):
     def start_tray(self):
         """This method starts the system tray"""
         import mkchromecast.systray
+        # TODO(xsdg): checkmktmp and writePidFile are guaranteed to have been
+        # called already.
         checkmktmp()
         writePidFile()
         mkchromecast.systray.main()
 
 
 if __name__ == "__main__":
-    mk()
+    mkcc = mkchromecast.Mkchromecast()
+    maybe_execute_single_action(mkcc)
+
+    CastProcess(mkcc).run()
