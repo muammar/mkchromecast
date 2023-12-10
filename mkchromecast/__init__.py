@@ -15,12 +15,8 @@ import shlex
 class _Mkchromecast:
     """An object that encapsulates Mkchromecast state."""
 
-    def __init__(self):
-        # TODO(xsdg): Args parsing should happen outside of this class, and the
-        # parsed args should be passed in.
-        self.args = _arg_parsing.Parser.parse_args()
-        args = self.args  # Shorthand, since it's used frequently below.
-
+    def __init__(self, args):
+        self.args = args
         self.debug: bool = args.debug
 
         # Arguments with no dependencies.
@@ -245,9 +241,14 @@ class Mkchromecast:
     """A singleton object that encapsulates Mkchromecast state."""
     _instance: Optional[_Mkchromecast] = None
 
-    def __new__(cls):
+    def __new__(cls, args = None):
         if cls._instance is None:
-            cls._instance = _Mkchromecast()
+            if not args:
+                # TODO(xsdg): Args parsing should only ever happen outside of
+                # this class.
+                args = _arg_parsing.Parser.parse_args()
+
+            cls._instance = _Mkchromecast(args)
 
         return cls._instance
 

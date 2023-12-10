@@ -4,6 +4,7 @@
 
 import argparse
 import logging
+import os
 import pathlib
 import shutil
 import subprocess
@@ -12,6 +13,10 @@ import time
 import unittest
 
 import pychromecast
+
+
+# Modify this to enable debug logging of test outputs.
+ENABLE_DEBUG_LOGGING = False
 
 # This argument parser will steal arguments from unittest.  So we only define
 # arguments that are needed for the integration test, and that won't collide
@@ -42,8 +47,8 @@ class MkchromecastTests(unittest.TestCase):
         ]
 
         # Makes target names absolute.
-        parent_dir = pathlib.Path(__file__).parent
-        self.type_targets = [parent_dir / target for target in target_names]
+        self.parent_dir = pathlib.Path(__file__).parent
+        self.type_targets = [self.parent_dir / name for name in target_names]
 
     def testMyPy(self):
         """Runs the mypy static type analyzer, if it's installed."""
@@ -89,6 +94,36 @@ class MkchromecastTests(unittest.TestCase):
             # Debug-log for diagnostic purposes.
             logging.debug(pytype_result.stdout)
 
+    def testExecUnitTests(self):
+        """Runs the Mkchromecast unit test suite."""
+        tests_dir = self.parent_dir / "tests"
+        pytest_cmd = [
+            "python3",
+            "-m", "unittest",
+            "discover",
+            "-s", tests_dir,
+            "-t", tests_dir,
+        ]
+
+        # Set PYTHONPATH to include parentdir, so that the unit tests can
+        # import mkchromecast regardless of how the current file is executed.
+        custom_env = os.environ.copy()
+        orig_python_path = os.environ.get("PYTHONPATH", "")
+        custom_env["PYTHONPATH"] = f"{self.parent_dir}:{orig_python_path}"
+        pytest_result = subprocess.run(
+            pytest_cmd,
+            env=custom_env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            encoding="utf8",
+        )
+
+        if pytest_result.returncode:
+            self.fail(pytest_result.stdout)
+        else:
+            # Always show unit test output, even when they pass.
+            logging.info("\n" + pytest_result.stdout)
+
     # "ZZ" prefix so this runs last.
     def testZZEndToEndIntegration(self):
         args = integration_args  # Shorthand.
@@ -124,6 +159,9 @@ class MkchromecastTests(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    loglevel = logging.INFO if not ENABLE_DEBUG_LOGGING else logging.DEBUG
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=loglevel)
+
     # Steals known arguments from unittest in order to properly configure the
     # integration test.
     integration_args, skipped_argv = integration_arg_parser.parse_known_args()
