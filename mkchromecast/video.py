@@ -4,12 +4,6 @@
 Google Cast device has to point out to http://ip:5000/stream
 """
 
-import mkchromecast.__init__
-from mkchromecast import utils
-from mkchromecast.audio_devices import inputint, outputint
-import mkchromecast.colors as colors
-from mkchromecast.utils import terminate, is_installed, check_file_info
-from mkchromecast.resolution import resolution
 import psutil
 import getpass
 import pickle
@@ -21,44 +15,33 @@ from flask import Flask, Response
 import multiprocessing
 import threading
 import os
-from os import getpid
+
+import mkchromecast
+from mkchromecast import utils
+from mkchromecast.audio_devices import inputint, outputint
+import mkchromecast.colors as colors
+from mkchromecast.utils import terminate, is_installed, check_file_info
+from mkchromecast.resolution import resolution
 
 appendtourl = "stream"
 USER = getpass.getuser()
 
-chunk_size = mkchromecast.__init__.chunk_size
-user_command = mkchromecast.__init__.command
-platform = mkchromecast.__init__.platform
-subtitles = mkchromecast.__init__.subtitles
-input_file = mkchromecast.__init__.input_file
-res = mkchromecast.__init__.resolution
-seek = mkchromecast.__init__.seek
-debug = mkchromecast.__init__.debug
-source_url = mkchromecast.__init__.source_url
-encoder_backend = mkchromecast.__init__.backend
-screencast = mkchromecast.__init__.screencast
-display = mkchromecast.__init__.display
-vcodec = mkchromecast.__init__.vcodec
-host = mkchromecast.__init__.host
-port = mkchromecast.__init__.port
-loop = mkchromecast.__init__.loop
-mtype = mkchromecast.__init__.mtype
-fps = mkchromecast.__init__.fps
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
 
-ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
+user_command = _mkcc.command
+mtype = _mkcc.mtype
 
+ip = utils.get_effective_ip(_mkcc.platform, host_override=_mkcc.host, fallback_ip="0.0.0.0")
+
+mkv: bool
 try:
-    if input_file[-3:] == "mkv":
+    if _mkcc.input_file[-3:] == "mkv":
         mkv = True
     else:
         mkv = False
 except TypeError:
     mkv = False
-
-try:
-    youtube_url = mkchromecast.__init__.youtube_url
-except AttributeError:
-    youtube_url = None
 
 
 def seeking(seek):
@@ -73,14 +56,14 @@ http://stackoverflow.com/questions/12801192/client-closes-connection-when-stream
 I think that the command below is sending a file that is too big and the
 browser closes the connection.
 """
-if youtube_url is not None:
-    command = ["youtube-dl", "-o", "-", youtube_url]
+if _mkcc.youtube_url is not None:
+    command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
 
-elif screencast is True:
-    if res is None:
-        screen_size = resolution("1080p", screencast)
+elif _mkcc.screencast is True:
+    if _mkcc.resolution is None:
+        screen_size = resolution("1080p", _mkcc.screencast)
     else:
-        screen_size = resolution(res, screencast)
+        screen_size = resolution(_mkcc.resolution, _mkcc.screencast)
     command = [
         "ffmpeg",
         "-ac",
@@ -100,15 +83,15 @@ elif screencast is True:
         "-f",
         "x11grab",
         "-r",
-        fps,
+        _mkcc.fps,
         "-s",
         screen_size,
         "-i",
-        "{}+0,0".format(display),
+        "{}+0,0".format(_mkcc.display),
         "-vcodec",
-        vcodec,
+        _mkcc.vcodec,
     ]
-    if vcodec != "h264_nvenc":
+    if _mkcc.vcodec != "h264_nvenc":
         command.append("-preset")
         command.append("veryfast")
     command.extend(
@@ -139,14 +122,14 @@ else:
     """
     The blocks shown below are related to input_files
     """
-    # file_resolution = check_file_info(input_file, what='resolution')
+    # file_resolution = check_file_info(_mkcc.input_file, what='resolution')
 
-    if res is None and subtitles is None and user_command is None:
+    if _mkcc.resolution is None and _mkcc.subtitles is None and user_command is None:
         command = [
             "ffmpeg",
             "-re",
             "-i",
-            input_file,
+            _mkcc.input_file,
             "-vcodec",
             "copy",
             "-acodec",
@@ -163,14 +146,14 @@ else:
             "frag_keyframe+empty_moov",
             "pipe:1",
         ]
-    elif res is None and subtitles is not None and user_command is None:
+    elif _mkcc.resolution is None and _mkcc.subtitles is not None and user_command is None:
         command = [
             "ffmpeg",
             "-re",
             "-i",
-            input_file,
+            _mkcc.input_file,
             "-i",
-            subtitles,
+            _mkcc.subtitles,
             "-vcodec",
             "copy",
             "-acodec",
@@ -188,14 +171,14 @@ else:
             "pipe:1",
         ]
     else:
-        if input_file is not None and subtitles is None and mkv is False:
+        if _mkcc.input_file is not None and _mkcc.subtitles is None and mkv is False:
             # Command taken from
             # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
             command = [
                 "ffmpeg",
                 "-re",
                 "-i",
-                input_file,
+                _mkcc.input_file,
                 "-map_chapters",
                 "-1",
                 "-vcodec",
@@ -220,14 +203,14 @@ else:
                 "pipe:1",
             ]
 
-        elif input_file is not None and subtitles is None and mkv is True:
+        elif _mkcc.input_file is not None and _mkcc.subtitles is None and mkv is True:
             # Command taken from
             # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
             command = [
                 "ffmpeg",
                 "-re",
                 "-i",
-                input_file,
+                _mkcc.input_file,
                 "-map_chapters",
                 "-1",
                 "-vcodec",
@@ -243,7 +226,7 @@ else:
                 "pipe:1",
             ]
 
-            bit_depth = check_file_info(input_file, what="bit-depth")
+            bit_depth = check_file_info(_mkcc.input_file, what="bit-depth")
             if bit_depth == "yuv420p10le":
                 vcodec_index = command.index("-vcodec") + 1
                 command[vcodec_index] = "libx264"
@@ -265,14 +248,14 @@ else:
                     vcodec_index += 1
                     command.insert(vcodec_index, a)
 
-        elif input_file is not None and subtitles is not None and mkv is False:
+        elif _mkcc.input_file is not None and _mkcc.subtitles is not None and mkv is False:
             # Command taken from
             # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
             command = [
                 "ffmpeg",
                 "-re",
                 "-i",
-                input_file,
+                _mkcc.input_file,
                 "-map_chapters",
                 "-1",
                 "-vcodec",
@@ -295,19 +278,19 @@ else:
                 "-movflags",
                 "frag_keyframe+empty_moov",
                 "-vf",
-                "subtitles=" + subtitles,
+                "subtitles=" + _mkcc.subtitles,
                 "pipe:1",
             ]
 
-        elif input_file is not None and subtitles is not None and mkv is True:
+        elif _mkcc.input_file is not None and _mkcc.subtitles is not None and mkv is True:
             print(colors.warning("Subtitles with mkv are not supported yet."))
             command = [
                 "ffmpeg",
                 "-re",
                 "-i",
-                input_file,
+                _mkcc.input_file,
                 "-i",
-                subtitles,
+                _mkcc.subtitles,
                 "-c:v",
                 "copy",
                 "-c:a",
@@ -342,34 +325,35 @@ else:
             ]
 
         if user_command is not None:
+            # TODO(xsdg): This should probably be [user_command].
             command = user_command
 
-        if debug is False and source_url is None:
+        if _mkcc.debug is False and _mkcc.source_url is None:
             try:
                 command.insert(command.index("-i"), "panic")
                 command.insert(command.index("panic"), "-loglevel")
             except ValueError:
                 pass
 
-        if loop is True:
+        if _mkcc.loop is True:
             command.insert(1, "-stream_loop")
             command.insert(2, "-1")
 
-        if res is not None:
-            command_index = command.index(input_file)
-            res_elements = resolution(res, screencast)
+        if _mkcc.resolution is not None:
+            command_index = command.index(_mkcc.input_file)
+            res_elements = resolution(_mkcc.resolution, _mkcc.screencast)
             for element in res_elements:
                 command.insert(-command_index, element)
 
-    if seek is not None:
-        seeking(seek)
+    if _mkcc.seek is not None:
+        seeking(_mkcc.seek)
 
 if mtype is None:
     mtype = "video/mp4"
 
 app = Flask(__name__)
 
-if debug is True:
+if _mkcc.debug is True:
     print(":::ffmpeg::: command: %s." % command)
 
 
@@ -407,14 +391,14 @@ def shutdown():
 @app.route("/" + appendtourl)
 def stream():
     process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), chunk_size)
+    read_chunk = partial(os.read, process.stdout.fileno(), _mkcc.chunk_size)
     return Response(iter(read_chunk, b""), mimetype=mtype)
 
 
 def start_app():
     monitor_daemon = monitor()
     monitor_daemon.start()
-    app.run(host=ip, port=port, threaded=True)
+    app.run(host=ip, port=_mkcc.port, threaded=True)
 
 
 class multi_proc(object):  # I launch ffmpeg in a different process
@@ -448,7 +432,7 @@ def monitor_daemon():
     pidnumber = int(pickle.load(f))
     print(colors.options("PID of main process:") + " " + str(pidnumber))
 
-    localpid = getpid()
+    localpid = os.getpid()
     print(colors.options("PID of streaming process:") + " " + str(localpid))
 
     while psutil.pid_exists(localpid) is True:
@@ -458,7 +442,7 @@ def monitor_daemon():
             # this I ensure that if the main app fails, everything
             # will get back to normal
             if psutil.pid_exists(pidnumber) is False:
-                if platform == "Darwin":
+                if _mkcc.platform == "Darwin":
                     inputint()
                     outputint()
                 else:
@@ -481,12 +465,12 @@ def monitor_daemon():
 
 
 def main():
-    if encoder_backend != "node":
+    if _mkcc.backend != "node":
         st = multi_proc()
         st.start()
     else:
         print("Starting Node")
-        if platform == "Darwin":
+        if _mkcc.platform == "Darwin":
             PATH = (
                 "./bin:./nodejs/bin:/Users/"
                 + str(USER)
@@ -498,25 +482,25 @@ def main():
         else:
             PATH = os.environ["PATH"]
 
-        if debug is True:
+        if _mkcc.debug is True:
             print("PATH = %s." % PATH)
 
         node_names = ["node"]
         nodejs_dir = ["./nodejs/"]
 
-        if platform == "Linux":
+        if _mkcc.platform == "Linux":
             node_names.append("nodejs")
             nodejs_dir.append("/usr/share/mkchromecast/nodejs/")
 
         for name in node_names:
-            if is_installed(name, PATH, debug) is True:
+            if is_installed(name, PATH, _mkcc.debug) is True:
                 for path in nodejs_dir:
                     if os.path.isdir(path):
                         path = path + "html5-video-streamer.js"
-                        webcast = [name, path, input_file]
+                        webcast = [name, path, _mkcc.input_file]
                         break
 
-        if input_file == None:
+        if _mkcc.input_file == None:
             print(colors.warning("Please specify an input file with -i"))
             print(colors.warning("Closing the application..."))
             terminate()
