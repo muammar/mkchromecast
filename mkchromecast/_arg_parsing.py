@@ -10,6 +10,20 @@ import os
 
 from mkchromecast.resolution import resolutions
 
+
+def invalid_arg(error_msg: str):
+    """Returns a lambda that will raise an ArgumentTypeError when called.
+
+    Args:
+        error_msg: The error message that will be used to construct the
+            ArgumentTypeError.
+    """
+
+    def raise_arg_type_error():
+        raise argparse.ArgumentTypeError(error_msg)
+    return raise_arg_type_error
+
+
 Parser = argparse.ArgumentParser(
     description="""
     This is a program to cast your macOS audio, or Linux audio to your Google
@@ -143,14 +157,6 @@ Parser.add_argument(
 
     Note that for the output you have to use pipe:1 to stream. This option only
     works for the ffmpeg, avconv backends.
-    """,
-)
-
-Parser.add_argument(
-    "--config",
-    action="store_true",
-    help="""
-    Use this option to connect from configuration file.
     """,
 )
 
@@ -325,14 +331,6 @@ Parser.add_argument(
 
 
 Parser.add_argument(
-    "--reboot",
-    action="store_true",
-    help="""
-    Reboot the Google Cast device.
-    """,
-)
-
-Parser.add_argument(
     "--resolution",
     type=str,
     default=None,
@@ -501,18 +499,9 @@ Parser.add_argument(
 
 Parser.add_argument(
     "--update",
+    type=invalid_arg("Argument dropped."),
     action="store_true",
-    help="""
-    Update Mkchromecast git repository.
-
-    Example:
-        python mkchromecast.py --update
-
-    This will execute for you:
-
-        git pull --all
-        git fetch -p
-    """,
+    help="Do not use.  Argument dropped.",
 )
 
 Parser.add_argument(
@@ -555,12 +544,8 @@ Parser.add_argument(
 )
 Parser.add_argument(
     "--volume",
-    action="store_true",
-    default=False,
-    help="""
-    This option has been changed to --control. It will be deleted in following
-    releases.
-    """,
+    type=invalid_arg("Renamed to --control"),
+    help="Do not use.  Renamed to --control.",
 )
 
 Parser.add_argument(

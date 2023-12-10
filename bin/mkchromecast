@@ -14,12 +14,28 @@ from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
                                         outputint)
 from mkchromecast.cast import Casting
 import mkchromecast.colors as colors
-from mkchromecast.pulseaudio import create_sink, remove_sink
+from mkchromecast.pulseaudio import create_sink, get_sink_list, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
 from mkchromecast.messages import print_available_devices
 import subprocess
 import atexit
 import signal
+
+def maybe_execute_single_action():
+    """Potentially executes a one-off action, followed by exiting."""
+
+    if mkchromecast.__init__.reset:
+        # TODO(xsdg): unify the various entry and cleanup codepaths.
+        if platform == "Darwin":
+            inputint()
+            outputint()
+        else:
+            get_sink_list()
+            remove_sink()
+        terminate()
+    elif mkchromecast.__init__.version:
+        print("mkchromecast " + "v" + colors.success(__version__))
+    sys.exit(0)
 
 
 class mk(object):
