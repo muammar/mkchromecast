@@ -7,47 +7,35 @@ To call them:
     name()
 """
 
-import mkchromecast.__init__
+import configparser as ConfigParser
+import multiprocessing
+import os
+import pickle
+import psutil
+import time
+import sys
+import signal
+import subprocess
+
+import mkchromecast
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
-import subprocess
-import multiprocessing
-import time
-import sys
-import signal
-import psutil
-import pickle
-import os
-from os import getpid
-import os.path
-
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    # This is for Python3
-    import configparser as ConfigParser
 
 
-def streaming():
+def streaming(mkcc: mkchromecast.Mkchromecast):
     """
     Configuration files
     """
-    platform = mkchromecast.__init__.platform
-    tray = mkchromecast.__init__.tray
-    debug = mkchromecast.__init__.debug
     config = ConfigParser.RawConfigParser()
     # Class from mkchromecast.config
     configurations = config_manager()
     configf = configurations.configf
 
-    if os.path.exists(configf) and tray is True:
+    if os.path.exists(configf) and mkcc.tray is True:
         configurations.chk_config()
         print(colors.warning("Configuration file exists"))
         print(colors.warning("Using defaults set there"))
@@ -58,27 +46,22 @@ def streaming():
         samplerate = ConfigSectionMap("settings")["samplerate"]
         notifications = ConfigSectionMap("settings")["notifications"]
     else:
-        backend = mkchromecast.__init__.backend
-        rcodec = mkchromecast.__init__.rcodec
-        codec = mkchromecast.__init__.codec
-        bitrate = str(mkchromecast.__init__.bitrate)
-        samplerate = str(mkchromecast.__init__.samplerate)
-        notifications = mkchromecast.__init__.notifications
+        backend = mkcc.backend
+        rcodec = mkcc.rcodec
+        codec = mkcc.codec
+        bitrate = str(mkcc.bitrate)
+        samplerate = str(mkcc.samplerate)
+        notifications = mkcc.notifications
 
     print(colors.options("Selected backend:") + " " + backend)
 
-    if debug is True:
+    if mkcc.debug is True:
         print(
             ":::node::: variables %s, %s, %s, %s, %s"
             % (backend, rcodec, bitrate, samplerate, notifications)
         )
 
-    try:
-        youtube_url = mkchromecast.__init__.youtube_url
-    except AttributeError:
-        youtube_url = None
-
-    if youtube_url is None:
+    if mkcc.youtube_url is None:
         if backend == "node" and rcodec != "mp3":
             print(
                 colors.warning(
@@ -207,14 +190,14 @@ def streaming():
     if webcast is not None:
         p = subprocess.Popen(webcast)
 
-        if debug is True:
+        if mkcc.debug is True:
             print(":::node::: node command: %s." % webcast)
 
         f = open("/tmp/mkchromecast.pid", "rb")
         pidnumber = int(pickle.load(f))
         print(colors.options("PID of main process:") + " " + str(pidnumber))
 
-        localpid = getpid()
+        localpid = os.getpid()
         print(colors.options("PID of streaming process: ") + str(localpid))
 
         while p.poll() is None:
@@ -241,18 +224,18 @@ def streaming():
                 sys.exit(0)
         else:
             print(colors.warning("Reconnecting node streaming..."))
-            if platform == "Darwin" and notifications == "enabled":
+            if mkcc.platform == "Darwin" and notifications == "enabled":
                 if os.path.exists("images/google.icns") is True:
                     noticon = "images/google.icns"
                 else:
                     noticon = "google.icns"
-            if debug is True:
+            if mkcc.debug is True:
                 print(
                     ":::node::: platform, tray, notifications: %s, %s, %s."
-                    % (platform, tray, notifications)
+                    % (mkcc.platform, mkcc.tray, notifications)
                 )
 
-            if platform == "Darwin" and tray is True and notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.tray is True and notifications == "enabled":
                 reconnecting = [
                     "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
                     "-group",
@@ -268,7 +251,7 @@ def streaming():
                 ]
                 subprocess.Popen(reconnecting)
 
-                if debug is True:
+                if mkcc.debug is True:
                     print(
                         ":::node::: reconnecting notifier command: %s." % reconnecting
                     )
@@ -278,7 +261,8 @@ def streaming():
 
 class multi_proc(object):
     def __init__(self):
-        self.proc = multiprocessing.Process(target=streaming)
+        self._mkcc = mkchromecast.Mkchromecast()
+        self.proc = multiprocessing.Process(target=streaming, args=(self._mkcc,))
         self.proc.daemon = False
 
     def start(self):
@@ -286,7 +270,7 @@ class multi_proc(object):
 
 
 def kill():
-    pid = getpid()
+    pid = os.getpid()
     os.kill(pid, signal.SIGTERM)
     return
 
@@ -299,7 +283,8 @@ def relaunch(func1, func2, func3):
 
 
 def recasting():
-    start = Casting()
+    mkcc = mkchromecast.Mkchromecast()
+    start = Casting(mkcc)
     start.initialize_cast()
     start.get_devices()
     start.play_cast()
