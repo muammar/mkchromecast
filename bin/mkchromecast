@@ -53,7 +53,7 @@ class CastProcess(object):
         self.backends: List[str]
 
     def run(self):
-        self.cc = Casting()
+        self.cc = Casting(self.mkcc)
         checkmktmp()
         writePidFile()
 

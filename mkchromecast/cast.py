@@ -374,7 +374,7 @@ class Casting(object):
                 print(" ")
                 print(colors.options("The media type string used is:") + " " + mtype)
                 media_controller.play_media(
-                    "http://" + localip + ":" + self.mkcc.port + "/stream",
+                    f"http://{localip}:{self.mkcc.port}/stream",
                     mtype,
                     title=self.title,
                     stream_type="LIVE",
