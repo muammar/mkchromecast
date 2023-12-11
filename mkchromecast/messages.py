@@ -1,106 +1,43 @@
 # This file is part of mkchromecast.
 
-import mkchromecast
-import mkchromecast.colors as colors
+from typing import Any, Iterable, List
 
-# TODO(xsdg): Encapsulate this so that we don't do this work on import.
-_mkcc = mkchromecast.Mkchromecast()
-
-
-def bitrate_default(bitrate):
-    """Bitrate messages
-    Printing default bitrate message
-    """
-    if _mkcc.source_url is None:
-        print(colors.options("Default bitrate used:") + " " + bitrate)
-    return
+from mkchromecast import colors
+from mkchromecast import constants
 
 
-def no_bitrate(codec):
-    if _mkcc.source_url is None:
-        print(
-            colors.warning(
-                "The " + codec + " codec does not require the bitrate argument."
+def print_bitrate_warning(codec: str, bitrate: str) -> None:
+    print(colors.warning(
+        f"Maximum bitrate supported by {codec} is: {bitrate}k."
+        )
+    )
+
+    if codec == "aac":
+        print(colors.warning(
+            "128-256k is already considered sufficient for maximum quality "
+            f"using {codec}."
             )
         )
-    return
-
-
-def maxbitrate(codec, bitrate):
-    if _mkcc.source_url is None:
-        print(
-            colors.warning(
-                "Maximum bitrate supported by " + codec + " is: " + bitrate + "k."
+        print(colors.warning(
+            "Consider a lossless audio codec for higher quality."
             )
         )
-    if codec == "aac" and _mkcc.source_url is None:
-        print(
-            colors.warning(
-                "At about 128-256k is already considered as "
-                '"transparent" for ' + codec + "."
-            )
+
+
+def print_samplerate_warning(codec: str) -> None:
+    """Prints a warning when sample rates are set incorrectly."""
+    str_rates = [
+        f"{rate}Hz" for rate in constants.sample_rates_for_codec(codec)
+    ]
+    joined_rates = ", ".join(str_rates)
+    print(colors.warning(
+        f"Sample rates supported by {codec} are: {joined_rates}."
         )
-        print(colors.warning("You may try lossless audio coding formats."))
-        print(colors.warning("Bitrate has been set to maximum!"))
-    return
+    )
 
 
-def samplerate_default(samplerate):
-    """Sample rate messages
-    Printing default sample rate message"""
-    if _mkcc.source_url is None:
-        print(colors.options("Default sample rate used:") + " " + samplerate + "Hz.")
-    return
-
-
-def samplerate_info(codec):
-    """This prints warning when sample rates are set incorrectly"""
-    if _mkcc.source_url is None:
-        print(
-            colors.warning(
-                "Sample rates supported by "
-                + codec
-                + " are: "
-                + str(22050)
-                + "Hz, "
-                + str(32000)
-                + "Hz, "
-                + str(44100)
-                + "Hz, "
-                + str(48000)
-                + "Hz  "
-                + str(96000)
-                + "Hz or "
-                + str(192000)
-                + "Hz."
-            )
-        )
-    return
-
-
-def samplerate_no96(codec):
-    """This prints warning when sample rates are set incorrectly and no 96k"""
-    if _mkcc.source_url is None:
-        print(
-            colors.warning(
-                "Sample rates supported by "
-                + codec
-                + " are: "
-                + str(22050)
-                + "Hz, "
-                + str(32000)
-                + "Hz, "
-                + str(44100)
-                + "Hz or, "
-                + str(48000)
-                + "Hz."
-            )
-        )
-    return
-
-
-def print_available_devices(list_of_devices):
-    """docstring for print_available_devices"""
+def print_available_devices(list_of_devices: Iterable[Any]):
+    """Prints a list of available devices."""
     print(colors.important("List of Devices Available in Network:"))
     print(colors.important("-------------------------------------\n"))
     print(colors.important("Index   Types   Friendly Name "))

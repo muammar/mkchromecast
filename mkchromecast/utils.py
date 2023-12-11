@@ -1,18 +1,18 @@
 # This file is part of mkchromecast.
 
-import psutil
-import pickle
-from os import getpid
-import os.path
-import mkchromecast.colors as colors
-import subprocess
-import socket
 import json
+import os
+import pickle
+import psutil
+import socket
+import subprocess
+from typing import List, Optional
+from urllib.parse import urlparse
 
-try:
-    from urlparse import urlparse
-except:
-    from urllib.parse import urlparse
+from mkchromecast import colors
+from mkchromecast import constants
+from mkchromecast import messages
+
 
 """
 To call them:
@@ -21,9 +21,83 @@ To call them:
 """
 
 
+def quantize_sample_rate(has_source_url: bool,
+                         codec: str,
+                         sample_rate: int,
+                         limit_to_48k: bool = False) -> int:
+    """Takes an arbitrary sample rate and aligns it to a standard value.
+
+    It does this by rounding up to the next standard value, while staying below
+    a reasonable maximum for the specified codec.
+
+    Args:
+        has_source_url: Whether mkcc.source_url is None.  Only used to avoid
+            printing a warning.
+        codec: The name of the codec in use.
+        sample_rate: The original sample rate.
+
+    Returns:
+        An integer sample rate that has been aligned to the closest standard
+        value.
+    """
+    # The behavior as implemented here differs from the legacy behavior.
+    # The audio.py legacy behavior excluding no96k codecs was as follows:
+    #  22000 < x <= 27050  --> 22050
+    #  27050 < x <= 36000  --> 32000
+    #  36000 < x <= 43000  --> 44100   Sample rates < 44100 would jump to 48000.
+    #  43000 < x <= 72000  --> 48000
+    #  72000 < x <= 90000  --> 88200
+    #  90000 < x <= 96000  --> 96000
+    #  96000 < x <= 176000 --> 176000
+    # 176000 < x           --> 192000
+    #
+    # For no96k codecs (ogg and mp3), it was as follows:
+    #  22000 < x <= 27050  --> 22050
+    #  27050 < x <= 36000  --> 32000
+    #  36000 < x <= 43000  --> 44100
+    #  43000 < x <= 72000  --> 48000
+    #  72000 < x <= 90000  --> 88200   Illegal sample rate for ogg or mp3.
+    #  90000 < x <= 96000  --> 48000
+    #  96000 < x <= 176000 --> 48000
+    # 176000 < x           --> 48000
+    #
+    # The node.py legacy behavior was as follows:
+    #  22000 < x <= 27050  --> 22050
+    #  27050 < x <= 36000  --> 32000
+    #  36000 < x <= 43000  --> 44100
+    #  43000 < x <= 72000  --> 48000
+    #  72000 < x           --> 48000 for no96k, x (unbounded) otherwise.
+
+    # Target rates must be sorted in increasing order.
+    target_rates: List[int]
+    if limit_to_48k:
+        target_rates = constants.MAX_48K_SAMPLE_RATES
+    else:
+        target_rates = constants.sample_rates_for_codec(codec)
+
+    if sample_rate in target_rates:
+        return sample_rate
+
+    for target_rate in target_rates:
+        if sample_rate < target_rate:
+            # Because we're traversing in increasing order, the first time we
+            # find a target_rate that's greater than the sample rate, we know
+            # that's the next-largest value, so we can return that immediately.
+            if not has_source_url:
+                messages.print_samplerate_warning(codec)
+            return target_rate
+
+    # If we make it to this point, sample_rate is above the max target_rate, so
+    # we just clamp to the max target_rate.
+    if not has_source_url:
+        messages.print_samplerate_warning(codec)
+        print(colors.warning("Sample rate set to maximum!"))
+    return target_rates[-1]
+
+
 def terminate():
     del_tmp()
-    parent_pid = getpid()
+    parent_pid = os.getpid()
     parent = psutil.Process(parent_pid)
     for child in parent.children(recursive=True):
         child.kill()

@@ -19,10 +19,11 @@ import subprocess
 
 import mkchromecast
 from mkchromecast.audio_devices import inputint, outputint
-import mkchromecast.colors as colors
+from mkchromecast import colors
+from mkchromecast import constants
+from mkchromecast import utils
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
-import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
 
@@ -85,79 +86,12 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
             else:
                 print(colors.options("Selected bitrate: ") + bitrate + "k.")
 
-            if samplerate == "44100":
-                print(
-                    colors.options("Default sample rate used:")
-                    + " "
-                    + samplerate
-                    + "Hz."
+            if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
+                samplerate = str(utils.quantize_sample_rate(
+                    bool(mkcc.source_url), codec, samplerate)
                 )
-            else:
-                codecs_sr = ["mp3", "ogg", "aac", "wav", "flac"]
 
-                """
-                The codecs below do not support 96000Hz
-                """
-                no96k = ["mp3", "ogg"]
-
-                if (
-                    codec in codecs_sr
-                    and int(samplerate) > 22000
-                    and int(samplerate) <= 27050
-                ):
-                    samplerate = "22050"
-                    msg.samplerate_no96(codec)
-
-                if (
-                    codec in codecs_sr
-                    and int(samplerate) > 27050
-                    and int(samplerate) <= 32000
-                ):
-                    samplerate = "32000"
-                    msg.samplerate_no96(codec)
-
-                elif (
-                    codec in codecs_sr
-                    and int(samplerate) > 32000
-                    and int(samplerate) <= 36000
-                ):
-                    samplerate = "32000"
-                    msg.samplerate_no96(codec)
-
-                elif (
-                    codec in codecs_sr
-                    and int(samplerate) > 36000
-                    and int(samplerate) <= 43000
-                ):
-                    samplerate = "44100"
-                    msg.samplerate_no96(codec)
-                    print(
-                        colors.warning(
-                            "Sample rate has been set to \
-                        default!"
-                        )
-                    )
-
-                elif (
-                    codec in codecs_sr
-                    and int(samplerate) > 43000
-                    and int(samplerate) <= 72000
-                ):
-                    samplerate = "48000"
-                    msg.samplerate_no96(codec)
-
-                elif codec in codecs_sr and int(samplerate) > 72000:
-                    if codec in no96k:
-                        msg.samplerate_no96(codec)
-                        samplerate = "48000"
-                    print(
-                        colors.warning(
-                            "Sample rate has been set to \
-                        maximum!"
-                        )
-                    )
-
-                print(colors.options("Sample rate set to:") + " " + samplerate + "Hz.")
+            print(colors.options("Using sample rate:") + f" {samplerate}Hz.")
 
     """
     Node section
