@@ -17,10 +17,11 @@ import threading
 import time
 
 import mkchromecast
+from mkchromecast import colors
+from mkchromecast import constants
 from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.config import config_manager
-import mkchromecast.colors as colors
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
@@ -167,97 +168,13 @@ else:
             if source_url is None:
                 print(colors.options("Selected bitrate:") + " " + bitrate)
 
-        if samplerate == "44100":
-            msg.samplerate_default(_mkcc, samplerate)
-        else:
-            codecs_sr = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
+        if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
+            samplerate = str(utils.quantize_sample_rate(
+                bool(_mkcc.source_url), codec, samplerate)
+            )
 
-            """
-            The codecs below do not support > 96000Hz
-            """
-            no96k = ["mp3", "ogg"]
-
-            if (
-                codec in codecs_sr
-                and int(samplerate) > 22000
-                and int(samplerate) <= 27050
-            ):
-                samplerate = "22050"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 27050
-                and int(samplerate) <= 32000
-            ):
-                samplerate = "32000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 32000
-                and int(samplerate) <= 36000
-            ):
-                samplerate = "32000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 36000
-                and int(samplerate) <= 43000
-            ):
-                samplerate = "44100"
-                msg.print_samplerate_warning(_mkcc, codec)
-                if source_url is None:
-                    print(colors.warning("Sample rate set to default!"))
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 43000
-                and int(samplerate) <= 72000
-            ):
-                samplerate = "48000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 72000
-                and int(samplerate) <= 90000
-            ):
-                samplerate = "88200"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 90000
-                and int(samplerate) <= 96000
-            ):
-                samplerate = "48000" if codec in no96k else "96000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-                if source_url is None:
-                    print(colors.warning("Sample rate set to maximum!"))
-
-            elif (
-                codec in codecs_sr
-                and int(samplerate) > 96000
-                and int(samplerate) <= 176000
-            ):
-                samplerate = "48000" if codec in no96k else "176000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-                if source_url is None:
-                    print(colors.warning("Sample rate set to maximum!"))
-
-            elif codec in codecs_sr and int(samplerate) > 176000:
-                samplerate = "48000" if codec in no96k else "192000"
-                msg.print_samplerate_warning(_mkcc, codec)
-
-                if source_url is None:
-                    print(colors.warning("Sample rate set to maximum!"))
-
-            if source_url is None:
-                print(colors.options("Sample rate set to:") + " " + samplerate + "Hz")
+        if source_url is None:
+            print(colors.options("Using sample rate:") + f" {samplerate}Hz")
 
     """
     We verify platform and other options
