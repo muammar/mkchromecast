@@ -15,6 +15,7 @@ from subprocess import Popen, PIPE
 import sys
 import threading
 import time
+from typing import Optional
 
 import mkchromecast
 from mkchromecast import colors
@@ -78,6 +79,12 @@ if _mkcc.youtube_url is not None:
     command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
     mtype = "audio/mp4"
 else:
+    # Because these are defined in parallel conditional bodies, we declare
+    # the types here to avoid ambiguity for the type analyzers.
+    backend: Optional[str]
+    bitrate: str
+    codec: str
+    samplerate: str
     if os.path.exists(configf) and tray is True:
         configurations.chk_config()
         config.read(configf)
@@ -172,7 +179,7 @@ else:
 
         if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
             samplerate = str(utils.quantize_sample_rate(
-                bool(_mkcc.source_url), codec, samplerate)
+                bool(_mkcc.source_url), codec, int(samplerate))
             )
 
         if source_url is None:
