@@ -145,9 +145,8 @@ else:
     if backend != "node":
         if bitrate == "192":
             bitrate = bitrate + "k"
-            msg.bitrate_default(_mkcc, bitrate)
         elif bitrate == "None":
-            msg.no_bitrate(_mkcc, codec)
+            pass
         else:
             # TODO(xsdg): The logic here is unclear or incorrect.  It appears
             # that we add "k" to the bitrate unless the bitrate was above the
@@ -155,18 +154,21 @@ else:
             # the trailing "k".
             if codec == "mp3" and int(bitrate) > 320:
                 bitrate = "320"
-                msg.maxbitrate(_mkcc, codec, bitrate)
+                if not source_url:
+                    msg.print_bitrate_warning(codec, bitrate)
             elif codec == "ogg" and int(bitrate) > 500:
                 bitrate = "500"
-                msg.maxbitrate(_mkcc, codec, bitrate)
+                if not source_url:
+                    msg.print_bitrate_warning(codec, bitrate)
             elif codec == "aac" and int(bitrate) > 500:
                 bitrate = "500"
-                msg.maxbitrate(_mkcc, codec, bitrate)
+                if not source_url:
+                    msg.print_bitrate_warning(codec, bitrate)
             else:
                 bitrate = bitrate + "k"
 
-            if source_url is None:
-                print(colors.options("Selected bitrate:") + " " + bitrate)
+        if bitrate != "None" and not source_url:
+            print(colors.options("Using bitrate:") + f" {bitrate}")
 
         if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
             samplerate = str(utils.quantize_sample_rate(

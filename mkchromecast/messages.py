@@ -5,38 +5,23 @@ from typing import Any, Iterable, List
 from mkchromecast import colors
 from mkchromecast import constants
 
-def bitrate_default(mkcc: "mkchromecast.Mkchromecast", bitrate: str) -> None:
-    """Prints a default bitrate message."""
-    if not mkcc.source_url:
-        print(colors.options("Default bitrate used:") + f" {bitrate}")
 
+def print_bitrate_warning(codec: str, bitrate: str) -> None:
+    print(colors.warning(
+        f"Maximum bitrate supported by {codec} is: {bitrate}k."
+        )
+    )
 
-def no_bitrate(mkcc: "mkchromecast.Mkchromecast", codec: str) -> None:
-    """Prints a message that a bitrate is not needed."""
-    if not mkcc.source_url:
+    if codec == "aac":
         print(colors.warning(
-            f"The {codec} codec does not require the bitrate argument."
+            "128-256k is already considered sufficient for maximum quality "
+            f"using {codec}."
             )
         )
-
-
-def maxbitrate(mkcc: "mkchromecast.Mkchromecast", codec: str, bitrate: str) -> None:
-    if not mkcc.source_url:
         print(colors.warning(
-            f"Maximum bitrate supported by {codec} is: {bitrate}k."
+            "Consider a lossless audio codec for higher quality."
             )
         )
-
-        if codec == "aac":
-            print(colors.warning(
-                "128-256k is already considered sufficient for maximum quality "
-                f"using {codec}."
-                )
-            )
-            print(colors.warning(
-                "Consider a lossless audio codec for higher quality."
-                )
-            )
 
 
 def print_samplerate_warning(codec: str) -> None:
