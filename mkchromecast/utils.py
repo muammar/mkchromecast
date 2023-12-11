@@ -6,7 +6,7 @@ import pickle
 import psutil
 import socket
 import subprocess
-from typing import Optional
+from typing import List, Optional
 from urllib.parse import urlparse
 
 from mkchromecast import colors
@@ -73,7 +73,7 @@ def quantize_sample_rate(has_source_url: bool,
     if limit_to_48k:
         target_rates = constants.MAX_48K_SAMPLE_RATES
     else:
-        target_rates = constancts.sample_rates_for_codec(codec)
+        target_rates = constants.sample_rates_for_codec(codec)
 
     if sample_rate in target_rates:
         return sample_rate
@@ -85,7 +85,7 @@ def quantize_sample_rate(has_source_url: bool,
             # that's the next-largest value, so we can return that immediately.
             if not has_source_url:
                 messages.print_samplerate_warning(codec)
-            return threshold
+            return target_rate
 
     # If we make it to this point, sample_rate is above the max target_rate, so
     # we just clamp to the max target_rate.
