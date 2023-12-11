@@ -144,19 +144,23 @@ else:
     if backend != "node":
         if bitrate == "192":
             bitrate = bitrate + "k"
-            msg.bitrate_default(bitrate)
+            msg.bitrate_default(_mkcc, bitrate)
         elif bitrate == "None":
-            msg.no_bitrate(codec)
+            msg.no_bitrate(_mkcc, codec)
         else:
+            # TODO(xsdg): The logic here is unclear or incorrect.  It appears
+            # that we add "k" to the bitrate unless the bitrate was above the
+            # maximum, in which case we set the bitrate to the max and don't add
+            # the trailing "k".
             if codec == "mp3" and int(bitrate) > 320:
                 bitrate = "320"
-                msg.maxbitrate(codec, bitrate)
+                msg.maxbitrate(_mkcc, codec, bitrate)
             elif codec == "ogg" and int(bitrate) > 500:
                 bitrate = "500"
-                msg.maxbitrate(codec, bitrate)
+                msg.maxbitrate(_mkcc, codec, bitrate)
             elif codec == "aac" and int(bitrate) > 500:
                 bitrate = "500"
-                msg.maxbitrate(codec, bitrate)
+                msg.maxbitrate(_mkcc, codec, bitrate)
             else:
                 bitrate = bitrate + "k"
 
@@ -164,7 +168,7 @@ else:
                 print(colors.options("Selected bitrate:") + " " + bitrate)
 
         if samplerate == "44100":
-            msg.samplerate_default(samplerate)
+            msg.samplerate_default(_mkcc, samplerate)
         else:
             codecs_sr = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
 
@@ -179,10 +183,7 @@ else:
                 and int(samplerate) <= 27050
             ):
                 samplerate = "22050"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
 
             elif (
                 codec in codecs_sr
@@ -190,10 +191,7 @@ else:
                 and int(samplerate) <= 32000
             ):
                 samplerate = "32000"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
 
             elif (
                 codec in codecs_sr
@@ -201,10 +199,7 @@ else:
                 and int(samplerate) <= 36000
             ):
                 samplerate = "32000"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
 
             elif (
                 codec in codecs_sr
@@ -212,10 +207,7 @@ else:
                 and int(samplerate) <= 43000
             ):
                 samplerate = "44100"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
                 if source_url is None:
                     print(colors.warning("Sample rate set to default!"))
 
@@ -225,10 +217,7 @@ else:
                 and int(samplerate) <= 72000
             ):
                 samplerate = "48000"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
 
             elif (
                 codec in codecs_sr
@@ -236,22 +225,15 @@ else:
                 and int(samplerate) <= 90000
             ):
                 samplerate = "88200"
-                if codec in no96k:
-                    msg.samplerate_no96(codec)
-                else:
-                    msg.samplerate_info(codec)
+                msg.print_samplerate_warning(_mkcc, codec)
 
             elif (
                 codec in codecs_sr
                 and int(samplerate) > 90000
                 and int(samplerate) <= 96000
             ):
-                if codec in no96k:
-                    samplerate = "48000"
-                    msg.samplerate_no96(codec)
-                else:
-                    samplerate = "96000"
-                    msg.samplerate_info(codec)
+                samplerate = "48000" if codec in no96k else "96000"
+                msg.print_samplerate_warning(_mkcc, codec)
 
                 if source_url is None:
                     print(colors.warning("Sample rate set to maximum!"))
@@ -261,23 +243,15 @@ else:
                 and int(samplerate) > 96000
                 and int(samplerate) <= 176000
             ):
-                if codec in no96k:
-                    samplerate = "48000"
-                    msg.samplerate_no96(codec)
-                else:
-                    samplerate = "176000"
-                    msg.samplerate_info(codec)
+                samplerate = "48000" if codec in no96k else "176000"
+                msg.print_samplerate_warning(_mkcc, codec)
 
                 if source_url is None:
                     print(colors.warning("Sample rate set to maximum!"))
 
             elif codec in codecs_sr and int(samplerate) > 176000:
-                if codec in no96k:
-                    samplerate = "48000"
-                    msg.samplerate_no96(codec)
-                else:
-                    samplerate = "192000"
-                    msg.samplerate_info(codec)
+                samplerate = "48000" if codec in no96k else "192000"
+                msg.print_samplerate_warning(_mkcc, codec)
 
                 if source_url is None:
                     print(colors.warning("Sample rate set to maximum!"))

@@ -93,6 +93,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     + "Hz."
                 )
             else:
+                # TODO(xsdg): This should really be elif codec in codecs_sr.
                 codecs_sr = ["mp3", "ogg", "aac", "wav", "flac"]
 
                 """
@@ -100,13 +101,16 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                 """
                 no96k = ["mp3", "ogg"]
 
+                # TODO(xsdg): factor this out into a quantize_sample_rates
+                # function that takes a codec and a sample rate.  Also, use
+                # same from audio.py
                 if (
                     codec in codecs_sr
                     and int(samplerate) > 22000
                     and int(samplerate) <= 27050
                 ):
                     samplerate = "22050"
-                    msg.samplerate_no96(codec)
+                    msg.print_samplerate_warning(mkcc, codec)
 
                 if (
                     codec in codecs_sr
@@ -114,7 +118,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     and int(samplerate) <= 32000
                 ):
                     samplerate = "32000"
-                    msg.samplerate_no96(codec)
+                    msg.print_samplerate_warning(mkcc, codec)
 
                 elif (
                     codec in codecs_sr
@@ -122,7 +126,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     and int(samplerate) <= 36000
                 ):
                     samplerate = "32000"
-                    msg.samplerate_no96(codec)
+                    msg.print_samplerate_warning(mkcc, codec)
 
                 elif (
                     codec in codecs_sr
@@ -130,11 +134,10 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     and int(samplerate) <= 43000
                 ):
                     samplerate = "44100"
-                    msg.samplerate_no96(codec)
+                    msg.print_samplerate_warning(mkcc, codec)
                     print(
                         colors.warning(
-                            "Sample rate has been set to \
-                        default!"
+                            "Sample rate has been set to default!"
                         )
                     )
 
@@ -144,16 +147,17 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     and int(samplerate) <= 72000
                 ):
                     samplerate = "48000"
-                    msg.samplerate_no96(codec)
+                    msg.print_samplerate_warning(mkcc, codec)
 
                 elif codec in codecs_sr and int(samplerate) > 72000:
+                    # TODO(xsdg): This seems like it was supposed to alter the
+                    # sample rate somehow, but it doesn't.
                     if codec in no96k:
-                        msg.samplerate_no96(codec)
                         samplerate = "48000"
+                        msg.print_samplerate_warning(mkcc, codec)
                     print(
                         colors.warning(
-                            "Sample rate has been set to \
-                        maximum!"
+                            "Sample rate has been set to maximum!"
                         )
                     )
 
