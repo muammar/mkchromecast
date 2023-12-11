@@ -1,8 +1,17 @@
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
 
-from __future__ import division
-import mkchromecast.__init__
+import configparser as ConfigParser
+import os
+import pickle
+import psutil
+import signal
+import socket
+import subprocess
+import sys
+from urllib.request import urlopen
+
+import mkchromecast
 from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
@@ -11,18 +20,11 @@ import mkchromecast.preferences
 import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.utils import del_tmp, checkmktmp
+from mkchromecast.version import __version__
 import mkchromecast.tray_threading
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, Qt
 from PyQt5.QtWidgets import QWidget, QMessageBox
-import socket
-import signal
-import os.path
-import psutil
-import pickle
-import subprocess
-from os import getpid
-import sys
 
 """
 We verify that pychromecast is installed
@@ -34,29 +36,14 @@ try:
 except ImportError:
     chromecast = False
 
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser
 
-"""
-urllib is imported differently in Python3
-"""
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib2 import urlopen
-
-platform = mkchromecast.__init__.platform
-debug = mkchromecast.__init__.debug
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
 
 
 class menubar(QtWidgets.QMainWindow):
     def __init__(self):
-        self.cc = Casting()
+        self.cc = Casting(_mkcc)
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
@@ -124,14 +111,14 @@ class menubar(QtWidgets.QMainWindow):
         else:
             self.scale_factor = 1
 
-        if debug is True:
+        if _mkcc.debug is True:
             print(":::systray::: Screen resolution: ", self.width, self.height)
         # This avoid the QMessageBox to close parent processes.
         self.app.setQuitOnLastWindowClosed(False)
 
         if hasattr(QtCore.Qt, "AA_UseHighDpiPixmaps"):
             self.app.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps)
-            if debug is True:
+            if _mkcc.debug is True:
                 print(":::systray::: High-DPI screen detected...")
 
         self.w = QWidget()
@@ -139,13 +126,13 @@ class menubar(QtWidgets.QMainWindow):
         # This is useful when launching from git repo
         if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
             self.icon = QtGui.QIcon()
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 self.icon.addFile("images/" + self.google[self.colors] + ".icns")
             else:
                 self.icon.addFile("images/" + self.google[self.colors] + ".png")
         else:
             self.icon = QtGui.QIcon()
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.icon.addFile(
                     "/usr/share/mkchromecast/images/"
                     + self.google[self.colors]
@@ -201,7 +188,7 @@ class menubar(QtWidgets.QMainWindow):
             self.notifications = "disabled"
             self.searchatlaunch = "disabled"
             self.colors = "black"
-            if debug is True:
+            if _mkcc.debug is True:
                 print(":::systray::: self.notifications " + self.notifications)
                 print(":::systray::: self.searchatlaunch " + self.searchatlaunch)
                 print(":::systray::: self.colors " + self.colors)
@@ -266,7 +253,7 @@ class menubar(QtWidgets.QMainWindow):
             os.path.exists("images/" + self.google_working[self.colors] + ".icns")
             is True
         ):
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 self.tray.setIcon(
                     QtGui.QIcon("images/" + self.google_working[self.colors] + ".icns")
                 )
@@ -275,7 +262,7 @@ class menubar(QtWidgets.QMainWindow):
                     QtGui.QIcon("images/" + self.google_working[self.colors] + ".png")
                 )
         else:
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.tray.setIcon(
                     QtGui.QIcon(
                         "/usr/share/mkchromecast/images/"
@@ -291,7 +278,7 @@ class menubar(QtWidgets.QMainWindow):
     def set_icon_idle(self):
         """docstring for icon_idle"""
         if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 self.tray.setIcon(
                     QtGui.QIcon("images/" + self.google[self.colors] + ".icns")
                 )
@@ -300,7 +287,7 @@ class menubar(QtWidgets.QMainWindow):
                     QtGui.QIcon("images/" + self.google[self.colors] + ".png")
                 )
         else:
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.tray.setIcon(
                     QtGui.QIcon(
                         "/usr/share/mkchromecast/images/"
@@ -314,7 +301,7 @@ class menubar(QtWidgets.QMainWindow):
     def set_icon_nodev(self):
         """docstring for set_ic"""
         if os.path.exists("images/" + self.google_nodev[self.colors] + ".icns") is True:
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 self.tray.setIcon(
                     QtGui.QIcon("images/" + self.google_nodev[self.colors] + ".icns")
                 )
@@ -323,7 +310,7 @@ class menubar(QtWidgets.QMainWindow):
                     QtGui.QIcon("images/" + self.google_nodev[self.colors] + ".png")
                 )
         else:
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.tray.setIcon(
                     QtGui.QIcon(
                         "/usr/share/mkchromecast/images/"
@@ -374,7 +361,7 @@ class menubar(QtWidgets.QMainWindow):
             self.exit_menu()
         else:
             self.read_config()
-            if platform == "Darwin" and self.notifications == "enabled":
+            if _mkcc.platform == "Darwin" and self.notifications == "enabled":
                 if (
                     os.path.exists("images/" + self.google[self.colors] + ".icns")
                     is True
@@ -395,9 +382,9 @@ class menubar(QtWidgets.QMainWindow):
                     "Media Streaming Devices Found!",
                 ]
                 subprocess.Popen(found)
-                if debug is True:
+                if _mkcc.debug is True:
                     print(":::systray:::", found)
-            elif platform == "Linux" and self.notifications == "enabled":
+            elif _mkcc.platform == "Linux" and self.notifications == "enabled":
                 try:
                     import gi
 
@@ -459,7 +446,7 @@ class menubar(QtWidgets.QMainWindow):
             except AttributeError:
                 self.cast.stop()
 
-        if debug is True:
+        if _mkcc.debug is True:
             print(":::tray::: clicked item: %s." % clicked_item)
         self.index = clicked_item[0]
         self.cast_to = clicked_item[1]
@@ -536,7 +523,7 @@ class menubar(QtWidgets.QMainWindow):
             self.stopped = True
             self.read_config()
 
-            if platform == "Darwin" and self.notifications == "enabled":
+            if _mkcc.platform == "Darwin" and self.notifications == "enabled":
                 if self.pcastfailed is True:
                     stop = [
                         "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
@@ -558,10 +545,10 @@ class menubar(QtWidgets.QMainWindow):
                         "Streaming Stopped!",
                     ]
                 subprocess.Popen(stop)
-                if debug is True:
+                if _mkcc.debug is True:
                     print(":::systray::: stop", stop)
 
-            elif platform == "Linux" and self.notifications == "enabled":
+            elif _mkcc.platform == "Linux" and self.notifications == "enabled":
                 try:
                     import gi
 
@@ -624,7 +611,7 @@ class menubar(QtWidgets.QMainWindow):
             if round(self.cast.status.volume_level, 1) == 1:
                 print(colors.warning(":::systray::: Maximum volume level reached!"))
 
-            if debug is True:
+            if _mkcc.debug is True:
                 print(":::systray::: Volume set to: " + str(volume))
         except AttributeError:
             pass
@@ -640,16 +627,16 @@ class menubar(QtWidgets.QMainWindow):
             if (self.cast.volume) == 100:
                 print(colors.warning(":::systray::: Maximum volume reached!"))
 
-            if debug is True:
+            if _mkcc.debug is True:
                 print(":::systray::: Volume set to: " + str(volume))
         except AttributeError:
             pass
 
-        if debug is True:
+        if _mkcc.debug is True:
             print(":::systray::: Volume changed: " + str(value))
 
     def reset_audio(self):
-        if platform == "Darwin":
+        if _mkcc.platform == "Darwin":
             inputint()
             outputint()
         else:
@@ -668,7 +655,7 @@ class menubar(QtWidgets.QMainWindow):
             )
             reboot = lambda x: None
 
-        if platform == "Darwin":
+        if _mkcc.platform == "Darwin":
             try:
                 self.cast.host_ = socket.gethostbyname(self.cast_to + ".local")
                 print("Cast device IP: " + str(self.cast.host_))
@@ -724,7 +711,7 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setText("<b>Your installation is up-to-date!</b>")
             updaterBox.setInformativeText(
                 "<b>Mkchromecast</b> v"
-                + mkchromecast.__init__.__version__
+                + __version__
                 + " is currently the newest version available."
             )
         elif message == "error1":
@@ -732,7 +719,7 @@ class menubar(QtWidgets.QMainWindow):
             updaterBox.setInformativeText("""Try again later.""")
         else:
             updaterBox.setText("New version of Mkchromecast available!")
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 download = (
                     '<a href="https://github.com/muammar/mkchromecast/releases/download/'
                     + message
@@ -740,11 +727,11 @@ class menubar(QtWidgets.QMainWindow):
                     + message
                     + '.dmg">'
                 )
-            elif platform == "Linux":
+            elif _mkcc.platform == "Linux":
                 download = (
                     '<a href="http://github.com/muammar/mkchromecast/releases/latest">'
                 )
-            if debug is True:
+            if _mkcc.debug is True:
                 print("Download URL:", download)
             updaterBox.setInformativeText(
                 "You can " + download + "download it by clicking here</a>."
@@ -760,13 +747,13 @@ class menubar(QtWidgets.QMainWindow):
         msgBox.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         # This is useful when launching from git repo
         if os.path.exists("images/google.icns") is True:
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 self.about_icon = "images/google.icns"
             else:
                 self.about_icon = "images/google.png"
         # This is useful for applications
         else:
-            if platform == "Linux":
+            if _mkcc.platform == "Linux":
                 self.about_icon = "/usr/share/mkchromecast/images/google.png"
             else:
                 self.about_icon = "google.icns"
@@ -776,7 +763,7 @@ class menubar(QtWidgets.QMainWindow):
             + self.about_icon
             + '" "height="98" width="128" align="middle"> <br> <br>'
             + " <b>Mkchromecast</b> v"
-            + mkchromecast.__init__.__version__
+            + __version__
         )
         msgBox.setText(msgsettext)
         msgBox.setInformativeText(
@@ -808,7 +795,7 @@ class menubar(QtWidgets.QMainWindow):
         msgBox.exec_()
 
     def kill_child(self):  # Not a beautiful name, I know...
-        self.parent_pid = getpid()
+        self.parent_pid = os.getpid()
         self.parent = psutil.Process(self.parent_pid)
         # or parent.children() for recursive=False
         for child in self.parent.children(recursive=True):
@@ -830,7 +817,7 @@ class menubar(QtWidgets.QMainWindow):
     """
 
     def search_notification(self):
-        if platform == "Darwin" and self.notifications == "enabled":
+        if _mkcc.platform == "Darwin" and self.notifications == "enabled":
             if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
                 noticon = "images/" + self.google[self.colors] + ".icns"
             else:
@@ -847,9 +834,9 @@ class menubar(QtWidgets.QMainWindow):
                 "Searching for Media Streaming Devices...",
             ]
             subprocess.Popen(searching)
-            if debug is True:
+            if _mkcc.debug is True:
                 print(":::systray:::", searching)
-        elif platform == "Linux" and self.notifications == "enabled":
+        elif _mkcc.platform == "Linux" and self.notifications == "enabled":
             try:
                 import gi
 

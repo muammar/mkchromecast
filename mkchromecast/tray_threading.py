@@ -1,6 +1,10 @@
 # This file is part of mkchromecast.
 
-import mkchromecast.__init__
+import configparser as ConfigParser
+import os
+import socket
+
+import mkchromecast
 from mkchromecast.audio_devices import inputdev, outputdev
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
@@ -9,22 +13,11 @@ from mkchromecast.node import stream
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-import os.path
-import socket
 import mkchromecast.colors as colors
 
-"""
-Configparser is imported differently in Python3
-"""
-try:
-    import ConfigParser
-except ImportError:
-    import configparser as ConfigParser
+# TODO(xsdg): Encapsulate this so that we don't do this work on import.
+_mkcc = mkchromecast.Mkchromecast()
 
-adevice = mkchromecast.__init__.adevice
-platform = mkchromecast.__init__.platform
-tray = mkchromecast.__init__.tray
-debug = mkchromecast.__init__.debug
 config = ConfigParser.RawConfigParser()
 # Class from mkchromecast.config
 configurations = config_manager()
@@ -43,11 +36,11 @@ class Worker(QObject):
         # This should fix the error socket.gaierror making the system tray to
         # be closed.
         try:
-            self.cc = Casting()
+            self.cc = Casting(_mkcc)
             self.cc.initialize_cast()
             self.cc.available_devices()
         except socket.gaierror:
-            if debug is True:
+            if _mkcc.debug is True:
                 print(colors.warning(":::Threading::: Socket error, CC set to 0"))
             pass
         except TypeError:
@@ -55,7 +48,7 @@ class Worker(QObject):
         except OSError:
             self.cc.available_devices = []
 
-        if len(self.cc.available_devices) == 0 and tray is True:
+        if len(self.cc.available_devices) == 0 and _mkcc.tray is True:
             available_devices = []
             self.intReady.emit(available_devices)
             self.finished.emit()
@@ -81,7 +74,7 @@ class Player(QObject):
             backend = ConfigSectionMap("settings")["backend"]
             print(":::Threading backend::: %s." % backend)
         else:
-            backend = mkchromecast.__init__.backend
+            backend = _mkcc.backend
         global cast
         if backend == "node":
             stream()
@@ -93,12 +86,12 @@ class Player(QObject):
 
                 reload(mkchromecast.audio)
             mkchromecast.audio.main()
-        if platform == "Linux":
+        if _mkcc.platform == "Linux":
             # We create the sink only if it is not available
-            if check_sink() is False and adevice is None:
+            if check_sink() is False and _mkcc.adevice is None:
                 create_sink()
 
-        start = Casting()
+        start = Casting(_mkcc)
         start.initialize_cast()
         try:
             start.get_devices()
@@ -108,7 +101,7 @@ class Player(QObject):
             # For Linux it does not matter given that user has to select sink
             # in pulse audio.  Therefore the sooner it is available, the
             # better.
-            if platform == "Darwin":
+            if _mkcc.platform == "Darwin":
                 inputdev()
                 outputdev()
             self.pcastready.emit("_play_cast_ success")
