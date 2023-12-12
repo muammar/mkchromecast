@@ -17,9 +17,9 @@ This is a program to cast your **macOS** audio, or **Linux** audio to your
 Google Cast devices or Sonos speakers. It can also [cast video files](#video).
 
 It is written for Python3, and it can stream via `node.js`, `parec` (**Linux**),
-`ffmpeg`, or `avconv`.  **Mkchromecast** is capable of using lossy and lossless
-audio formats provided that `ffmpeg`, `avconv` (**Linux**), or `parec`
-(**Linux**) are installed. It also supports [Multi-room group
+or `ffmpeg`.  **Mkchromecast** is capable of using lossy and lossless audio
+formats provided that `ffmpeg` or `parec` (**Linux**) are installed. It also
+supports [Multi-room group
 playback](https://support.google.com/chromecast/answer/6329016?hl=en), and
  [24-bit/96kHz high audio resolution](https://github.com/muammar/mkchromecast#high-quality-audio).
 Additionally, a system tray menu is available.
@@ -33,8 +33,7 @@ degrade the sound quality. For more information visit the
 [wiki](https://github.com/muammar/mkchromecast/wiki/), and the
 [FAQ](https://github.com/muammar/mkchromecast/wiki/FAQ).
 
-You can optionally install `ffmpeg` or `avconv` (the latter only supported in **Linux**,
-[more information
+You can optionally install `ffmpeg` [more information
 here](https://github.com/muammar/mkchromecast#using-the-ffmpeg-backend-with-mkchromecast-installed-from-sources)).
 **Linux** users also can configure [ALSA to capture
 audio](https://github.com/muammar/mkchromecast/wiki/ALSA).  Note that sometimes
@@ -128,7 +127,6 @@ following:
 * flac.
 * faac.
 * ffmpeg (optional).
-* avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (option if you plan to cast youtube URLs or [supported
   websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
@@ -152,7 +150,6 @@ requirements are:
 * flac.
 * faac.
 * ffmpeg.
-* avconv (optional).
 * PyQt5 (optional if you want to use the system tray menu).
 * youtube-dl (option if you plan to cast youtube URLs or [supported
   websites](https://rg3.github.io/youtube-dl/supportedsites.html)).
@@ -315,7 +312,7 @@ an issue in chromecast audio devices. See [this thread](https://goo.gl/yNVODZ).
 Therefore, if you want to go beyond `44100Hz` you have to [capture the sound at
 a higher sample rate](https://github.com/muammar/mkchromecast/wiki/Sample-rates).
 
-##### ffmpeg or avconv
+##### ffmpeg
 
 The easiest way of installing `ffmpeg` is using a package manager, *e.g.*: brew,
 macports or fink. Or in the case of **Linux**, *e.g.*: apt, yum, or pacman.
@@ -338,8 +335,6 @@ install `ffmpeg` with the following options enabled:
 brew install ffmpeg --with-fdk-aac --with-tools --with-freetype --with-libass --with-libvorbis --with-libvpx --with-x265 --with-opus
 ```
 
-**Mkchromecast** does not support `avconv` in **macOS**.
-
 ###### Linux
 
 As I use Debian, the way of installing `ffmpeg` is:
@@ -348,13 +343,7 @@ As I use Debian, the way of installing `ffmpeg` is:
 apt-get install ffmpeg
 ```
 
-or `avconv`
-
-```
-apt-get install libav-tools
-```
-
-**Audio coding formats available with `parec`, `ffmpeg` and `avconv` backends**
+**Audio coding formats available with `parec` and `ffmpeg` backends**
 
 **Audio coding format** | **Description**                   | **Notes**
 ------------------------| ----------------------------------|------------------
@@ -501,9 +490,6 @@ and another one to change the sampling rate:
 ```
 mkchromecast --encoder-backend ffmpeg -c ogg -b 128 --sample-rate 48000
 ```
-
-**Note**: to use `avconv` just replace from `ffmpeg` to `avconv` in the
-commands above.
 
 ##### Using **Mkchromecast** from the system tray
 

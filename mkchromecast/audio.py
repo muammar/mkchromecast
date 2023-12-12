@@ -108,8 +108,7 @@ else:
         bitrate = str(_mkcc.bitrate)
         samplerate = str(_mkcc.samplerate)
 
-    backends = ["ffmpeg", "avconv", "parec"]
-    if tray is True and backend in backends:
+    if tray and backend in ["ffmpeg", "parec"]:
         import os
         import getpass
 
@@ -752,8 +751,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-    verbose_backend = ["ffmpeg", "avconv"]
-    if debug is False and backends_dict[backend] in verbose_backend:
+    if not debug and backends_dict[backend] == "ffmpeg":
         debug_command()
 
 app = Flask(__name__)

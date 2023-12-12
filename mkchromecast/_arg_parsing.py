@@ -30,10 +30,9 @@ Parser = argparse.ArgumentParser(
     Cast devices.
 
     It is written in Python, and it can stream via node.js, ffmpeg, parec
-    (Linux pulseaudio users), avconv (Linux only) or ALSA (Linux users).
-    Mkchromecast is capable of using lossy and lossless audio formats provided
-    that ffmpeg, avconv or parec is installed.  Additionally, a system tray
-    menu is available.
+    (Linux pulseaudio users), or ALSA (Linux users). Mkchromecast is capable of
+    using lossy and lossless audio formats provided that ffmpeg or parec is
+    installed.  Additionally, a system tray menu is available.
 
     Linux users that have installed the debian package need to launch the
     command `mkchromecast`, e.g.:
@@ -69,9 +68,9 @@ Parser.add_argument(
     Example:
         python mkchromecast.py --encoder-backend ffmpeg --alsa-device hw:2,1
 
-    It only works for the ffmpeg and avconv backends, and it is not useful for
-    pulseaudio users. For more information read the README.Debian file shipped
-    in the Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
+    It only works for the ffmpeg backend, and it is not useful for pulseaudio
+    users. For more information read the README.Debian file shipped in the
+    Debian package or https://github.com/muammar/mkchromecast/wiki/ALSA.
     """,
 )
 
@@ -103,18 +102,14 @@ Parser.add_argument(
     default="64",
     help="""
     Set the chunk size base for streaming in the Flask server. Default to 64.
-    This option only works when using the ffmpeg or avconv backends. This
-    number is the base to set both the buffer_size (defined by
-    2 * chunk_size**2) in Flask server and the frame_size (defined by 32
-      * chunk_size).
+    This option only works when using the ffmpeg backend. This number is the
+    base to set both the buffer_size (defined by 2 * chunk_size**2) in Flask
+    server and the frame_size (defined by 32 * chunk_size).
 
     Example:
 
     ffmpeg:
         python mkchromecast.py --encoder-backend ffmpeg -c ogg -b 128 --chunk-size 2048
-
-    avconv:
-        python mkchromecast.py --encoder-backend avconv -c ogg -b 128 --chunk-size 64
 
     """,
 )
@@ -137,7 +132,7 @@ Parser.add_argument(
         - wav  [HQ]     Waveform Audio File Format
         - flac [HQ]     Free Lossless Audio Codec
 
-    This option only works for the ffmpeg, avconv and parec backends.
+    This option only works for the ffmpeg and parec backends.
     """,
 )
 
@@ -146,7 +141,7 @@ Parser.add_argument(
     type=str,
     default=None,
     help="""
-    Set a ffmpeg or avconv command for streaming video.
+    Set an ffmpeg command for streaming video.
 
     Example:
         python3 mkchromecast.py --video --command 'ffmpeg -re -i \
@@ -156,7 +151,7 @@ Parser.add_argument(
         frag_keyframe+empty_moov pipe:1'
 
     Note that for the output you have to use pipe:1 to stream. This option only
-    works for the ffmpeg, avconv backends.
+    works for the ffmpeg backend.
     """,
 )
 
@@ -206,13 +201,13 @@ Parser.add_argument(
     "--encoder-backend",
     type=str,
     default=None,
+    choices=["ffmpeg", "gstreamer", "node", "parec"],
     help="""
     Set the backend for all encoders.
     Possible backends:
         - node (default in macOS)
         - parec (default in Linux)
         - ffmpeg
-        - avconv
         - gstreamer
 
     Example:

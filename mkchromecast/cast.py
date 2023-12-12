@@ -337,48 +337,31 @@ class Casting(object):
                     config.read(configf)
                     self.mkcc.backend = ConfigSectionMap("settings")["backend"]
 
-            if self.mkcc.source_url is not None:
-                if self.mkcc.videoarg is True:
-                    import mkchromecast.video
+            # Set up the mime type and conditionally import video or audio
+            # TODO(xsdg): Get rid of these conditional imports.
+            media_type: str
+            if self.mkcc.videoarg:
+                import mkchromecast.video
 
-                    mtype = mkchromecast.video.mtype
-                else:
-                    import mkchromecast.audio
+                media_type = mkchromecast.video.mtype
+            else:
+                import mkchromecast.audio
 
-                    mtype = mkchromecast.audio.mtype
-                print(" ")
-                print(
-                    colors.options("Casting from stream URL:") + " " + self.mkcc.source_url
-                )
-                print(colors.options("Using media type:") + " " + mtype)
-                media_controller.play_media(
-                    self.mkcc.source_url, mtype, title=self.title, stream_type="LIVE"
-                )
-                media_controller.play()
-            elif (
-                self.mkcc.backend == "ffmpeg"
-                or self.mkcc.backend == "node"
-                or self.mkcc.backend == "avconv"
-                or self.mkcc.backend == "parec"
-                or self.mkcc.backend == "gstreamer"
-                and self.mkcc.source_url is None
-            ):
-                if self.mkcc.videoarg is True:
-                    import mkchromecast.video
+                media_type = mkchromecast.audio.mtype
+            print(" ")
+            print(colors.options("Using media type:") + f" {media_type}")
 
-                    mtype = mkchromecast.video.mtype
-                else:
-                    import mkchromecast.audio
+            play_url: str
+            if self.mkcc.source_url:
+                play_url = self.mkcc.source_url
+                print(colors.options("Casting from stream URL:")
+                      + f" {play_url}")
+            else:
+                play_url = f"http://{localip}:{self.mkcc.port}/stream"
 
-                    mtype = mkchromecast.audio.mtype
-                print(" ")
-                print(colors.options("The media type string used is:") + " " + mtype)
-                media_controller.play_media(
-                    f"http://{localip}:{self.mkcc.port}/stream",
-                    mtype,
-                    title=self.title,
-                    stream_type="LIVE",
-                )
+            media_controller.play_media(
+                play_url, media_type, title=self.title, stream_type="LIVE",
+            )
 
             if media_controller.is_active:
                 media_controller.play()
