@@ -62,13 +62,9 @@ class Mkchromecast:
         # Arguments that depend on other arguments.
         self.select_device: bool = True if self.tray else args.select_device
 
-        if self.platform == "Darwin":
-            backend_options = ["node", "ffmpeg"]
-        else:  # platform == "Linux"
-            if args.video:
-                backend_options = ["node", "ffmpeg", "avconv"]
-            else:
-                backend_options = ["ffmpeg", "avconv", "parec", "gstreamer"]
+        backend_options = constants.backend_options_for_platform(
+            self.platform, args.video
+        )
 
         self.backend: Optional[str]
         if args.encoder_backend:
@@ -111,7 +107,7 @@ class Mkchromecast:
             self.rcodec = None
 
         # TODO(xsdg): Add support for yt-dlp
-        command_choices = ["ffmpeg", "avconv", "youtube-dl"]
+        command_choices = ["ffmpeg", "youtube-dl"]
         self.command: Optional[str]
         if not args.command:
             self.command = None

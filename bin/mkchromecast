@@ -50,22 +50,11 @@ class CastProcess(object):
 
         # Type declarations
         self.cc: Casting
-        self.backends: List[str]
 
     def run(self):
         self.cc = Casting(self.mkcc)
         checkmktmp()
         writePidFile()
-
-        """
-        Initializing backend array
-        """
-        self.backends = [
-          'ffmpeg',
-          'avconv',
-          'parec',
-          'gstreamer'
-          ]
 
         self.check_connection()
         if self.mkcc.tray is False and self.mkcc.videoarg is False:
@@ -182,10 +171,13 @@ class CastProcess(object):
             print(colors.error('Internal error: failed to select a backend.'))
             terminate()
 
-        if backend == 'node' and self.mkcc.source_url is None:
+        if self.mkcc.source_url:
+            return
+
+        if backend == 'node':
             from mkchromecast.node import stream
             stream()
-        elif backend in self.backends and self.mkcc.source_url is None:
+        else:
             import mkchromecast.audio
             mkchromecast.audio.main()
 

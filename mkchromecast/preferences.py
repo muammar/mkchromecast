@@ -99,30 +99,18 @@ if _mkcc.tray is True:
             """
             Backend
             """
-            backends_supported = ["node", "ffmpeg", "avconv", "parec", "gstreamer"]
-            self.backends = []
-            if _mkcc.platform == "Darwin":
-                for item in backends_supported:
-                    if (
-                        is_installed(item, PATH, _mkcc.debug) is True
-                        and item != "avconv"
-                        and item != "gstreamer"
-                    ):
-                        self.backends.append(item)
-            else:
-                for item in backends_supported:
-                    if (
-                        is_installed(item, PATH, _mkcc.debug) is True
-                        and item != "node"
-                        and item != "gstreamer"
-                    ):
-                        self.backends.append(item)
-                    # hardcoded gst-launch-1.0 for gstreamer
-                    elif (
-                        is_installed("gst-launch-1.0", PATH, _mkcc.debug) is True
-                        and item == "gstreamer"
-                    ):
-                        self.backends.append(item)
+            backend_options = constants.backend_options_for_platform(
+                _mkcc.platform
+            )
+            self.backends: List[str] = []
+            for option in backend_options:
+                if is_installed(option, PATH, _mkcc.debug):
+                    self.backends.append(option)
+            # Hard-coded for gstreamer.
+            if (_mkcc.platform == "Linux"
+                and is_installed("gst-launch-1.0", PATH, _mkcc.debug)):
+                self.backends.append("gstreamer")
+
             try:
                 backend_index = self.backends.index(self.backend_conf)
             except ValueError:
