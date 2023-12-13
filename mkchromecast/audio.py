@@ -96,6 +96,7 @@ else:
         configurations.chk_config()
         config.read(configf)
         backend.name = ConfigSectionMap("settings")["backend"]
+        backend.path = backend.name
         codec = ConfigSectionMap("settings")["codec"]
         bitrate = ConfigSectionMap("settings")["bitrate"]
         samplerate = ConfigSectionMap("settings")["samplerate"]
@@ -109,6 +110,7 @@ else:
             print(backend, codec, bitrate, samplerate, adevice)
     else:
         backend.name = _mkcc.backend
+        backend.path = backend.name
         codec = _mkcc.codec
         bitrate = str(_mkcc.bitrate)
         samplerate = str(_mkcc.samplerate)
