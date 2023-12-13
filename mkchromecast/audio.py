@@ -752,12 +752,14 @@ else:
     if not debug and backend.name == "ffmpeg":
         debug_command()
 
+# XSDG moved
 app = Flask(__name__)
 
 if debug is True:
     print(":::audio::: command " + str(command))
 
 
+# XSDG moved
 @app.route("/")
 def index():
     return """<!doctype html>
@@ -770,6 +772,7 @@ def index():
     )
 
 
+# XSDG going to drop
 """
 The code below is supposed to kill the Flask server. I don't know if it would
 be useful later.
