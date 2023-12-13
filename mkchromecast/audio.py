@@ -5,12 +5,14 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import configparser as ConfigParser
+from dataclasses import dataclass
 from flask import Flask, Response
 from functools import partial
 import multiprocessing
 import os
 import pickle
 import psutil
+import shutil
 from subprocess import Popen, PIPE
 import sys
 import threading
@@ -26,8 +28,14 @@ from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
-backends_dict = {}
 
+@dataclass
+class BackendInfo:
+    name: Optional[str] = None
+    # TODO(xsdg): Switch to pathlib for this.
+    path: Optional[str] = None
+
+backend = BackendInfo()
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
@@ -81,15 +89,13 @@ if _mkcc.youtube_url is not None:
 else:
     # Because these are defined in parallel conditional bodies, we declare
     # the types here to avoid ambiguity for the type analyzers.
-    backend: Optional[str]
     bitrate: str
     codec: str
     samplerate: str
     if os.path.exists(configf) and tray is True:
         configurations.chk_config()
         config.read(configf)
-        backend = ConfigSectionMap("settings")["backend"]
-        backends_dict[backend] = backend
+        backend.name = ConfigSectionMap("settings")["backend"]
         codec = ConfigSectionMap("settings")["codec"]
         bitrate = ConfigSectionMap("settings")["bitrate"]
         samplerate = ConfigSectionMap("settings")["samplerate"]
@@ -102,40 +108,30 @@ else:
             print(colors.warning("Using defaults set there"))
             print(backend, codec, bitrate, samplerate, adevice)
     else:
-        backend = _mkcc.backend
-        backends_dict[backend] = backend
+        backend.name = _mkcc.backend
         codec = _mkcc.codec
         bitrate = str(_mkcc.bitrate)
         samplerate = str(_mkcc.samplerate)
 
-    if tray and backend in ["ffmpeg", "parec"]:
+    # TODO(xsdg): Why is this only run in tray mode???
+    if tray and backend.name in ["ffmpeg", "parec"]:
         import os
         import getpass
 
-        USER = getpass.getuser()
-        PATH = (
-            "./bin:./nodejs/bin:/Users/"
-            + str(USER)
-            + "/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/X11/bin:/usr/games:"
-            + os.environ["PATH"]
+        # TODO(xsdg): We should not be setting up a custom path like this.  We
+        # should be respecting the path that the user has set, and requiring
+        # them to specify an absolute path if the backend isn't in their PATH.
+        username = getpass.getuser()
+        backend_search_path = (
+            f"./bin:./nodejs/bin:/Users/{username}/bin:/usr/local/bin:"
+            "/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:"
+            f"/usr/X11/bin:/usr/games:{os.environ['PATH']}"
         )
 
-        iterate = PATH.split(":")
-        for item in iterate:
-            verifyif = str(item + "/" + backend)
-            if os.path.exists(verifyif) is False:
-                continue
-            else:
-                backends_dict[verifyif] = backend
-                backend = verifyif
-                if debug is True:
-                    print(
-                        ":::audio::: Program "
-                        + str(backend)
-                        + " found in "
-                        + str(verifyif)
-                    )
-                    print(":::audio::: backend dictionary " + str(backends_dict))
+        backend.path = shutil.which(backend.name, path=backend_search_path)
+        if debug:
+            print(f"Searched for {backend.name} in PATH {backend_search_path}")
+            print(f"Resolved to {repr(backend.path)}")
 
     if codec == "mp3":
         append_mtype = "mpeg"
@@ -145,10 +141,10 @@ else:
     mtype = "audio/" + append_mtype
 
     if source_url is None:
-        print(colors.options("Selected backend:") + " " + backend)
-        print(colors.options("Selected audio codec:") + " " + codec)
+        print(colors.options("Selected backend:") + f" {backend}")
+        print(colors.options("Selected audio codec:") + f" {codec}")
 
-    if backend != "node":
+    if backend.name != "node":
         if bitrate == "192":
             bitrate = bitrate + "k"
         elif bitrate == "None":
@@ -213,11 +209,11 @@ else:
     if codec == "mp3":
         if (
             platform == "Linux"
-            and backends_dict[backend] != "parec"
-            and backends_dict[backend] != "gstreamer"
+            and backend.name != "parec"
+            and backend.name != "gstreamer"
         ):
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -250,13 +246,13 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = ["lame", "-b", bitrate[:-1], "-r", "-"]
             """
         This command dumps to file correctly, but does not work for stdout.
-        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+        elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
                 'gst-launch-1.0',
                 '-v',
@@ -283,7 +279,7 @@ else:
             """
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -310,11 +306,11 @@ else:
     if codec == "ogg":
         if (
             platform == "Linux"
-            and backends_dict[backend] != "parec"
-            and backends_dict[backend] != "gstreamer"
+            and backend.name != "parec"
+            and backend.name != "gstreamer"
         ):
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -347,13 +343,13 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = ["oggenc", "-b", bitrate[:-1], "-Q", "-r", "--ignorelength", "-"]
             """
         This command dumps to file correctly, but does not work for stdout.
-        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+        elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
                 'gst-launch-1.0',
                 '!',
@@ -381,7 +377,7 @@ else:
             """
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -405,11 +401,11 @@ else:
     if codec == "aac":
         if (
             platform == "Linux"
-            and backends_dict[backend] != "parec"
-            and backends_dict[backend] != "gstreamer"
+            and backend.name != "parec"
+            and backend.name != "gstreamer"
         ):
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -441,8 +437,8 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = [
                 "faac",
@@ -458,7 +454,7 @@ else:
             ]
             """
         This command dumps to file correctly, but does not work for stdout.
-        elif platform == 'Linux' and backends_dict[backend] == 'gstreamer':
+        elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
                 'gst-launch-1.0',
                 '-v',
@@ -483,7 +479,7 @@ else:
             """
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -512,9 +508,9 @@ else:
     OPUS
     """
     if codec == "opus":
-        if platform == "Linux" and backends_dict[backend] != "parec":
+        if platform == "Linux" and backend.name != "parec":
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -547,8 +543,8 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = [
                 "opusenc",
@@ -562,7 +558,7 @@ else:
             ]
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -587,9 +583,9 @@ else:
     WAV 24-Bit
     """
     if codec == "wav":
-        if platform == "Linux" and backends_dict[backend] != "parec":
+        if platform == "Linux" and backend.name != "parec":
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -621,8 +617,8 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = [
                 "sox",
@@ -652,7 +648,7 @@ else:
             ]
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -675,9 +671,9 @@ else:
     https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
     """
     if codec == "flac":
-        if platform == "Linux" and backends_dict[backend] != "parec":
+        if platform == "Linux" and backend.name != "parec":
             command = [
-                backend,
+                backend.path,
                 "-ac",
                 "2",
                 "-ar",
@@ -710,8 +706,8 @@ else:
 
         elif (
             platform == "Linux"
-            and backends_dict[backend] == "parec"
-            or backends_dict[backend] == "gstreamer"
+            and backend.name == "parec"
+            or backend.name == "gstreamer"
         ):
             command = [
                 "flac",
@@ -731,7 +727,7 @@ else:
             ]
         else:
             command = [
-                backend,
+                backend.path,
                 "-f",
                 "avfoundation",
                 "-i",
@@ -751,7 +747,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-    if not debug and backends_dict[backend] == "ffmpeg":
+    if not debug and backend.name == "ffmpeg":
         debug_command()
 
 app = Flask(__name__)
@@ -795,10 +791,10 @@ def shutdown():
 def stream():
     if (
         platform == "Linux"
-        and bool(backends_dict) is True
-        and backends_dict[backend] == "parec"
+        and backend.name == "parec"
+        and bool(backend.path)
     ):
-        c_parec = [backend, "--format=s16le", "-d", "Mkchromecast.monitor"]
+        c_parec = [backend.path, "--format=s16le", "-d", "Mkchromecast.monitor"]
         parec = Popen(c_parec, stdout=PIPE)
 
         try:
@@ -810,8 +806,7 @@ def stream():
 
     elif (
         platform == "Linux"
-        and bool(backends_dict) is True
-        and backends_dict[backend] == "gstreamer"
+        and backend.name == "gstreamer"
     ):
         c_gst = [
             "gst-launch-1.0",
