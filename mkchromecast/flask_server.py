@@ -18,11 +18,13 @@ from mkchromecast import colors
 
 FlaskViewReturn = Union[str, flask.Response]
 
+
 @dataclass
 class BackendInfo:
     name: Optional[str] = None
     # TODO(xsdg): Switch to pathlib for this.
     path: Optional[str] = None
+
 
 # TODO(xsdg): Consider porting to https://github.com/pallets-eco/flask-classful
 # for a more natural approach to using Flask in an encapsulated way.
@@ -96,15 +98,25 @@ class FlaskServer:
         FlaskServer._samplerate = samplerate
 
     @staticmethod
-    def init_video(chunk_size: int, command: str) -> None:
+    def init_video(chunk_size: int,
+                   command: Union[str, list[str]],
+                   media_type: str) -> None:
         FlaskServer._init_common(video_mode=True)
 
         FlaskServer._chunk_size = chunk_size
         FlaskServer._command = command
+        FlaskServer._media_type = media_type
 
     @staticmethod
     def run(host: str, port: int) -> None:
         FlaskServer._ensure_initialized()
+
+        # NOTE(xsdg): video.py used threaded=True and didn't specify
+        # passthrough_errors.  audio.py used passthrough_errors=False and didn't
+        # specify threaded.
+        # I _believe_ that threaded is a bad idea, since it would potentially
+        # launch multiple streaming pipelines.  I could be wrong about that,
+        # though.
 
         # Original comment: Note that passthrough_errors=False is useful when
         # reconnecting. In that way, flask won't die.
@@ -136,14 +148,24 @@ class FlaskServer:
         FlaskServer._ensure_initialized()
 
         # TODO(xsdg): Add head and body tags?
-        return textwrap.dedent(f"""\
-            <!doctype html>
-            <title>Play {FlaskServer._stream_url}</title>
-            <audio controls autoplay >
-                <source src="{FlaskServer._stream_url}" type="audio/mp3" >
-                Your browser does not support this audio format.
-            </audio>
-            """)
+        if FlaskServer._video_mode:
+            return textwrap.dedent(f"""\
+                <!doctype html>
+                <title>Play {FlaskServer._stream_url}</title>
+                <video controls autoplay >
+                    <source src="{FlaskServer._stream_url}" type="video/mp4" >
+                    Your browser does not support this video format.
+                </video>
+                """)
+        else:
+            return textwrap.dedent(f"""\
+                <!doctype html>
+                <title>Play {FlaskServer._stream_url}</title>
+                <audio controls autoplay >
+                    <source src="{FlaskServer._stream_url}" type="audio/mp3" >
+                    Your browser does not support this audio format.
+                </audio>
+                """)
 
     @staticmethod
     def _stream_video() -> flask.Response:
