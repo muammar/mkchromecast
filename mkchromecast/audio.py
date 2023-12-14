@@ -5,37 +5,20 @@ Google Cast device has to point out to http://ip:5000/stream
 """
 
 import configparser as ConfigParser
-from dataclasses import dataclass
-from flask import Flask, Response
-from functools import partial
-import multiprocessing
 import os
-import pickle
-import psutil
 import shutil
-from subprocess import Popen, PIPE
-import sys
-import threading
-import time
-from typing import Optional
 
 import mkchromecast
 from mkchromecast import colors
 from mkchromecast import constants
+from mkchromecast import stream_infra
 from mkchromecast import utils
-from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
 
-@dataclass
-class BackendInfo:
-    name: Optional[str] = None
-    # TODO(xsdg): Switch to pathlib for this.
-    path: Optional[str] = None
-
-backend = BackendInfo()
+backend = stream_infra.BackendInfo()
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
@@ -752,158 +735,23 @@ else:
     if not debug and backend.name == "ffmpeg":
         debug_command()
 
-app = Flask(__name__)
-
 if debug is True:
     print(":::audio::: command " + str(command))
 
 
-@app.route("/")
-def index():
-    return """<!doctype html>
-<title>Play {appendtourl}</title>
-<audio controls autoplay >
-    <source src="{appendtourl}" type="audio/mp3" >
-    Your browser does not support this audio format.
-</audio>""".format(
-        appendtourl=appendtourl
-    )
-
-
-"""
-The code below is supposed to kill the Flask server. I don't know if it would
-be useful later.
-"""
-"""
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    shutdown_server()
-    return 'Server shutting down...'
-
-"""
-
-
-@app.route("/" + appendtourl)
-def stream():
-    if (
-        platform == "Linux"
-        and backend.name == "parec"
-        and bool(backend.path)
-    ):
-        c_parec = [backend.path, "--format=s16le", "-d", "Mkchromecast.monitor"]
-        parec = Popen(c_parec, stdout=PIPE)
-
-        try:
-            process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
-        except FileNotFoundError:
-            print("Failed to execute {}".format(command))
-            message = "Have you installed lame, see https://github.com/muammar/mkchromecast#linux-1?"
-            raise Exception(message)
-
-    elif (
-        platform == "Linux"
-        and backend.name == "gstreamer"
-    ):
-        c_gst = [
-            "gst-launch-1.0",
-            "-v",
-            "!",
-            "audioconvert",
-            "!",
-            "filesink",
-            "location=/dev/stdout",
-        ]
-        if adevice is not None:
-            c_gst.insert(2, "alsasrc")
-            c_gst.insert(3, 'device="' + adevice + '"')
-        else:
-            c_gst.insert(2, "pulsesrc")
-            c_gst.insert(3, 'device="Mkchromecast.monitor"')
-        gst = Popen(c_gst, stdout=PIPE)
-        process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
-    else:
-        process = Popen(command, stdout=PIPE, bufsize=-1)
-    read_chunk = partial(os.read, process.stdout.fileno(), buffer_size)
-    return Response(iter(read_chunk, b""), mimetype=mtype)
-
-
-def start_app():
-    """Starting the streaming server.
-
-    Note that passthrough_errors=False is useful when reconnecting. In that
-    way, flask won't die.
-    """
-    monitor_daemon = monitor()
-    monitor_daemon.start()
-    app.run(host=ip, port=port, passthrough_errors=False)
-
-
-class multi_proc(object):  # I launch ffmpeg in a different process
-    def __init__(self):
-        self.proc = multiprocessing.Process(target=start_app)
-        self.proc.daemon = True
-
-    def start(self):
-        self.proc.start()
-
-
-class monitor(object):
-    """
-    I create a class to launch a thread in this process that monitors if main
-    application stops.  A normal running of mkchromecast will have 2 threads in
-    the streaming process when ffmpeg is used.
-    """
-
-    def __init__(self):
-        self.monitor_d = threading.Thread(target=monitor_daemon)
-        self.monitor_d.daemon = True
-
-    def start(self):
-        self.monitor_d.start()
-
-
-def monitor_daemon():
-    f = open("/tmp/mkchromecast.pid", "rb")
-    pidnumber = int(pickle.load(f))
-    print(colors.options("PID of main process:") + " " + str(pidnumber))
-
-    localpid = os.getpid()
-    print(colors.options("PID of streaming process:") + " " + str(localpid))
-
-    while psutil.pid_exists(localpid) is True:
-        try:
-            time.sleep(0.5)
-            # With this I ensure that if the main app fails, everything
-            # will get back to normal
-            if psutil.pid_exists(pidnumber) is False:
-                if platform == "Darwin":
-                    inputint()
-                    outputint()
-                else:
-                    from mkchromecast.pulseaudio import remove_sink
-
-                    remove_sink()
-                parent = psutil.Process(localpid)
-                for child in parent.children(recursive=True):
-                    child.kill()
-                parent.kill()
-        except KeyboardInterrupt:
-            print("Ctrl-c was requested")
-            sys.exit(0)
-        except IOError:
-            print("I/O Error")
-            sys.exit(0)
-        except OSError:
-            print("OSError")
-            sys.exit(0)
+def _flask_init():
+    stream_infra.FlaskServer.init_audio(
+        adevice=adevice,
+        backend=backend,
+        bitrate=bitrate,
+        buffer_size=buffer_size,
+        codec=codec,
+        command=command,
+        media_type=mtype,
+        platform=platform,
+        samplerate=samplerate)
 
 
 def main():
-    st = multi_proc()
-    st.start()
+    pipeline = stream_infra.PipelineProcess(_flask_init, ip, port, platform)
+    pipeline.start()
