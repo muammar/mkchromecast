@@ -4,22 +4,14 @@
 Google Cast device has to point out to http://ip:5000/stream
 """
 
-import psutil
 import getpass
 import pickle
-import sys
-import time
-from functools import partial
-from subprocess import Popen, PIPE
-from flask import Flask, Response
-import multiprocessing
-import threading
+from subprocess import Popen
 import os
 
 import mkchromecast
 from mkchromecast import flask_server
 from mkchromecast import utils
-from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
 from mkchromecast.utils import terminate, is_installed, check_file_info
 from mkchromecast.resolution import resolution

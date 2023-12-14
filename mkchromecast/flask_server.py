@@ -1,3 +1,5 @@
+# This file is part of mkchromecast.
+
 from dataclasses import dataclass
 import flask
 from functools import partial

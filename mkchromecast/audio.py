@@ -7,8 +7,6 @@ Google Cast device has to point out to http://ip:5000/stream
 import configparser as ConfigParser
 import os
 import shutil
-import sys
-from typing import Optional
 
 import mkchromecast
 from mkchromecast import colors
