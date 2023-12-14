@@ -1,10 +1,28 @@
+from dataclasses import dataclass
 import flask
+from functools import partial
+import multiprocessing
+import os
+import pickle
+import psutil
+from subprocess import Popen, PIPE
+import sys
 import textwrap
-from typing import Optional, Union
+import threading
+import time
+from typing import Callable, Optional, Union
 
 import mkchromecast
+from mkchromecast.audio_devices import inputint, outputint
+from mkchromecast import colors
 
 FlaskViewReturn = Union[str, flask.Response]
+
+@dataclass
+class BackendInfo:
+    name: Optional[str] = None
+    # TODO(xsdg): Switch to pathlib for this.
+    path: Optional[str] = None
 
 # TODO(xsdg): Consider porting to https://github.com/pallets-eco/flask-classful
 # for a more natural approach to using Flask in an encapsulated way.
@@ -16,18 +34,107 @@ class FlaskServer:
     """
 
     _app: Optional[flask.Flask] = None
+    _video_mode: Optional[bool] = None
+
+    _mkcc: mkchromecast.Mkchromecast
     _stream_url: str = "stream"
 
-    def __init__(self, mkcc: mkchromecast.Mkchromecast):
-        FlaskServer._app = flask.Flask("mkchromecast")
+    # Common arguments.
+    _command: Union[str, list[str]]
+    _media_type: str
 
-        FlaskServer._app.add_url_rule("/", view_func=FlaskServer.index)
-        # TODO(xsdg): Maybe just have distinct endpoints?
-        if audio_mode:
-            FlaskServer._
+    # Audio arguments.
+    _adevice: Optional[str]
+    _backend: BackendInfo
+    _bitrate: str
+    _buffer_size: int
+    _codec: str
+    _platform: str
+    _samplerate: str
+
+    # Video arguments.
+    _chunk_size: int
 
     @staticmethod
-    def index() -> FlaskViewReturn:
+    def _init_common(video_mode: bool) -> None:
+        if FlaskServer._app is not None or FlaskServer._video_mode is not None:
+            raise Exception("Flask Server can only be initialized once.")
+
+        FlaskServer._app = flask.Flask("mkchromecast")
+        FlaskServer._app.add_url_rule("/", view_func=FlaskServer._index)
+
+        # TODO(xsdg): Maybe just have distinct audio and video endpoints?
+        if video_mode:
+            FlaskServer._app.add_url_rule("/stream",
+                                          view_func=FlaskServer._stream_video)
+        else:
+            FlaskServer._app.add_url_rule("/stream",
+                                          view_func=FlaskServer._stream_audio)
+
+        FlaskServer._video_mode = video_mode
+
+    @staticmethod
+    def init_audio(adevice: Optional[str],
+                   backend: BackendInfo,
+                   bitrate: str,
+                   buffer_size: int,
+                   codec: str,
+                   command: Union[str, list[str]],
+                   media_type: str,
+                   platform: str,
+                   samplerate: str) -> None:
+        FlaskServer._init_common(video_mode=False)
+
+        FlaskServer._adevice = adevice
+        FlaskServer._backend = backend
+        FlaskServer._bitrate = bitrate
+        FlaskServer._buffer_size = buffer_size
+        FlaskServer._codec = codec
+        FlaskServer._command = command
+        FlaskServer._media_type = media_type
+        FlaskServer._platform = platform
+        FlaskServer._samplerate = samplerate
+
+    @staticmethod
+    def init_video(chunk_size: int, command: str) -> None:
+        FlaskServer._init_common(video_mode=True)
+
+        FlaskServer._chunk_size = chunk_size
+        FlaskServer._command = command
+
+    @staticmethod
+    def run(host: str, port: int) -> None:
+        FlaskServer._ensure_initialized()
+
+        # Original comment: Note that passthrough_errors=False is useful when
+        # reconnecting. In that way, flask won't die.
+        FlaskServer._app.run(host=host, port=port, passthrough_errors=False)
+
+    @staticmethod
+    def _ensure_initialized():
+        if FlaskServer._app is None or FlaskServer._video_mode is None:
+            raise Exception("Flask Server needs to be initialized first.")
+
+    @staticmethod
+    def _ensure_audio_mode():
+        FlaskServer._ensure_initialized()
+        if FlaskServer._video_mode == True:
+            raise Exception(
+                "Tried to use audio mode, but Flask Server was initialized in "
+                "video mode.")
+
+    @staticmethod
+    def _ensure_video_mode():
+        FlaskServer._ensure_initialized()
+        if FlaskServer._video_mode == False:
+            raise Exception(
+                "Tried to use vidio mode, but Flask Server was initialized in "
+                "audio mode.")
+
+    @staticmethod
+    def _index() -> FlaskViewReturn:
+        FlaskServer._ensure_initialized()
+
         # TODO(xsdg): Add head and body tags?
         return textwrap.dedent(f"""\
             <!doctype html>
@@ -39,32 +146,35 @@ class FlaskServer:
             """)
 
     @staticmethod
-    def stream_video() -> flask.Response:
-        process = Popen(command, stdout=PIPE, bufsize=-1)
-        read_chunk = partial(os.read, process.stdout.fileno(), _mkcc.chunk_size)
-        return Response(iter(read_chunk, b""), mimetype=mtype)
+    def _stream_video() -> flask.Response:
+        FlaskServer._ensure_video_mode()
+
+        process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1)
+        read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._chunk_size)
+        return flask.Response(iter(read_chunk, b""), mimetype=FlaskServer._media_type)
 
     @staticmethod
-    def stream_audio():
+    def _stream_audio():
+        FlaskServer._ensure_audio_mode()
+
         if (
-            platform == "Linux"
-            and bool(backends_dict) is True
-            and backends_dict[backend] == "parec"
+            FlaskServer._platform == "Linux"
+            and FlaskServer._backend.name == "parec"
+            and FlaskServer._backend.path is not None
         ):
-            c_parec = [backend, "--format=s16le", "-d", "Mkchromecast.monitor"]
+            c_parec = [FlaskServer._backend.path, "--format=s16le", "-d", "Mkchromecast.monitor"]
             parec = Popen(c_parec, stdout=PIPE)
 
             try:
-                process = Popen(command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
+                process = Popen(FlaskServer._command, stdin=parec.stdout, stdout=PIPE, bufsize=-1)
             except FileNotFoundError:
-                print("Failed to execute {}".format(command))
+                print("Failed to execute {}".format(FlaskServer._command))
                 message = "Have you installed lame, see https://github.com/muammar/mkchromecast#linux-1?"
                 raise Exception(message)
 
         elif (
-            platform == "Linux"
-            and bool(backends_dict) is True
-            and backends_dict[backend] == "gstreamer"
+            FlaskServer._platform == "Linux"
+            and FlaskServer._backend.name == "gstreamer"
         ):
             c_gst = [
                 "gst-launch-1.0",
@@ -75,16 +185,89 @@ class FlaskServer:
                 "filesink",
                 "location=/dev/stdout",
             ]
-            if adevice is not None:
+            if FlaskServer._adevice is not None:
                 c_gst.insert(2, "alsasrc")
-                c_gst.insert(3, 'device="' + adevice + '"')
+                c_gst.insert(3, 'device="' + FlaskServer._adevice + '"')
             else:
                 c_gst.insert(2, "pulsesrc")
                 c_gst.insert(3, 'device="Mkchromecast.monitor"')
             gst = Popen(c_gst, stdout=PIPE)
-            process = Popen(command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
+            process = Popen(FlaskServer._command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
         else:
-            process = Popen(command, stdout=PIPE, bufsize=-1)
-        read_chunk = partial(os.read, process.stdout.fileno(), buffer_size)
-        return Response(iter(read_chunk, b""), mimetype=mtype)
-        pass
+            process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1)
+        read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._buffer_size)
+        return flask.Response(iter(read_chunk, b""), mimetype=FlaskServer._media_type)
+
+
+# Launching the pipeline command in a separate process.
+class PipelineProcess:
+    def __init__(self, flask_init: Callable, host: str, port: int, platform: str):
+        self._proc = multiprocessing.Process(
+            target=PipelineProcess.start_app,
+            args=(flask_init, host, port, platform,)
+        )
+        self._proc.daemon = True
+
+    def start(self):
+        self._proc.start()
+
+    @staticmethod
+    def start_app(flask_init: Callable, host: str, port: int, platform: str):
+        """Starting the streaming server."""
+        monitor_daemon = ParentMonitor(platform)
+        monitor_daemon.start()
+
+        flask_init()
+        FlaskServer.run(host=host, port=port)
+
+
+class ParentMonitor(object):
+    """Thread that terminates this process if the main process dies.
+
+    A normal running of mkchromecast will have 2 threads in the streaming
+    process when ffmpeg is used.
+    """
+
+    def __init__(self, platform: str):
+        self._monitor_thread = threading.Thread(target=ParentMonitor._monitor_loop,
+                                                args=(platform,))
+        self._monitor_thread.daemon = True
+
+    def start(self):
+        self._monitor_thread.start()
+
+    @staticmethod
+    def _monitor_loop(platform: str):
+        f = open("/tmp/mkchromecast.pid", "rb")
+        pidnumber = int(pickle.load(f))
+        print(colors.options("PID of main process:") + " " + str(pidnumber))
+
+        localpid = os.getpid()
+        print(colors.options("PID of streaming process:") + " " + str(localpid))
+
+        while psutil.pid_exists(localpid) is True:
+            try:
+                time.sleep(0.5)
+                # With this I ensure that if the main app fails, everything
+                # will get back to normal
+                if psutil.pid_exists(pidnumber) is False:
+                    if platform == "Darwin":
+                        inputint()
+                        outputint()
+                    else:
+                        from mkchromecast.pulseaudio import remove_sink
+
+                        remove_sink()
+                    parent = psutil.Process(localpid)
+                    for child in parent.children(recursive=True):
+                        child.kill()
+                    parent.kill()
+            except KeyboardInterrupt:
+                print("Ctrl-c was requested")
+                sys.exit(0)
+            except IOError:
+                print("I/O Error")
+                sys.exit(0)
+            except OSError:
+                print("OSError")
+                sys.exit(0)
