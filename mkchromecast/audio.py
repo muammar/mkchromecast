@@ -7,6 +7,7 @@ Google Cast device has to point out to http://ip:5000/stream
 import configparser as ConfigParser
 import os
 import shutil
+from typing import Union
 
 import mkchromecast
 from mkchromecast import colors
@@ -22,6 +23,7 @@ backend = stream_infra.BackendInfo()
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
+command: Union[str, list[str]]
 
 # We make local copies of these attributes because they are sometimes modified.
 # TODO(xsdg): clean this up more when we refactor this file.
@@ -192,11 +194,7 @@ else:
     MP3 192k
     """
     if codec == "mp3":
-        if (
-            platform == "Linux"
-            and backend.name != "parec"
-            and backend.name != "gstreamer"
-        ):
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -218,11 +216,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = ["lame", "-b", bitrate[:-1], "-r", "-"]
             """
         This command dumps to file correctly, but does not work for stdout.
@@ -251,7 +245,7 @@ else:
                 command.insert(2, 'pulsesrc')
                 command.insert(3, 'device="Mkchromecast.monitor"')
             """
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
@@ -271,11 +265,7 @@ else:
     OGG 192k
     """
     if codec == "ogg":
-        if (
-            platform == "Linux"
-            and backend.name != "parec"
-            and backend.name != "gstreamer"
-        ):
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -297,11 +287,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = ["oggenc", "-b", bitrate[:-1], "-Q", "-r", "--ignorelength", "-"]
             """
         This command dumps to file correctly, but does not work for stdout.
@@ -331,7 +317,7 @@ else:
                 command.insert(1, 'pulsesrc')
                 command.insert(2, 'device="Mkchromecast.monitor"')
             """
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
@@ -348,11 +334,7 @@ else:
     AAC > 128k for Stereo, Default sample rate: 44100kHz
     """
     if codec == "aac":
-        if (
-            platform == "Linux"
-            and backend.name != "parec"
-            and backend.name != "gstreamer"
-        ):
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -372,11 +354,7 @@ else:
             if adevice is not None:
                 modalsa()
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = [
                 "faac",
                 "-b", bitrate[:-1],
@@ -411,7 +389,7 @@ else:
                 command.insert(2, 'pulsesrc')
                 command.insert(3, 'device="Mkchromecast.monitor"')
             """
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
@@ -435,7 +413,7 @@ else:
     OPUS
     """
     if codec == "opus":
-        if platform == "Linux" and backend.name != "parec":
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -457,11 +435,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = [
                 "opusenc",
                 "-",
@@ -470,7 +444,7 @@ else:
                 "--raw-rate", samplerate,
                 "-",
             ]
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
@@ -490,7 +464,7 @@ else:
     WAV 24-Bit
     """
     if codec == "wav":
-        if platform == "Linux" and backend.name != "parec":
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -512,11 +486,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-9)
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = [
                 "sox",
                 "-t", "raw",
@@ -533,7 +503,7 @@ else:
                 "-L",
                 "-",
             ]
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
@@ -552,7 +522,7 @@ else:
     https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
     """
     if codec == "flac":
-        if platform == "Linux" and backend.name != "parec":
+        if platform == "Linux" and backend.name == "ffmpeg":
             command = [
                 backend.path,
                 "-ac", "2",
@@ -574,11 +544,7 @@ else:
             if segment_time is not None:
                 set_segment_time(-11)
 
-        elif (
-            platform == "Linux"
-            and backend.name == "parec"
-            or backend.name == "gstreamer"
-        ):
+        elif platform == "Linux" and backend.name in {"parec", "gstreamer"}:
             command = [
                 "flac",
                 "-",
@@ -590,7 +556,7 @@ else:
                 "--sign", "signed",
                 "-s",
             ]
-        else:
+        else:  # platform == "Darwin"
             command = [
                 backend.path,
                 "-f", "avfoundation",
