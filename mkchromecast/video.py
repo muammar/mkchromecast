@@ -10,7 +10,7 @@ from subprocess import Popen
 import os
 
 import mkchromecast
-from mkchromecast import flask_server
+from mkchromecast import stream_infra
 from mkchromecast import utils
 import mkchromecast.colors as colors
 from mkchromecast.utils import terminate, is_installed, check_file_info
@@ -349,7 +349,7 @@ if _mkcc.debug is True:
 
 
 def _flask_init():
-    flask_server.FlaskServer.init_video(
+    stream_infra.FlaskServer.init_video(
         chunk_size=_mkcc.chunk_size,
         command=command,
         media_type=mtype)
@@ -357,7 +357,7 @@ def _flask_init():
 
 def main():
     if _mkcc.backend != "node":
-        pipeline = flask_server.PipelineProcess(_flask_init, ip, _mkcc.port, _mkcc.platform)
+        pipeline = stream_infra.PipelineProcess(_flask_init, ip, _mkcc.port, _mkcc.platform)
         pipeline.start()
     else:
         print("Starting Node")

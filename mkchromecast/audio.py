@@ -11,14 +11,14 @@ import shutil
 import mkchromecast
 from mkchromecast import colors
 from mkchromecast import constants
-from mkchromecast import flask_server
+from mkchromecast import stream_infra
 from mkchromecast import utils
 from mkchromecast.config import config_manager
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
 
-backend = flask_server.BackendInfo()
+backend = stream_infra.BackendInfo()
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
@@ -740,7 +740,7 @@ if debug is True:
 
 
 def _flask_init():
-    flask_server.FlaskServer.init_audio(
+    stream_infra.FlaskServer.init_audio(
         adevice=adevice,
         backend=backend,
         bitrate=bitrate,
@@ -753,5 +753,5 @@ def _flask_init():
 
 
 def main():
-    pipeline = flask_server.PipelineProcess(_flask_init, ip, port, platform)
+    pipeline = stream_infra.PipelineProcess(_flask_init, ip, port, platform)
     pipeline.start()
