@@ -178,7 +178,7 @@ class Audio:
                     "-L",
                     "-"]
 
-        if self._settings.codec == "flag":
+        if self._settings.codec == "flac":
             return ["flac",
                     "-",
                     "-c",

@@ -158,6 +158,24 @@ class AudioBuilderTests(unittest.TestCase):
             exp_command,
             self.create_builder("ffmpeg", "Darwin", codec="aac", segment_time=2).command)
 
+    # TODO(xsdg): Use pyparameterized for this.
+    def testLinuxOther(self):
+        binary_for_codecs: dict[str, str] = {
+            "mp3": "lame",
+            "ogg": "oggenc",
+            "aac": "faac",
+            "opus": "opusenc",
+            "wav": "sox",
+            "flac": "flac",
+        }
+
+        for codec, binary in binary_for_codecs.items():
+            command = self.create_builder("parec", "Linux", codec=codec).command
+            self.assertEqual(
+                binary, command[0], f"Unexpected binary for codec {codec}")
+
+        with self.assertRaisesRegex(Exception, "unexpected codec.*noexist"):
+            _ = self.create_builder("parec", "Linux", codec="noexist").command
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

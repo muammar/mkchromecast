@@ -25,6 +25,7 @@ backend = stream_infra.BackendInfo()
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
 command: Union[str, list[str]]
+media_type: str
 
 # We make local copies of these attributes because they are sometimes modified.
 # TODO(xsdg): clean this up more when we refactor this file.
@@ -67,7 +68,7 @@ if _mkcc.youtube_url is not None:
     video = query["v"][0]
     print(colors.options("Playing video:") + " " + video)
     command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
-    mtype = "audio/mp4"
+    media_type = "audio/mp4"
 else:
     # Because these are defined in parallel conditional bodies, we declare
     # the types here to avoid ambiguity for the type analyzers.
@@ -125,12 +126,10 @@ else:
             print(f"Searched for {backend.name} in PATH {backend_search_path}")
             print(f"Resolved to {repr(backend.path)}")
 
-    if codec == "mp3":
-        append_mtype = "mpeg"
+    if encode_settings.codec == "mp3":
+        media_type = "audio/mpeg"
     else:
-        append_mtype = codec
-
-    mtype = "audio/" + append_mtype
+        media_type = f"audio/{encode_settings.codec}"
 
     if source_url is None:
         print(colors.options("Selected backend:") + f" {backend}")
@@ -138,8 +137,10 @@ else:
               + f" {encode_settings.codec}")
 
     if backend.name != "node":
+        # TODO(xsdg): This is backwards.  Use bitrate as an int everywhere, and
+        # then serialize it with a "k" for ffmpeg.
         if encode_settings.bitrate == "192":
-            encode_settings.bitrate = bitrate + "k"
+            encode_settings.bitrate = encode_settings.bitrate + "k"
         elif encode_settings.bitrate == "None":
             pass
         else:
@@ -150,15 +151,15 @@ else:
             if encode_settings.codec == "mp3" and int(encode_settings.bitrate) > 320:
                 encode_settings.bitrate = "320"
                 if not source_url:
-                    msg.print_bitrate_warning(codec, bitrate)
+                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
             elif encode_settings.codec == "ogg" and int(encode_settings.bitrate) > 500:
                 encode_settings.bitrate = "500"
                 if not source_url:
-                    msg.print_bitrate_warning(codec, bitrate)
+                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
             elif encode_settings.codec == "aac" and int(encode_settings.bitrate) > 500:
                 encode_settings.bitrate = "500"
                 if not source_url:
-                    msg.print_bitrate_warning(codec, bitrate)
+                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
             else:
                 encode_settings.bitrate = encode_settings.bitrate + "k"
 
@@ -182,16 +183,17 @@ if debug is True:
 
 def _flask_init():
     builder = pipeline_builder.Audio(backend, platform, encode_settings)
+    # TODO(xsdg): Update init_audio to take an EncodeSettings.
     stream_infra.FlaskServer.init_audio(
-        adevice=adevice,
+        adevice=encode_settings.adevice,
         backend=backend,
-        bitrate=bitrate,
+        bitrate=encode_settings.bitrate,
         buffer_size=buffer_size,
-        codec=codec,
+        codec=encode_settings.codec,
         command=builder.command,
-        media_type=mtype,
+        media_type=media_type,
         platform=platform,
-        samplerate=samplerate)
+        samplerate=encode_settings.samplerate)
 
 
 def main():
