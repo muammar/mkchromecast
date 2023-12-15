@@ -176,13 +176,14 @@ else:
         if source_url is None:
             print(colors.options("Using sample rate:") + f" {encode_settings.samplerate}Hz")
 
+    builder = pipeline_builder.Audio(backend, platform, encode_settings)
+    command = builder.command
 
 if debug is True:
     print(":::audio::: command " + str(command))
 
 
 def _flask_init():
-    builder = pipeline_builder.Audio(backend, platform, encode_settings)
     # TODO(xsdg): Update init_audio to take an EncodeSettings.
     stream_infra.FlaskServer.init_audio(
         adevice=encode_settings.adevice,
@@ -190,7 +191,7 @@ def _flask_init():
         bitrate=encode_settings.bitrate,
         buffer_size=buffer_size,
         codec=encode_settings.codec,
-        command=builder.command,
+        command=command,
         media_type=media_type,
         platform=platform,
         samplerate=encode_settings.samplerate)

@@ -60,6 +60,8 @@ class Audio:
         if self._platform == "Darwin":
             return ["-f", "avfoundation", "-i", ":BlackHole 16ch"]
         else:  # platform == "Linux"
+            # NOTE(xsdg): Warning on console:
+            # [Pulse indev @ 0x564d070e7440] The "frame_size" option is deprecated: set number of bytes per frame
             cmd: list[str] = [
                 "-ac", "2",
                 "-ar", "44100",
@@ -156,7 +158,7 @@ class Audio:
 
         if self._settings.codec == "opus":
             return ["opusenc",
-                    "-"
+                    "-",
                     "--raw",
                     "--bitrate", self._settings.bitrate[:-1],
                     "--raw-rate", self._settings.samplerate,
