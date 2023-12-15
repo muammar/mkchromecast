@@ -29,24 +29,21 @@ command: Union[str, list[str]]
 # We make local copies of these attributes because they are sometimes modified.
 # TODO(xsdg): clean this up more when we refactor this file.
 tray = _mkcc.tray
-#adevice = _mkcc.adevice
-chunk_size = _mkcc.chunk_size
-#segment_time = _mkcc.segment_time
 host = _mkcc.host
 port = _mkcc.port
 platform = _mkcc.platform
 
 ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
 
-frame_size = 32 * chunk_size
-buffer_size = 2 * chunk_size**2
+frame_size = 32 * _mkcc.chunk_size
+buffer_size = 2 * _mkcc.chunk_size**2
 
 debug = _mkcc.debug
 
 if debug is True:
     print(
         ":::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s"
-        % (chunk_size, frame_size, buffer_size)
+        % (_mkcc.chunk_size, frame_size, buffer_size)
     )
 source_url = _mkcc.source_url
 config = ConfigParser.RawConfigParser()
@@ -178,39 +175,10 @@ else:
         if source_url is None:
             print(colors.options("Using sample rate:") + f" {encode_settings.samplerate}Hz")
 
-    """
-    We verify platform and other options
-    """
 
-    # This function add some more flags to the ffmpeg command
-    # when user passes --debug option.
-    def debug_command():
-        command.insert(1, "-loglevel")
-        command.insert(2, "panic")
-        return
-
-    def modalsa():
-        command[command.index("pulse")] = "alsa"
-        command[command.index("Mkchromecast.monitor")] = adevice
-        print(command)
-        return
-
-    def set_segment_time(position):
-        string = ["-f", "segment", "-segment_time", str(_mkcc.segment_time)]
-        for element in string:
-            command.insert(position, element)
-        return
-
-    pb = pipeline_builder.AudioPipelineBuilder(backend, encode_settings)
-    command = pb.build_command()
-
-    """
-    MP3 192k
-    """
-    if codec == "mp3":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = ["lame", "-b", bitrate[:-1], "-r", "-"]
-            """
+    # DO NOT SUBMIT
+    if False:
+        """
         This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
@@ -237,14 +205,7 @@ else:
                 command.insert(2, 'pulsesrc')
                 command.insert(3, 'device="Mkchromecast.monitor"')
             """
-
-    """
-    OGG 192k
-    """
-    if codec == "ogg":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = ["oggenc", "-b", bitrate[:-1], "-Q", "-r", "--ignorelength", "-"]
-            """
+        """
         This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
@@ -272,22 +233,7 @@ else:
                 command.insert(1, 'pulsesrc')
                 command.insert(2, 'device="Mkchromecast.monitor"')
             """
-
-    """
-    AAC > 128k for Stereo, Default sample rate: 44100kHz
-    """
-    if codec == "aac":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = [
-                "faac",
-                "-b", bitrate[:-1],
-                "-X",
-                "-P",
-                "-c", "18000",
-                "-o", "-",
-                "-",
-            ]
-            """
+        """
         This command dumps to file correctly, but does not work for stdout.
         elif platform == 'Linux' and backend.name == 'gstreamer':
             command = [
@@ -313,75 +259,19 @@ else:
                 command.insert(3, 'device="Mkchromecast.monitor"')
             """
 
-    """
-    OPUS
-    """
-    if codec == "opus":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = [
-                "opusenc",
-                "-",
-                "--raw",
-                "--bitrate", bitrate[:-1],
-                "--raw-rate", samplerate,
-                "-",
-            ]
-
-    """
-    WAV 24-Bit
-    """
-    if codec == "wav":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = [
-                "sox",
-                "-t", "raw",
-                "-b", "16",
-                "-e", "signed",
-                "-c", "2",
-                "-r", samplerate,
-                "-",
-                "-t", "wav",
-                "-b", "16",
-                "-e", "signed",
-                "-c", "2",
-                "-r", samplerate,
-                "-L",
-                "-",
-            ]
-
-    """
-    FLAC 24-Bit (values taken from:
-    https://trac.ffmpeg.org/wiki/Encode/HighQualityAudio) except for parec.
-    """
-    if codec == "flac":
-        if platform == "Linux" and backend.name in {"parec", "gstreamer"}:
-            command = [
-                "flac",
-                "-",
-                "-c",
-                "--channels", "2",
-                "--bps", "16",
-                "--sample-rate", samplerate,
-                "--endian", "little",
-                "--sign", "signed",
-                "-s",
-            ]
-
-    if not debug and backend.name == "ffmpeg":
-        debug_command()
-
 if debug is True:
     print(":::audio::: command " + str(command))
 
 
 def _flask_init():
+    builder = pipeline_builder.Audio(backend, platform, encode_settings)
     stream_infra.FlaskServer.init_audio(
         adevice=adevice,
         backend=backend,
         bitrate=bitrate,
         buffer_size=buffer_size,
         codec=codec,
-        command=command,
+        command=builder.command,
         media_type=mtype,
         platform=platform,
         samplerate=samplerate)

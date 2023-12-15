@@ -14,6 +14,8 @@ class EncodeSettings:
     frame_size: int
     samplerate: str
     segment_time: Optional[int]
+    ffmpeg_debug: bool = False
+
 
 class Audio:
 
@@ -42,7 +44,12 @@ class Audio:
             if self._backend.name == "ffmpeg":
                 return self._build_ffmpeg_command()
 
-            return self._build_linux_other_command()
+            elif self._backend.name == "parec":
+                return self._build_linux_other_command()
+
+            else:
+                # TODO(xsdg): gstreamer support never worked, so drop itDrop support for gstreamer.
+                raise Exception("gstreamer is not currently supported")
 
     def _input_command(self) -> list[str]:
         """Returns an appropriate set of input arguments for the pipeline.
@@ -73,6 +80,11 @@ class Audio:
         if self._settings.codec == "aac":
             fmt = "adts"
 
+        # Runs ffmpeg with debug logging enabled.
+        maybe_debug_cmd: list[str] = (
+            [] if not self._settings.ffmpeg_debug else ["-loglevel", "panic"]
+        )
+
         maybe_bitrate_cmd: list[str] = (
             ["-b:a", self._settings.bitrate] if fmt != "wav" else []
         )
@@ -101,6 +113,7 @@ class Audio:
             maybe_cutoff_cmd = []
 
         return [self._backend.path,
+                *maybe_debug_cmd,
                 *self._input_command(),
                 *maybe_segment_cmd,
                 "-f", fmt,
@@ -113,4 +126,67 @@ class Audio:
         ]
 
     def _build_linux_other_command(self) -> list[str]:
-        raise Exception("Not yet implemented")
+        if self._settings.codec == "mp3":
+            # NOTE(xsdg): Apparently lame wants "192" and not "192k"
+            return ["lame",
+                    "-b", self._settings.bitrate[:-1],
+                    "-r",
+                    "-"]
+
+        if self._settings.codec == "ogg":
+            return ["oggenc",
+                    "-b", self._settings.bitrate[:-1],
+                    "-Q",
+                    "-r",
+                    "--ignorelength",
+                    "-"]
+
+        # Original comment: AAC > 128k for Stereo, Default sample rate: 44100Hz.
+        if self._settings.codec == "aac":
+            # TODO(xsdg): This always applies the 18kHz cutoff, in contrast to
+            # the ffmpeg code which only applies it when segment_time is
+            # included.  Figure out this discrepancy.
+            return ["faac",
+                    "-b", self._settings.bitrate[:-1],
+                    "-X",
+                    "-P",
+                    "-c", "18000",
+                    "-o", "-",
+                    "-"]
+
+        if self._settings.codec == "opus":
+            return ["opusenc",
+                    "-"
+                    "--raw",
+                    "--bitrate", self._settings.bitrate[:-1],
+                    "--raw-rate", self._settings.samplerate,
+                    "-"]
+
+        if self._settings.codec == "wav":
+            return ["sox",
+                    "-t", "raw",
+                    "-b", "16",
+                    "-e", "signed",
+                    "-c", "2",
+                    "-r", self._settings.samplerate,
+                    "-",
+                    "-t", "wav",
+                    "-b", "16",
+                    "-e", "signed",
+                    "-c", "2",
+                    "-r", self._settings.samplerate,
+                    "-L",
+                    "-"]
+
+        if self._settings.codec == "flag":
+            return ["flac",
+                    "-",
+                    "-c",
+                    "--channels", "2",
+                    "--bps", "16",
+                    "--sample-rate", self._settings.samplerate,
+                    "--endian", "little",
+                    "--sign", "signed",
+                    "-s"]
+
+        raise Exception(f"Can't handle unexpected codec {self._settings.codec}")

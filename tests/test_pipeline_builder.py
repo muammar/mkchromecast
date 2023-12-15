@@ -58,6 +58,14 @@ class AudioBuilderTests(unittest.TestCase):
         self.assertNotIn("pulse", input_cmd)
         self.assertIn("-frame_size", input_cmd)
 
+    def testDebugSpecialCase(self):
+        self.assertIn(
+            "-loglevel",
+            self.create_builder("ffmpeg", "Darwin", ffmpeg_debug=True).command)
+        self.assertNotIn(
+            "-loglevel",
+            self.create_builder("ffmpeg", "Darwin", ffmpeg_debug=False).command)
+
     def testBitrateSpecialCase(self):
         self.assertIn(
             "-b:a",
