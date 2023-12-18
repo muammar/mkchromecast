@@ -78,10 +78,10 @@ Parser.add_argument(
     "-b",
     "--bitrate",
     type=int,
-    default=None,
+    default=192,
     help="""
     Set the audio encoder's bitrate. The default is set to be 192k average
-    bitrate.
+    bitrate.  Will be ignored for lossless codecs like flac or wav.
 
     Example:
 

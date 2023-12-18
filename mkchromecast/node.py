@@ -13,6 +13,7 @@ import os
 import pickle
 import psutil
 import time
+import re
 import sys
 import signal
 import subprocess
@@ -36,6 +37,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
     configurations = config_manager()
     configf = configurations.configf
 
+    bitrate: int
     if os.path.exists(configf) and mkcc.tray is True:
         configurations.chk_config()
         print(colors.warning("Configuration file exists"))
@@ -43,14 +45,29 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
         config.read(configf)
         backend = ConfigSectionMap("settings")["backend"]
         rcodec = ConfigSectionMap("settings")["codec"]
-        bitrate = ConfigSectionMap("settings")["bitrate"]
+
+        # TODO(xsdg): dedup this parsing code between audio.py and node.py.
+        stored_bitrate = ConfigSectionMap("settings")["bitrate"]
+        if stored_bitrate == "None":
+            print(colors.warning("Setting bitrate to default of "
+                                 f"{constants.DEFAULT_BITRATE}"))
+            bitrate = constants.DEFAULT_BITRATE
+        else:
+            # Bitrate may be stored with or without "k" suffix.
+            bitrate_match = re.match(r"^(\d+)k?$", stored_bitrate)
+            if not bitrate_match:
+                raise Exception(
+                    f"Failed to parse bitrate {repr(stored_bitrate)} as an "
+                    "int. Expected something like '192' or '192k'")
+            bitrate = int(bitrate_match[1])
+
         samplerate = ConfigSectionMap("settings")["samplerate"]
         notifications = ConfigSectionMap("settings")["notifications"]
     else:
         backend = mkcc.backend
         rcodec = mkcc.rcodec
         codec = mkcc.codec
-        bitrate = str(mkcc.bitrate)
+        bitrate = mkcc.bitrate
         samplerate = str(mkcc.samplerate)
         notifications = mkcc.notifications
 
@@ -72,19 +89,8 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
             print("Using " + codec + " as default.")
 
         if backend == "node":
-            if int(bitrate) == 192:
-                print(colors.options("Default bitrate used:") + " " + bitrate + "k.")
-            elif int(bitrate) > 500:
-                print(
-                    colors.warning("Maximum bitrate supported by " + codec + " is:")
-                    + " "
-                    + str(500)
-                    + "k."
-                )
-                bitrate = "500"
-                print(colors.warning("Bitrate has been set to maximum!"))
-            else:
-                print(colors.options("Selected bitrate: ") + bitrate + "k.")
+            bitrate = utils.clamp_bitrate(codec, bitrate)
+            print(colors.options("Using bitrate: ") + f"{bitrate}k.")
 
             if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
                 samplerate = str(utils.quantize_sample_rate(

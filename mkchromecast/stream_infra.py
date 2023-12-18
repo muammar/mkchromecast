@@ -50,7 +50,7 @@ class FlaskServer:
     # Audio arguments.
     _adevice: Optional[str]
     _backend: BackendInfo
-    _bitrate: str
+    _bitrate: int
     _buffer_size: int
     _codec: str
     _platform: str
@@ -80,7 +80,7 @@ class FlaskServer:
     @staticmethod
     def init_audio(adevice: Optional[str],
                    backend: BackendInfo,
-                   bitrate: str,
+                   bitrate: int,
                    buffer_size: int,
                    codec: str,
                    command: Union[str, list[str]],

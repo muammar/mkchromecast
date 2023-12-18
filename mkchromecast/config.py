@@ -123,13 +123,14 @@ class config_manager(object):
         searchatlaunch = ConfigSectionMap("settings")["searchatlaunch"]
         alsadevice = ConfigSectionMap("settings")["alsadevice"]
 
-        codecs = ["mp3", "ogg", "aac", "opus", "flac"]
-
         if os.path.exists(self.configf):
             """
             Reading the codec from config file
             """
-            if codec in codecs and bitrate == "None":
+            # Bitrate must always be set.  It will be ignored for lossless
+            # codecs like FLAC and WAV.
+            if bitrate == "None":
+                # TODO(xsdg): Only update a single field instead of all of them?
                 self.config.set("settings", "backend", str(backend))
                 self.config.set("settings", "codec", str(codec))
                 self.config.set("settings", "bitrate", "192")

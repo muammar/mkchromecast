@@ -134,16 +134,13 @@ class Mkchromecast:
                     print(f"- {resolution}")
                 sys.exit(0)
 
-        self.bitrate: Optional[int]
-        if self.codec in constants.BITRATE_CODECS:
+        self.bitrate: int
+        if self.codec in constants.CODECS_WITH_BITRATE:
             if args.bitrate <= 0:
                 print(colors.error("Bitrate must be a positive integer"))
                 sys.exit(0)
 
             self.bitrate = args.bitrate
-        else:
-            # When the codec doesn't require bitrate, we set it to None.
-            self.bitrate = None
 
         if args.chunk_size <= 0:
             print(colors.error("Chunk size must be a positive integer"))

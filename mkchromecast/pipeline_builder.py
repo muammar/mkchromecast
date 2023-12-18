@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import mkchromecast
+from mkchromecast import constants
 from mkchromecast import stream_infra
 
 @dataclass
@@ -87,9 +88,11 @@ class Audio:
             [] if not self._settings.ffmpeg_debug else ["-loglevel", "panic"]
         )
 
-        maybe_bitrate_cmd: list[str] = (
-            ["-b:a", f"{self._settings.bitrate}k"] if fmt != "wav" else []
-        )
+        maybe_bitrate_cmd: list[str]
+        if self._settings.codec in constants.CODECS_WITH_BITRATE:
+            maybe_bitrate_cmd = ["-b:a", f"{self._settings.bitrate}k"]
+        else:
+            maybe_bitrate_cmd = []
 
         # TODO(xsdg): It's really weird that the legacy code excludes
         # specifically Darwin/ogg and Linux/aac.  Do some more testing to
@@ -129,7 +132,6 @@ class Audio:
 
     def _build_linux_other_command(self) -> list[str]:
         if self._settings.codec == "mp3":
-            # NOTE(xsdg): Apparently lame wants "192" and not "192k"
             return ["lame",
                     "-b", str(self._settings.bitrate),
                     "-r",
