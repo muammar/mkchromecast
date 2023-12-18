@@ -6,24 +6,6 @@ from mkchromecast import colors
 from mkchromecast import constants
 
 
-def print_bitrate_warning(codec: str, bitrate: str) -> None:
-    print(colors.warning(
-        f"Maximum bitrate supported by {codec} is: {bitrate}k."
-        )
-    )
-
-    if codec == "aac":
-        print(colors.warning(
-            "128-256k is already considered sufficient for maximum quality "
-            f"using {codec}."
-            )
-        )
-        print(colors.warning(
-            "Consider a lossless audio codec for higher quality."
-            )
-        )
-
-
 def print_samplerate_warning(codec: str) -> None:
     """Prints a warning when sample rates are set incorrectly."""
     str_rates = [
