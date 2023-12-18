@@ -141,6 +141,9 @@ class Mkchromecast:
                 sys.exit(0)
 
             self.bitrate = args.bitrate
+        else:
+            # Will be ignored downstream.
+            self.bitrate = constants.DEFAULT_BITRATE
 
         if args.chunk_size <= 0:
             print(colors.error("Chunk size must be a positive integer"))
