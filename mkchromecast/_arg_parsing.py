@@ -78,7 +78,7 @@ Parser.add_argument(
     "-b",
     "--bitrate",
     type=int,
-    default="192",
+    default=None,
     help="""
     Set the audio encoder's bitrate. The default is set to be 192k average
     bitrate.

@@ -29,3 +29,7 @@ def backend_options_for_platform(platform: str, video: bool = False):
         return LINUX_VIDEO_BACKENDS
 
     return LINUX_BACKENDS
+
+
+DEFAULT_BITRATE = 192
+CODECS_WITH_BITRATE = ["aac", "mp3", "ogg", "opus"]

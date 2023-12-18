@@ -6,6 +6,7 @@ Google Cast device has to point out to http://ip:5000/stream
 
 import configparser as ConfigParser
 import os
+import re
 import shutil
 from typing import Union
 
@@ -78,13 +79,31 @@ else:
         config.read(configf)
         backend.name = ConfigSectionMap("settings")["backend"]
         backend.path = backend.name
+
+        # Parse strings into Python types.
         adevice = ConfigSectionMap("settings")["alsadevice"]
         if adevice == "None":
             adevice = None
+
+        stored_bitrate = ConfigSectionMap("settings")["bitrate"]
+        bitrate: int
+        if stored_bitrate == "None":
+            print(colors.warning("Setting bitrate to default of "
+                                 f"{constants.DEFAULT_BITRATE}"))
+            bitrate = constants.DEFAULT_BITRATE
+        else:
+            # Bitrate may be stored with or without "k" suffix.
+            bitrate_match = re.match(r"^(\d+)k?$", stored_bitrate)
+            if not bitrate_match:
+                raise Exception(
+                    f"Failed to parse bitrate {repr(stored_bitrate)} as an "
+                    "int. Expected something like '192' or '192k'")
+            bitrate = int(bitrate_match[1])
+
         encode_settings = pipeline_builder.EncodeSettings(
             codec=ConfigSectionMap("settings")["codec"],
             adevice=adevice,
-            bitrate=ConfigSectionMap("settings")["bitrate"],
+            bitrate=bitrate,
             frame_size=frame_size,
             samplerate=ConfigSectionMap("settings")["samplerate"],
             segment_time=_mkcc.segment_time
@@ -100,7 +119,7 @@ else:
         encode_settings = pipeline_builder.EncodeSettings(
             codec=_mkcc.codec,
             adevice=_mkcc.adevice,
-            bitrate=str(_mkcc.bitrate),
+            bitrate=_mkcc.bitrate,
             frame_size=frame_size,
             samplerate=str(_mkcc.samplerate),
             segment_time=_mkcc.segment_time
@@ -137,31 +156,8 @@ else:
               + f" {encode_settings.codec}")
 
     if backend.name != "node":
-        # TODO(xsdg): This is backwards.  Use bitrate as an int everywhere, and
-        # then serialize it with a "k" for ffmpeg.
-        if encode_settings.bitrate == "192":
-            encode_settings.bitrate = encode_settings.bitrate + "k"
-        elif encode_settings.bitrate == "None":
-            pass
-        else:
-            # TODO(xsdg): The logic here is unclear or incorrect.  It appears
-            # that we add "k" to the bitrate unless the bitrate was above the
-            # maximum, in which case we set the bitrate to the max and don't add
-            # the trailing "k".
-            if encode_settings.codec == "mp3" and int(encode_settings.bitrate) > 320:
-                encode_settings.bitrate = "320"
-                if not source_url:
-                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
-            elif encode_settings.codec == "ogg" and int(encode_settings.bitrate) > 500:
-                encode_settings.bitrate = "500"
-                if not source_url:
-                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
-            elif encode_settings.codec == "aac" and int(encode_settings.bitrate) > 500:
-                encode_settings.bitrate = "500"
-                if not source_url:
-                    msg.print_bitrate_warning(encode_settings.codec, encode_settings.bitrate)
-            else:
-                encode_settings.bitrate = encode_settings.bitrate + "k"
+        encode_settings.bitrate = utils.clamp_bitrate(encode_settings.codec,
+                                                      encode_settings.bitrate)
 
         if encode_settings.bitrate != "None" and not source_url:
             print(colors.options("Using bitrate:") + f" {encode_settings.bitrate}")

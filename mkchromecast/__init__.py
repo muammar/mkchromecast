@@ -135,7 +135,7 @@ class Mkchromecast:
                 sys.exit(0)
 
         self.bitrate: Optional[int]
-        if self.codec in ["mp3", "ogg", "acc", "opus", "flac"]:
+        if self.codec in constants.BITRATE_CODECS:
             if args.bitrate <= 0:
                 print(colors.error("Bitrate must be a positive integer"))
                 sys.exit(0)

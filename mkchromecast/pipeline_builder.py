@@ -10,7 +10,7 @@ from mkchromecast import stream_infra
 class EncodeSettings:
     codec: str
     adevice: Optional[str]
-    bitrate: str
+    bitrate: int
     frame_size: int
     samplerate: str
     segment_time: Optional[int]
@@ -88,7 +88,7 @@ class Audio:
         )
 
         maybe_bitrate_cmd: list[str] = (
-            ["-b:a", self._settings.bitrate] if fmt != "wav" else []
+            ["-b:a", f"{self._settings.bitrate}k"] if fmt != "wav" else []
         )
 
         # TODO(xsdg): It's really weird that the legacy code excludes
@@ -131,13 +131,13 @@ class Audio:
         if self._settings.codec == "mp3":
             # NOTE(xsdg): Apparently lame wants "192" and not "192k"
             return ["lame",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-r",
                     "-"]
 
         if self._settings.codec == "ogg":
             return ["oggenc",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-Q",
                     "-r",
                     "--ignorelength",
@@ -149,7 +149,7 @@ class Audio:
             # the ffmpeg code which only applies it when segment_time is
             # included.  Figure out this discrepancy.
             return ["faac",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-X",
                     "-P",
                     "-c", "18000",
@@ -160,7 +160,7 @@ class Audio:
             return ["opusenc",
                     "-",
                     "--raw",
-                    "--bitrate", self._settings.bitrate[:-1],
+                    "--bitrate", str(self._settings.bitrate),
                     "--raw-rate", self._settings.samplerate,
                     "-"]
 

@@ -67,12 +67,29 @@ class AudioBuilderTests(unittest.TestCase):
             self.create_builder("ffmpeg", "Darwin", ffmpeg_debug=False).command)
 
     def testBitrateSpecialCase(self):
+        # wav doesn't emit bitrate.
         self.assertIn(
             "-b:a",
             self.create_builder("ffmpeg", "Darwin", codec="mp3").command)
         self.assertNotIn(
             "-b:a",
             self.create_builder("ffmpeg", "Darwin", codec="wav").command)
+
+        # ffmpeg should use "k" suffix.
+        self.assertIn(
+            "160k",
+            self.create_builder("ffmpeg", "Linux", bitrate=160).command)
+        self.assertNotIn(
+            "160",
+            self.create_builder("ffmpeg", "Linux", bitrate=160).command)
+
+        # non-ffmpeg (parec in this case) should omit "k" suffix.
+        self.assertIn(
+            "160",
+            self.create_builder("parec", "Linux", bitrate=160).command)
+        self.assertNotIn(
+            "160k",
+            self.create_builder("parec", "Linux", bitrate=160).command)
 
     def testSegmentTimeSpecialCase(self):
         self.assertIn(
@@ -130,7 +147,7 @@ class AudioBuilderTests(unittest.TestCase):
             "-acodec", "libmp3lame",
             "-ac", "2",
             "-ar", "22050",
-            "-b:a", "160",
+            "-b:a", "160k",
             "pipe:",
         ]
 
@@ -149,7 +166,7 @@ class AudioBuilderTests(unittest.TestCase):
             "-acodec", "aac",
             "-ac", "2",
             "-ar", "22050",
-            "-b:a", "160",
+            "-b:a", "160k",
             "-cutoff", "18000",
             "pipe:",
         ]
