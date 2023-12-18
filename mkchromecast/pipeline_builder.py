@@ -4,13 +4,14 @@ from dataclasses import dataclass
 from typing import Optional
 
 import mkchromecast
+from mkchromecast import constants
 from mkchromecast import stream_infra
 
 @dataclass
 class EncodeSettings:
     codec: str
     adevice: Optional[str]
-    bitrate: str
+    bitrate: int
     frame_size: int
     samplerate: str
     segment_time: Optional[int]
@@ -87,9 +88,11 @@ class Audio:
             [] if not self._settings.ffmpeg_debug else ["-loglevel", "panic"]
         )
 
-        maybe_bitrate_cmd: list[str] = (
-            ["-b:a", self._settings.bitrate] if fmt != "wav" else []
-        )
+        maybe_bitrate_cmd: list[str]
+        if self._settings.codec in constants.CODECS_WITH_BITRATE:
+            maybe_bitrate_cmd = ["-b:a", f"{self._settings.bitrate}k"]
+        else:
+            maybe_bitrate_cmd = []
 
         # TODO(xsdg): It's really weird that the legacy code excludes
         # specifically Darwin/ogg and Linux/aac.  Do some more testing to
@@ -129,15 +132,14 @@ class Audio:
 
     def _build_linux_other_command(self) -> list[str]:
         if self._settings.codec == "mp3":
-            # NOTE(xsdg): Apparently lame wants "192" and not "192k"
             return ["lame",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-r",
                     "-"]
 
         if self._settings.codec == "ogg":
             return ["oggenc",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-Q",
                     "-r",
                     "--ignorelength",
@@ -149,7 +151,7 @@ class Audio:
             # the ffmpeg code which only applies it when segment_time is
             # included.  Figure out this discrepancy.
             return ["faac",
-                    "-b", self._settings.bitrate[:-1],
+                    "-b", str(self._settings.bitrate),
                     "-X",
                     "-P",
                     "-c", "18000",
@@ -160,7 +162,7 @@ class Audio:
             return ["opusenc",
                     "-",
                     "--raw",
-                    "--bitrate", self._settings.bitrate[:-1],
+                    "--bitrate", str(self._settings.bitrate),
                     "--raw-rate", self._settings.samplerate,
                     "-"]
 

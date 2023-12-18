@@ -95,6 +95,47 @@ def quantize_sample_rate(has_source_url: bool,
     return target_rates[-1]
 
 
+def clamp_bitrate(codec: str, bitrate: Optional[int]) -> int:
+    # Legacy logic (also used str for bitrate rather than int):
+    # if bitrate == "192" -> "192k"
+    # elif bitrate == "None" -> pass
+    # else
+    #   if codec == "mp3" and bitrate > 320 -> "320" + warning
+    #   elif codec == "ogg" and bitrate > 500 -> "500" + warning
+    #   elif codec == "aac" and bitrate < 500 -> "500" + warning
+    #   else -> bitrate + "k"
+
+    if bitrate is None:
+        print(colors.warning("Setting bitrate to default of "
+                             f"{constants.DEFAULT_BITRATE}"))
+        return constants.DEFAULT_BITRATE
+
+    if bitrate <= 0:
+        print(colors.warning(f"Bitrate of {bitrate} was invalid; setting to "
+                             f"{constants.DEFAULT_BITRATE}"))
+        return constants.DEFAULT_BITRATE
+
+    max_bitrate_for_codec: dict[str, int] = {
+        "mp3": 320,
+        "ogg": 500,
+        "aac": 500,
+    }
+    max_bitrate: Optional[int] = max_bitrate_for_codec.get(codec, None)
+
+    if max_bitrate is None:
+        # codec bitrate is unlimited.
+        return bitrate
+
+    if bitrate > max_bitrate:
+        print(colors.warning(
+            f"Configured bitrate {bitrate} exceeds max {max_bitrate} for "
+            f"{codec} codec; setting to max."
+        ))
+        return max_bitrate
+
+    return bitrate
+
+
 def terminate():
     del_tmp()
     parent_pid = os.getpid()
