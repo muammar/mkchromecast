@@ -1,11 +1,17 @@
 # This file is part of mkchromecast.
 
 from dataclasses import dataclass
-from typing import Optional
+import os
+from typing import Optional, Union
 
 import mkchromecast
+from mkchromecast import colors
 from mkchromecast import constants
+from mkchromecast import resolution
 from mkchromecast import stream_infra
+from mkchromecast import utils
+
+SubprocessCommand = Union[list[str], str, os.PathLike]
 
 @dataclass
 class EncodeSettings:
@@ -37,6 +43,7 @@ class Audio:
         self._platform = platform
         self._settings = encode_settings
 
+    # TODO(xsdg): Use SubprocessCommand here.
     @property
     def command(self) -> list[str]:
         if self._platform == "Darwin":
@@ -194,3 +201,175 @@ class Audio:
                     "-s"]
 
         raise Exception(f"Can't handle unexpected codec {self._settings.codec}")
+
+
+@dataclass
+class VideoSettings:
+    display: Optional[str]
+    fps: str
+    input_file: Optional[str]
+    resolution: Optional[str]
+    screencast: bool
+    subtitles: Optional[str]
+    user_command: Optional[str]  # TODO(xsdg): check type.
+    vcodec: str
+    youtube_url: Optional[str]
+
+
+class Video:
+    def __init__(self, video_settings: VideoSettings):
+        self._settings = video_settings
+
+    @property
+    def command(self) -> SubprocessCommand:
+        # TODO(xsdg): Set up a mutually-exclusive group for youtube_url,
+        # screencast, user_command, and input_file in _arg_parsing.py .
+        if self._settings.youtube_url:
+            return ["youtube-dl", "-o", "-", self._settings.youtube_url]
+
+        if self._settings.screencast:
+            return self._screencast_command()
+
+        if self._settings.user_command:
+            return self._settings.user_command
+
+        if self._settings.input_file:
+            return self._input_file_command()
+
+        # TODO(xsdg): Figure out if there's any way to actually get here.
+        raise Exception("Internal error: Unexpected video mode")
+
+    def _screencast_command(self) -> list[str]:
+        screen_size = resolution.resolution(
+            self._settings.resolution or "1080p",
+            self._settings.screencast
+        )
+
+        maybe_veryfast_cmd: list[str]
+        if self._settings.vcodec != "h264_nvenc":
+            maybe_veryfast_cmd = ["-preset", "veryfast"]
+        else:
+            maybe_veryfast_cmd = []
+
+        return ["ffmpeg",
+                "-ac", "2",
+                "-ar", "44100",
+                "-frame_size", "2048",
+                "-fragment_size", "2048",
+                "-f", "pulse",
+                "-ac", "2",
+                "-i", "Mkchromecast.monitor",
+                "-f", "x11grab",
+                "-r", self._settings.fps,
+                "-s", screen_size,
+                "-i", "{}+0,0".format(self._settings.display),
+                "-vcodec", self._settings.vcodec,
+                *maybe_veryfast_cmd,
+                "-tune", "zerolatency",
+                "-maxrate", "10000k",
+                "-bufsize", "20000k",
+                "-pix_fmt", "yuv420p",
+                "-g", "60",  # '-c:a', 'copy', '-ac', '2',
+                # '-b', '900k',
+                "-f", "mp4",
+                "-movflags", "frag_keyframe+empty_moov",
+                "-ar", "44100",
+                "-acodec", "libvorbis",
+                "pipe:1",
+        ]
+
+    def _input_file_subtitle(self) -> tuple(list[str], list[str]):
+    def _input_file_command(self) -> list[str]:
+        # Commands adapted from:
+        # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
+        if not self._settings.input_file:
+            raise Exception("Internal error: input file is not specified.")
+
+        is_mkv = self._settings.input_file.endswith("mkv")
+
+        maybe_input_subtitle_cmd: list[str]
+        maybe_vf_subtitle_cmd: list[str]
+        if self._settings.subtitles:
+            if is_mkv:
+                print(colors.warning("Subtitles with mkv are not supported yet."))
+                # NOTE(xsdg):  Here's an excerpt from the original command:
+                # "-i", _mkcc.input_file,
+                # "-i", _mkcc.subtitles,
+                # "-c:v", "copy",
+                # "-c:a", "copy",
+                # "-c:s", "mov_text",
+                # "-map", "0:0",
+                # "-map", "0:1",
+                # "-map", "1:0",
+                #
+                # The first number in the "-map" command corresponds to an input
+                # stream.  So "1" is the subtitle stream, and "0" is input_file.
+
+                # NOTE(xsdg): In the original command,
+                # "-max_muxing_queue_size" came after "-f" and before
+                # "-movflags".  We may need to move it to be functionally
+                # equivalent to the original command.
+
+                maybe_input_subtitle_cmd = ["-i", self._settings.subtitles,
+                                            "-codec:s", "mov_text",
+                                            "-map", "1:0"]
+                maybe_vf_subtitle_cmd = ["-max_muxing_queue_size", "9999"]
+            else:
+                maybe_input_subtitle_cmd = []
+                maybe_vf_subtitle_cmd = [
+                    "-vf", f"subtitles={self._settings.subtitles}"]
+        else:
+            maybe_input_subtitle_cmd = []
+            maybe_vf_subtitle_cmd = []
+
+        vencode_cmd: list[str]
+        # TODO(xsdg): rename "bit-depth" to something more accurate.
+        bit_depth = utils.check_file_info(self._settings.input_file,
+                                          what="bit-depth")
+        if bit_depth == "yuv420p10le":
+            vencode_cmd = ["-vcodec", "libx264",
+                           "-preset", "ultrafast",
+                           "-tune", "zerolatency",
+                           "-maxrate", "10000k",
+                           "-bufsize", "20000k",
+                           "-pix_fmt", "yuv420p",
+                           "-g", "60"]
+        else:
+            vencode_cmd = ["-vcodec", "copy"]
+
+        #sub None, mkv False -> []
+        #sub None mkv True -> ["-acodec", "libmp3lame", "-q:a", "0"]
+        #sub not None, mkv False -> []
+        #sub not None, mkv True -> ["-c:a", "copy"]
+        aencode_cmd: list[str]
+        if is_mkv:
+            if self._settings.subtitles:
+                aencode_cmd = ["-codec:a", "copy"]
+            else:
+                aencode_cmd = ["-codec:a", "libmp3lame",
+                               "-q:a", "0"]
+        else:  # is_mkv == False
+            aencode_cmd = []
+
+        return [
+            "ffmpeg",
+            "-re",
+            "-i", self._settings.input_file,
+            *maybe_input_subtitle_cmd,
+            "-map_chapters", "-1",
+            *vencode_cmd,
+            *aencode_cmd,
+            "-vcodec", "libx264",
+            "-preset", "veryfast",
+            "-tune", "zerolatency",
+            "-maxrate", "10000k",
+            "-bufsize", "20000k",
+            "-pix_fmt", "yuv420p",
+            "-g", "60",
+            # '-b', '900k',
+            "-f", "mp4",
+            "-movflags", "frag_keyframe+empty_moov",
+            *maybe_vf_subtitle_cmd,
+            "pipe:1",
+        ]
+

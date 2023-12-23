@@ -131,7 +131,7 @@ else:
             "-movflags", "frag_keyframe+empty_moov",
             "pipe:1",
         ]
-    else:
+    else:  # resolution is not None _or_ user_command is not None.
         if _mkcc.input_file is not None and _mkcc.subtitles is None and mkv is False:
             # Command taken from
             # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
