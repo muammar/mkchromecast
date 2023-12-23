@@ -134,6 +134,8 @@ class Mkchromecast:
                     print(f"- {resolution}")
                 sys.exit(0)
 
+            self.resolution = args.resolution
+
         self.bitrate: int
         if self.codec in constants.CODECS_WITH_BITRATE:
             if args.bitrate <= 0:
