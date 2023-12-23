@@ -203,9 +203,13 @@ class Audio:
         raise Exception(f"Can't handle unexpected codec {self._settings.codec}")
 
 
+def is_mkv(filename: str) -> bool:
+    return filename.endswith("mkv")
+
+
 @dataclass
 class VideoSettings:
-    display: Optional[str]
+    display: Optional[str]  # TODO(xsdg): Should this be Optional?
     fps: str
     input_file: Optional[str]
     resolution: Optional[str]
@@ -278,78 +282,104 @@ class Video:
                 "pipe:1",
         ]
 
-    def _input_file_subtitle(self) -> tuple(list[str], list[str]):
+    @staticmethod
+    def _input_file_subtitle(subtitles: Optional[str], is_mkv: bool) -> tuple[list[str], list[str]]:
+        """Returns input_file arguments related to subtitles.
+
+        Depending on the pipeline settings, this will return arguments to be
+        specified alongside the input streams, and/or arguments to be specified
+        near the output settings.
+
+        Returns:
+            A tuple of (input-adjacent args, output-adjacent args).
+        """
+        if not subtitles:
+            return ([], [],)
+
+        if not is_mkv:
+            # Only output-adjacent args for non-mkv input files.
+            output_args = ["-vf", f"subtitles={subtitles}"]
+            return ([], output_args,)
+
+        print(colors.warning("Subtitles with mkv are not supported yet."))
+        # NOTE(xsdg):  Here's an excerpt from the original command:
+        # "-i", _mkcc.input_file,
+        # "-i", _mkcc.subtitles,
+        # "-c:v", "copy",
+        # "-c:a", "copy",
+        # "-c:s", "mov_text",
+        # "-map", "0:0",
+        # "-map", "0:1",
+        # "-map", "1:0",
+        #
+        # The first number in the "-map" command corresponds to an input
+        # stream.  So "1" is the subtitle stream, and "0" is input_file.
+
+        # NOTE(xsdg): In the original command,
+        # "-max_muxing_queue_size" came after "-f" and before
+        # "-movflags".  We may need to move it to be functionally
+        # equivalent to the original command.
+
+        input_args = ["-i", subtitles,
+                      "-codec:s", "mov_text",
+                      "-map", "1:0"]
+        output_args = ["-max_muxing_queue_size", "9999"]
+        return (input_args, output_args,)
+
+    @staticmethod
+    def _input_file_vencode(input_file: str) -> list[str]:
+        input_is_mkv = is_mkv(input_file)
+        copy_vencode = ["-vcodec", "copy"]
+
+        if not input_is_mkv:
+            # Return early to avoid expensive check_file_info.
+            return copy_vencode
+
+        # TODO(xsdg): rename "bit-depth" to something more accurate.
+        pixel_format = utils.check_file_info(input_file, what="bit-depth")
+        if pixel_format == "yuv420p10le":
+            return ["-vcodec", "libx264",
+                    "-preset", "ultrafast",
+                    "-tune", "zerolatency",
+                    "-maxrate", "10000k",
+                    "-bufsize", "20000k",
+                    "-pix_fmt", "yuv420p",
+                    "-g", "60"]
+
+        return copy_vencode
+
+    @staticmethod
+    def _input_file_aencode(has_subtitles: bool, input_is_mkv: bool) -> list[str]:
+        #sub None, mkv False -> []
+        #sub None mkv True -> ["-acodec", "libmp3lame", "-q:a", "0"]
+        #sub not None, mkv False -> []
+        #sub not None, mkv True -> ["-c:a", "copy"]
+
+        # acodec is only specified for mkv files.
+        if not input_is_mkv:
+            return []
+
+        if has_subtitles:
+            return ["-codec:a", "copy"]
+        else:
+            return ["-codec:a", "libmp3lame",
+                    "-q:a", "0"]
+
     def _input_file_command(self) -> list[str]:
         # Commands adapted from:
         # https://trac.ffmpeg.org/wiki/EncodingForStreamingSites#Streamingafile
         if not self._settings.input_file:
             raise Exception("Internal error: input file is not specified.")
 
-        is_mkv = self._settings.input_file.endswith("mkv")
+        input_is_mkv = is_mkv(self._settings.input_file)
 
-        maybe_input_subtitle_cmd: list[str]
-        maybe_vf_subtitle_cmd: list[str]
-        if self._settings.subtitles:
-            if is_mkv:
-                print(colors.warning("Subtitles with mkv are not supported yet."))
-                # NOTE(xsdg):  Here's an excerpt from the original command:
-                # "-i", _mkcc.input_file,
-                # "-i", _mkcc.subtitles,
-                # "-c:v", "copy",
-                # "-c:a", "copy",
-                # "-c:s", "mov_text",
-                # "-map", "0:0",
-                # "-map", "0:1",
-                # "-map", "1:0",
-                #
-                # The first number in the "-map" command corresponds to an input
-                # stream.  So "1" is the subtitle stream, and "0" is input_file.
+        maybe_input_subtitle_cmd, maybe_vf_subtitle_cmd = (
+            self._input_file_subtitle(self._settings.subtitles, input_is_mkv))
 
-                # NOTE(xsdg): In the original command,
-                # "-max_muxing_queue_size" came after "-f" and before
-                # "-movflags".  We may need to move it to be functionally
-                # equivalent to the original command.
+        vencode_cmd = self._input_file_vencode(self._settings.input_file)
 
-                maybe_input_subtitle_cmd = ["-i", self._settings.subtitles,
-                                            "-codec:s", "mov_text",
-                                            "-map", "1:0"]
-                maybe_vf_subtitle_cmd = ["-max_muxing_queue_size", "9999"]
-            else:
-                maybe_input_subtitle_cmd = []
-                maybe_vf_subtitle_cmd = [
-                    "-vf", f"subtitles={self._settings.subtitles}"]
-        else:
-            maybe_input_subtitle_cmd = []
-            maybe_vf_subtitle_cmd = []
-
-        vencode_cmd: list[str]
-        # TODO(xsdg): rename "bit-depth" to something more accurate.
-        bit_depth = utils.check_file_info(self._settings.input_file,
-                                          what="bit-depth")
-        if bit_depth == "yuv420p10le":
-            vencode_cmd = ["-vcodec", "libx264",
-                           "-preset", "ultrafast",
-                           "-tune", "zerolatency",
-                           "-maxrate", "10000k",
-                           "-bufsize", "20000k",
-                           "-pix_fmt", "yuv420p",
-                           "-g", "60"]
-        else:
-            vencode_cmd = ["-vcodec", "copy"]
-
-        #sub None, mkv False -> []
-        #sub None mkv True -> ["-acodec", "libmp3lame", "-q:a", "0"]
-        #sub not None, mkv False -> []
-        #sub not None, mkv True -> ["-c:a", "copy"]
-        aencode_cmd: list[str]
-        if is_mkv:
-            if self._settings.subtitles:
-                aencode_cmd = ["-codec:a", "copy"]
-            else:
-                aencode_cmd = ["-codec:a", "libmp3lame",
-                               "-q:a", "0"]
-        else:  # is_mkv == False
-            aencode_cmd = []
+        aencode_cmd = self._input_file_aencode(bool(self._settings.subtitles),
+                                               input_is_mkv)
 
         return [
             "ffmpeg",

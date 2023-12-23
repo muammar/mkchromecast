@@ -194,5 +194,50 @@ class AudioBuilderTests(unittest.TestCase):
         with self.assertRaisesRegex(Exception, "unexpected codec.*noexist"):
             _ = self.create_builder("parec", "Linux", codec="noexist").command
 
+
+class VideoBuilderTests(unittest.TestCase):
+
+    def create_builder(self,
+                       **special_encoder_kwargs):
+        encoder_kwargs: dict[str, Any] = {
+            "display": ":0",
+            "fps": "25",
+            "input_file": "/path/to/file.mp4",
+            "resolution": None,
+            "screencast": False,
+            "subtitles": None,
+            "user_command": None,
+            "vcodec": "libx264",
+            "youtube_url": None,
+        }
+
+        encoder_kwargs |= special_encoder_kwargs
+        settings = pipeline_builder.VideoSettings(**encoder_kwargs)
+
+        return pipeline_builder.Video(settings)
+
+    def testSpotCheckFullCommand(self):
+        exp_command = [
+            "ffmpeg",
+            "-re",
+            "-i", "input_file.mp4",
+            "-map_chapters", "-1",
+            "-vcodec", "libx264",
+            "-preset", "veryfast",
+            "-tune", "zerolatency",
+            "-maxrate", "10000k",
+            "-bufsize", "20000k",
+            "-pix_fmt", "yuv420p",
+            "-g", "60",
+            # '-b', '900k',
+            "-f", "mp4",
+            "-movflags", "frag_keyframe+empty_moov",
+            "pipe:1",
+        ]
+        self.assertEqual(
+            exp_command,
+            self.create_builder(input_file="input_file.mp4").command)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
