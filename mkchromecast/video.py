@@ -10,6 +10,7 @@ from subprocess import Popen
 import os
 
 import mkchromecast
+from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
 from mkchromecast import utils
 import mkchromecast.colors as colors
@@ -260,14 +261,37 @@ if mtype is None:
     mtype = "video/mp4"
 
 if _mkcc.debug is True:
-    print(":::ffmpeg::: command: %s." % command)
+    print(":::ffmpeg::: unused legacy command: %s." % command)
 
 
 def _flask_init():
+    # TODO(xsdg): Passing args in one-by-one to facilitate refactoring
+    # the Mkchromecast object so that it has argument groups instead of just a
+    # giant set of uncoordinated and conflicting arguments.
+    encode_settings = pipeline_builder.VideoSettings(
+        display=_mkcc.display,
+        fps=_mkcc.fps,
+        input_file=_mkcc.input_file,
+        loop=_mkcc.loop,
+        resolution=_mkcc.resolution,
+        screencast=_mkcc.screencast,
+        seek=_mkcc.seek,
+        subtitles=_mkcc.subtitles,
+        user_command=_mkcc.command,
+        vcodec=_mkcc.vcodec,
+        youtube_url=_mkcc.youtube_url,
+    )
+    builder = pipeline_builder.Video(encode_settings)
+    if _mkcc.debug is True:
+        print(f":::ffmpeg::: unused legacy command: {command}")
+        print(f":::ffmpeg::: pipeline_builder command: {builder.command}")
+
+    media_type = _mkcc.mtype or "video/mp4"
     stream_infra.FlaskServer.init_video(
         chunk_size=_mkcc.chunk_size,
-        command=command,
-        media_type=mtype)
+        command=builder.command,
+        media_type=(_mkcc.mtype or "video/mp4")
+    )
 
 
 def main():

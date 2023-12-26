@@ -226,6 +226,10 @@ class Video:
     # Differences compared to original policies:
     # - Using `veryfast` preset across the board, instead of `ultrafast`.
     # - Differences in vencode policy (see function).
+    #
+    # Note that this implementation remains broken (as was the original) in that
+    # "-vf" can only be specified once per stream, but will end up being
+    # specified twice if both subtitles and resolution are used.
 
     def __init__(self, video_settings: VideoSettings):
         self._settings = video_settings
@@ -371,6 +375,18 @@ class Video:
         if not input_is_mkv:
             # Return early to avoid expensive check_file_info.
             return copy_strategy
+
+        # NOTE(xsdg): A video from youtube with the following specs played
+        # without issue using the copy strategy, so I'm not sure if the
+        # following workaround is still necessary:
+        #
+        # Stream #0:0(eng): Video: vp9 (Profile 2) (vp09 / 0x39307076), yuv420p10le(tv, bt2020nc/bt2020/smpte2084), 3840x2160 [SAR 1:1 DAR 16:9], q=2-31, 59.94 fps, 59.94 tbr, 16k tbn (default)
+        #    Metadata:
+        #      DURATION        : 00:05:13.779000000
+        #    Side data:
+        #      Content Light Level Metadata, MaxCLL=1100, MaxFALL=180
+        #      Mastering Display Metadata, has_primaries:1 has_luminance:1 r(0.6780,0.3220) g(0.2450,0.7030) b(0.1380 0.0520) wp(0.3127, 0.3290) min_luminance=0.000100, max_luminance=1000.000000
+
 
         # TODO(xsdg): rename "what" from "bit-depth" to something more accurate.
         pixel_format = utils.check_file_info(input_file, what="bit-depth")

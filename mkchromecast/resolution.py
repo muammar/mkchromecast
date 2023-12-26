@@ -15,7 +15,7 @@ resolutions = {
 
 
 def resolution(res, screencast):
-    res = Resolutions[res.lower()]
+    res = resolutions[res.lower()]
     if not screencast:
         return ["-vf", res[0]]
     else:
