@@ -226,6 +226,7 @@ class Video:
     # Differences compared to original policies:
     # - Using `veryfast` preset across the board, instead of `ultrafast`.
     # - Differences in vencode policy (see function).
+    # - Avoids running ffmpeg with panic loglevel when --debug specified.
     #
     # Note that this implementation remains broken (as was the original) in that
     # "-vf" can only be specified once per stream, but will end up being
@@ -461,4 +462,3 @@ class Video:
             *maybe_resolution_cmd,
             "pipe:1",
         ]
-
