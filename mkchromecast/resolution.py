@@ -1,5 +1,6 @@
 # This file is part of mkchromecast.
 
+# TODO(xsdg): Move this to pipeline_builder.py.
 resolutions = {
     "480p": ("scale-854:-1", "854x480:"),
     "720p": ("scale=1280:-1", "1280x720"),
@@ -14,7 +15,7 @@ resolutions = {
 
 
 def resolution(res, screencast):
-    res = resolutions[res.lower()]
+    res = Resolutions[res.lower()]
     if not screencast:
         return ["-vf", res[0]]
     else:

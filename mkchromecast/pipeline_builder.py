@@ -212,8 +212,10 @@ class VideoSettings:
     display: Optional[str]  # TODO(xsdg): Should this be Optional?
     fps: str
     input_file: Optional[str]
+    loop: bool
     resolution: Optional[str]
     screencast: bool
+    seek: Optional[str]
     subtitles: Optional[str]
     user_command: Optional[str]  # TODO(xsdg): check type.
     vcodec: str
@@ -221,6 +223,10 @@ class VideoSettings:
 
 
 class Video:
+    # Differences compared to original policies:
+    # - Using `veryfast` preset across the board, instead of `ultrafast`.
+    # - Differences in vencode policy (see function).
+
     def __init__(self, video_settings: VideoSettings):
         self._settings = video_settings
 
@@ -283,7 +289,9 @@ class Video:
         ]
 
     @staticmethod
-    def _input_file_subtitle(subtitles: Optional[str], is_mkv: bool) -> tuple[list[str], list[str]]:
+    def _input_file_subtitle(
+        subtitles: Optional[str],
+        is_mkv: bool) -> tuple[list[str], list[str]]:
         """Returns input_file arguments related to subtitles.
 
         Depending on the pipeline settings, this will return arguments to be
@@ -327,29 +335,53 @@ class Video:
         return (input_args, output_args,)
 
     @staticmethod
-    def _input_file_vencode(input_file: str) -> list[str]:
-        input_is_mkv = is_mkv(input_file)
-        copy_vencode = ["-vcodec", "copy"]
+    def _input_file_vencode(input_file: str, res: Optional[str]) -> list[str]:
+        """Specifies the video encoding args according to a simple policy.
 
+        1) If any reencoding is being done (for instance, to rescale), use
+           libx264 vcodec with yuv420p pixel format
+        2) If input pixel format is yuv420p10le (HDR), re-encode using libx264
+           with yuv420p pixel format.
+        3) Otherwise, copy input with no re-encoding.
+        """
+
+        # Original policy was _extremely_ inconsistent and wasn't worth
+        # replicating.  Note that this may cause some regressions which would
+        # need to be re-fixed going forward.
+
+        input_is_mkv = is_mkv(input_file)
+        copy_strategy = ["-vcodec", "copy"]
+        reencode_strategy = [
+            "-vcodec", "libx264",
+            "-preset", "veryfast",
+            "-tune", "zerolatency",
+            "-maxrate", "10000k",
+            "-bufsize", "20000k",
+            "-pix_fmt", "yuv420p",
+            "-g", "60"
+        ]
+
+        if res:
+            # Rescaling always requires re-encoding.
+            # TODO(xsdg): Optimization: if the input resolution already matches
+            # the output resolution, avoid re-encoding?
+            return reencode_strategy
+
+        # TODO(xsdg): Why does mkv or not-mkv matter here?
         if not input_is_mkv:
             # Return early to avoid expensive check_file_info.
-            return copy_vencode
+            return copy_strategy
 
-        # TODO(xsdg): rename "bit-depth" to something more accurate.
+        # TODO(xsdg): rename "what" from "bit-depth" to something more accurate.
         pixel_format = utils.check_file_info(input_file, what="bit-depth")
         if pixel_format == "yuv420p10le":
-            return ["-vcodec", "libx264",
-                    "-preset", "ultrafast",
-                    "-tune", "zerolatency",
-                    "-maxrate", "10000k",
-                    "-bufsize", "20000k",
-                    "-pix_fmt", "yuv420p",
-                    "-g", "60"]
+            return reencode_strategy
 
-        return copy_vencode
+        return copy_strategy
 
     @staticmethod
     def _input_file_aencode(has_subtitles: bool, input_is_mkv: bool) -> list[str]:
+        # Original acodec policy:
         #sub None, mkv False -> []
         #sub None mkv True -> ["-acodec", "libmp3lame", "-q:a", "0"]
         #sub not None, mkv False -> []
@@ -373,33 +405,44 @@ class Video:
 
         input_is_mkv = is_mkv(self._settings.input_file)
 
-        maybe_input_subtitle_cmd, maybe_vf_subtitle_cmd = (
+        maybe_loop_cmd: list[str] = (
+            ["-stream_loop", "-1"] if self._settings.loop else [])
+
+        maybe_seek_cmd: list[str] = (
+            ["-ss", self._settings.seek] if self._settings.seek else [])
+
+        maybe_resolution_cmd: list[str]
+        if self._settings.resolution:
+            maybe_resolution_cmd = [
+                "-vf",
+                resolution.resolutions[self._settings.resolution][0]
+            ]
+        else:
+            maybe_resolution_cmd = []
+
+        maybe_input_subtitle_cmd, maybe_filter_subtitle_cmd = (
             self._input_file_subtitle(self._settings.subtitles, input_is_mkv))
 
-        vencode_cmd = self._input_file_vencode(self._settings.input_file)
+        vencode_cmd = self._input_file_vencode(self._settings.input_file,
+                                               self._settings.resolution)
 
         aencode_cmd = self._input_file_aencode(bool(self._settings.subtitles),
                                                input_is_mkv)
 
         return [
             "ffmpeg",
+            *maybe_loop_cmd,
+            *maybe_seek_cmd,
             "-re",
             "-i", self._settings.input_file,
             *maybe_input_subtitle_cmd,
             "-map_chapters", "-1",
             *vencode_cmd,
             *aencode_cmd,
-            "-vcodec", "libx264",
-            "-preset", "veryfast",
-            "-tune", "zerolatency",
-            "-maxrate", "10000k",
-            "-bufsize", "20000k",
-            "-pix_fmt", "yuv420p",
-            "-g", "60",
-            # '-b', '900k',
             "-f", "mp4",
             "-movflags", "frag_keyframe+empty_moov",
-            *maybe_vf_subtitle_cmd,
+            *maybe_filter_subtitle_cmd,
+            *maybe_resolution_cmd,
             "pipe:1",
         ]
 
