@@ -1,5 +1,6 @@
 # This file is part of mkchromecast.
 
+# TODO(xsdg): Move this to pipeline_builder.py.
 resolutions = {
     "480p": ("scale-854:-1", "854x480:"),
     "720p": ("scale=1280:-1", "1280x720"),

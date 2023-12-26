@@ -5,6 +5,7 @@ from unittest import mock
 
 from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
+from mkchromecast import utils
 
 class AudioBuilderTests(unittest.TestCase):
 
@@ -193,6 +194,150 @@ class AudioBuilderTests(unittest.TestCase):
 
         with self.assertRaisesRegex(Exception, "unexpected codec.*noexist"):
             _ = self.create_builder("parec", "Linux", codec="noexist").command
+
+
+class VideoBuilderTests(unittest.TestCase):
+
+    def create_builder(self,
+                       **special_encoder_kwargs):
+        encoder_kwargs: dict[str, Any] = {
+            "display": ":0",
+            "fps": "25",
+            "input_file": "/path/to/file.mp4",
+            "loop": False,
+            "resolution": None,
+            "screencast": False,
+            "seek": None,
+            "subtitles": None,
+            "user_command": None,
+            "vcodec": "libx264",
+            "youtube_url": None,
+        }
+
+        encoder_kwargs |= special_encoder_kwargs
+        settings = pipeline_builder.VideoSettings(**encoder_kwargs)
+
+        return pipeline_builder.Video(settings)
+
+    def testEmptySubtitleCommands(self):
+        empty_sub = ([], [],)
+        self.assertEqual(
+            empty_sub,
+            pipeline_builder.Video._input_file_subtitle(None, is_mkv=False)
+        )
+        self.assertEqual(
+            empty_sub,
+            pipeline_builder.Video._input_file_subtitle(None, is_mkv=True)
+        )
+
+    def testMkvSubtitleCommands(self):
+        sub_file = "subtitles.srt"
+        input_args, output_args = pipeline_builder.Video._input_file_subtitle(
+            sub_file, is_mkv=True
+        )
+
+        self.assertIn("-i", input_args)
+        i_index = input_args.index("-i")
+        self.assertEqual(sub_file, input_args[i_index + 1])
+
+        self.assertIn("-max_muxing_queue_size", output_args)
+        self.assertNotIn("-vf", output_args)
+
+    def testNonMkvSubtitleCommands(self):
+        sub_file = "subtitles.srt"
+        input_args, output_args = pipeline_builder.Video._input_file_subtitle(
+            sub_file, is_mkv=False
+        )
+
+        self.assertEqual([], input_args)
+
+        self.assertIn("-vf", output_args)
+        o_index = output_args.index("-vf")
+        self.assertEqual(f"subtitles={sub_file}", output_args[o_index + 1])
+
+    def testAudioEncodeCommands(self):
+        # Shorthand for convenience.
+        aencode_fxn = pipeline_builder.Video._input_file_aencode
+
+        self.assertEqual([], aencode_fxn(True, False))
+        self.assertEqual([], aencode_fxn(False, False))
+
+        self.assertIn("copy", aencode_fxn(True, True))
+        self.assertNotIn("libmp3lame", aencode_fxn(True, True))
+
+        self.assertNotIn("copy", aencode_fxn(False, True))
+        self.assertIn("libmp3lame", aencode_fxn(False, True))
+
+    def testVideoEncodeCommands(self):
+        self.enterContext(mock.patch.object(utils, "check_file_info", autospec=True))
+        utils.check_file_info.side_effect = Exception("Should not be called")
+
+        # Shorthand for convenience.
+        vencode_fxn = pipeline_builder.Video._input_file_vencode
+
+        # Whenever resolution is specified, we should see the reencode strategy.
+        self.assertIn("libx264", vencode_fxn("input.mp4", res="1080p"))
+        self.assertIn("libx264", vencode_fxn("input.mkv", res="1080p"))
+        self.assertNotIn("copy", vencode_fxn("input.mkv", res="1080p"))
+
+        # We should always copy for non-mkv without resolution specified.
+        self.assertIn("copy", vencode_fxn("input.mp4", res=None))
+        self.assertNotIn("libx264", vencode_fxn("input.mp4", res=None))
+
+        # For mkv without resolution, we should only reencode yuv420p10le.
+        utils.check_file_info.side_effect = None
+        utils.check_file_info.return_value = "yuv420p"
+        self.assertIn("copy", vencode_fxn("input.mkv", res=None))
+        utils.check_file_info.assert_called_once()
+
+        utils.check_file_info.reset_mock()
+        utils.check_file_info.return_value = "yuv420p10le"
+        self.assertIn("libx264", vencode_fxn("input.mkv", res=None))
+        utils.check_file_info.assert_called_once()
+
+    def testSpotCheckReencodeFullCommand(self):
+        exp_command = [
+            "ffmpeg",
+            "-re",
+            "-i", "input_file.mp4",
+            "-map_chapters", "-1",
+            "-vcodec", "libx264",
+            "-preset", "veryfast",
+            "-tune", "zerolatency",
+            "-maxrate", "10000k",
+            "-bufsize", "20000k",
+            "-pix_fmt", "yuv420p",
+            "-g", "60",
+            "-f", "mp4",
+            "-movflags", "frag_keyframe+empty_moov",
+            "-vf", "scale=1920x1080",
+            "pipe:1",
+        ]
+
+        builder = self.create_builder(input_file="input_file.mp4",
+                                      resolution="1080p")
+        self.assertEqual(exp_command, builder.command)
+
+    def testSpotCheckCopyFullCommand(self):
+        exp_command = [
+            "ffmpeg",
+            "-stream_loop", "-1",
+            "-ss", "hh:mm:ss",
+            "-re",
+            "-i", "input_file.mp4",
+            "-map_chapters", "-1",
+            "-vcodec", "copy",
+            "-f", "mp4",
+            "-movflags", "frag_keyframe+empty_moov",
+            "pipe:1",
+        ]
+
+        builder = self.create_builder(input_file="input_file.mp4",
+                                      resolution=None,
+                                      loop=True,
+                                      seek="hh:mm:ss")
+        self.assertEqual(exp_command, builder.command)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

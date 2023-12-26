@@ -208,10 +208,8 @@ def check_file_info(name, what=None):
         "ffprobe",
         "-show_format",
         "-show_streams",
-        "-loglevel",
-        "quiet",
-        "-print_format",
-        "json",
+        "-loglevel", "quiet",
+        "-print_format", "json",
         name,
     ]
 
