@@ -2,6 +2,7 @@
 
 import mkchromecast.colors as colors
 from mkchromecast import _arg_parsing
+from mkchromecast import constants
 from mkchromecast.utils import terminate, check_url
 from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions

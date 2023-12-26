@@ -7,6 +7,7 @@ import sys
 import webbrowser
 
 import mkchromecast
+from mkchromecast import constants
 from mkchromecast.config import config_manager
 from mkchromecast.utils import is_installed
 
