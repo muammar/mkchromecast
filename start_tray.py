@@ -4,6 +4,8 @@
 from mkchromecast.utils import checkmktmp, writePidFile
 import mkchromecast.systray
 
+# TODO(xsdg): This should go through mkchromecast and shouldn't be a separate
+# entrypoint.
 checkmktmp()
 writePidFile()
 mkchromecast.systray.main()

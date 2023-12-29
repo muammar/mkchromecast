@@ -194,6 +194,9 @@ class CastProcess(object):
 
     def terminate_app(self):
         """Terminate the app (kill app)"""
+        if self.mkcc.debug:
+            print(f'terminate_app running in pid {os.getpid()}')
+
         self.cc.stop_cast()
         if self.mkcc.platform == 'Darwin':
             inputint()

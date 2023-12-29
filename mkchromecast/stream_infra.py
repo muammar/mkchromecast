@@ -262,19 +262,19 @@ class ParentMonitor(object):
 
     @staticmethod
     def _monitor_loop(platform: str):
-        f = open("/tmp/mkchromecast.pid", "rb")
-        pidnumber = int(pickle.load(f))
-        print(colors.options("PID of main process:") + " " + str(pidnumber))
+        with open("/tmp/mkchromecast.pid", "rb") as pid_file:
+            main_pid = int(pickle.load(pid_file))
+        print(colors.options("PID of main process:") + f" {main_pid}")
 
-        localpid = os.getpid()
-        print(colors.options("PID of streaming process:") + " " + str(localpid))
+        local_pid = os.getpid()
+        print(colors.options("PID of streaming process:") + f" {os.getpid()}")
 
-        while psutil.pid_exists(localpid) is True:
+        while psutil.pid_exists(local_pid):
             try:
                 time.sleep(0.5)
                 # With this I ensure that if the main app fails, everything
                 # will get back to normal
-                if psutil.pid_exists(pidnumber) is False:
+                if not psutil.pid_exists(main_pid):
                     if platform == "Darwin":
                         inputint()
                         outputint()
@@ -282,10 +282,15 @@ class ParentMonitor(object):
                         from mkchromecast.pulseaudio import remove_sink
 
                         remove_sink()
-                    parent = psutil.Process(localpid)
+                    parent = psutil.Process(local_pid)
+                    # TODO(xsdg): This is unlikely to finish, given that this
+                    # code itself is running in one of the child processes.  We
+                    # should instead signal the parent to terminate, and have it
+                    # handle child cleanup on its own.
                     for child in parent.children(recursive=True):
                         child.kill()
                     parent.kill()
+
             except KeyboardInterrupt:
                 print("Ctrl-c was requested")
                 sys.exit(0)
