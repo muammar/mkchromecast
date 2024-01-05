@@ -7,6 +7,7 @@ import socket
 import subprocess
 from threading import Thread
 import time
+from typing import Any, Optional
 
 import mkchromecast
 from mkchromecast import utils
@@ -49,6 +50,9 @@ class Casting(object):
         self.title = "Mkchromecast v" + __version__
 
         self.ip = utils.get_effective_ip(self.mkcc.platform, host_override=self.mkcc.host)
+
+        self.cast: Optional[Any] = None
+        self.sonos: Optional[Any] = None
 
     def _get_chromecasts(self):
         # TODO(xsdg): Drop backwards compatibility with old versions of
@@ -343,7 +347,9 @@ class Casting(object):
             if self.mkcc.videoarg:
                 import mkchromecast.video
 
-                media_type = mkchromecast.video.mtype
+                # TODO(xsdg): Centralize media type storage in some way.
+                # In mkcc?
+                media_type = self.mkcc.mtype or "video/mp4"
             else:
                 import mkchromecast.audio
 
@@ -402,9 +408,9 @@ class Casting(object):
         media_controller.play()
 
     def stop_cast(self):
-        try:
+        if self.cast:
             self.cast.quit_app()
-        except AttributeError:
+        if self.sonos:
             self.sonos.stop()
 
     def volume_up(self):
