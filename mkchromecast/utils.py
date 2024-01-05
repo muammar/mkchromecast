@@ -14,13 +14,6 @@ from mkchromecast import constants
 from mkchromecast import messages
 
 
-"""
-To call them:
-    from mkchromecast.terminate import name
-    name()
-"""
-
-
 def quantize_sample_rate(has_source_url: bool,
                          codec: str,
                          sample_rate: int,
@@ -136,14 +129,13 @@ def clamp_bitrate(codec: str, bitrate: Optional[int]) -> int:
     return bitrate
 
 
-def terminate():
+def terminate() -> None:
     del_tmp()
     parent_pid = os.getpid()
     parent = psutil.Process(parent_pid)
     for child in parent.children(recursive=True):
         child.kill()
     parent.kill()
-    return
 
 
 def del_tmp(debug: bool = False) -> None:
