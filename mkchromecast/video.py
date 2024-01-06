@@ -97,6 +97,7 @@ def main():
         try:
             subprocess.Popen(webcast)
         except:
+            # TODO(xsdg): Capture a specific exception here.
             print(
                 colors.warning(
                     "Nodejs is not installed in your system. "

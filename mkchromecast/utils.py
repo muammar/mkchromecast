@@ -14,13 +14,6 @@ from mkchromecast import constants
 from mkchromecast import messages
 
 
-"""
-To call them:
-    from mkchromecast.terminate import name
-    name()
-"""
-
-
 def quantize_sample_rate(has_source_url: bool,
                          codec: str,
                          sample_rate: int,
@@ -136,31 +129,31 @@ def clamp_bitrate(codec: str, bitrate: Optional[int]) -> int:
     return bitrate
 
 
-def terminate():
+def terminate() -> None:
     del_tmp()
     parent_pid = os.getpid()
     parent = psutil.Process(parent_pid)
     for child in parent.children(recursive=True):
         child.kill()
     parent.kill()
-    return
 
 
-def del_tmp():
+def del_tmp(debug: bool = False) -> None:
     """Delete files created in /tmp/"""
     delete_me = ["/tmp/mkchromecast.tmp", "/tmp/mkchromecast.pid"]
 
-    print(colors.important("Cleaning up /tmp/..."))
+    if debug:
+        print(colors.important("Cleaning up /tmp/..."))
 
     for f in delete_me:
-        if os.path.exists(f) is True:
+        if os.path.exists(f):
             os.remove(f)
 
-    print(colors.success("[Done]"))
-    return
+    if debug:
+        print(colors.success("[Done]"))
 
 
-def is_installed(name, path, debug):
+def is_installed(name, path, debug) -> bool:
     PATH = path
     iterate = PATH.split(":")
     for item in iterate:
@@ -171,7 +164,7 @@ def is_installed(name, path, debug):
             if debug is True:
                 print("Program %s found in %s." % (name, verifyif))
             return True
-    return
+    return False
 
 
 def check_url(url):
@@ -183,22 +176,21 @@ def check_url(url):
         return False
 
 
-def writePidFile():
+def writePidFile() -> None:
+    pid_filename = "/tmp/mkchromecast.pid"
     # This is to verify that pickle tmp file exists
-    if os.path.exists("/tmp/mkchromecast.pid") is True:
-        os.remove("/tmp/mkchromecast.pid")
+    if os.path.exists(pid_filename):
+        os.remove(pid_filename)
+
     pid = str(os.getpid())
-    f = open("/tmp/mkchromecast.pid", "wb")
-    pickle.dump(pid, f)
-    f.close()
-    return
+    with open(pid_filename, "wb") as pid_file:
+        pickle.dump(pid, pid_file)
 
 
-def checkmktmp():
+def checkmktmp() -> None:
     # This is to verify that pickle tmp file exists
-    if os.path.exists("/tmp/mkchromecast.tmp") is True:
+    if os.path.exists("/tmp/mkchromecast.tmp"):
         os.remove("/tmp/mkchromecast.tmp")
-    return
 
 
 def check_file_info(name, what=None):
