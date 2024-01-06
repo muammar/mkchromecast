@@ -3,9 +3,10 @@
 import enum
 from typing import List
 
+
 @enum.unique
-class ActionMode(enum.Enum):
-    AUDIO = enum.auto()
+class OpMode(enum.Enum):
+    AUDIOCAST = enum.auto()
     DISCOVER = enum.auto()
     INPUT_FILE = enum.auto()
     RESET = enum.auto()
@@ -14,7 +15,6 @@ class ActionMode(enum.Enum):
     TRAY = enum.auto()
     VERSION = enum.auto()
     YOUTUBE = enum.auto()
-    VIDEO = enum.auto()
 
 
 # Formerly, "no96k", which was misleading because it implied that (for instance)

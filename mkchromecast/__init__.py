@@ -29,6 +29,27 @@ class Mkchromecast:
         self.args = args
         self.debug: bool = args.debug
 
+        # Operating Mode
+        self.operation: constants.OpMode
+        if args.discover:
+            self.operation = constants.OpMode.DISCOVER
+        elif args.input_file:
+            self.operation = constants.OpMode.INPUT_FILE
+        elif args.reset:
+            self.operation = constants.OpMode.RESET
+        elif args.screencast:
+            self.operation = constants.OpMode.SCREENCAST
+        elif args.source_url:
+            self.operation = constants.OpMode.SOURCE_URL
+        elif args.tray:
+            self.operation = constants.OpMode.TRAY
+        elif args.version:
+            self.operation = constants.OpMode.VERSION
+        elif args.youtube:
+            self.operation = constants.OpMode.YOUTUBE
+        else:
+            self.operation = constants.OpMode.AUDIOCAST
+
         # Arguments with no dependencies.
         # Groupings are mostly carried over from earlier code; unclear how
         # meaningful they are.
