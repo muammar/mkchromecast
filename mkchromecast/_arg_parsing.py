@@ -57,6 +57,14 @@ Parser = argparse.ArgumentParser(
     formatter_class=argparse.RawTextHelpFormatter,
 )
 
+# All of the "do this action" arguments.
+_ActionGroupContainer = Parser.add_argument_group(
+    title='Actions',
+    description=('Optional actions that mkchromecast can perform.  These are '
+                 'mutually-exclusive.'),
+)
+_ActionGroup = _ActionGroupContainer.add_mutually_exclusive_group()
+
 Parser.add_argument(
     "--alsa-device",
     type=str,
@@ -176,7 +184,7 @@ Parser.add_argument(
     """,
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-d",
     "--discover",
     action="store_true",
@@ -241,7 +249,7 @@ Parser.add_argument(
     """,
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-i",
     "--input-file",
     type=str,
@@ -314,7 +322,7 @@ Parser.add_argument(
 )
 
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-r",
     "--reset",
     action="store_true",
@@ -391,7 +399,7 @@ Parser.add_argument(
     """,
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "--screencast",
     action="store_true",
     default=False,
@@ -433,7 +441,7 @@ Parser.add_argument(
     """,
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "--source-url",
     type=str,
     default=None,
@@ -473,7 +481,7 @@ Parser.add_argument(
     """,
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-t",
     "--tray",
     action="store_true",
@@ -498,7 +506,7 @@ Parser.add_argument(
     help="Do not use.  Argument dropped.",
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-v",
     "--version",
     action="store_true",
@@ -542,7 +550,7 @@ Parser.add_argument(
     help="Do not use.  Renamed to --control.",
 )
 
-Parser.add_argument(
+_ActionGroup.add_argument(
     "-y",
     "--youtube",
     type=str,
