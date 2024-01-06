@@ -22,6 +22,7 @@ from mkchromecast.pulseaudio import create_sink, get_sink_list, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
 from mkchromecast.messages import print_available_devices
 
+
 def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
     """Potentially executes a one-off action, followed by exiting."""
 
@@ -39,6 +40,7 @@ def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
     if mkcc.version:
         print("mkchromecast " + "v" + colors.success(__version__))
         sys.exit(0)
+
 
 # TODO(xsdg): Stop using conditional imports all over the place.
 class CastProcess(object):
