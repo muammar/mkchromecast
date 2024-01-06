@@ -276,12 +276,6 @@ class CastProcess(object):
                 print('')
                 print(colors.error('Ctrl-C to kill the Application at any Time'))
                 print('')
-                # TODO(xsdg): atexit is incorrect here.  The signal handlers should
-                # directly call terminate_app.
-                #signal.signal(signal.SIGINT,
-                #              lambda *_: atexit.register(self.terminate_app()))
-                #signal.signal(signal.SIGTERM,
-                #              lambda *_: atexit.register(self.terminate_app()))
                 signal.pause()
 
         except KeyboardInterrupt:
