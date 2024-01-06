@@ -5,15 +5,17 @@ import os
 import socket
 
 import mkchromecast
+from mkchromecast import audio
+from mkchromecast import colors
+from mkchromecast import node
 from mkchromecast.audio_devices import inputdev, outputdev
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
-import mkchromecast.audio
-from mkchromecast.node import stream
+from mkchromecast.constatns import OpMode
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-import mkchromecast.colors as colors
+
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
@@ -48,7 +50,7 @@ class Worker(QObject):
         except OSError:
             self.cc.available_devices = []
 
-        if len(self.cc.available_devices) == 0 and _mkcc.tray is True:
+        if len(self.cc.available_devices) == 0 and _mkcc.operation == OpMode.TRAY:
             available_devices = []
             self.intReady.emit(available_devices)
             self.finished.emit()
@@ -77,7 +79,7 @@ class Player(QObject):
             backend = _mkcc.backend
         global cast
         if backend == "node":
-            stream()
+            node.stream_audio()
         else:
             try:
                 reload(mkchromecast.audio)

@@ -5,6 +5,7 @@ from unittest import mock
 
 import mkchromecast
 from mkchromecast import _arg_parsing
+from mkchromecast import constants
 
 class BasicInstantiationTest(unittest.TestCase):
     def testInstantiate(self):
@@ -13,6 +14,8 @@ class BasicInstantiationTest(unittest.TestCase):
         mock_args = mock.Mock()
         # Here we set the minimal required args for __init__ to not sys.exit.
         mock_args.encoder_backend = None
+        mock_args.bitrate = constants.DEFAULT_BITRATE
+        mock_args.codec = 'mp3'
         mock_args.command = None
         mock_args.resolution = None
         mock_args.chunk_size = 64

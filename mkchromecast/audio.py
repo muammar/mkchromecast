@@ -17,6 +17,7 @@ from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
 from mkchromecast import utils
 from mkchromecast.config import config_manager
+from mkchromecast.constants import OpMode
 import mkchromecast.messages as msg
 from mkchromecast.preferences import ConfigSectionMap
 
@@ -30,7 +31,6 @@ media_type: str
 
 # We make local copies of these attributes because they are sometimes modified.
 # TODO(xsdg): clean this up more when we refactor this file.
-tray = _mkcc.tray
 host = _mkcc.host
 port = _mkcc.port
 platform = _mkcc.platform
@@ -52,7 +52,7 @@ configurations = config_manager()  # Class from mkchromecast.config
 configf = configurations.configf
 
 # This is to take the youtube URL
-if _mkcc.youtube_url is not None:
+if _mkcc.operation == OpMode.YOUTUBE:
     print(colors.options("The Youtube URL chosen: ") + _mkcc.youtube_url)
 
     try:
@@ -73,7 +73,7 @@ else:
     # Because these are defined in parallel conditional bodies, we declare
     # the types here to avoid ambiguity for the type analyzers.
     encode_settings: pipeline_builder.EncodeSettings
-    if os.path.exists(configf) and tray is True:
+    if _mkcc.operation == OpMode.TRAY and os.path.exists(configf):
         configurations.chk_config()
         config.read(configf)
         backend.name = ConfigSectionMap("settings")["backend"]
@@ -108,11 +108,11 @@ else:
             segment_time=_mkcc.segment_time
         )
         if debug is True:
-            print(":::audio::: tray = " + str(tray))
+            print(":::audio::: tray = True")
             print(colors.warning("Configuration file exists"))
             print(colors.warning("Using defaults set there"))
             print(backend, encode_settings, adevice)
-    else:
+    else:  # not tray or config file doesn't exist
         backend.name = _mkcc.backend
         backend.path = backend.name
         encode_settings = pipeline_builder.EncodeSettings(
@@ -125,7 +125,7 @@ else:
         )
 
     # TODO(xsdg): Why is this only run in tray mode???
-    if tray and backend.name in ["ffmpeg", "parec"]:
+    if _mkcc.operation == OpMode.TRAY and backend.name in {"ffmpeg", "parec"}:
         import os
         import getpass
 

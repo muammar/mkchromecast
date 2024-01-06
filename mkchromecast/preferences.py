@@ -9,6 +9,7 @@ import webbrowser
 import mkchromecast
 from mkchromecast import constants
 from mkchromecast.config import config_manager
+from mkchromecast.constants import OpMode
 from mkchromecast.utils import is_installed
 
 """
@@ -55,7 +56,7 @@ def ConfigSectionMap(section):
     return dict1
 
 
-if _mkcc.tray is True:
+if _mkcc.operation == OpMode.TRAY:
     from PyQt5.QtWidgets import (
         QWidget,
         QLabel,
@@ -103,7 +104,7 @@ if _mkcc.tray is True:
             backend_options = constants.backend_options_for_platform(
                 _mkcc.platform
             )
-            self.backends: List[str] = []
+            self.backends: list[str] = []
             for option in backend_options:
                 if is_installed(option, PATH, _mkcc.debug):
                     self.backends.append(option)

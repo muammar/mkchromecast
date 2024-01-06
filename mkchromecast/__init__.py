@@ -3,6 +3,7 @@
 import mkchromecast.colors as colors
 from mkchromecast import _arg_parsing
 from mkchromecast import constants
+from mkchromecast.constants import OpMode
 from mkchromecast.utils import terminate, check_url
 from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions
@@ -30,25 +31,25 @@ class Mkchromecast:
         self.debug: bool = args.debug
 
         # Operating Mode
-        self.operation: constants.OpMode
+        self.operation: OpMode
         if args.discover:
-            self.operation = constants.OpMode.DISCOVER
+            self.operation = OpMode.DISCOVER
         elif args.input_file:
-            self.operation = constants.OpMode.INPUT_FILE
+            self.operation = OpMode.INPUT_FILE
         elif args.reset:
-            self.operation = constants.OpMode.RESET
+            self.operation = OpMode.RESET
         elif args.screencast:
-            self.operation = constants.OpMode.SCREENCAST
+            self.operation = OpMode.SCREENCAST
         elif args.source_url:
-            self.operation = constants.OpMode.SOURCE_URL
+            self.operation = OpMode.SOURCE_URL
         elif args.tray:
-            self.operation = constants.OpMode.TRAY
+            self.operation = OpMode.TRAY
         elif args.version:
-            self.operation = constants.OpMode.VERSION
+            self.operation = OpMode.VERSION
         elif args.youtube:
-            self.operation = constants.OpMode.YOUTUBE
+            self.operation = OpMode.YOUTUBE
         else:
-            self.operation = constants.OpMode.AUDIOCAST
+            self.operation = OpMode.AUDIOCAST
 
         # Arguments with no dependencies.
         # Groupings are mostly carried over from earlier code; unclear how
@@ -113,7 +114,7 @@ class Mkchromecast:
         self.codec: str
         self.rcodec: Optional[str]
 
-        if self.operation = OpMode.SOURCE_URL:
+        if self.operation == OpMode.SOURCE_URL:
             self.codec = args.codec
             self.rcodec = None
         elif self.backend == "node":

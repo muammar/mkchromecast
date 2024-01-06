@@ -10,6 +10,7 @@ from mkchromecast import constants
 from mkchromecast import resolution
 from mkchromecast import stream_infra
 from mkchromecast import utils
+from mkchromecast.constants import OpMode
 
 SubprocessCommand = Union[list[str], str, os.PathLike]
 
@@ -213,6 +214,7 @@ class VideoSettings:
     fps: str
     input_file: Optional[str]
     loop: bool
+    operation: OpMode
     resolution: Optional[str]
     screencast: bool
     seek: Optional[str]
@@ -237,22 +239,21 @@ class Video:
 
     @property
     def command(self) -> SubprocessCommand:
-        # TODO(xsdg): Set up a mutually-exclusive group for youtube_url,
-        # screencast, user_command, and input_file in _arg_parsing.py .
-        if self._settings.youtube_url:
+        if self._settings.operation == OpMode.YOUTUBE:
             return ["youtube-dl", "-o", "-", self._settings.youtube_url]
 
-        if self._settings.screencast:
+        if self._settings.operation == OpMode.SCREENCAST:
             return self._screencast_command()
 
         if self._settings.user_command:
             return self._settings.user_command
 
-        if self._settings.input_file:
+        if self._settings.operation == OpMode.INPUT_FILE:
             return self._input_file_command()
 
         # TODO(xsdg): Figure out if there's any way to actually get here.
-        raise Exception("Internal error: Unexpected video mode")
+        raise Exception("Internal error: Unexpected video operation mode "
+                        f"{self._settings.operation}")
 
     def _screencast_command(self) -> list[str]:
         screen_size = resolution.resolution(

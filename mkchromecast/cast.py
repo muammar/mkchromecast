@@ -125,7 +125,7 @@ class Casting(object):
             print(" ")
             print_available_devices(self.available_devices())
             print(" ")
-            if self.mkcc.discover is False:
+            if self.mkcc.operation != OpMode.DISCOVER:
                 print(colors.important("Casting to first device shown above!"))
                 print(colors.important("Select devices by using the -s flag."))
                 print(" ")
@@ -139,7 +139,7 @@ class Casting(object):
         elif (
             len(self.cclist) != 0
             and self.mkcc.select_device is True
-            and self.mkcc.tray is False
+            and self.mkcc.operation != OpMode.TRAY
             and self.mkcc.device_name is None
         ):
             if self.mkcc.debug is True:
@@ -163,7 +163,7 @@ class Casting(object):
                 )
                 print(" ")
 
-        elif len(self.cclist) != 0 and self.mkcc.select_device is True and self.mkcc.tray is True:
+        elif len(self.cclist) != 0 and self.mkcc.select_device and self.mkcc.operation == OpMode.TRAY:
             if self.mkcc.debug is True:
                 print(
                     "elif len(self.cclist) != 0 and self.mkcc.select_device == True"
@@ -185,7 +185,7 @@ class Casting(object):
                 )
                 print(" ")
 
-        elif len(self.cclist) == 0 and self.mkcc.tray is False:
+        elif len(self.cclist) == 0 and self.mkcc.operation != OpMode.TRAY:
             if self.mkcc.debug is True:
                 print("elif len(self.cclist) == 0 and self.mkcc.tray == False:")
             print(colors.error("No devices found!"))
@@ -197,7 +197,7 @@ class Casting(object):
             terminate()
             exit()
 
-        elif len(self.cclist) == 0 and self.mkcc.tray is True:
+        elif len(self.cclist) == 0 and self.mkcc.operation == OpMode.TRAY:
             print(colors.error(":::Tray::: No devices found!"))
             self.available_devices = []
 
@@ -231,6 +231,12 @@ class Casting(object):
             except IndexError:
                 checkmktmp()
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
+                # TODO(xsdg): The original code had what was likely a typo here,
+                # in that this called `self.select_device()`, which did not
+                # exist.  It likely was supposed to be `self.select_a_device()`,
+                # but it's better to just start over, here.
+                raise Exception(
+                    "Internal error: Never worked; needs to be fixed.")
                 self.mkcc.select_device()
                 continue
             break
@@ -275,7 +281,7 @@ class Casting(object):
                     remove_sink()
                 # In the case that the tray is used, we don't kill the
                 # application
-                if self.mkcc.tray is False:
+                if self.mkcc.operation != OpMode.TRAY:
                     print(colors.error("Finishing the application..."))
                     terminate()
                     exit()
@@ -327,7 +333,7 @@ class Casting(object):
         try:
             media_controller = self.cast.media_controller
 
-            if self.mkcc.tray is True:
+            if self.mkcc.operation == OpMode.TRAY:
                 config = ConfigParser.RawConfigParser()
                 # Class from mkchromecast.config
                 from mkchromecast.config import config_manager
@@ -335,7 +341,7 @@ class Casting(object):
                 configurations = config_manager()
                 configf = configurations.configf
 
-                if os.path.exists(configf) and self.mkcc.tray is True:
+                if os.path.exists(configf) and self.mkcc.operation == OpMode.TRAY:
                     print(self.mkcc.tray)
                     print(colors.warning("Configuration file exists"))
                     print(colors.warning("Using defaults set there"))
@@ -359,7 +365,7 @@ class Casting(object):
             print(colors.options("Using media type:") + f" {media_type}")
 
             play_url: str
-            if self.mkcc.operation = OpMode.SOURCE_URL:
+            if self.mkcc.operation == OpMode.SOURCE_URL:
                 play_url = self.mkcc.source_url
                 print(colors.options("Casting from stream URL:")
                       + f" {play_url}")
@@ -391,12 +397,15 @@ class Casting(object):
 
         # TODO(xsdg): This isn't an appropriate exception-handling strategy.
         except AttributeError:
+            raise Exception("Internal error: This code path is broken and "
+                            "needs to be fixed.")
             self.sonos = self.cast_to
             self.sonos.play_uri(
                 "x-rincon-mp3radio://" + localip + ":" + self.mkcc.port + "/stream",
                 title=self.title,
             )
-            if self.mkcc.tray is True:
+            if self.mkcc.operation == OpMode.TRAY:
+                # TODO(xsdg): No.
                 self.cast = self.sonos
 
     def pause(self):

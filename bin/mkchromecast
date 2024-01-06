@@ -89,7 +89,7 @@ class CastProcess(object):
         print(colors.important('Starting Local Streaming Server'))
         if self.mkcc.backend == 'node':
             import mkchromecast.node
-            mkchromecast.node.stream()
+            mkchromecast.node.stream_audio()
         else:
             import mkchromecast.audio
             mkchromecast.audio.main()
