@@ -1,6 +1,21 @@
 # This file is part of mkchromecast.
 
+import enum
 from typing import List
+
+@enum.unique
+class ActionMode(enum.Enum):
+    AUDIO = enum.auto()
+    DISCOVER = enum.auto()
+    INPUT_FILE = enum.auto()
+    RESET = enum.auto()
+    SCREENCAST = enum.auto()
+    SOURCE_URL = enum.auto()
+    TRAY = enum.auto()
+    VERSION = enum.auto()
+    YOUTUBE = enum.auto()
+    VIDEO = enum.auto()
+
 
 # Formerly, "no96k", which was misleading because it implied that (for instance)
 # 88200 was valid, which it is not.
