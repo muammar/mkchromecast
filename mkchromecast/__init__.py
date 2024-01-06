@@ -19,10 +19,12 @@ class Mkchromecast:
 
     def __init__(self, args = None):
         # TODO(xsdg): Require arg parsing to be done outside of this class.
+        first_parse: bool = False
         if not args:
             if not self._parsed_args:
-                self._parsed_args = _arg_parsing.Parser.parse_args()
-            args = self._parsed_args
+                Mkchromecast._parsed_args = _arg_parsing.Parser.parse_args()
+                first_parse = True
+            args = Mkchromecast._parsed_args
 
         self.args = args
         self.debug: bool = args.debug
@@ -202,23 +204,26 @@ class Mkchromecast:
 
 
         # Diagnostic messages
-        self._debug(f"ALSA device name: {self.adevice}")
-        self._debug(f"Google Cast name: {self.device_name}")
-        self._debug(f"backend: {self.backend}")
+        if first_parse:
+            self._debug(f"Parsed args in process {os.getpid()}")
 
-        # TODO(xsdg): These were just printed warnings in the original, but
-        # should they be errors?
-        if self.mtype and not self.videoarg:
-            print(colors.warning(
-                "The media type argument is only supported for video."))
+            self._debug(f"ALSA device name: {self.adevice}")
+            self._debug(f"Google Cast name: {self.device_name}")
+            self._debug(f"backend: {self.backend}")
 
-        if self.loop and self.videoarg:
-            print(colors.warning(
-                "The loop and video arguments aren't compatible."))
+            # TODO(xsdg): These were just printed warnings in the original, but
+            # should they be errors?
+            if self.mtype and not self.videoarg:
+                print(colors.warning(
+                    "The media type argument is only supported for video."))
 
-        if self.command and not self.videoarg:
-            print(colors.warning(
-                "The --command option only works for video."))
+            if self.loop and self.videoarg:
+                print(colors.warning(
+                    "The loop and video arguments aren't compatible."))
+
+            if self.command and not self.videoarg:
+                print(colors.warning(
+                    "The --command option only works for video."))
 
     def _validate_input_file(self) -> None:
         if not self.input_file:
