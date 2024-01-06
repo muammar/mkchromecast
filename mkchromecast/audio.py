@@ -47,7 +47,6 @@ if debug is True:
         ":::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s"
         % (_mkcc.chunk_size, frame_size, buffer_size)
     )
-source_url = _mkcc.source_url
 config = ConfigParser.RawConfigParser()
 configurations = config_manager()  # Class from mkchromecast.config
 configf = configurations.configf
@@ -150,27 +149,23 @@ else:
     else:
         media_type = f"audio/{encode_settings.codec}"
 
-    if source_url is None:
-        print(colors.options("Selected backend:") + f" {backend}")
-        print(colors.options("Selected audio codec:")
-              + f" {encode_settings.codec}")
+    print(colors.options("Selected backend:") + f" {backend}")
+    print(colors.options("Selected audio codec:") + f" {encode_settings.codec}")
 
     if backend.name != "node":
         encode_settings.bitrate = utils.clamp_bitrate(encode_settings.codec,
                                                       encode_settings.bitrate)
 
-        if encode_settings.bitrate != "None" and not source_url:
+        if encode_settings.bitrate != "None":
             print(colors.options("Using bitrate:") + f" {encode_settings.bitrate}")
 
         if encode_settings.codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
             encode_settings.samplerate = str(utils.quantize_sample_rate(
-                bool(_mkcc.source_url),
                 encode_settings.codec,
                 int(encode_settings.samplerate))
             )
 
-        if source_url is None:
-            print(colors.options("Using sample rate:") + f" {encode_settings.samplerate}Hz")
+        print(colors.options("Using sample rate:") + f" {encode_settings.samplerate}Hz")
 
     builder = pipeline_builder.Audio(backend, platform, encode_settings)
     command = builder.command

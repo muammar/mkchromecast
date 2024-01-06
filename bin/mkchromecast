@@ -80,7 +80,6 @@ class CastProcess(object):
                 f'Unsupported or unexpected operation: {self.mkcc.operation}')
 
     def start_audiocast(self):
-        # not youtube_url and not source_url
         if self.mkcc.platform == "Linux" and self.mkcc.adevice is None:
             print('Creating Pulseaudio Sink...')
             print(colors.warning(

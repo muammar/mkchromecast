@@ -13,6 +13,7 @@ import mkchromecast
 from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
 import mkchromecast.colors as colors
+from mkchromecast.constants import OpMode
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
@@ -358,7 +359,7 @@ class Casting(object):
             print(colors.options("Using media type:") + f" {media_type}")
 
             play_url: str
-            if self.mkcc.source_url:
+            if self.mkcc.operation = OpMode.SOURCE_URL:
                 play_url = self.mkcc.source_url
                 print(colors.options("Casting from stream URL:")
                       + f" {play_url}")
@@ -388,6 +389,7 @@ class Casting(object):
                 self.r.daemon = True
                 self.r.start()
 
+        # TODO(xsdg): This isn't an appropriate exception-handling strategy.
         except AttributeError:
             self.sonos = self.cast_to
             self.sonos.play_uri(

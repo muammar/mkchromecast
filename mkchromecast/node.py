@@ -93,9 +93,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
             print(colors.options("Using bitrate: ") + f"{bitrate}k.")
 
             if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
-                samplerate = str(utils.quantize_sample_rate(
-                    bool(mkcc.source_url), codec, samplerate)
-                )
+                samplerate = str(utils.quantize_sample_rate(codec, samplerate))
 
             print(colors.options("Using sample rate:") + f" {samplerate}Hz.")
 

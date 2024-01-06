@@ -113,7 +113,7 @@ class Mkchromecast:
         self.codec: str
         self.rcodec: Optional[str]
 
-        if self.source_url:
+        if self.operation = OpMode.SOURCE_URL:
             self.codec = args.codec
             self.rcodec = None
         elif self.backend == "node":
