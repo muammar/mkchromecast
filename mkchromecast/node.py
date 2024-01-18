@@ -7,6 +7,9 @@ To call them:
     name()
 """
 
+# This file is audio-only for node.  Video via node is (currently) handled
+# completely within video.py.
+
 import configparser as ConfigParser
 import multiprocessing
 import os
@@ -25,6 +28,7 @@ from mkchromecast import constants
 from mkchromecast import utils
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
+from mkchromecast.constants import OpMode
 from mkchromecast.preferences import ConfigSectionMap
 
 
@@ -38,7 +42,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
     configf = configurations.configf
 
     bitrate: int
-    if os.path.exists(configf) and mkcc.tray is True:
+    if os.path.exists(configf) and mkcc.operation == OpMode.TRAY:
         configurations.chk_config()
         print(colors.warning("Configuration file exists"))
         print(colors.warning("Using defaults set there"))
@@ -93,9 +97,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
             print(colors.options("Using bitrate: ") + f"{bitrate}k.")
 
             if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
-                samplerate = str(utils.quantize_sample_rate(
-                    bool(mkcc.source_url), codec, samplerate)
-                )
+                samplerate = str(utils.quantize_sample_rate(codec, samplerate))
 
             print(colors.options("Using sample rate:") + f" {samplerate}Hz.")
 
@@ -175,7 +177,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     % (mkcc.platform, mkcc.tray, notifications)
                 )
 
-            if mkcc.platform == "Darwin" and mkcc.tray is True and notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.operation == OpMode.TRAY and notifications == "enabled":
                 reconnecting = [
                     "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
                     "-group",
@@ -195,7 +197,12 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     print(
                         ":::node::: reconnecting notifier command: %s." % reconnecting
                     )
-            relaunch(stream, recasting, kill)
+
+            # This could potentially cause forkbomb-like behavior where each new
+            # child process would create a new child process, ad infinitum.
+            raise Exception("Internal error: Never worked; needs to be fixed.")
+
+            relaunch(stream_audio, recasting, kill)
         return
 
 
@@ -231,6 +238,6 @@ def recasting():
     return
 
 
-def stream():
+def stream_audio():
     st = multi_proc()
     st.start()

@@ -14,7 +14,7 @@ from mkchromecast import colors
 from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
 from mkchromecast import utils
-
+from mkchromecast.constants import OpMode
 
 def _flask_init():
     mkcc = mkchromecast.Mkchromecast()
@@ -27,6 +27,7 @@ def _flask_init():
         fps=mkcc.fps,
         input_file=mkcc.input_file,
         loop=mkcc.loop,
+        operation=mkcc.operation,
         resolution=mkcc.resolution,
         screencast=mkcc.screencast,
         seek=mkcc.seek,
@@ -57,6 +58,16 @@ def main():
         pipeline.start()
     else:
         print("Starting Node")
+
+        # TODO(xsdg): This implies that the `node` backend is only compatible
+        # with INPUT_FILE OpMode, for video.  Double-check what's happening here
+        # and then implement that constraint directly in the Mkchromecast class.
+        if mkcc.operation != OpMode.INPUT_FILE:
+            print(colors.warning(
+                "The node video backend requires and only supports the input "
+                "file operation (-i argument)."))
+            utils.terminate()
+
         if mkcc.platform == "Darwin":
             PATH = (
                 "./bin:./nodejs/bin:/Users/"
@@ -88,11 +99,6 @@ def main():
                         path = path + "html5-video-streamer.js"
                         webcast = [name, path, mkcc.input_file]
                         break
-
-        if mkcc.input_file == None:
-            print(colors.warning("Please specify an input file with -i"))
-            print(colors.warning("Closing the application..."))
-            utils.terminate()
 
         try:
             subprocess.Popen(webcast)

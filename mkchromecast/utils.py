@@ -14,8 +14,7 @@ from mkchromecast import constants
 from mkchromecast import messages
 
 
-def quantize_sample_rate(has_source_url: bool,
-                         codec: str,
+def quantize_sample_rate(codec: str,
                          sample_rate: int,
                          limit_to_48k: bool = False) -> int:
     """Takes an arbitrary sample rate and aligns it to a standard value.
@@ -24,8 +23,6 @@ def quantize_sample_rate(has_source_url: bool,
     a reasonable maximum for the specified codec.
 
     Args:
-        has_source_url: Whether mkcc.source_url is None.  Only used to avoid
-            printing a warning.
         codec: The name of the codec in use.
         sample_rate: The original sample rate.
 
@@ -76,15 +73,13 @@ def quantize_sample_rate(has_source_url: bool,
             # Because we're traversing in increasing order, the first time we
             # find a target_rate that's greater than the sample rate, we know
             # that's the next-largest value, so we can return that immediately.
-            if not has_source_url:
-                messages.print_samplerate_warning(codec)
+            messages.print_samplerate_warning(codec)
             return target_rate
 
     # If we make it to this point, sample_rate is above the max target_rate, so
     # we just clamp to the max target_rate.
-    if not has_source_url:
-        messages.print_samplerate_warning(codec)
-        print(colors.warning("Sample rate set to maximum!"))
+    messages.print_samplerate_warning(codec)
+    print(colors.warning("Sample rate set to maximum!"))
     return target_rates[-1]
 
 

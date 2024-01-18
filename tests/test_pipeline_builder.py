@@ -6,6 +6,7 @@ from unittest import mock
 from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
 from mkchromecast import utils
+from mkchromecast.constants import OpMode
 
 class AudioBuilderTests(unittest.TestCase):
 
@@ -314,7 +315,8 @@ class VideoBuilderTests(unittest.TestCase):
             "pipe:1",
         ]
 
-        builder = self.create_builder(input_file="input_file.mp4",
+        builder = self.create_builder(operation=OpMode.INPUT_FILE,
+                                      input_file="input_file.mp4",
                                       resolution="1080p")
         self.assertEqual(exp_command, builder.command)
 
@@ -332,7 +334,8 @@ class VideoBuilderTests(unittest.TestCase):
             "pipe:1",
         ]
 
-        builder = self.create_builder(input_file="input_file.mp4",
+        builder = self.create_builder(operation=OpMode.INPUT_FILE,
+                                      input_file="input_file.mp4",
                                       resolution=None,
                                       loop=True,
                                       seek="hh:mm:ss")

@@ -18,6 +18,7 @@ from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
                                         outputint)
 from mkchromecast.cast import Casting
 import mkchromecast.colors as colors
+from mkchromecast.constants import OpMode
 from mkchromecast.pulseaudio import create_sink, get_sink_list, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
 from mkchromecast.messages import print_available_devices
@@ -26,7 +27,7 @@ from mkchromecast.messages import print_available_devices
 def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
     """Potentially executes a one-off action, followed by exiting."""
 
-    if mkcc.reset:
+    if mkcc.operation == OpMode.RESET:
         # TODO(xsdg): unify the various entry and cleanup codepaths.
         if mkcc.platform == "Darwin":
             inputint()
@@ -37,7 +38,7 @@ def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
         terminate()
         sys.exit(0)
 
-    if mkcc.version:
+    if mkcc.operation == OpMode.VERSION:
         print("mkchromecast " + "v" + colors.success(__version__))
         sys.exit(0)
 
@@ -60,84 +61,65 @@ class CastProcess(object):
         atexit.register(self.terminate_app)
 
         self.check_connection()
-        if self.mkcc.tray is False and self.mkcc.videoarg is False:
-            if self.mkcc.platform == 'Linux':
-                self.audio_linux()
-            else:
-                self.audio_macOS()
-        elif self.mkcc.tray is False and self.mkcc.videoarg is True:
+        if self.mkcc.operation == OpMode.DISCOVER:
+            # TODO(xsdg): Move this to maybe_execute_single_action.
+            self.cc.initialize_cast()
+            terminate()
+        elif self.mkcc.operation == OpMode.AUDIOCAST:
+            self.start_audiocast()
+        elif self.mkcc.operation == OpMode.SOURCE_URL:
+            self.start_source_url()
+        elif self.mkcc.operation == OpMode.YOUTUBE:
+            self.start_youtube()
+        elif self.mkcc.operation == OpMode.TRAY:
+            self.start_tray()
+        elif self.mkcc.operation in {OpMode.INPUT_FILE, OpMode.SCREENCAST}:
             self.cast_video()
         else:
-            self.start_tray()
+            raise Exception(
+                f'Unsupported or unexpected operation: {self.mkcc.operation}')
 
-    def audio_linux(self):
-        """This method manages all related to casting audio in Linux"""
-        if self.mkcc.youtube_url is None and self.mkcc.source_url is None:
-            if self.mkcc.adevice is None:
-                print('Creating Pulseaudio Sink...')
-                print(colors.warning('Open Pavucontrol and Select the '
-                      'Mkchromecast Sink.'))
-                create_sink()
-            print(colors.important('Starting Local Streaming Server'))
-            print(colors.success('[Done]'))
-            self.start_backend(self.mkcc.backend)
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
-            self.cc.play_cast()
-            self.block_until_exit()
+    def start_audiocast(self):
+        if self.mkcc.platform == "Linux" and self.mkcc.adevice is None:
+            print('Creating Pulseaudio Sink...')
+            print(colors.warning(
+                'Open Pavucontrol and Select the Mkchromecast Sink.'))
+            create_sink()
 
-        elif self.mkcc.youtube_url is None and self.mkcc.source_url is not None:
-            self.start_backend(self.mkcc.backend)
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
-            self.cc.play_cast()
-            self.block_until_exit()
-
-        # When casting youtube url, we do it through the audio module
-        elif self.mkcc.youtube_url is not None and self.mkcc.videoarg is False:
+        print(colors.important('Starting Local Streaming Server'))
+        if self.mkcc.backend == 'node':
+            import mkchromecast.node
+            mkchromecast.node.stream_audio()
+        else:
             import mkchromecast.audio
             mkchromecast.audio.main()
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
-            self.cc.play_cast()
-            self.block_until_exit()
+        print(colors.success('[Done]'))
 
-    def audio_macOS(self):
-        """This method manages all related to casting audio in macOS"""
-        if self.mkcc.youtube_url is None and self.mkcc.source_url is None:
-            self.start_backend(self.mkcc.backend)
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
+        self.cc.initialize_cast()
+        self.get_devices(self.mkcc.select_device)
 
+        if self.mkcc.platform == "Darwin":
             print('Switching to BlackHole...')
             inputdev()
             outputdev()
             print(colors.success('[Done]'))
-            self.cc.play_cast()
-            self.block_until_exit()
 
-        elif self.mkcc.youtube_url is None and self.mkcc.source_url is not None:
-            self.start_backend(self.mkcc.backend)
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
-            self.cc.play_cast()
-            self.block_until_exit()
+        self.cc.play_cast()
+        self.block_until_exit()
 
-            print('Switching to BlackHole...')
-            inputdev()
-            outputdev()
-            print(colors.success('[Done]'))
-            self.cc.play_cast()
-            self.block_until_exit()
+    def start_source_url(self):
+        self.cc.initialize_cast()
+        self.get_devices(self.mkcc.select_device)
+        self.cc.play_cast()
+        self.block_until_exit()
 
-        # When casting youtube url, we do it through the audio module
-        elif self.mkcc.youtube_url is not None and self.mkcc.videoarg is False:
-            import mkchromecast.audio
-            mkchromecast.audio.main()
-            self.cc.initialize_cast()
-            self.get_devices(self.mkcc.select_device)
-            self.cc.play_cast()
-            self.block_until_exit()
+    def start_youtube(self):
+        import mkchromecast.audio
+        mkchromecast.audio.main()
+        self.cc.initialize_cast()
+        self.get_devices(self.mkcc.select_device)
+        self.cc.play_cast()
+        self.block_until_exit()
 
     def cast_video(self):
         """This method launches video casting"""
@@ -168,31 +150,11 @@ class CastProcess(object):
         else:
             self.cc.get_devices()
 
-    def start_backend(self, backend: Optional[str]):
-        """Starting backends"""
-        if not backend:
-            print(colors.error('Internal error: failed to select a backend.'))
-            terminate()
-
-        if self.mkcc.source_url:
-            return
-
-        if backend == 'node':
-            from mkchromecast.node import stream
-            stream()
-        else:
-            import mkchromecast.audio
-            mkchromecast.audio.main()
-
     def check_connection(self):
         """Check if the computer is connected to a network"""
         if self.cc.ip == '127.0.0.1':        # We verify the local IP.
             print(colors.error('Your Computer is not Connected to Any '
                   'Network'))
-            terminate()
-        elif self.cc.ip != '127.0.0.1' and self.mkcc.discover is True:
-            # TODO(xsdg): Move this to maybe_execute_single_action.
-            self.cc.initialize_cast()
             terminate()
 
     def terminate_app(self):

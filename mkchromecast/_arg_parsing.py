@@ -523,6 +523,8 @@ Parser.add_argument(
     """,
 )
 
+# TODO(xsdg): Probably best to replace this with --suppress-video.  Otherwise,
+# we should either auto-detect audio-only usecases, or always send video.
 Parser.add_argument(
     "--video",
     action="store_true",
