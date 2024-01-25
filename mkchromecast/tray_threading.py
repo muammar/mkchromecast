@@ -11,7 +11,7 @@ from mkchromecast import node
 from mkchromecast.audio_devices import inputdev, outputdev
 from mkchromecast.cast import Casting
 from mkchromecast.config import config_manager
-from mkchromecast.constatns import OpMode
+from mkchromecast.constants import OpMode
 from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
