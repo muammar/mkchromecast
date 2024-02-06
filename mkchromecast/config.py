@@ -9,6 +9,18 @@ from typing import Optional
 
 import mkchromecast
 
+# Section name.
+SETTINGS = "settings"
+
+# Field names.
+CODEC = "codec"
+BITRATE = "bitrate"
+SAMPLERATE = "samplerate"
+NOTIFICATIONS = "notifications"
+COLORS = "colors"
+SEARCH_AT_LAUNCH = "searchatlaunch"
+ALSA_DEVICE = "alsadevice"
+
 
 def _default_config_path(mkcc: mkchromecast.Mkchromecast) -> pathlib.Path:
     config_dir: pathlib.PurePath
@@ -25,6 +37,74 @@ def _default_config_path(mkcc: mkchromecast.Mkchromecast) -> pathlib.Path:
 
     print(f":::config::: WARNING: USING BETA CONFIG PATH: {config_path}")
     return config_path
+
+
+class Config:
+    def __init__(self, config_path: Optional[os.PathLike] = None):
+        self._mkcc = mkchromecast.Mkchromecast()
+
+        if not config_path:
+            config_path = _default_config_path(self._mkcc)
+
+        self.config = configparser.ConfigParser()
+
+    # TODO(xsdg): Refactor this to avoid code duplication.  Sadly,
+    # functools.partialmethod doesn't work with properties.
+    @property
+    def codec(self) -> str:
+        return self.config.get(SETTINGS, CODEC)
+
+    @codec.setter
+    def codec(self, value: str) -> None:
+        self.config.set(SETTINGS, CODEC, value)
+
+    @property
+    def bitrate(self) -> int:
+        return self.config.getint(SETTINGS, BITRATE)
+
+    @bitrate.setter
+    def bitrate(self, value: int) -> None:
+        self.config.set(SETTINGS, BITRATE, str(value))
+
+    @property
+    def samplerate(self) -> int:
+        return self.config.getint(SETTINGS, SAMPLERATE)
+
+    @samplerate.setter
+    def samplerate(self, value: int) -> None:
+        self.config.set(SETTINGS, SAMPLERATE, str(value))
+
+    @property
+    def notifications(self) -> bool:
+        return self.config.getboolean(SETTINGS, NOTIFICATIONS)
+
+    @notifications.setter
+    def notifications(self, value: bool) -> None:
+        self.config.set(SETTINGS, NOTIFICATIONS, str(value))
+
+    @property
+    def colors(self) -> str:
+        return self.config.get(SETTINGS, COLORS)
+
+    @colors.setter
+    def colors(self, value: str) -> None:
+        self.config.set(SETTINGS, COLORS, value)
+
+    @property
+    def search_at_launch(self) -> bool:
+        return self.config.getboolean(SETTINGS, SEARCH_AT_LAUNCH)
+
+    @search_at_launch.setter
+    def search_at_launch(self, value: bool) -> None:
+        self.config.set(SETTINGS, SEARCH_AT_LAUNCH, str(value))
+
+    @property
+    def alsa_device(self) -> str:
+        return self.config.get(SETTINGS, ALSA_DEVICE)
+
+    @alsa_device.setter
+    def alsa_device(self, value: str) -> None:
+        self.config.set(SETTINGS, ALSA_DEVICE, value)
 
 
 class config_manager:
