@@ -1,21 +1,40 @@
 # This file is part of mkchromecast.
 
-import configparser as ConfigParser
+import configparser
+import functools
 import getpass
 import os
+import pathlib
+from typing import Optional
 
 import mkchromecast
 
 
-class config_manager(object):
+def _default_config_path(mkcc: mkchromecast.Mkchromecast) -> pathlib.Path:
+    config_dir: pathlib.PurePath
+    if mkcc.platform == "Darwin":
+        config_dir = pathlib.PosixPath(
+            "~/Library/Application Support/mkchromecast")
+    else:  # Linux
+        xdg_config_home = pathlib.PosixPath(
+            os.environ.get("XDG_CONFIG_HOME", "~/.config"))
+        config_dir = xdg_config_home / "mkchromecast"
+
+    # TODO(xsdg): Switch this back to mkchromecast.cfg.
+    config_path = config_dir / "mkchromecast_beta.cfg"
+
+    print(f":::config::: WARNING: USING BETA CONFIG PATH: {config_path}")
+    return config_path
+
+
+class config_manager:
     def __init__(self):
         self._mkcc = mkchromecast.Mkchromecast()
 
-        self.user = getpass.getuser()
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.ConfigParser()
 
         self.config.add_section("settings")
-        self.defaultconf = {
+        self.default_conf = {
             "codec": "mp3",
             "bitrate": "192",
             "samplerate": "44100",
@@ -26,144 +45,65 @@ class config_manager(object):
         }
 
         if self._mkcc.platform == "Darwin":
-            self.defaultconf["backend"] = "node"
+            self.default_conf["backend"] = "node"
         else:
-            self.defaultconf["backend"] = "parec"
+            self.default_conf["backend"] = "parec"
 
         # Writing our configuration file
 
-        """
-        Depeding the platform we create the configuration directory in
-        different locations.
-        """
-        if self._mkcc.platform == "Darwin":
-            # TODO(xsdg): Use $HOME instead of generating a path that might not
-            # be correct.
-            self.directory = (
-                "/Users/" + self.user + "/Library/Application Support/mkchromecast/"
-            )
-        else:
-            self.directory = os.environ["HOME"] + "/.config/mkchromecast/"  # Linux
-        self.configf = self.directory + "mkchromecast.cfg"
+        self.config_path = _default_config_path(self._mkcc)
+        self.config_dir = self.config_path.parent
 
     def config_defaults(self):
         """
         Verify that the directory exists.
         """
-        if not os.path.exists(self.directory):
-            os.makedirs(self.directory)
+        self.config_dir.mkdir(parents=True, exist_ok=True)
 
         """
         Creation of new configuration file with defaults.
         """
-        if not os.path.exists(self.configf):
+        if not self.config_path.exists():
             self.write_defaults()
 
     def write_defaults(self):
         if self._mkcc.platform == "Darwin":
             self.config.set("settings", "backend", "node")
-            self.config.set("settings", "codec", "mp3")
-            self.config.set("settings", "bitrate", "192")
-            self.config.set("settings", "samplerate", "44100")
-            self.config.set("settings", "notifications", "disabled")
-            self.config.set("settings", "colors", "black")
-            self.config.set("settings", "searchatlaunch", "disabled")
-            self.config.set("settings", "alsadevice", None)
         else:
             self.config.set("settings", "backend", "parec")
-            self.config.set("settings", "codec", "mp3")
-            self.config.set("settings", "bitrate", "192")
-            self.config.set("settings", "samplerate", "44100")
-            self.config.set("settings", "notifications", "disabled")
-            self.config.set("settings", "colors", "black")
-            self.config.set("settings", "searchatlaunch", "disabled")
-            self.config.set("settings", "alsadevice", None)
 
-        with open(self.configf, "w") as configfile:
-            self.config.write(configfile)
+        self.config.set("settings", "codec", "mp3")
+        self.config.set("settings", "bitrate", "192")
+        self.config.set("settings", "samplerate", "44100")
+        self.config.set("settings", "notifications", "disabled")
+        self.config.set("settings", "colors", "black")
+        self.config.set("settings", "searchatlaunch", "disabled")
+        self.config.set("settings", "alsadevice", None)
+
+        with open(self.config_path, "w") as config_file:
+            self.config.write(config_file)
 
     def chk_config(self):
-        from mkchromecast.preferences import ConfigSectionMap
-
-        self.config.read(self.configf)
+        self.config.read(self.config_path)
 
         """
         We check that configuration file is complete, otherwise the settings
         are filled from self.defaultconf dictionary.
         """
-        chkconfig = [
-            "backend",
-            "codec",
-            "bitrate",
-            "samplerate",
-            "notifications",
-            "colors",
-            "searchatlaunch",
-            "alsadevice",
-        ]
-        for e in chkconfig:
-            try:
-                e = ConfigSectionMap("settings")[str(e)]
-            except KeyError:
-                if self._mkcc.debug is True:
-                    print(
-                        ":::config::: the setting %s is not correctly set. "
-                        "Defaults added." % e
-                    )
-                self.config.set("settings", str(e), self.defaultconf[e])
-                with open(self.configf, "w") as configfile:
-                    self.config.write(configfile)
+        expected_keys = self.default_conf.keys()
+        missing_keys: list[str] = []
+        for key in expected_keys:
+            if not self.config.has_option("settings", key):
+                missing_keys.append(key)
+                if self._mkcc.debug:
+                    print(f":::config::: Setting missing key {key} to default "
+                          "value.")
+                self.config.set("settings", key, self.defaultconf[key])
 
-        backend = ConfigSectionMap("settings")["backend"]
-        codec = ConfigSectionMap("settings")["codec"]
-        bitrate = ConfigSectionMap("settings")["bitrate"]
-        samplerate = ConfigSectionMap("settings")["samplerate"]
-        notifications = ConfigSectionMap("settings")["notifications"]
-        colors = ConfigSectionMap("settings")["colors"]
-        searchatlaunch = ConfigSectionMap("settings")["searchatlaunch"]
-        alsadevice = ConfigSectionMap("settings")["alsadevice"]
+        if missing_keys:
+            if self._mkcc.debug:
+                print(":::config::: Re-writing config to add missing keys: "
+                      f"{missing_keys}")
 
-        if os.path.exists(self.configf):
-            """
-            Reading the codec from config file
-            """
-            # Bitrate must always be set.  It will be ignored for lossless
-            # codecs like FLAC and WAV.
-            if bitrate == "None":
-                # TODO(xsdg): Only update a single field instead of all of them?
-                self.config.set("settings", "backend", str(backend))
-                self.config.set("settings", "codec", str(codec))
-                self.config.set("settings", "bitrate", "192")
-                self.config.set("settings", "samplerate", str(samplerate))
-                self.config.set("settings", "notifications", str(notifications))
-                self.config.set("settings", "colors", str(colors))
-                self.config.set("settings", "searchatlaunch", str(searchatlaunch))
-                self.config.set("settings", "alsadevice", str(alsadevice))
-
-            with open(self.configf, "w") as configfile:
-                self.config.write(configfile)
-
-
-"""
-The function below helps to map the options inside each section. Taken from:
-https://wiki.python.org/moin/ConfigParserExamples
-import ConfigParser
-config = ConfigParser.RawConfigParser()
-config.read(configf)
-
-def ConfigSectionMap(section):
-    dict1 = {}
-    options = config.options(section)
-    for option in options:
-        try:
-            dict1[option] = config.get(section, option)
-            if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
-        except:
-            print("exception on %s!" % option)
-            dict1[option] = None
-    return dict1
-
-print(platform)
-print(ConfigSectionMap("settings")['bitrate'])
-"""
+            with open(self.config_path, "w") as config_file:
+                self.config.write(config_file)
