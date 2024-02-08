@@ -44,9 +44,6 @@ if debug is True:
         ":::audio::: chunk_size, frame_size, buffer_size: %s, %s, %s"
         % (_mkcc.chunk_size, frame_size, buffer_size)
     )
-config = ConfigParser.RawConfigParser()
-configurations = config_manager()  # Class from mkchromecast.config
-configf = configurations.configf
 
 # This is to take the youtube URL
 if _mkcc.operation == OpMode.YOUTUBE:
