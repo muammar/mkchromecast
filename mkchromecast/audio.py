@@ -4,7 +4,6 @@
 Google Cast device has to point out to http://ip:5000/stream
 """
 
-import configparser as ConfigParser
 import os
 import re
 import shutil
@@ -16,10 +15,8 @@ from mkchromecast import constants
 from mkchromecast import pipeline_builder
 from mkchromecast import stream_infra
 from mkchromecast import utils
-from mkchromecast.config import config_manager
 from mkchromecast.constants import OpMode
 import mkchromecast.messages as msg
-from mkchromecast.preferences import ConfigSectionMap
 
 
 backend = stream_infra.BackendInfo()
@@ -70,59 +67,16 @@ if _mkcc.operation == OpMode.YOUTUBE:
     command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
     media_type = "audio/mp4"
 else:
-    # Because these are defined in parallel conditional bodies, we declare
-    # the types here to avoid ambiguity for the type analyzers.
-    encode_settings: pipeline_builder.EncodeSettings
-    if _mkcc.operation == OpMode.TRAY and os.path.exists(configf):
-        configurations.chk_config()
-        config.read(configf)
-        backend.name = ConfigSectionMap("settings")["backend"]
-        backend.path = backend.name
-
-        # Parse strings into Python types.
-        adevice = ConfigSectionMap("settings")["alsadevice"]
-        if adevice == "None":
-            adevice = None
-
-        stored_bitrate = ConfigSectionMap("settings")["bitrate"]
-        bitrate: int
-        if stored_bitrate == "None":
-            print(colors.warning("Setting bitrate to default of "
-                                 f"{constants.DEFAULT_BITRATE}"))
-            bitrate = constants.DEFAULT_BITRATE
-        else:
-            # Bitrate may be stored with or without "k" suffix.
-            bitrate_match = re.match(r"^(\d+)k?$", stored_bitrate)
-            if not bitrate_match:
-                raise Exception(
-                    f"Failed to parse bitrate {repr(stored_bitrate)} as an "
-                    "int. Expected something like '192' or '192k'")
-            bitrate = int(bitrate_match[1])
-
-        encode_settings = pipeline_builder.EncodeSettings(
-            codec=ConfigSectionMap("settings")["codec"],
-            adevice=adevice,
-            bitrate=bitrate,
-            frame_size=frame_size,
-            samplerate=ConfigSectionMap("settings")["samplerate"],
-            segment_time=_mkcc.segment_time
-        )
-        if debug is True:
-            print(":::audio::: tray = True")
-            print(colors.warning("Configuration file exists"))
-            print(colors.warning("Using defaults set there"))
-            print(backend, encode_settings, adevice)
-    else:  # not tray or config file doesn't exist
-        backend.name = _mkcc.backend
-        backend.path = backend.name
-        encode_settings = pipeline_builder.EncodeSettings(
-            codec=_mkcc.codec,
-            adevice=_mkcc.adevice,
-            bitrate=_mkcc.bitrate,
-            frame_size=frame_size,
-            samplerate=str(_mkcc.samplerate),
-            segment_time=_mkcc.segment_time
-        )
+    backend.name = _mkcc.backend
+    backend.path = backend.name
+    encode_settings = pipeline_builder.EncodeSettings(
+        codec=_mkcc.codec,
+        adevice=_mkcc.adevice,
+        bitrate=_mkcc.bitrate,
+        frame_size=frame_size,
+        samplerate=str(_mkcc.samplerate),
+        segment_time=_mkcc.segment_time
+    )
 
     # TODO(xsdg): Why is this only run in tray mode???
     if _mkcc.operation == OpMode.TRAY and backend.name in {"ffmpeg", "parec"}:

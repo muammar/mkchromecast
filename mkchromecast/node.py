@@ -33,45 +33,11 @@ from mkchromecast.preferences import ConfigSectionMap
 
 
 def streaming(mkcc: mkchromecast.Mkchromecast):
-    """
-    Configuration files
-    """
-    config = ConfigParser.RawConfigParser()
-    # Class from mkchromecast.config
-    configurations = config_manager()
-    configf = configurations.configf
-
-    bitrate: int
-    if os.path.exists(configf) and mkcc.operation == OpMode.TRAY:
-        configurations.chk_config()
-        print(colors.warning("Configuration file exists"))
-        print(colors.warning("Using defaults set there"))
-        config.read(configf)
-        backend = ConfigSectionMap("settings")["backend"]
-
-        # TODO(xsdg): dedup this parsing code between audio.py and node.py.
-        stored_bitrate = ConfigSectionMap("settings")["bitrate"]
-        if stored_bitrate == "None":
-            print(colors.warning("Setting bitrate to default of "
-                                 f"{constants.DEFAULT_BITRATE}"))
-            bitrate = constants.DEFAULT_BITRATE
-        else:
-            # Bitrate may be stored with or without "k" suffix.
-            bitrate_match = re.match(r"^(\d+)k?$", stored_bitrate)
-            if not bitrate_match:
-                raise Exception(
-                    f"Failed to parse bitrate {repr(stored_bitrate)} as an "
-                    "int. Expected something like '192' or '192k'")
-            bitrate = int(bitrate_match[1])
-
-        samplerate = ConfigSectionMap("settings")["samplerate"]
-        notifications = ConfigSectionMap("settings")["notifications"]
-    else:
-        backend = mkcc.backend
-        codec = mkcc.codec
-        bitrate = mkcc.bitrate
-        samplerate = str(mkcc.samplerate)
-        notifications = mkcc.notifications
+    backend = mkcc.backend
+    codec = mkcc.codec
+    bitrate = mkcc.bitrate
+    samplerate = str(mkcc.samplerate)
+    notifications = mkcc.notifications
 
     print(colors.options("Selected backend:") + " " + backend)
 
