@@ -137,18 +137,17 @@ class Mkchromecast:
 
         codec_choices = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
         self.codec: str
-        self.rcodec: Optional[str]
 
         if self.operation == OpMode.SOURCE_URL:
             self.codec = args.codec
-            self.rcodec = None
         elif tray_config:  # OpMode.TRAY
             # TODO(xsdg): Validate config codec.
             self.codec = tray_config.codec
-            self.rcodec = None
         elif self.backend == "node":
-            self.codec = "mp3"
-            self.rcodec = args.codec
+            if args.codec != "mp3":
+                print(colors.warning(f"Setting codec from {args.codec} to mp3, "
+                                     "as required by node backend"))
+                self.codec = "mp3"
         else:  # not source_url and backend != "node"
             if args.codec not in codec_choices:
                 print(colors.options(f"Selected audio codec: {args.codec}."))
@@ -158,7 +157,6 @@ class Mkchromecast:
                 sys.exit(0)
 
             self.codec = args.codec
-            self.rcodec = None
 
         # TODO(xsdg): Add support for yt-dlp
         command_choices = ["ffmpeg", "youtube-dl"]

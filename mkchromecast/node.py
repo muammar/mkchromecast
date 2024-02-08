@@ -48,7 +48,6 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
         print(colors.warning("Using defaults set there"))
         config.read(configf)
         backend = ConfigSectionMap("settings")["backend"]
-        rcodec = ConfigSectionMap("settings")["codec"]
 
         # TODO(xsdg): dedup this parsing code between audio.py and node.py.
         stored_bitrate = ConfigSectionMap("settings")["bitrate"]
@@ -69,7 +68,6 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
         notifications = ConfigSectionMap("settings")["notifications"]
     else:
         backend = mkcc.backend
-        rcodec = mkcc.rcodec
         codec = mkcc.codec
         bitrate = mkcc.bitrate
         samplerate = str(mkcc.samplerate)
@@ -80,18 +78,10 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
     if mkcc.debug is True:
         print(
             ":::node::: variables %s, %s, %s, %s, %s"
-            % (backend, rcodec, bitrate, samplerate, notifications)
+            % (backend, codec, bitrate, samplerate, notifications)
         )
 
     if mkcc.youtube_url is None:
-        if backend == "node" and rcodec != "mp3":
-            print(
-                colors.warning(
-                    "Codec " + rcodec + " is not supported by the node server!"
-                )
-            )
-            print("Using " + codec + " as default.")
-
         if backend == "node":
             bitrate = utils.clamp_bitrate(codec, bitrate)
             print(colors.options("Using bitrate: ") + f"{bitrate}k.")
