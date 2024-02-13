@@ -62,7 +62,8 @@ if _mkcc.operation == OpMode.TRAY:
             self.config = config.Config(platform=_mkcc.platform,
                                         read_only=False,
                                         debug=_mkcc.debug)
-            self.read_defaults()
+            # TODO(xsdg): Move UI creation out of the constructor.
+            self.config.load_and_validate()
             self.initUI()
 
         def initUI(self):
@@ -186,7 +187,7 @@ if _mkcc.operation == OpMode.TRAY:
             for item in VISUAL_BOOL.values():
                 self.qcnotifications.addItem(item)
             self.jump_to_item_or_start(
-                self.qcnotifations, VISUAL_BOOL[self.config.notifications])
+                self.qcnotifications, VISUAL_BOOL[self.config.notifications])
 
             self.qcnotifications.activated[str].connect(self.onActivatednotify)
 

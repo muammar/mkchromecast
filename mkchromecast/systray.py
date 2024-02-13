@@ -52,6 +52,7 @@ class menubar(QtWidgets.QMainWindow):
         self.config = config.Config(platform=_mkcc.platform,
                                     read_only=True,
                                     debug=_mkcc.debug)
+        self.config.load_and_validate()
 
         """
         These dictionaries are used to set icons' colors
@@ -144,6 +145,7 @@ class menubar(QtWidgets.QMainWindow):
 
         super(QtWidgets.QMainWindow, self).__init__()
 
+        # TODO(xsdg): Move UI creation out of the constructor.
         self.createUI()
 
     def createUI(self):
@@ -168,7 +170,7 @@ class menubar(QtWidgets.QMainWindow):
         """
         This is for the search at launch
         """
-        if self.searchatlaunch:
+        if self.config.search_at_launch:
             self.search_cast()
         self.app.exec_()  # We start showing the system tray
 

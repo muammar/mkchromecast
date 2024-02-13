@@ -32,7 +32,7 @@ def _default_config_path(platform: str) -> pathlib.Path:
         config_dir = xdg_config_home / "mkchromecast"
 
     # TODO(xsdg): Switch this back to mkchromecast.cfg.
-    config_path = config_dir / "mkchromecast_beta.cfg"
+    config_path = (config_dir / "mkchromecast_beta.cfg").expanduser()
 
     print(f":::config::: WARNING: USING BETA CONFIG PATH: {config_path}")
     return config_path
@@ -110,6 +110,10 @@ class Config:
 
     def _update_any_missing_values(self) -> None:
         """Sets any missing values to their defaults."""
+        if not self._config.has_section(SETTINGS):
+            print(f":::config::: Creating missing section '{SETTINGS}'")
+            self._config.add_section(SETTINGS)
+
         expected_keys = self._default_conf.keys()
         missing_keys: list[str] = []
         for key in expected_keys:
