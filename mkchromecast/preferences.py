@@ -278,14 +278,6 @@ if _mkcc.operation == OpMode.TRAY:
                 )
             )
 
-            donbtn = QPushButton("Donate :)", self)
-            donbtn.move(204 * self.scale_factor, 274 * self.scale_factor)
-            donbtn.clicked.connect(
-                lambda: webbrowser.open(
-                    "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=RZLF7TDCAXT9Q&lc=US&item_name=mkchromecast&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
-                )
-            )
-
         def window(self):
             """
             Geometry and window's title
