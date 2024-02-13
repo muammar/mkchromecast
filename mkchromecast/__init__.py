@@ -62,6 +62,7 @@ class Mkchromecast:
             tray_config = config.Config(platform=self.platform,
                                         read_only=True,
                                         debug=self.debug)
+            tray_config.load_and_validate()
 
         # Arguments with no dependencies.
         # Groupings are mostly carried over from earlier code; unclear how

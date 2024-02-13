@@ -39,6 +39,17 @@ def _default_config_path(platform: str) -> pathlib.Path:
 
 
 class Config:
+    """This represents a configuration, as backed by a config on disk.
+
+    To use without updating settings, you can either use the `load_and_validate`
+    method directly, or use it as a context manager, which will call that
+    function.
+
+    The context manager usage will _also_ consider saving updated files back to
+    disk (depending on whether the instance is specified as read-only or not).
+    That is the only supported way to write updated values to disk.
+    """
+
     def __init__(self,
                  platform: str,
                  config_path: Optional[os.PathLike] = None,
@@ -72,13 +83,22 @@ class Config:
 
     def __enter__(self):
         """Parses config file and returns self"""
-        self._config.read(self._config_path)
-        self._update_any_missing_values()
+        self.load_and_validate()
 
         return self
 
     def __exit__(self, *exc):
         self._maybe_write_config()
+
+    def load_and_validate(self) -> None:
+        """Loads config from disk and validates that no settings are missing.
+
+        If any settings are missing, they are set to the default value, and if
+        this Config was not created read-only, the completed config will be
+        written back to disk.
+        """
+        self._config.read(self._config_path)
+        self._update_any_missing_values()
 
     def _maybe_write_config(self) -> None:
         """Writes the config to config_file unless read-only mode was used."""
