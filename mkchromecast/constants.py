@@ -48,3 +48,7 @@ def backend_options_for_platform(platform: str, video: bool = False):
 
 DEFAULT_BITRATE = 192
 CODECS_WITH_BITRATE = ["aac", "mp3", "ogg", "opus"]
+# TODO(xsdg): Reverse how this is defined.
+ALL_CODECS = QUANTIZED_SAMPLE_RATE_CODECS
+NODE_CODEC = "mp3"
+

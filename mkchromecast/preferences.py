@@ -1,14 +1,14 @@
 # This file is part of mkchromecast.
 
-import configparser as ConfigParser
 import getpass
 import os
 import sys
+from typing import Any
 import webbrowser
 
 import mkchromecast
 from mkchromecast import constants
-from mkchromecast.config import config_manager
+from mkchromecast import config
 from mkchromecast.constants import OpMode
 from mkchromecast.utils import is_installed
 
@@ -18,6 +18,7 @@ Check if external programs are available to build the preferences
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
+BITRATE_OPTIONS = [128, 160, 192, 224, 256, 320, 500]
 USER = getpass.getuser()
 
 if _mkcc.platform == "Darwin":
@@ -36,24 +37,6 @@ else:
 if _mkcc.debug is True:
     print("USER =" + str(USER))
     print("PATH =" + str(PATH))
-
-
-def ConfigSectionMap(section):
-    config = ConfigParser.RawConfigParser()
-    configurations = config_manager()  # Class from mkchromecast.config
-    configf = configurations.configf
-    config.read(configf)
-    dict1 = {}
-    options = config.options(section)
-    for option in options:
-        try:
-            dict1[option] = config.get(section, option)
-            if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
-        except:
-            print("Exception on %s!" % option)
-            dict1[option] = None
-    return dict1
 
 
 if _mkcc.operation == OpMode.TRAY:
@@ -75,12 +58,9 @@ if _mkcc.operation == OpMode.TRAY:
                 super(self.__class__, self).__init__()  # port to python2
 
             self.scale_factor = scale_factor
-            self.config = ConfigParser.RawConfigParser()
-            self.configurations = config_manager()
-            self.configf = self.configurations.configf
-            if os.path.exists(self.configf) is False:
-                print("Config file does not exist!")
-                self.configurations.config_defaults()
+            self.config = config.Config(platform=_mkcc.platform,
+                                        read_only=False,
+                                        debug=_mkcc.debug)
             self.read_defaults()
             self.initUI()
 
@@ -114,21 +94,21 @@ if _mkcc.operation == OpMode.TRAY:
                 self.backends.append("gstreamer")
 
             try:
-                backend_index = self.backends.index(self.backend_conf)
+                backend_idx = self.backends.index(self.config.backend)
             except ValueError:
                 # No backend found
-                backend_index = None
-                pass
+                backend_idx = None
+
             self.backend = QLabel("Select Backend", self)
             self.backend.move(20 * self.scale_factor, 24 * self.scale_factor)
             self.qcbackend = QComboBox(self)
             self.qcbackend.move(180 * self.scale_factor, 20 * self.scale_factor)
             self.qcbackend.setMinimumContentsLength(7)
-            for item in self.backends:
-                self.qcbackend.addItem(item)
+            for backend in self.backends:
+                self.qcbackend.addItem(backend)
 
-            if backend_index:
-                self.qcbackend.setCurrentIndex(backend_index)
+            if backend_idx:
+                self.qcbackend.setCurrentIndex(backend_idx)
 
             self.qcbackend.activated[str].connect(self.onActivatedbk)
 
@@ -140,7 +120,7 @@ if _mkcc.operation == OpMode.TRAY:
             self.codec.move(20 * self.scale_factor, 56 * self.scale_factor)
             self.qccodec = QComboBox(self)
             self.qccodec.clear()
-            if self.backend_conf == "node":
+            if self.config.backend == "node":
                 self.codecs = ["mp3"]
             else:
                 self.codecs = ["mp3", "ogg", "aac", "wav", "flac"]
@@ -169,7 +149,7 @@ if _mkcc.operation == OpMode.TRAY:
                 bitrateindex = 0
             else:
                 self.bitrates = ["128", "160", "192", "224", "256", "320", "500"]
-                bitrateindex = self.bitrates.index(self.bitrateconf)
+                bitrateindex = self.bitrates.index(str(self.config.bitrate))
             for item in self.bitrates:
                 self.qcbitrate.addItem(item)
             self.qcbitrate.setCurrentIndex(bitrateindex)
@@ -179,25 +159,16 @@ if _mkcc.operation == OpMode.TRAY:
             """
             Sample rate
             """
-            self.samplerates = [
-                "192000",
-                "176400",
-                "96000",
-                "88200",
-                "48000",
-                "44100",
-                "32000",
-                "22050",
-            ]
-            sampleratesindex = self.samplerates.index(self.samplerateconf)
+            samplerate_idx = constants.ALL_SAMPLE_RATES.index(
+                self.config.samplerate)
             self.samplerate = QLabel("Sample Rate (Hz)", self)
             self.samplerate.move(20 * self.scale_factor, 120 * self.scale_factor)
             self.qcsamplerate = QComboBox(self)
             self.qcsamplerate.move(180 * self.scale_factor, 120 * self.scale_factor)
             self.qcsamplerate.setMinimumContentsLength(7)
-            for item in self.samplerates:
-                self.qcsamplerate.addItem(item)
-            self.qcsamplerate.setCurrentIndex(sampleratesindex)
+            for samplerate in constants.ALL_SAMPLE_RATES:
+                self.qcsamplerate.addItem(str(samplerate))
+            self.qcsamplerate.setCurrentIndex(samplerate_idx)
             self.qcsamplerate.activated[str].connect(self.onActivatedsr)
 
         def iconcolors(self):
@@ -310,20 +281,19 @@ if _mkcc.operation == OpMode.TRAY:
             self.reset_indexes()
 
         def reset_indexes(self):
-            self.read_defaults()
             """
             Indexes of QCombo boxes are reset
             """
-            backend_index = self.backends.index(self.backend_conf)
-            codecindex = self.codecs.index(self.codecconf)
+            backend_index = self.backends.index(self.config.backend)
+            codecindex = self.codecs.index(self.config.codec)
             self.bitrates = ["128", "160", "192", "224", "256", "320", "500"]
-            bitrateindex = self.bitrates.index(self.bitrateconf)
+            bitrateindex = self.bitrates.index(str(self.config.bitrate))
             self.qcbitrate.clear()
-            for item in self.bitrates:
-                self.qcbitrate.addItem(item)
-            sampleratesindex = self.samplerates.index(self.samplerateconf)
-            colorsindex = self.colors_list.index(self.searchcolorsconf)
-            notindex = self.notifications_list.index(self.notifconf)
+            for bitrate in self.bitrates:
+                self.qcbitrate.addItem(str(bitrate))
+            sampleratesindex = self.samplerates.index(self.config.samplerate)
+            colorsindex = self.colors_list.index(self.config.colors)
+            notindex = self.notifications_list.index(self.config.notifconf)
             launchindex = self.atlaunch_list.index(self.satlaunchconf)
             self.qcbackend.setCurrentIndex(backend_index)
             self.qccodec.setCurrentIndex(codecindex)
@@ -333,118 +303,74 @@ if _mkcc.operation == OpMode.TRAY:
             self.qcnotifications.setCurrentIndex(notindex)
             self.qcatlaunch.setCurrentIndex(launchindex)
 
-        def onActivatedbk(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "backend", text)
-            self.write_config()
-            self.read_defaults()
-            self.qccodec.clear()
-            if self.backend_conf == "node":
-                codecs = ["mp3"]
-                self.config.read(self.configf)
-                self.config.set("settings", "codec", "mp3")
-                self.write_config()
-            else:
-                codecs = ["mp3", "ogg", "aac", "wav", "flac"]
+        def onActivatedbk(self, backend):
+            # TODO(xsdg): input validation?
+            # Available codecs vary by backend, so we 
+            with self.config:
+                self.config.backend = backend
+                if backend == "node":
+                    codecs = [constants.NODE_CODEC]
+                    self.config.codec = constants.NODE_CODEC
+                else:
+                    codecs = constants.ALL_CODECS
+
             if _mkcc.debug is True:
                 print("Codecs: %s." % codecs)
-            codecindex = codecs.index(self.codecconf)
+            codec_idx = codecs.index(self.config.codec)
+            self.qccodec.clear()
             self.qccodec.move(180 * self.scale_factor, 54 * self.scale_factor)
             self.qccodec.setMinimumContentsLength(7)
-            for item in codecs:
-                self.qccodec.addItem(item)
-            self.qccodec.setCurrentIndex(codecindex)
+            for codec in codecs:
+                self.qccodec.addItem(codec)
+            self.qccodec.setCurrentIndex(codec_idx)
             self.qccodec.activated[str].connect(self.onActivatedcc)
 
-        def onActivatedcc(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "codec", text)
-            self.write_config()
-            self.read_defaults()
-            self.qcbitrate.clear()
-            if self.codecconf == "wav":
-                bitrates = ["None"]
-                bitrateindex = 0
+        def onActivatedcc(self, codec):
+            with self.config:
+                self.config.codec = codec
+
+            bitrates: list[Any]
+            if codec in constants.CODECS_WITH_BITRATE:
+                bitrate_idx = BITRATE_OPTIONS.index(self.config.bitrate)
+                bitrates = BITRATE_OPTIONS
             else:
-                self.configurations.chk_config()
-                self.read_defaults()
-                bitrates = ["128", "160", "192", "224", "256", "320", "500"]
-                bitrateindex = bitrates.index(self.bitrateconf)
+                bitrate_idx = 0
+                bitrates = [None]
+
+            self.qcbitrate.clear()
             self.qcbitrate.move(180 * self.scale_factor, 88 * self.scale_factor)
-            for item in bitrates:
-                self.qcbitrate.addItem(item)
-            self.qcbitrate.setCurrentIndex(bitrateindex)
+            for bitrate in bitrates:
+                self.qcbitrate.addItem(str(bitrate))
+            self.qcbitrate.setCurrentIndex(bitrate_idx)
             self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
-        def onActivatedbt(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "bitrate", text)
-            self.write_config()
-            self.read_defaults()
+        def onActivatedbt(self, bitrate):
+            with self.config:
+                self.config.bitrate = int(bitrate)
 
-        def onActivatedsr(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "samplerate", text)
-            self.write_config()
-            self.read_defaults()
+        def onActivatedsr(self, samplerate):
+            with self.config:
+                self.config.samplerate = int(samplerate)
 
-        def onActivatednotify(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "notifications", text)
-            self.write_config()
-            self.read_defaults()
+        def onActivatednotify(self, setting):
+            # TODO(xsdg): Switch this to a checkbox.
+            with self.config:
+                self.config.notifications = setting == "enabled"
 
-        def onActivatedcolors(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "colors", text)
-            self.write_config()
-            self.read_defaults()
+        def onActivatedcolors(self, colors):
+            with self.config:
+                self.config.colors = colors
 
-        def onActivatedatlaunch(self, text):
-            self.config.read(self.configf)
-            self.config.set("settings", "searchatlaunch", text)
-            self.write_config()
-            self.read_defaults()
+        def onActivatedatlaunch(self, setting):
+            with self.config:
+                self.config.search_at_launch = setting == "enabled"
 
-        def onActivatedalsadevice(self, text):
-            self.config.read(self.configf)
-            if not text:
-                self.config.set("settings", "alsadevice", None)
-            else:
-                self.config.set("settings", "alsadevice", text)
-            self.write_config()
-            self.read_defaults()
-
-        def read_defaults(self):
-            self.backend_conf = ConfigSectionMap("settings")["backend"]
-            self.codecconf = ConfigSectionMap("settings")["codec"]
-            if self.backend_conf == "node" and self.codecconf != "mp3":
-                self.config.read(self.configf)
-                self.config.set("settings", "codec", "mp3")
-                self.write_config()
-                self.codecconf = ConfigSectionMap("settings")["codec"]
-            self.bitrateconf = ConfigSectionMap("settings")["bitrate"]
-            self.samplerateconf = ConfigSectionMap("settings")["samplerate"]
-            self.notifconf = ConfigSectionMap("settings")["notifications"]
-            self.searchcolorsconf = ConfigSectionMap("settings")["colors"]
-            self.satlaunchconf = ConfigSectionMap("settings")["searchatlaunch"]
-            self.alsadeviceconf = ConfigSectionMap("settings")["alsadevice"]
-            if _mkcc.debug is True:
-                print(
-                    self.backend_conf,
-                    self.codecconf,
-                    self.bitrateconf,
-                    self.samplerateconf,
-                    self.notifconf,
-                    self.satlaunchconf,
-                    self.searchcolorsconf,
-                    self.alsadeviceconf,
-                )
-
-        def write_config(self):
-            """This method writes to configfile"""
-            with open(self.configf, "w") as configfile:
-                self.config.write(configfile)
+        def onActivatedalsadevice(self, alsa_device):
+            with self.config:
+                if alsa_device:
+                    self.config.alsa_device = alsa_device
+                else:
+                    self.config.alsa_device = None
 
 
 if __name__ == "__main__":
