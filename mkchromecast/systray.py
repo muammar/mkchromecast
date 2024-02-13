@@ -168,7 +168,7 @@ class menubar(QtWidgets.QMainWindow):
         """
         This is for the search at launch
         """
-        if self.searchatlaunch == "enabled":
+        if self.searchatlaunch:
             self.search_cast()
         self.app.exec_()  # We start showing the system tray
 

@@ -68,9 +68,9 @@ class BasicInstantiationTest(unittest.TestCase):
         self.assertEqual(mkcc.codec, "codec")
         self.assertEqual(mkcc.bitrate, 12345)
         self.assertEqual(mkcc.samplerate, 54321)
-        self.assertEqual(mkcc.notifications, "enabled")
+        self.assertEqual(mkcc.notifications, True)
         self.assertEqual(mkcc.colors, "colors")
-        self.assertEqual(mkcc.search_at_launch, "disabled")
+        self.assertEqual(mkcc.search_at_launch, False)
         self.assertEqual(mkcc.adevice, "alsa_device")
 
 

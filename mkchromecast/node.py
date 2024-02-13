@@ -115,7 +115,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                 sys.exit(0)
         else:
             print(colors.warning("Reconnecting node streaming..."))
-            if mkcc.platform == "Darwin" and mkcc.notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.notifications:
                 if os.path.exists("images/google.icns") is True:
                     noticon = "images/google.icns"
                 else:
@@ -126,7 +126,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                     % (mkcc.platform, mkcc.tray, mkcc.notifications)
                 )
 
-            if mkcc.platform == "Darwin" and mkcc.operation == OpMode.TRAY and mkcc.notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.operation == OpMode.TRAY and mkcc.notifications:
                 reconnecting = [
                     "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
                     "-group",

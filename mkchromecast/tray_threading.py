@@ -68,7 +68,7 @@ class Player(QObject):
                                 read_only=True,
                                 debug=_mkcc.debug)
         with config_:
-            if backend == "node":
+            if config_.backend == "node":
                 node.stream_audio()
             else:
                 # TODO(xsdg): Drop this reload stuff.
@@ -117,7 +117,7 @@ class Updater(QObject):
 
     @pyqtSlot()
     def _updater_(self):
-        chk = Casting()
+        chk = Casting(_mkcc)
         if chk.ip == "127.0.0.1" or None:  # We verify the local IP.
             self.updateready.emit("None")
         else:
