@@ -70,14 +70,11 @@ class Mkchromecast:
         self.adevice: Optional[str] = (
             tray_config.alsa_device if tray_config else args.alsa_device)
 
-        # TODO(xsdg): This should obviously be a boolean.
-        bool_notifications: bool = (
+        self.notifications: bool = (
             tray_config.notifications if tray_config else args.notifications)
-        self.notifications: str = "enabled" if bool_notifications else "disabled"
-        self.search_at_launch: Optional[str]
+        self.search_at_launch: Optional[bool]
         if tray_config:
-            self.search_at_launch = (
-                "enabled" if tray_config.search_at_launch else "disabled")
+            self.search_at_launch = tray_config.search_at_launch
         else:
             self.search_at_launch = None
         self.colors: Optional[str] = tray_config.colors if tray_config else None
