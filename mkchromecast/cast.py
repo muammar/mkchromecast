@@ -1,6 +1,5 @@
 # This file is part of mkchromecast.
 
-import configparser as ConfigParser
 import os
 import pickle
 import socket
@@ -10,11 +9,10 @@ import time
 from typing import Any, Optional
 
 import mkchromecast
+from mkchromecast import colors
 from mkchromecast import utils
 from mkchromecast.audio_devices import inputint, outputint
-import mkchromecast.colors as colors
 from mkchromecast.constants import OpMode
-from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.messages import print_available_devices
@@ -332,21 +330,6 @@ class Casting(object):
 
         try:
             media_controller = self.cast.media_controller
-
-            if self.mkcc.operation == OpMode.TRAY:
-                config = ConfigParser.RawConfigParser()
-                # Class from mkchromecast.config
-                from mkchromecast.config import config_manager
-
-                configurations = config_manager()
-                configf = configurations.configf
-
-                if os.path.exists(configf) and self.mkcc.operation == OpMode.TRAY:
-                    print(self.mkcc.tray)
-                    print(colors.warning("Configuration file exists"))
-                    print(colors.warning("Using defaults set there"))
-                    config.read(configf)
-                    self.mkcc.backend = ConfigSectionMap("settings")["backend"]
 
             # Set up the mime type and conditionally import video or audio
             # TODO(xsdg): Get rid of these conditional imports.

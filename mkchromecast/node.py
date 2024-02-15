@@ -10,7 +10,6 @@ To call them:
 # This file is audio-only for node.  Video via node is (currently) handled
 # completely within video.py.
 
-import configparser as ConfigParser
 import multiprocessing
 import os
 import pickle
@@ -27,77 +26,27 @@ from mkchromecast import colors
 from mkchromecast import constants
 from mkchromecast import utils
 from mkchromecast.cast import Casting
-from mkchromecast.config import config_manager
 from mkchromecast.constants import OpMode
-from mkchromecast.preferences import ConfigSectionMap
 
 
 def streaming(mkcc: mkchromecast.Mkchromecast):
-    """
-    Configuration files
-    """
-    config = ConfigParser.RawConfigParser()
-    # Class from mkchromecast.config
-    configurations = config_manager()
-    configf = configurations.configf
-
-    bitrate: int
-    if os.path.exists(configf) and mkcc.operation == OpMode.TRAY:
-        configurations.chk_config()
-        print(colors.warning("Configuration file exists"))
-        print(colors.warning("Using defaults set there"))
-        config.read(configf)
-        backend = ConfigSectionMap("settings")["backend"]
-        rcodec = ConfigSectionMap("settings")["codec"]
-
-        # TODO(xsdg): dedup this parsing code between audio.py and node.py.
-        stored_bitrate = ConfigSectionMap("settings")["bitrate"]
-        if stored_bitrate == "None":
-            print(colors.warning("Setting bitrate to default of "
-                                 f"{constants.DEFAULT_BITRATE}"))
-            bitrate = constants.DEFAULT_BITRATE
-        else:
-            # Bitrate may be stored with or without "k" suffix.
-            bitrate_match = re.match(r"^(\d+)k?$", stored_bitrate)
-            if not bitrate_match:
-                raise Exception(
-                    f"Failed to parse bitrate {repr(stored_bitrate)} as an "
-                    "int. Expected something like '192' or '192k'")
-            bitrate = int(bitrate_match[1])
-
-        samplerate = ConfigSectionMap("settings")["samplerate"]
-        notifications = ConfigSectionMap("settings")["notifications"]
-    else:
-        backend = mkcc.backend
-        rcodec = mkcc.rcodec
-        codec = mkcc.codec
-        bitrate = mkcc.bitrate
-        samplerate = str(mkcc.samplerate)
-        notifications = mkcc.notifications
-
-    print(colors.options("Selected backend:") + " " + backend)
+    print(colors.options("Selected backend:") + " " + mkcc.backend)
 
     if mkcc.debug is True:
         print(
             ":::node::: variables %s, %s, %s, %s, %s"
-            % (backend, rcodec, bitrate, samplerate, notifications)
+            % (mkcc.backend, mkcc.codec, mkcc.bitrate, mkcc.samplerate, mkcc.notifications)
         )
 
+    bitrate: int
+    samplerate: int
     if mkcc.youtube_url is None:
-        if backend == "node" and rcodec != "mp3":
-            print(
-                colors.warning(
-                    "Codec " + rcodec + " is not supported by the node server!"
-                )
-            )
-            print("Using " + codec + " as default.")
-
-        if backend == "node":
-            bitrate = utils.clamp_bitrate(codec, bitrate)
+        if mkcc.backend == "node":
+            bitrate = utils.clamp_bitrate(mkcc.codec, bitrate)
             print(colors.options("Using bitrate: ") + f"{bitrate}k.")
 
-            if codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
-                samplerate = str(utils.quantize_sample_rate(codec, samplerate))
+            if mkcc.codec in constants.QUANTIZED_SAMPLE_RATE_CODECS:
+                samplerate = utils.quantize_sample_rate(mkcc.codec, mkcc.samplerate)
 
             print(colors.options("Using sample rate:") + f" {samplerate}Hz.")
 
@@ -112,9 +61,9 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                 path,
                 "./nodejs/node_modules/webcast-osx-audio/bin/webcast.js",
                 "-b",
-                bitrate,
+                str(bitrate),
                 "-s",
-                samplerate,
+                str(samplerate),
                 "-p",
                 "5000",
                 "-u",
@@ -166,7 +115,7 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
                 sys.exit(0)
         else:
             print(colors.warning("Reconnecting node streaming..."))
-            if mkcc.platform == "Darwin" and notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.notifications:
                 if os.path.exists("images/google.icns") is True:
                     noticon = "images/google.icns"
                 else:
@@ -174,10 +123,10 @@ def streaming(mkcc: mkchromecast.Mkchromecast):
             if mkcc.debug is True:
                 print(
                     ":::node::: platform, tray, notifications: %s, %s, %s."
-                    % (mkcc.platform, mkcc.tray, notifications)
+                    % (mkcc.platform, mkcc.tray, mkcc.notifications)
                 )
 
-            if mkcc.platform == "Darwin" and mkcc.operation == OpMode.TRAY and notifications == "enabled":
+            if mkcc.platform == "Darwin" and mkcc.operation == OpMode.TRAY and mkcc.notifications:
                 reconnecting = [
                     "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
                     "-group",

@@ -1,7 +1,6 @@
 # This file is part of mkchromecast.
 # brew install pyqt5 --with-python --without-python3
 
-import configparser as ConfigParser
 import os
 import pickle
 import psutil
@@ -12,16 +11,16 @@ import sys
 from urllib.request import urlopen
 
 import mkchromecast
+from mkchromecast import colors
+from mkchromecast import config
+from mkchromecast import preferences
+from mkchromecast import tray_threading
 from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.cast import Casting
-from mkchromecast.config import config_manager
-from mkchromecast.preferences import ConfigSectionMap
-import mkchromecast.preferences
-import mkchromecast.colors as colors
 from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.utils import del_tmp, checkmktmp
 from mkchromecast.version import __version__
-import mkchromecast.tray_threading
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, Qt
 from PyQt5.QtWidgets import QWidget, QMessageBox
@@ -49,7 +48,11 @@ class menubar(QtWidgets.QMainWindow):
         self.stopped = False
         self.played = False
         self.pcastfailed = False
-        self.read_config()
+        # TODO(xsdg): pull this directly from _mkcc.
+        self.config = config.Config(platform=_mkcc.platform,
+                                    read_only=True,
+                                    debug=_mkcc.debug)
+        self.config.load_and_validate()
 
         """
         These dictionaries are used to set icons' colors
@@ -124,23 +127,25 @@ class menubar(QtWidgets.QMainWindow):
         self.w = QWidget()
 
         # This is useful when launching from git repo
-        if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
+        icon_name = self.google[self.config.colors]
+        if os.path.exists(f"images/{icon_name}.icns"):
             self.icon = QtGui.QIcon()
             if _mkcc.platform == "Darwin":
-                self.icon.addFile("images/" + self.google[self.colors] + ".icns")
+                self.icon.addFile(f"images/{icon_name}.icns")
             else:
-                self.icon.addFile("images/" + self.google[self.colors] + ".png")
+                self.icon.addFile(f"images/{icon_name}.png")
         else:
             self.icon = QtGui.QIcon()
             if _mkcc.platform == "Linux":
                 self.icon.addFile(
-                    "/usr/share/mkchromecast/images/"
-                    + self.google[self.colors]
-                    + ".png"
+                    f"/usr/share/mkchromecast/images/{icon_name}.png"
                 )
             else:
-                self.icon.addFile(self.google[self.colors] + ".icns")
+                self.icon.addFile(f"{icon_name}.icns")
+
         super(QtWidgets.QMainWindow, self).__init__()
+
+        # TODO(xsdg): Move UI creation out of the constructor.
         self.createUI()
 
     def createUI(self):
@@ -165,33 +170,9 @@ class menubar(QtWidgets.QMainWindow):
         """
         This is for the search at launch
         """
-        if self.searchatlaunch == "enabled":
+        if self.config.search_at_launch:
             self.search_cast()
         self.app.exec_()  # We start showing the system tray
-
-    def read_config(self):
-        """
-        This is to load variables from configuration file
-        """
-        config = ConfigParser.RawConfigParser()
-        configurations = config_manager()  # Class from mkchromecast.config
-        configf = configurations.configf
-
-        if os.path.exists(configf):
-            print(colors.warning("Configuration file exists"))
-            print(colors.warning("Using defaults set there"))
-            config.read(configf)
-            self.notifications = ConfigSectionMap("settings")["notifications"]
-            self.searchatlaunch = ConfigSectionMap("settings")["searchatlaunch"]
-            self.colors = ConfigSectionMap("settings")["colors"]
-        else:
-            self.notifications = "disabled"
-            self.searchatlaunch = "disabled"
-            self.colors = "black"
-            if _mkcc.debug is True:
-                print(":::systray::: self.notifications " + self.notifications)
-                print(":::systray::: self.searchatlaunch " + self.searchatlaunch)
-                print(":::systray::: self.colors " + self.colors)
 
     def search_menu(self):
         self.SearchAction = self.menu.addAction("Search For Media " "Streaming Devices")
@@ -245,84 +226,36 @@ class menubar(QtWidgets.QMainWindow):
         self.available_devices = available_devices
         self.cast_list()
 
-    def set_icon_working(self):
-        """docstring for fnamicon_working"""
-        if self.notifications == "enabled":
-            self.search_notification()
-        if (
-            os.path.exists("images/" + self.google_working[self.colors] + ".icns")
-            is True
-        ):
+    def _set_generic_icon(self, icon_set: dict):
+        icon_name = icon_set[self.config.colors]
+        if os.path.exists(f"images/{icon_name}.icns"):
             if _mkcc.platform == "Darwin":
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google_working[self.colors] + ".icns")
-                )
+                self.tray.setIcon(QtGui.QIcon(f"images/{icon_name}.icns"))
             else:
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google_working[self.colors] + ".png")
-                )
+                self.tray.setIcon(QtGui.QIcon(f"images/{icon_name}.png"))
         else:
             if _mkcc.platform == "Linux":
-                self.tray.setIcon(
-                    QtGui.QIcon(
-                        "/usr/share/mkchromecast/images/"
-                        + self.google_working[self.colors]
-                        + ".png"
-                    )
-                )
+                self.tray.setIcon(QtGui.QIcon(
+                    f"/usr/share/mkchromecast/images/{icon_name}.png"))
             else:
-                self.tray.setIcon(
-                    QtGui.QIcon(self.google_working[self.colors] + ".icns")
-                )
+                self.tray.setIcon(QtGui.QIcon(f"{icon_name}.icns"))
+
+    def set_icon_working(self):
+        """docstring for fnamicon_working"""
+        if self.config.notifications:
+            self.search_notification()
+
+        self._set_generic_icon(self.google_working)
 
     def set_icon_idle(self):
         """docstring for icon_idle"""
-        if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
-            if _mkcc.platform == "Darwin":
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google[self.colors] + ".icns")
-                )
-            else:
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google[self.colors] + ".png")
-                )
-        else:
-            if _mkcc.platform == "Linux":
-                self.tray.setIcon(
-                    QtGui.QIcon(
-                        "/usr/share/mkchromecast/images/"
-                        + self.google[self.colors]
-                        + ".png"
-                    )
-                )
-            else:
-                self.tray.setIcon(QtGui.QIcon(self.google[self.colors] + ".icns"))
+        self._set_generic_icon(self.google)
 
     def set_icon_nodev(self):
         """docstring for set_ic"""
-        if os.path.exists("images/" + self.google_nodev[self.colors] + ".icns") is True:
-            if _mkcc.platform == "Darwin":
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google_nodev[self.colors] + ".icns")
-                )
-            else:
-                self.tray.setIcon(
-                    QtGui.QIcon("images/" + self.google_nodev[self.colors] + ".png")
-                )
-        else:
-            if _mkcc.platform == "Linux":
-                self.tray.setIcon(
-                    QtGui.QIcon(
-                        "/usr/share/mkchromecast/images/"
-                        + self.google_nodev[self.colors]
-                        + ".png"
-                    )
-                )
-            else:
-                self.tray.setIcon(QtGui.QIcon(self.google_nodev[self.colors] + ".icns"))
+        self._set_generic_icon(self.google_nodev)
 
     def search_cast(self):
-        self.read_config()
         self.set_icon_working()
         """
         This catches the error caused by an empty .tmp file
@@ -360,31 +293,24 @@ class menubar(QtWidgets.QMainWindow):
             self.about_menu()
             self.exit_menu()
         else:
-            self.read_config()
-            if _mkcc.platform == "Darwin" and self.notifications == "enabled":
-                if (
-                    os.path.exists("images/" + self.google[self.colors] + ".icns")
-                    is True
-                ):
-                    noticon = "images/" + self.google[self.colors] + ".icns"
+            if _mkcc.platform == "Darwin" and self.config.notifications:
+                icon_name = self.google[self.config.colors]
+                if os.path.exists(f"images/{icon_name}.icns"):
+                    noticon = f"images/{icon_name}.icns"
                 else:
-                    noticon = self.google[self.colors] + ".icns"
+                    noticon = f"{icon_name}.icns"
 
                 found = [
                     "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
-                    "-group",
-                    "cast",
-                    "-contentImage",
-                    noticon,
-                    "-title",
-                    "Mkchromecast",
-                    "-message",
-                    "Media Streaming Devices Found!",
+                    "-group", "cast",
+                    "-contentImage", noticon,
+                    "-title", "Mkchromecast",
+                    "-message", "Media Streaming Devices Found!",
                 ]
                 subprocess.Popen(found)
                 if _mkcc.debug is True:
                     print(":::systray:::", found)
-            elif _mkcc.platform == "Linux" and self.notifications == "enabled":
+            elif _mkcc.platform == "Linux" and self.config.notifications:
                 try:
                     import gi
 
@@ -523,32 +449,26 @@ class menubar(QtWidgets.QMainWindow):
             self.stopped = True
             self.read_config()
 
-            if _mkcc.platform == "Darwin" and self.notifications == "enabled":
+            if _mkcc.platform == "Darwin" and self.config.notifications:
                 if self.pcastfailed is True:
                     stop = [
                         "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
-                        "-group",
-                        "cast",
-                        "-title",
-                        "Mkchromecast",
-                        "-message",
-                        "Streaming Process Failed. Try Again...",
+                        "-group", "cast",
+                        "-title", "Mkchromecast",
+                        "-message", "Streaming Process Failed. Try Again...",
                     ]
                 else:
                     stop = [
                         "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
-                        "-group",
-                        "cast",
-                        "-title",
-                        "Mkchromecast",
-                        "-message",
-                        "Streaming Stopped!",
+                        "-group", "cast",
+                        "-title", "Mkchromecast",
+                        "-message", "Streaming Stopped!",
                     ]
                 subprocess.Popen(stop)
                 if _mkcc.debug is True:
                     print(":::systray::: stop", stop)
 
-            elif _mkcc.platform == "Linux" and self.notifications == "enabled":
+            elif _mkcc.platform == "Linux" and self.config.notifications:
                 try:
                     import gi
 
@@ -817,26 +737,23 @@ class menubar(QtWidgets.QMainWindow):
     """
 
     def search_notification(self):
-        if _mkcc.platform == "Darwin" and self.notifications == "enabled":
-            if os.path.exists("images/" + self.google[self.colors] + ".icns") is True:
-                noticon = "images/" + self.google[self.colors] + ".icns"
+        if _mkcc.platform == "Darwin" and self.config.notifications:
+            icon_name = self.google[self.config.colors]
+            if os.path.exists(f"images/{icon_name}.icns"):
+                noticon = f"images/{icon_name}.icns"
             else:
-                noticon = self.google[self.colors] + ".icns"
+                noticon = f"{icon_name}.icns"
             searching = [
                 "./notifier/terminal-notifier.app/Contents/MacOS/terminal-notifier",
-                "-group",
-                "cast",
-                "-contentImage",
-                noticon,
-                "-title",
-                "Mkchromecast",
-                "-message",
-                "Searching for Media Streaming Devices...",
+                "-group", "cast",
+                "-contentImage", noticon,
+                "-title", "Mkchromecast",
+                "-message", "Searching for Media Streaming Devices...",
             ]
             subprocess.Popen(searching)
             if _mkcc.debug is True:
                 print(":::systray:::", searching)
-        elif _mkcc.platform == "Linux" and self.notifications == "enabled":
+        elif _mkcc.platform == "Linux" and self.config.notifications:
             try:
                 import gi
 

@@ -1,18 +1,19 @@
 # This file is part of Mkchromecast.
 
-import mkchromecast.colors as colors
+import os
+import platform
+import shlex
+import subprocess
+import sys
+from typing import Optional
+
 from mkchromecast import _arg_parsing
+from mkchromecast import colors
+from mkchromecast import config
 from mkchromecast import constants
 from mkchromecast.constants import OpMode
 from mkchromecast.utils import terminate, check_url
-from mkchromecast.version import __version__
 from mkchromecast.resolution import resolutions
-import sys
-import platform
-import subprocess
-from typing import Optional
-import os
-import shlex
 
 class Mkchromecast:
     """A singleton object that encapsulates Mkchromecast state."""
@@ -51,12 +52,32 @@ class Mkchromecast:
         else:
             self.operation = OpMode.AUDIOCAST
 
+        # Need platform and debug (above) for config loading.
+        self.platform: str = platform.system()
+
+        tray_config: Optional[config.Config] = None
+        if self.operation == OpMode.TRAY:
+            # TODO(xsdg): Probably don't need to initialize most of this class
+            # for Tray mode.
+            tray_config = config.Config(platform=self.platform,
+                                        read_only=True,
+                                        debug=self.debug)
+            tray_config.load_and_validate()
+
         # Arguments with no dependencies.
         # Groupings are mostly carried over from earlier code; unclear how
         # meaningful they are.
-        self.adevice: Optional[str] = args.alsa_device
-        self.notifications: str = "enabled" if args.notifications else "disabled"
-        self.platform: str = platform.system()  # Guess the platform.
+        self.adevice: Optional[str] = (
+            tray_config.alsa_device if tray_config else args.alsa_device)
+
+        self.notifications: bool = (
+            tray_config.notifications if tray_config else args.notifications)
+        self.search_at_launch: Optional[bool]
+        if tray_config:
+            self.search_at_launch = tray_config.search_at_launch
+        else:
+            self.search_at_launch = None
+        self.colors: Optional[str] = tray_config.colors if tray_config else None
         self.tray: bool = args.tray
 
         self.discover: bool = args.discover
@@ -92,7 +113,9 @@ class Mkchromecast:
         )
 
         self.backend: Optional[str]
-        if args.encoder_backend:
+        if tray_config:
+            self.backend = tray_config.backend
+        elif args.encoder_backend:
             if args.encoder_backend not in backend_options:
                 print(colors.error(f"Backend {args.encoder_backend} is not in "
                                    "supported backends: "))
@@ -112,14 +135,17 @@ class Mkchromecast:
 
         codec_choices = ["mp3", "ogg", "aac", "opus", "wav", "flac"]
         self.codec: str
-        self.rcodec: Optional[str]
 
         if self.operation == OpMode.SOURCE_URL:
             self.codec = args.codec
-            self.rcodec = None
+        elif tray_config:  # OpMode.TRAY
+            # TODO(xsdg): Validate config codec.
+            self.codec = tray_config.codec
         elif self.backend == "node":
-            self.codec = "mp3"
-            self.rcodec = args.codec
+            if args.codec != "mp3":
+                print(colors.warning(f"Setting codec from {args.codec} to mp3, "
+                                     "as required by node backend"))
+                self.codec = "mp3"
         else:  # not source_url and backend != "node"
             if args.codec not in codec_choices:
                 print(colors.options(f"Selected audio codec: {args.codec}."))
@@ -129,7 +155,6 @@ class Mkchromecast:
                 sys.exit(0)
 
             self.codec = args.codec
-            self.rcodec = None
 
         # TODO(xsdg): Add support for yt-dlp
         command_choices = ["ffmpeg", "youtube-dl"]
@@ -164,7 +189,9 @@ class Mkchromecast:
             self.resolution = args.resolution
 
         self.bitrate: int
-        if self.codec in constants.CODECS_WITH_BITRATE:
+        if tray_config:
+            self.bitrate = tray_config.bitrate
+        elif self.codec in constants.CODECS_WITH_BITRATE:
             if args.bitrate <= 0:
                 print(colors.error("Bitrate must be a positive integer"))
                 sys.exit(0)
@@ -184,7 +211,9 @@ class Mkchromecast:
             sys.exit(0)
 
         self.samplerate: int
-        if self.codec == "opus":
+        if tray_config:
+            self.samplerate = tray_config.samplerate
+        elif self.codec == "opus":
             self.samplerate = 48000
         else:
             self.samplerate = args.sample_rate

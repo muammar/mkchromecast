@@ -1,29 +1,22 @@
 # This file is part of mkchromecast.
 
-import configparser as ConfigParser
 import os
 import socket
 
 import mkchromecast
 from mkchromecast import audio
 from mkchromecast import colors
+from mkchromecast import config
 from mkchromecast import node
 from mkchromecast.audio_devices import inputdev, outputdev
 from mkchromecast.cast import Casting
-from mkchromecast.config import config_manager
 from mkchromecast.constants import OpMode
-from mkchromecast.preferences import ConfigSectionMap
 from mkchromecast.pulseaudio import create_sink, check_sink
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 
 # TODO(xsdg): Encapsulate this so that we don't do this work on import.
 _mkcc = mkchromecast.Mkchromecast()
-
-config = ConfigParser.RawConfigParser()
-# Class from mkchromecast.config
-configurations = config_manager()
-configf = configurations.configf
 
 
 class Worker(QObject):
@@ -46,6 +39,7 @@ class Worker(QObject):
                 print(colors.warning(":::Threading::: Socket error, CC set to 0"))
             pass
         except TypeError:
+            # TODO(xsdg): this is probably a bad idea.
             pass
         except OSError:
             self.cc.available_devices = []
@@ -69,25 +63,22 @@ class Player(QObject):
 
     @pyqtSlot()
     def _play_cast_(self):
-        if os.path.exists(configf):
-            print(colors.warning(":::Threading::: Configuration file exists."))
-            print(colors.warning(":::Threading::: Using defaults set there."))
-            config.read(configf)
-            backend = ConfigSectionMap("settings")["backend"]
-            print(":::Threading backend::: %s." % backend)
-        else:
-            backend = _mkcc.backend
         global cast
-        if backend == "node":
-            node.stream_audio()
-        else:
-            try:
-                reload(mkchromecast.audio)
-            except NameError:
-                from imp import reload
+        config_ = config.Config(platform=_mkcc.platform,
+                                read_only=True,
+                                debug=_mkcc.debug)
+        with config_:
+            if config_.backend == "node":
+                node.stream_audio()
+            else:
+                # TODO(xsdg): Drop this reload stuff.
+                try:
+                    reload(mkchromecast.audio)
+                except NameError:
+                    from imp import reload
 
-                reload(mkchromecast.audio)
-            mkchromecast.audio.main()
+                    reload(mkchromecast.audio)
+                mkchromecast.audio.main()
         if _mkcc.platform == "Linux":
             # We create the sink only if it is not available
             if check_sink() is False and _mkcc.adevice is None:
@@ -126,7 +117,7 @@ class Updater(QObject):
 
     @pyqtSlot()
     def _updater_(self):
-        chk = Casting()
+        chk = Casting(_mkcc)
         if chk.ip == "127.0.0.1" or None:  # We verify the local IP.
             self.updateready.emit("None")
         else:
