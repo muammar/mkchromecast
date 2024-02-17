@@ -34,7 +34,8 @@ def sample_rates_for_codec(codec: str) -> List[int]:
 
 DARWIN_BACKENDS = ["node", "ffmpeg"]
 LINUX_VIDEO_BACKENDS = ["node", "ffmpeg"]
-LINUX_BACKENDS = ["ffmpeg", "parec", "gstreamer"]
+LINUX_BACKENDS = ["ffmpeg", "parec"]
+ALL_BACKENDS = ["node", "ffmpeg", "parec"]
 
 def backend_options_for_platform(platform: str, video: bool = False):
     if platform == "Darwin":

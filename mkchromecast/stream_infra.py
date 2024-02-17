@@ -196,27 +196,6 @@ class FlaskServer:
                 message = "Have you installed lame, see https://github.com/muammar/mkchromecast#linux-1?"
                 raise Exception(message)
 
-        elif (
-            FlaskServer._platform == "Linux"
-            and FlaskServer._backend.name == "gstreamer"
-        ):
-            c_gst = [
-                "gst-launch-1.0",
-                "-v",
-                "!",
-                "audioconvert",
-                "!",
-                "filesink",
-                "location=/dev/stdout",
-            ]
-            if FlaskServer._adevice is not None:
-                c_gst.insert(2, "alsasrc")
-                c_gst.insert(3, 'device="' + FlaskServer._adevice + '"')
-            else:
-                c_gst.insert(2, "pulsesrc")
-                c_gst.insert(3, 'device="Mkchromecast.monitor"')
-            gst = Popen(c_gst, stdout=PIPE)
-            process = Popen(FlaskServer._command, stdin=gst.stdout, stdout=PIPE, bufsize=-1)
         else:
             process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1)
         read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._buffer_size)
