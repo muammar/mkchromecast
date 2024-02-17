@@ -93,10 +93,6 @@ if _mkcc.operation == OpMode.TRAY:
             for option in backend_options:
                 if is_installed(option, PATH, _mkcc.debug):
                     backends.append(option)
-            # Hard-coded for gstreamer.
-            # if (_mkcc.platform == "Linux"
-            #     and is_installed("gst-launch-1.0", PATH, _mkcc.debug)):
-            #     self.backends.append("gstreamer")
 
             self.backend = QLabel("Select Backend", self)
             self.backend.move(20 * self.scale_factor, 24 * self.scale_factor)

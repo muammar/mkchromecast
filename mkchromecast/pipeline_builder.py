@@ -57,8 +57,7 @@ class Audio:
                 return self._build_linux_other_command()
 
             else:
-                # TODO(xsdg): gstreamer support never worked, so drop itDrop support for gstreamer.
-                raise Exception("gstreamer is not currently supported")
+                raise Exception(f"Unsupported backend: {self._backend.name}")
 
     def _input_command(self) -> list[str]:
         """Returns an appropriate set of input arguments for the pipeline.

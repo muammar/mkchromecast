@@ -8,6 +8,7 @@ the command-line interface.
 import argparse
 import os
 
+from mkchromecast import constants
 from mkchromecast.resolution import resolutions
 
 
@@ -209,14 +210,13 @@ Parser.add_argument(
     "--encoder-backend",
     type=str,
     default=None,
-    choices=["ffmpeg", "gstreamer", "node", "parec"],
+    choices=constants.ALL_BACKENDS,
     help="""
     Set the backend for all encoders.
     Possible backends:
         - node (default in macOS)
         - parec (default in Linux)
         - ffmpeg
-        - gstreamer
 
     Example:
         python mkchromecast.py --encoder-backend ffmpeg
