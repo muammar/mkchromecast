@@ -22,24 +22,24 @@ from mkchromecast.version import __version__
 """
 We verify that soco is installed to give Sonos support
 """
-sonos: bool
+has_sonos: bool
 try:
     import soco
 
-    sonos = True
+    has_sonos = True
 except ImportError:
-    sonos = False
+    has_sonos = False
 
 """
 We verify that pychromecast is installed
 """
-chromecast: bool
+has_chromecast: bool
 try:
     import pychromecast
 
-    chromecast = True
+    has_chromecast = True
 except ImportError:
-    chromecast = False
+    has_chromecast = False
 
 
 class Casting:
@@ -475,7 +475,7 @@ class _DisabledSonosCasting:
 
     def initialize_cast(self):
         self.cclist: list[Any] = []
-        if sonos:
+        if has_sonos:
             # Checking groups
             zone = soco.discovery.any_soco()
 
@@ -617,7 +617,7 @@ class _DisabledSonosCasting:
     def get_devices(self):
         if self.mkcc.debug is True:
             print("def get_devices(self):")
-        if chromecast:
+        if has_chromecast:
             try:
                 if self.mkcc.device_name is not None:
                     self.cast_to = self.mkcc.device_name
