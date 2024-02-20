@@ -53,10 +53,7 @@ if _mkcc.operation == OpMode.TRAY:
 
     class preferences(QWidget):
         def __init__(self, scale_factor):
-            try:
-                super().__init__()
-            except TypeError:
-                super(self.__class__, self).__init__()  # port to python2
+            super().__init__()
 
             self.scale_factor = scale_factor
             self.config = config.Config(platform=_mkcc.platform,
@@ -67,25 +64,22 @@ if _mkcc.operation == OpMode.TRAY:
             self.initUI()
 
         def initUI(self):
-            self.backend()
-            self.codec()
-            self.bitrate()
-            self.samplerates()
-            self.iconcolors()
-            self.notifications()
-            self.searchatlaunch()
+            self.init_backend()
+            self.init_codec()
+            self.init_bitrate()
+            self.init_samplerates()
+            self.init_iconcolors()
+            self.init_notifications()
+            self.init_searchatlaunch()
 
             self.qle_alsadevice: Optional[QLineEdit] = None
             if _mkcc.platform == "Linux":
-                self.alsadevice()
+                self.init_alsadevice()
 
-            self.buttons()
-            self.window()
+            self.init_buttons()
+            self.init_window()
 
-        def backend(self):
-            """
-            Backend
-            """
+        def init_backend(self):
             backend_options = constants.backend_options_for_platform(
                 _mkcc.platform
             )
@@ -106,10 +100,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qcbackend.activated[str].connect(self.onActivatedbk)
 
-        def codec(self):
-            """
-            Codec
-            """
+        def init_codec(self):
             self.codec = QLabel("Audio Coding Format", self)
             self.codec.move(20 * self.scale_factor, 56 * self.scale_factor)
             self.qccodec = QComboBox(self)
@@ -121,7 +112,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qccodec.activated[str].connect(self.onActivatedcc)
 
-        def bitrate(self):
+        def init_bitrate(self):
             """
             Bitrate
             """
@@ -136,7 +127,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qcbitrate.activated[str].connect(self.onActivatedbt)
 
-        def samplerates(self):
+        def init_samplerates(self):
             """
             Sample rate
             """
@@ -153,7 +144,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qcsamplerate.activated[str].connect(self.onActivatedsr)
 
-        def iconcolors(self):
+        def init_iconcolors(self):
             """
             Icon colors
             """
@@ -170,7 +161,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qccolors.activated[str].connect(self.onActivatedcolors)
 
-        def notifications(self):
+        def init_notifications(self):
             """
             Notifications
             """
@@ -187,7 +178,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qcnotifications.activated[str].connect(self.onActivatednotify)
 
-        def searchatlaunch(self):
+        def init_searchatlaunch(self):
             """
             Search at launch
             """
@@ -204,7 +195,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qcatlaunch.activated[str].connect(self.onActivatedatlaunch)
 
-        def alsadevice(self):
+        def init_alsadevice(self):
             """
             Set the ALSA Device
             """
@@ -219,7 +210,7 @@ if _mkcc.operation == OpMode.TRAY:
 
             self.qle_alsadevice.textChanged[str].connect(self.onActivatedalsadevice)
 
-        def buttons(self):
+        def init_buttons(self):
             """
             Buttons
             """
@@ -235,7 +226,7 @@ if _mkcc.operation == OpMode.TRAY:
                 )
             )
 
-        def window(self):
+        def init_window(self):
             """
             Geometry and window's title
             """

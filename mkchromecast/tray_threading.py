@@ -19,12 +19,9 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 _mkcc = mkchromecast.Mkchromecast()
 
 
-class Worker(QObject):
+class Search(QObject):
     finished = pyqtSignal()
     intReady = pyqtSignal(list)
-
-    def __init__(self):
-        QObject.__init__(self)
 
     @pyqtSlot()
     def _search_cast_(self):
@@ -57,9 +54,6 @@ class Worker(QObject):
 class Player(QObject):
     pcastfinished = pyqtSignal()
     pcastready = pyqtSignal(str)
-
-    def __init__(self):
-        QObject.__init__(self)
 
     @pyqtSlot()
     def _play_cast_(self):
@@ -111,9 +105,6 @@ class Updater(QObject):
 
     upcastfinished = pyqtSignal()
     updateready = pyqtSignal(str)
-
-    def __init__(self):
-        QObject.__init__(self)
 
     @pyqtSlot()
     def _updater_(self):

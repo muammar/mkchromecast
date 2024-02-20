@@ -72,35 +72,35 @@ class menubar(QtWidgets.QMainWindow):
         """
         This is used when searching for cast devices
         """
-        self.obj = mkchromecast.tray_threading.Worker()  # no parent!
-        self.thread = QThread()  # no parent!
+        self._search = mkchromecast.tray_threading.Search()  # no parent!
+        self._search_thread = QThread()  # no parent!
 
-        self.obj.intReady.connect(self.onIntReady)
-        self.obj.moveToThread(self.thread)
-        self.obj.finished.connect(self.thread.quit)
-        self.thread.started.connect(self.obj._search_cast_)
+        self._search.intReady.connect(self.onIntReady)
+        self._search.moveToThread(self._search_thread)
+        self._search.finished.connect(self._search_thread.quit)
+        self._search_thread.started.connect(self._search._search_cast_)
 
         """
         This is used when one clicks on cast device
         """
-        self.objp = mkchromecast.tray_threading.Player()  # no parent!
-        self.threadplay = QThread()  # no parent!
+        self._player = mkchromecast.tray_threading.Player()  # no parent!
+        self._play_thread = QThread()  # no parent!
 
-        self.objp.moveToThread(self.threadplay)
-        self.objp.pcastready.connect(self.pcastready)
-        self.objp.pcastfinished.connect(self.threadplay.quit)
-        self.threadplay.started.connect(self.objp._play_cast_)
+        self._player.moveToThread(self._play_thread)
+        self._player.pcastready.connect(self.pcastready)
+        self._player.pcastfinished.connect(self._play_thread.quit)
+        self._play_thread.started.connect(self._player._play_cast_)
 
         """
         This is used when one clicks on the updater
         """
-        self.objup = mkchromecast.tray_threading.Updater()  # no parent!
-        self.threadupdater = QThread()  # no parent!
+        self._updater = mkchromecast.tray_threading.Updater()  # no parent!
+        self._updater_thread = QThread()  # no parent!
 
-        self.objup.moveToThread(self.threadupdater)
-        self.objup.updateready.connect(self.updateready)
-        self.objup.upcastfinished.connect(self.threadupdater.quit)
-        self.threadupdater.started.connect(self.objup._updater_)
+        self._updater.moveToThread(self._updater_thread)
+        self._updater.updateready.connect(self.updateready)
+        self._updater.upcastfinished.connect(self._updater_thread.quit)
+        self._updater_thread.started.connect(self._updater._updater_)
 
         self.app = QtWidgets.QApplication(sys.argv)
         """
@@ -124,6 +124,7 @@ class menubar(QtWidgets.QMainWindow):
             if _mkcc.debug is True:
                 print(":::systray::: High-DPI screen detected...")
 
+        # TODO(xsdg): Is this used?  Is this a special field?
         self.w = QWidget()
 
         # This is useful when launching from git repo
@@ -143,7 +144,7 @@ class menubar(QtWidgets.QMainWindow):
             else:
                 self.icon.addFile(f"{icon_name}.icns")
 
-        super(QtWidgets.QMainWindow, self).__init__()
+        super().__init__()
 
         # TODO(xsdg): Move UI creation out of the constructor.
         self.createUI()
@@ -270,7 +271,7 @@ class menubar(QtWidgets.QMainWindow):
         if self.stopped is True and os.path.exists("/tmp/mkchromecast.tmp") is True:
             os.remove("/tmp/mkchromecast.tmp")
 
-        self.thread.start()
+        self._search_thread.start()
 
     def cast_list(self):
         self.set_icon_idle()
@@ -410,7 +411,7 @@ class menubar(QtWidgets.QMainWindow):
                 continue
             break
         self.played = True
-        self.threadplay.start()
+        self._play_thread.start()
 
     def stop_cast(self):
         if self.stopped is False:
@@ -660,7 +661,7 @@ class menubar(QtWidgets.QMainWindow):
         updaterBox.exec_()
 
     def update_show(self):
-        self.threadupdater.start()
+        self._updater_thread.start()
 
     def about_show(self):
         msgBox = QMessageBox()
