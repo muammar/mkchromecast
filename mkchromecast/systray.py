@@ -160,7 +160,6 @@ class menubar(QtWidgets.QMainWindow):
         self.stop_menu()
         self.volume_menu()
         self.resetaudio_menu()
-        self.reboot_menu()
         self.separator_menu()
         self.preferences_menu()
         self.update_menu()
@@ -197,10 +196,6 @@ class menubar(QtWidgets.QMainWindow):
     def resetaudio_menu(self):
         self.ResetAudioAction = self.menu.addAction("Reset Audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
-
-    def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Streaming Device")
-        self.rebootAction.triggered.connect(self.reboot)
 
     def preferences_menu(self):
         self.preferencesAction = self.menu.addAction("Preferences...")
@@ -287,7 +282,6 @@ class menubar(QtWidgets.QMainWindow):
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
-            self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
             self.update_menu()
@@ -359,7 +353,6 @@ class menubar(QtWidgets.QMainWindow):
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
-            self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
             self.update_menu()
@@ -562,53 +555,6 @@ class menubar(QtWidgets.QMainWindow):
             outputint()
         else:
             remove_sink()
-
-    def reboot(self):
-        try:
-            from pychromecast.dial import reboot
-        except ImportError:
-            # reboot is removed from pychromecast.dial since PR394
-            # see: https://github.com/home-assistant-libs/pychromecast/pull/394
-            print(
-                colors.warning(
-                    "This version of pychromecast does not support reboot. Will do nothing."
-                )
-            )
-            reboot = lambda x: None
-
-        if _mkcc.platform == "Darwin":
-            try:
-                self.cast.host_ = socket.gethostbyname(self.cast_to + ".local")
-                print("Cast device IP: " + str(self.cast.host_))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host_)
-            except socket.gaierror:
-                print("Cast device IP: " + str(self.cast.host))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host)
-            except AttributeError:
-                # FIXME I should add a notification here
-                pass
-        else:
-            try:
-                print("Cast device IP: %s" % str(self.cast.host))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host)
-            except AttributeError:
-                self.reset_audio()
-                self.stop_cast()
-                try:
-                    for device in self.available_devices:
-                        if self.cast_to in device:
-                            ip = device[3]
-                            print("Sonos device IP: %s" % str(ip))
-                    url = "http://" + ip + ":1400/reboot"
-                    urlopen(url).read()
-                except AttributeError:
-                    pass
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)

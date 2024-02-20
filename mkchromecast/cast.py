@@ -40,7 +40,7 @@ except ImportError:
     chromecast = False
 
 
-class Casting(object):
+class Casting:
     """Main casting class."""
 
     def __init__(self, mkcc: mkchromecast.Mkchromecast):
@@ -432,25 +432,6 @@ class Casting(object):
         except AttributeError:
             self.sonos.volume -= 1
             self.sonos.play()
-
-    def reboot(self):
-        try:
-            from pychromecast.dial import reboot
-        except ImportError:
-            # reboot is removed from pychromecast.dial since PR394
-            # see: https://github.com/home-assistant-libs/pychromecast/pull/394
-            print(
-                colors.warning(
-                    "This version of pychromecast does not support reboot. Will do nothing."
-                )
-            )
-            reboot = lambda x: None
-
-        if self.mkcc.platform == "Darwin":
-            self.cast.host = socket.gethostbyname(self.cast_to + ".local")
-            reboot(self.cast.host)
-        else:
-            print(colors.error("This method is not supported in Linux yet."))
 
     # TOOD(xsdg): Unclear how this works, but the self.available_devices method
     # and the self.available_devices attribute are in obvious conflict.
