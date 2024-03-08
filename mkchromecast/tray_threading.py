@@ -5,11 +5,11 @@ import socket
 
 import mkchromecast
 from mkchromecast import audio
+from mkchromecast import cast
 from mkchromecast import colors
 from mkchromecast import config
 from mkchromecast import node
 from mkchromecast.audio_devices import inputdev, outputdev
-from mkchromecast.cast import Casting
 from mkchromecast.constants import OpMode
 from mkchromecast.pulseaudio import create_sink, check_sink
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -28,26 +28,15 @@ class Search(QObject):
         # This should fix the error socket.gaierror making the system tray to
         # be closed.
         try:
-            self.cc = Casting(_mkcc)
-            self.cc.initialize_cast()
-            self.cc.available_devices()
+            cc = cast.Casting(_mkcc)
+            cc.initialize_cast()
+            self.intReady.emit(cc.available_devices)
+            self.finished.emit()
         except socket.gaierror:
             if _mkcc.debug is True:
-                print(colors.warning(":::Threading::: Socket error, CC set to 0"))
-            pass
-        except TypeError:
-            # TODO(xsdg): this is probably a bad idea.
-            pass
-        except OSError:
-            self.cc.available_devices = []
-
-        if len(self.cc.available_devices) == 0 and _mkcc.operation == OpMode.TRAY:
-            available_devices = []
-            self.intReady.emit(available_devices)
-            self.finished.emit()
-        else:
-            available_devices = self.cc.available_devices
-            self.intReady.emit(available_devices)
+                print(colors.warning(
+                    ":::Threading::: Socket error, failed to search for devices"))
+            self.intReady.emit([])
             self.finished.emit()
 
 
@@ -78,7 +67,7 @@ class Player(QObject):
             if check_sink() is False and _mkcc.adevice is None:
                 create_sink()
 
-        start = Casting(_mkcc)
+        start = cast.Casting(_mkcc)
         start.initialize_cast()
         try:
             start.get_devices()
@@ -108,7 +97,7 @@ class Updater(QObject):
 
     @pyqtSlot()
     def _updater_(self):
-        chk = Casting(_mkcc)
+        chk = cast.Casting(_mkcc)
         if chk.ip == "127.0.0.1" or None:  # We verify the local IP.
             self.updateready.emit("None")
         else:
