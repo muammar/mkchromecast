@@ -87,15 +87,6 @@ class Casting:
 
         return list(self._chromecasts_by_name.keys())
 
-    def _get_chromecast(self, name):
-        # compatibility
-        try:
-            print("gc1")
-            return pychromecast.get_chromecast(friendly_name=self.cast_to)
-        except AttributeError:
-            print("gc2")
-            return self._chromecasts_by_name[name]
-
     """
     Cast processes
     """
@@ -238,52 +229,34 @@ class Casting:
         if self.mkcc.debug is True:
             print("def get_devices(self):")
 
-        try:
-            if self.mkcc.device_name is not None:
-                self.cast_to = self.mkcc.device_name
-            self.cast = self._get_chromecast(self.cast_to)
-            # Wait for cast device to be ready
-            self.cast.wait()
-            print(" ")
-            print(
-                colors.important("Information about ")
-                + " "
-                + colors.success(self.cast_to)
-            )
-            print(" ")
-            print(self.cast.device)
-            print(" ")
-            print(
-                colors.important("Status of device ")
-                + " "
-                + colors.success(self.cast_to)
-            )
-            print(" ")
-            print(self.cast.status)
-            print(" ")
-        except pychromecast.error.NoChromecastFoundError:
-            print(
-                colors.error(
-                    "No Chromecasts matching filter criteria" " were found!"
-                )
-            )
-            if self.mkcc.platform == "Darwin":
-                inputint()
-                outputint()
-            elif self.mkcc.platform == "Linux":
-                remove_sink()
-            # In the case that the tray is used, we don't kill the
-            # application
-            if self.mkcc.operation != OpMode.TRAY:
-                print(colors.error("Finishing the application..."))
-                terminate()
-                exit()
-            else:
-                self.stop_cast()
-        except AttributeError:
-            pass
-        except KeyError:
-            pass
+        if self.mkcc.device_name:
+            self.cast_to = self.mkcc.device_name
+
+        if self.cast_to not in self._chromecasts_by_name:
+            self.cast = None
+            print(colors.warning(f"No chromecast found named {self.cast_to}"))
+            return
+
+        self.cast = self._chromecasts_by_name[self.cast_to]
+        # Wait for cast device to be ready
+        self.cast.wait()
+        print()
+        print(
+            colors.important("Information about ")
+            + " "
+            + colors.success(self.cast_to)
+        )
+        print(" ")
+        print(self.cast.device)
+        print(" ")
+        print(
+            colors.important("Status of device ")
+            + " "
+            + colors.success(self.cast_to)
+        )
+        print(" ")
+        print(self.cast.status)
+        print(" ")
 
     def play_cast(self):
         if self.mkcc.debug is True:
