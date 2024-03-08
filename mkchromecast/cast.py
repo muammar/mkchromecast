@@ -1,12 +1,13 @@
 # This file is part of mkchromecast.
 
+import dataclasses
 import os
 import pickle
 import socket
 import subprocess
 from threading import Thread
 import time
-from typing import Any, Optional
+from typing import Any, Iterable, Optional
 
 import mkchromecast
 from mkchromecast import colors
@@ -15,7 +16,6 @@ from mkchromecast.audio_devices import inputint, outputint
 from mkchromecast.constants import OpMode
 from mkchromecast.utils import terminate, checkmktmp
 from mkchromecast.pulseaudio import remove_sink
-from mkchromecast.messages import print_available_devices
 from mkchromecast.version import __version__
 
 
@@ -42,6 +42,26 @@ except ImportError:
     has_chromecast = False
 
 
+@dataclasses.dataclass
+class AvailableDevice:
+    index: int
+    name: pychromecast.Chromecast
+    type: str
+
+    def __str__(self):
+        return f"{self.index} \t{self.type} \t{self.name}"
+
+
+def print_available_devices(devices: Iterable[AvailableDevice]):
+    """Prints a list of available devices."""
+    print(colors.important("List of Devices Available in Network:"))
+    print(colors.important("-------------------------------------\n"))
+    print(colors.important("Index   Type    Friendly Name "))
+    print(colors.important("=====   =====   ============= "))
+    for device in devices:
+        print(device)
+
+
 class Casting:
     """Main casting class."""
 
@@ -52,18 +72,10 @@ class Casting:
 
         self.ip = utils.get_effective_ip(self.mkcc.platform, host_override=self.mkcc.host)
 
-        self.cast: Optional[Any] = None
+        self.cast: Optional[pychromecast.Chromecast] = None
+        self._chromecasts_by_name: dict[str, pychromecast.Chromecast]
 
     def _get_chromecasts(self):
-        # TODO(xsdg): Drop backwards compatibility with old versions of
-        # pychromecast
-
-        # compatibility
-        try:
-            return list(pychromecast.get_chromecasts_as_dict().keys())
-        except AttributeError:
-            pass
-
         _chromecasts = pychromecast.get_chromecasts(tries=self.mkcc.tries)
 
         # since PR380, pychromecast.get_chromecasts returns a tuple
@@ -78,8 +90,10 @@ class Casting:
     def _get_chromecast(self, name):
         # compatibility
         try:
+            print("gc1")
             return pychromecast.get_chromecast(friendly_name=self.cast_to)
         except AttributeError:
+            print("gc2")
             return self._chromecasts_by_name[name]
 
     """
@@ -92,8 +106,8 @@ class Casting:
         # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         from pychromecast import socket_client
 
-        self.cclist = self._get_chromecasts()
-        self.cclist = [[i, _, "Gcast"] for i, _ in enumerate(self.cclist)]
+        tmp_cclist = self._get_chromecasts()
+        self.cclist = [[i, name, "Gcast"] for i, name in enumerate(tmp_cclist)]
 
         if self.mkcc.debug is True:
             print("self.cclist", self.cclist)
@@ -106,7 +120,7 @@ class Casting:
             if self.mkcc.debug is True:
                 print("if len(self.cclist) != 0 and self.mkcc.select_device == False:")
             print(" ")
-            print_available_devices(self.available_devices())
+            print_available_devices(self.available_devices)
             print(" ")
             if self.mkcc.operation != OpMode.DISCOVER:
                 print(colors.important("Casting to first device shown above!"))
@@ -130,7 +144,7 @@ class Casting:
             if os.path.exists("/tmp/mkchromecast.tmp") is False:
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
                 print(" ")
-                print_available_devices(self.available_devices())
+                print_available_devices(self.available_devices)
             else:
                 if self.mkcc.debug is True:
                     print("else:")
@@ -152,13 +166,13 @@ class Casting:
             if os.path.exists("/tmp/mkchromecast.tmp") is False:
                 self.tf = open("/tmp/mkchromecast.tmp", "wb")
                 print(" ")
-                print_available_devices(self.available_devices())
+                print_available_devices(self.available_devices)
             else:
                 if self.mkcc.debug is True:
                     print("else:")
                 self.tf = open("/tmp/mkchromecast.tmp", "rb")
                 self.cast_to = pickle.load(self.tf)
-                print_available_devices(self.available_devices())
+                print_available_devices(self.available_devices)
                 print(" ")
                 print(
                     colors.options("Casting to:") + " " + colors.success(self.cast_to)
@@ -179,7 +193,6 @@ class Casting:
 
         elif len(self.cclist) == 0 and self.mkcc.operation == OpMode.TRAY:
             print(colors.error(":::Tray::: No devices found!"))
-            self.available_devices = []
 
     def select_a_device(self):
         print(" ")
@@ -275,6 +288,11 @@ class Casting:
     def play_cast(self):
         if self.mkcc.debug is True:
             print("def play_cast(self):")
+        if not self.cast:
+            print(colors.warning("Calling get_devices before proceeding with play_cast"))
+            self.get_devices()
+            if not self.cast:
+                raise Exception("Internal error, self.cast was not set.")
         localip = self.ip
 
         try:
@@ -350,11 +368,15 @@ class Casting:
 
     def pause(self):
         """Pause casting"""
+        if not self.cast:
+            raise Exception("Internal error: not initialized.")
         media_controller = self.cast.media_controller
         media_controller.pause()
 
     def play(self):
         """Play casting"""
+        if not self.cast:
+            raise Exception("Internal error: not initialized.")
         media_controller = self.cast.media_controller
         media_controller.play()
 
@@ -366,6 +388,8 @@ class Casting:
         """Increment volume by 0.1 unless it is already maxed.
         Returns the new volume.
         """
+        if not self.cast:
+            raise Exception("Internal error: not initialized.")
         if self.mkcc.debug is True:
             print("Increasing volume... \n")
         volume = round(self.cast.status.volume_level, 1)
@@ -375,26 +399,21 @@ class Casting:
         """Decrement the volume by 0.1 unless it is already 0.
         Returns the new volume.
         """
+        if not self.cast:
+            raise Exception("Internal error: not initialized.")
         if self.mkcc.debug is True:
             print("Decreasing volume... \n")
         volume = round(self.cast.status.volume_level, 1)
         return self.cast.set_volume(volume - 0.1)
 
-    # TOOD(xsdg): Unclear how this works, but the self.available_devices method
-    # and the self.available_devices attribute are in obvious conflict.
-    def available_devices(self):
-        """This method is uplay_mediased for populating the self.available_devices array
-        needed for the system tray.
-        """
-        self.available_devices = []
-        for self.index, device in enumerate(self.cclist):
-            types = device[2]
-            device = device[1]
+    @property
+    def available_devices(self) -> list[AvailableDevice]:
+        """The list of available devices."""
+        devices: list[AvailableDevice] = []
+        for device_index, (_, name, type_) in enumerate(self.cclist):
+            devices.append(AvailableDevice(device_index, name, type_))
 
-            to_append = [self.index, device, types]
-            self.available_devices.append(to_append)
-
-        return self.available_devices
+        return devices
 
     def hijack_cc(self):
         """Dummy method to call  _hijack_cc_().
@@ -424,6 +443,8 @@ class Casting:
         name is different from "Default Media Receiver", it hijacks to the
         chromecast.
         """
+        if not self.cast:
+            raise Exception("Internal error: not initialized.")
 
         ip = self.cast.socket_client.host  # valid since at least v3.0.0
 
