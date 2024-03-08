@@ -11,12 +11,12 @@ import sys
 from urllib.request import urlopen
 
 import mkchromecast
+from mkchromecast import cast
 from mkchromecast import colors
 from mkchromecast import config
 from mkchromecast import preferences
 from mkchromecast import tray_threading
 from mkchromecast.audio_devices import inputint, outputint
-from mkchromecast.cast import Casting
 from mkchromecast.pulseaudio import remove_sink
 from mkchromecast.utils import del_tmp, checkmktmp
 from mkchromecast.version import __version__
@@ -42,12 +42,15 @@ _mkcc = mkchromecast.Mkchromecast()
 
 class menubar(QtWidgets.QMainWindow):
     def __init__(self):
-        self.cc = Casting(_mkcc)
+        self.cc = cast.Casting(_mkcc)
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         self.cast = None
         self.stopped = False
         self.played = False
         self.pcastfailed = False
+
+        self.available_devices: list[cast.AvailableDevice] = []
+
         # TODO(xsdg): pull this directly from _mkcc.
         self.config = config.Config(platform=_mkcc.platform,
                                     read_only=True,
@@ -160,7 +163,6 @@ class menubar(QtWidgets.QMainWindow):
         self.stop_menu()
         self.volume_menu()
         self.resetaudio_menu()
-        self.reboot_menu()
         self.separator_menu()
         self.preferences_menu()
         self.update_menu()
@@ -198,10 +200,6 @@ class menubar(QtWidgets.QMainWindow):
         self.ResetAudioAction = self.menu.addAction("Reset Audio")
         self.ResetAudioAction.triggered.connect(self.reset_audio)
 
-    def reboot_menu(self):
-        self.rebootAction = self.menu.addAction("Reboot Streaming Device")
-        self.rebootAction.triggered.connect(self.reboot)
-
     def preferences_menu(self):
         self.preferencesAction = self.menu.addAction("Preferences...")
         self.preferencesAction.triggered.connect(self.preferences_show)
@@ -222,7 +220,7 @@ class menubar(QtWidgets.QMainWindow):
     These are methods for interacting with the mkchromecast objects
     """
 
-    def onIntReady(self, available_devices):
+    def onIntReady(self, available_devices: list):
         print("available_devices received")
         self.available_devices = available_devices
         self.cast_list()
@@ -276,7 +274,7 @@ class menubar(QtWidgets.QMainWindow):
     def cast_list(self):
         self.set_icon_idle()
 
-        if len(self.available_devices) == 0:
+        if not self.available_devices:
             self.menu.clear()
             self.search_menu()
             self.separator_menu()
@@ -287,7 +285,6 @@ class menubar(QtWidgets.QMainWindow):
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
-            self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
             self.update_menu()
@@ -334,16 +331,13 @@ class menubar(QtWidgets.QMainWindow):
             self.search_menu()
             self.separator_menu()
             print("Available Media Streaming Devices", self.available_devices)
-            for index, menuentry in enumerate(self.available_devices):
-                try:
-                    a = self.ag.addAction(
-                        (QtWidgets.QAction(str(menuentry[1]), self, checkable=True))
-                    )
-                    self.menuentry = self.menu.addAction(a)
-                except UnicodeEncodeError:
-                    a = self.menuentry = self.menu.addAction(
-                        str(unicode(menuentry[1]).encode("utf-8"))
-                    )
+            for index, device in enumerate(self.available_devices):
+                # TODO(xsdg): self.ag isn't actually referenced from anywhere,
+                # so just make it local.
+                action = self.ag.addAction(
+                    (QtWidgets.QAction(device.name, self, checkable=True))
+                )
+
                 # The receiver is a lambda function that passes clicked as
                 # a boolean, and the clicked_item as an argument to the
                 # self.clicked_cc() method. This last method, sets the correct
@@ -351,32 +345,30 @@ class menubar(QtWidgets.QMainWindow):
                 # self.play_cast(). Credits to this question in stackoverflow:
                 #
                 # http://stackoverflow.com/questions/1464548/pyqt-qmenu-dynamically-populated-and-clicked
-                receiver = lambda clicked, clicked_item=menuentry: self.clicked_cc(
+                receiver = lambda clicked, clicked_item=device: self.clicked_cc(
                     clicked_item
                 )
-                a.triggered.connect(receiver)
+                action.triggered.connect(receiver)
+
+                self.menu.addAction(action)
             self.separator_menu()
             self.stop_menu()
             self.volume_menu()
             self.resetaudio_menu()
-            self.reboot_menu()
             self.separator_menu()
             self.preferences_menu()
             self.update_menu()
             self.about_menu()
             self.exit_menu()
 
-    def clicked_cc(self, clicked_item):
-        if self.played is True:
-            try:
-                self.cast.quit_app()
-            except AttributeError:
-                self.cast.stop()
+    def clicked_cc(self, clicked_item: cast.AvailableDevice):
+        if self.played:
+            self.cast.quit_app()
 
         if _mkcc.debug is True:
             print(":::tray::: clicked item: %s." % clicked_item)
-        self.index = clicked_item[0]
-        self.cast_to = clicked_item[1]
+        self.index = clicked_item.index
+        self.cast_to = clicked_item.name
         self.play_cast()
 
     def pcastready(self, message):
@@ -562,53 +554,6 @@ class menubar(QtWidgets.QMainWindow):
             outputint()
         else:
             remove_sink()
-
-    def reboot(self):
-        try:
-            from pychromecast.dial import reboot
-        except ImportError:
-            # reboot is removed from pychromecast.dial since PR394
-            # see: https://github.com/home-assistant-libs/pychromecast/pull/394
-            print(
-                colors.warning(
-                    "This version of pychromecast does not support reboot. Will do nothing."
-                )
-            )
-            reboot = lambda x: None
-
-        if _mkcc.platform == "Darwin":
-            try:
-                self.cast.host_ = socket.gethostbyname(self.cast_to + ".local")
-                print("Cast device IP: " + str(self.cast.host_))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host_)
-            except socket.gaierror:
-                print("Cast device IP: " + str(self.cast.host))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host)
-            except AttributeError:
-                # FIXME I should add a notification here
-                pass
-        else:
-            try:
-                print("Cast device IP: %s" % str(self.cast.host))
-                self.reset_audio()
-                self.stop_cast()
-                reboot(self.cast.host)
-            except AttributeError:
-                self.reset_audio()
-                self.stop_cast()
-                try:
-                    for device in self.available_devices:
-                        if self.cast_to in device:
-                            ip = device[3]
-                            print("Sonos device IP: %s" % str(ip))
-                    url = "http://" + ip + ":1400/reboot"
-                    urlopen(url).read()
-                except AttributeError:
-                    pass
 
     def preferences_show(self):
         self.p = mkchromecast.preferences.preferences(self.scale_factor)

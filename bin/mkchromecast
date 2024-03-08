@@ -16,12 +16,11 @@ import mkchromecast
 from mkchromecast.version import __version__
 from mkchromecast.audio_devices import (inputint, inputdev, outputdev,
                                         outputint)
-from mkchromecast.cast import Casting
-import mkchromecast.colors as colors
+from mkchromecast import cast
+from mkchromecast import colors
 from mkchromecast.constants import OpMode
 from mkchromecast.pulseaudio import create_sink, get_sink_list, remove_sink
 from mkchromecast.utils import terminate, checkmktmp, writePidFile
-from mkchromecast.messages import print_available_devices
 
 
 def maybe_execute_single_action(mkcc: mkchromecast.Mkchromecast):
@@ -51,10 +50,10 @@ class CastProcess(object):
         self.mkcc = mkcc
 
         # Type declarations
-        self.cc: Casting
+        self.cc: cast.Casting
 
     def run(self):
-        self.cc = Casting(self.mkcc)
+        self.cc = cast.Casting(self.mkcc)
         checkmktmp()
         writePidFile()
 
