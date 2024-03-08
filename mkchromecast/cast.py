@@ -45,7 +45,7 @@ except ImportError:
 @dataclasses.dataclass
 class AvailableDevice:
     index: int
-    name: pychromecast.Chromecast
+    name: str
     type: str
 
     def __str__(self):
@@ -75,7 +75,7 @@ class Casting:
         self.cast: Optional[pychromecast.Chromecast] = None
         self._chromecasts_by_name: dict[str, pychromecast.Chromecast]
 
-    def _get_chromecasts(self):
+    def _get_chromecast_names(self) -> list[str]:
         _chromecasts = pychromecast.get_chromecasts(tries=self.mkcc.tries)
 
         # since PR380, pychromecast.get_chromecasts returns a tuple
@@ -97,7 +97,7 @@ class Casting:
         # See commit 18005ebd4c96faccd69757bf3d126eb145687e0d.
         from pychromecast import socket_client
 
-        tmp_cclist = self._get_chromecasts()
+        tmp_cclist = self._get_chromecast_names()
         self.cclist = [[i, name, "Gcast"] for i, name in enumerate(tmp_cclist)]
 
         if self.mkcc.debug is True:
