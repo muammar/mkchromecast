@@ -234,29 +234,35 @@ class Casting:
 
         if self.cast_to not in self._chromecasts_by_name:
             self.cast = None
-            print(colors.warning(f"No chromecast found named {self.cast_to}"))
-            return
+            print(colors.warning(f"No Chromecast found named {self.cast_to}"))
+
+            if self.mkcc.platform == "Darwin":
+                inputint()
+                outputint()
+            elif self.mkcc.platform == "Linux":
+                remove_sink()
+
+            # In the case that the tray is used, we don't kill the
+            # application
+            if self.mkcc.operation == OpMode.TRAY:
+                return
+
+            print(colors.error("Finishing the application..."))
+            terminate()
+            exit()
 
         self.cast = self._chromecasts_by_name[self.cast_to]
         # Wait for cast device to be ready
         self.cast.wait()
         print()
         print(
-            colors.important("Information about ")
-            + " "
-            + colors.success(self.cast_to)
-        )
-        print(" ")
-        print(self.cast.device)
-        print(" ")
-        print(
             colors.important("Status of device ")
             + " "
             + colors.success(self.cast_to)
         )
-        print(" ")
+        print()
         print(self.cast.status)
-        print(" ")
+        print()
 
     def play_cast(self):
         if self.mkcc.debug is True:
