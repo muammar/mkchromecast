@@ -59,7 +59,7 @@ def print_available_devices(devices: Iterable[AvailableDevice]):
     print(colors.important("Index   Type    Friendly Name "))
     print(colors.important("=====   =====   ============= "))
     for device in devices:
-        print(device)
+        print(f"{device.index} \t{device.type} \t{device.name.encode('utf-8').decode('utf-8')}")
 
 
 class Casting:
