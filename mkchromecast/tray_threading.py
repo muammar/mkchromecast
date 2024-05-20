@@ -58,7 +58,7 @@ class Player(QObject):
                 try:
                     reload(mkchromecast.audio)
                 except NameError:
-                    from imp import reload
+                    from importlib import reload
 
                     reload(mkchromecast.audio)
                 mkchromecast.audio.main()
