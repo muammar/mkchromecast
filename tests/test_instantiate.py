@@ -25,6 +25,21 @@ class BasicInstantiationTest(unittest.TestCase):
         mock_args.input_file = None
         mkcc = mkchromecast.Mkchromecast(mock_args)
 
+    def testMP3CodecNodeBackend(self):
+        "This test evaluates the assignment of the MP3 codec when the Node Backend is selected"
+
+        mock_args = mock.Mock()
+        # Here we set the minimal required args for __init__ to not sys.exit.
+        mock_args.encoder_backend = 'node'
+        mock_args.bitrate = constants.DEFAULT_BITRATE
+        mock_args.codec = 'mp3'
+        mock_args.command = None
+        mock_args.resolution = None
+        mock_args.chunk_size = 64
+        mock_args.sample_rate = 44100
+        mock_args.youtube = None
+        mock_args.input_file = None
+        mkcc = mkchromecast.Mkchromecast(mock_args)
     def testTrayModeInstantiation(self):
         mock_config = mock.create_autospec(config.Config, spec_set=True)
         self.enterContext(mock.patch.object(config, "Config", return_value=mock_config))
