@@ -145,7 +145,7 @@ class Mkchromecast:
             if args.codec != "mp3":
                 print(colors.warning(f"Setting codec from {args.codec} to mp3, "
                                      "as required by node backend"))
-                self.codec = "mp3"
+            self.codec = "mp3"
         else:  # not source_url and backend != "node"
             if args.codec not in codec_choices:
                 print(colors.options(f"Selected audio codec: {args.codec}."))
