@@ -26,7 +26,7 @@ class BasicInstantiationTest(unittest.TestCase):
         mkcc = mkchromecast.Mkchromecast(mock_args)
 
     def testMP3CodecNodeBackend(self):
-        "This test evaluates the assignment of the MP3 codec when the Node Backend is selected"
+        """This test evaluates the assignment of the MP3 codec when the Node Backend is selected"""
 
         mock_args = mock.Mock()
         # Here we set the minimal required args for __init__ to not sys.exit.
@@ -40,6 +40,7 @@ class BasicInstantiationTest(unittest.TestCase):
         mock_args.youtube = None
         mock_args.input_file = None
         mkcc = mkchromecast.Mkchromecast(mock_args)
+
     def testTrayModeInstantiation(self):
         mock_config = mock.create_autospec(config.Config, spec_set=True)
         self.enterContext(mock.patch.object(config, "Config", return_value=mock_config))
