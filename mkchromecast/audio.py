@@ -37,6 +37,15 @@ ip = utils.get_effective_ip(platform, host_override=host, fallback_ip="0.0.0.0")
 frame_size = 32 * _mkcc.chunk_size
 buffer_size = 2 * _mkcc.chunk_size**2
 
+encode_settings = pipeline_builder.EncodeSettings(
+        codec=_mkcc.codec,
+        adevice=_mkcc.adevice,
+        bitrate=_mkcc.bitrate,
+        frame_size=frame_size,
+        samplerate=str(_mkcc.samplerate),
+        segment_time=_mkcc.segment_time
+    )
+
 debug = _mkcc.debug
 
 if debug is True:
@@ -61,19 +70,11 @@ if _mkcc.operation == OpMode.YOUTUBE:
         query = urllib.parse.parse_qs(url_data.query)
     video = query["v"][0]
     print(colors.options("Playing video:") + " " + video)
-    command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
+    command = ["yt-dlp", "-o", "-", _mkcc.youtube_url]
     media_type = "audio/mp4"
 else:
     backend.name = _mkcc.backend
-    backend.path = backend.name
-    encode_settings = pipeline_builder.EncodeSettings(
-        codec=_mkcc.codec,
-        adevice=_mkcc.adevice,
-        bitrate=_mkcc.bitrate,
-        frame_size=frame_size,
-        samplerate=str(_mkcc.samplerate),
-        segment_time=_mkcc.segment_time
-    )
+    backend.path = backend.name    
 
     # TODO(xsdg): Why is this only run in tray mode???
     if _mkcc.operation == OpMode.TRAY and backend.name in {"ffmpeg", "parec"}:
