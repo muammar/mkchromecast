@@ -61,7 +61,7 @@ if _mkcc.operation == OpMode.YOUTUBE:
         query = urllib.parse.parse_qs(url_data.query)
     video = query["v"][0]
     print(colors.options("Playing video:") + " " + video)
-    command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
+    command = ["yt-dlp", "-o", "-", _mkcc.youtube_url]
     media_type = "audio/mp4"
 else:
     backend.name = _mkcc.backend
