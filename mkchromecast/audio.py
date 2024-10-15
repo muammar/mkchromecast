@@ -59,8 +59,13 @@ if _mkcc.operation == OpMode.YOUTUBE:
 
         url_data = urllib.parse.urlparse(_mkcc.youtube_url)
         query = urllib.parse.parse_qs(url_data.query)
-    video = query["v"][0]
+
+    if "v" in query:
+        video = query["v"][0]
+    else:
+        video = _mkcc.youtube_url
     print(colors.options("Playing video:") + " " + video)
+
     command = ["youtube-dl", "-o", "-", _mkcc.youtube_url]
     media_type = "audio/mp4"
 else:
