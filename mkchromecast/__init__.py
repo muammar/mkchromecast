@@ -157,7 +157,7 @@ class Mkchromecast:
             self.codec = args.codec
 
         # TODO(xsdg): Add support for yt-dlp
-        command_choices = ["ffmpeg", "youtube-dl"]
+        command_choices = ["ffmpeg", "yt-dlp"]
         self.command: Optional[str]
         if not args.command:
             self.command = None
@@ -230,13 +230,13 @@ class Mkchromecast:
         else:
             if not check_url(args.youtube):
                 youtube_error = """
-                You need to provide a URL that is supported by youtube-dl.
+                You need to provide a URL that is supported by yt-dlp.
                 """
 
                 # TODO(xsdg): Switch to yt-dlp.
                 message = """
                 For a list of supported sources please visit:
-                    https://rg3.github.io/youtube-dl/supportedsites.html
+                    https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md?plain=1
 
                 Note that the URLs have to start with https.
                 """

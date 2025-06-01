@@ -239,7 +239,7 @@ class Video:
     @property
     def command(self) -> SubprocessCommand:
         if self._settings.operation == OpMode.YOUTUBE:
-            return ["youtube-dl", "-o", "-", self._settings.youtube_url]
+            return ["yt-dlp", "-o", "-", self._settings.youtube_url]
 
         if self._settings.operation == OpMode.SCREENCAST:
             return self._screencast_command()

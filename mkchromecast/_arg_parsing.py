@@ -558,12 +558,12 @@ _ActionGroup.add_argument(
     type=str,
     default=None,
     help="""
-    Stream from sources supported by youtube-dl. This option needs
-    the youtube-dl package, and it also gives you access to all its
+    Stream from sources supported by yt-dlp. This option needs
+    the yt-dlp package, and it also gives you access to all its
     supported websites such as Dailymotion, LiveLeak, and Vimeo.
 
     For a comprehensive list, check:
-        http://rg3.github.io/youtube-dl/supportedsites.html.
+        http://rg3.github.io/yt-dlp/supportedsites.html.
 
     Example:
         python mkchromecast.py -y https://www.youtube.com/watch?v=NVvAJhZVBTc
