@@ -1,24 +1,30 @@
-FROM python:3
+# syntax=docker/dockerfile:1
+FROM python:3.13-slim
 
+ARG DEBIAN_FRONTEND=noninteractive
 RUN \
+  --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
   apt-get update && \
-  DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
-      ffmpeg \
-      libgirepository1.0-dev \
-      pulseaudio-utils \
+  apt-get install --yes --no-install-recommends \
+    ffmpeg \
+    libgirepository-2.0 \
+    pulseaudio-utils \
   && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/
 
-RUN pip install --no-cache youtube-dl
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip/ \
+  pip install --compile yt-dlp
 
 WORKDIR /usr/src/mkchromecast/
 
 COPY requirements.txt .
-RUN pip install --no-cache -r requirements.txt
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip/ \
+  pip install --compile -r requirements.txt
 
 COPY . .
-RUN pip install --no-cache .
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip/ \
+  pip install --compile .
 
 ENTRYPOINT [ "mkchromecast" ]
