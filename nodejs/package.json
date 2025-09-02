@@ -3,7 +3,7 @@
   "version": "0.3.8",
   "description": "Cast sound and video form to chromecast devices",
   "main": "html5-video-streamer.js",
-  "dependencies": {
+  "optionalDependencies": {
     "webcast-osx-audio": "^1.0.1"
   },
   "devDependencies": {},
