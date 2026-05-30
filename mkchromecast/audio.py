@@ -141,5 +141,5 @@ def _flask_init():
 
 
 def main():
-    pipeline = stream_infra.PipelineProcess(_flask_init, ip, port, platform)
+    pipeline = stream_infra.PipelineProcess(_flask_init, "0.0.0.0", port, platform)  # Bind to all interfaces, not just local IP
     pipeline.start()

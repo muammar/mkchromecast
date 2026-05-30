@@ -54,7 +54,7 @@ def main():
         mkcc.platform, host_override=mkcc.host, fallback_ip="0.0.0.0")
 
     if mkcc.backend != "node":
-        pipeline = stream_infra.PipelineProcess(_flask_init, ip, mkcc.port, mkcc.platform)
+        pipeline = stream_infra.PipelineProcess(_flask_init, "0.0.0.0", mkcc.port, mkcc.platform)  # Bind to all interfaces, not just local IP
         pipeline.start()
     else:
         print("Starting Node")

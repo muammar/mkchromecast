@@ -74,19 +74,21 @@ class Casting:
 
         self.cast: Optional[pychromecast.Chromecast] = None
         self._chromecasts_by_name: dict[str, pychromecast.Chromecast]
+        self._browser = None  # Keep browser alive for pychromecast 14+
+
 
     def _get_chromecast_names(self) -> list[str]:
         _chromecasts = pychromecast.get_chromecasts(tries=self.mkcc.tries)
-
         # since PR380, pychromecast.get_chromecasts returns a tuple
         # see: https://github.com/home-assistant-libs/pychromecast/pull/380
         if type(_chromecasts) == tuple:
-            _chromecasts = _chromecasts[0]
-
+            _chromecasts, self._browser = _chromecasts  # Keep browser alive for pychromecast 14
+        else:
+            self._browser = None
         self._chromecasts_by_name = {c.name: c for c in _chromecasts}
-
         return list(self._chromecasts_by_name.keys())
 
+    
     """
     Cast processes
     """
@@ -297,6 +299,8 @@ class Casting:
             print(colors.options("Your manually entered local IP is:") + " " + localip)
 
         media_controller = self.cast.media_controller
+        self.cast.wait()  # Ensure connection ready before play_media
+
 
         # Set up the mime type and conditionally import video or audio
         # TODO(xsdg): Get rid of these conditional imports.
@@ -322,21 +326,51 @@ class Casting:
         else:
             play_url = f"http://{localip}:{self.mkcc.port}/stream"
 
-        media_controller.play_media(
-            play_url, media_type, title=self.title, stream_type="LIVE",
-        )
 
-        if media_controller.is_active:
-            media_controller.play()
+        # Get MPRIS metadata from playerctl
+        import subprocess
+        def _playerctl(field):
+            try:
+                r = subprocess.run(["playerctl", "metadata", field],
+                                   capture_output=True, text=True, timeout=2)
+                return r.stdout.strip()
+            except Exception:
+                return ""
 
+        track_title = _playerctl("xesam:title") or self.title
+        track_artist = _playerctl("xesam:artist")
+        track_album = _playerctl("xesam:album")
+        import time as _cast_time
+        thumb_url = f"http://{localip}:{self.mkcc.port}/art?t={int(_cast_time.time())}"
+        
+        try:
+            media_controller.play_media(
+                play_url, media_type,
+                title=track_title,
+                thumb=thumb_url,
+                stream_type="LIVE",
+                metadata={
+                   "metadataType": 3,  # MusicTrackMediaMetadata
+                   "title": track_title,
+                   "artist": track_artist,
+                   "albumName": track_album,
+                }                 
+            )
+        except Exception as e:
+            print(f"Failed to send play_media: {e}")
+        time.sleep(5.0)  # Wait for device to establish session
         print(" ")
         print(colors.important("Cast media controller status"))
         print(" ")
         print(self.cast.status)
         print(" ")
 
-        time.sleep(5.0)
-        media_controller.play()
+
+        # Start metadata refresh thread
+        self.meta_thread = Thread(target=self._update_metadata)
+        self.meta_thread.daemon = True
+        self.meta_thread.start()
+   
 
         if self.mkcc.hijack is True:
             self.r = Thread(target=self.hijack_cc)
@@ -393,6 +427,49 @@ class Casting:
             devices.append(AvailableDevice(device_index, name, type_))
 
         return devices
+
+    def _update_metadata(self):
+        """Watch MPRIS for track changes and update cast metadata"""
+        import subprocess
+
+        def _playerctl(field):
+            try:
+                r = subprocess.run(["playerctl", "metadata", field],
+                                   capture_output=True, text=True, timeout=2)
+                return r.stdout.strip()
+            except Exception:
+                return ""
+
+        last_title = _playerctl("xesam:title")
+        localip = self.ip
+
+        try:
+            while True:
+                time.sleep(3)
+                current_title = _playerctl("xesam:title")
+                if current_title and current_title != last_title:
+                    last_title = current_title
+                    track_artist = _playerctl("xesam:artist")
+                    track_album = _playerctl("xesam:album")
+                    thumb_url = f"http://{localip}:{self.mkcc.port}/art?t={int(time.time())}"
+                    try:
+                        mc = self.cast.media_controller
+                        mc.play_media(
+                            f"http://{localip}:{self.mkcc.port}/stream",
+                            "audio/mpeg",
+                            title=current_title,
+                            thumb=thumb_url,
+                            stream_type="LIVE",
+                            metadata={
+                                "metadataType": 3,
+                                "title": current_title,
+                                "artist": track_artist,
+                                "albumName": track_album,
+                            }
+                        )
+                    except Exception as e:
+        except KeyboardInterrupt:
+            pass
 
     def hijack_cc(self):
         """Dummy method to call  _hijack_cc_().
