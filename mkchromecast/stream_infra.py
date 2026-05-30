@@ -66,6 +66,7 @@ class FlaskServer:
 
         FlaskServer._app = flask.Flask("mkchromecast")
         FlaskServer._app.add_url_rule("/", view_func=FlaskServer._index)
+        FlaskServer._app.add_url_rule("/art", view_func=FlaskServer._art)  # Album art endpoint for MPRIS metadata
 
         # TODO(xsdg): Maybe just have distinct audio and video endpoints?
         if video_mode:
@@ -201,6 +202,24 @@ class FlaskServer:
         read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._buffer_size)
         return flask.Response(iter(read_chunk, b""), mimetype=FlaskServer._media_type)
 
+    @staticmethod
+    def _art() -> flask.Response:
+        """Serve current album art from playerctl/MPRIS"""
+        import subprocess, os
+        try:
+            result = subprocess.run(
+                ["playerctl", "metadata", "mpris:artUrl"],
+                capture_output=True, text=True, timeout=2
+            )
+            art_url = result.stdout.strip()
+            if art_url.startswith("file://"):
+                art_path = art_url[7:]
+                if os.path.exists(art_path):
+                    with open(art_path, "rb") as f:
+                        return flask.Response(f.read(), mimetype="image/jpeg")
+        except Exception:
+            pass
+        return flask.Response(status=404)
 
 # Launching the pipeline command in a separate process.
 class PipelineProcess:
