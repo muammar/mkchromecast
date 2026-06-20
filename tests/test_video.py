@@ -133,5 +133,65 @@ class FlaskInitWaylandPortalErrorTest(unittest.TestCase):
         mock_init_video.assert_not_called()
 
 
+class FlaskInitWaylandSuccessTest(unittest.TestCase):
+    """_flask_init: Wayland success → command_factory minting a fresh fd."""
+
+    def test_command_factory_mints_fresh_fd_per_request(self):
+        stub = _make_stub_mkcc()
+        stub.resolution = None  # use the pipeline's 1080p default
+
+        session = mock.MagicMock()
+        session.open.return_value = 42  # node id
+        session.open_pipewire_fd.side_effect = [7, 8, 9]
+
+        captured = {}
+
+        def fake_init_video(**kwargs):
+            captured.update(kwargs)
+
+        with (
+            mock.patch(
+                "mkchromecast.video.mkchromecast.Mkchromecast",
+                return_value=stub,
+            ),
+            mock.patch(
+                "mkchromecast.video.screencast_wayland.is_wayland_session",
+                return_value=True,
+            ),
+            mock.patch(
+                "mkchromecast.video.screencast_wayland.PortalScreenCastSession",
+                return_value=session,
+            ),
+            mock.patch("mkchromecast.video.os.set_inheritable"),
+            mock.patch(
+                "mkchromecast.video.stream_infra.FlaskServer.init_video",
+                side_effect=fake_init_video,
+            ),
+        ):
+            import mkchromecast.video
+            mkchromecast.video._flask_init()
+
+            # Handshake runs once; serving is wired through a factory, not a
+            # static command + pass_fds. (Invoke the factory inside the patched
+            # context so os.set_inheritable stays stubbed.)
+            session.open.assert_called_once()
+            self.assertIsNotNone(captured.get("command_factory"))
+            self.assertNotIn("command", captured)
+            self.assertNotIn("pass_fds", captured)
+
+            factory = captured["command_factory"]
+            cmd1, fds1 = factory()
+            cmd2, fds2 = factory()
+
+        # Each request mints a distinct fresh fd, baked into that request's
+        # pipewiresrc command and returned for the child to inherit.
+        self.assertEqual(fds1, [7])
+        self.assertEqual(fds2, [8])
+        self.assertIn("fd=7", cmd1)
+        self.assertIn("fd=8", cmd2)
+        self.assertIn("path=42", cmd1)
+        self.assertEqual(session.open_pipewire_fd.call_count, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

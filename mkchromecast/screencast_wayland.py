@@ -242,8 +242,15 @@ class PortalScreenCastSession:
         }
         return GLib.Variant("(osa{sv})", (self._session_handle, "", options))
 
-    def open(self) -> tuple[int, int]:
-        """Runs the full handshake and returns (pipewire_fd, node_id)."""
+    def open(self) -> int:
+        """Runs the handshake (CreateSession/SelectSources/Start) and returns
+        the PipeWire node id of the shared monitor.
+
+        Does NOT open a PipeWire fd: a portal fd backs exactly one pipewiresrc
+        connection (it is effectively single-use), and the Chromecast may
+        (re)connect to /stream several times — so each consumer mints its own
+        fresh fd via open_pipewire_fd() instead of sharing one.
+        """
         # 1. CreateSession.
         session_token = self._next_token("sess")
         results = self._call_with_request(
@@ -259,11 +266,19 @@ class PortalScreenCastSession:
         streams = results.get("streams")
         if not streams:
             raise PortalError("Portal returned no screencast streams.")
-        node_id = streams[0][0]
+        return streams[0][0]
 
-        # 4. OpenPipeWireRemote (returns the fd directly, not via Request).
-        fd = self._open_pipewire_remote()
-        return fd, node_id
+    def open_pipewire_fd(self) -> int:
+        """Returns a FRESH PipeWire remote fd for the open session.
+
+        Each fd backs exactly one pipewiresrc connection, so call this once per
+        gst pipeline (i.e. per /stream request). Repeated OpenPipeWireRemote
+        calls on the same session yield independent connection fds, letting
+        multiple consumers view the shared stream concurrently.
+        """
+        if self._session_handle is None:
+            raise PortalError("open() must be called before open_pipewire_fd().")
+        return self._open_pipewire_remote()
 
     def _open_pipewire_remote(self) -> int:
         args = GLib.Variant("(oa{sv})", (self._session_handle, {}))
