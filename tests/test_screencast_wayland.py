@@ -73,6 +73,9 @@ class PortalArgVariantTests(unittest.TestCase):
     """
 
     def _session(self):
+        # gi is imported lazily by __init__ via _ensure_gi(); since these tests
+        # bypass __init__ but still build GVariants, bind Gio/GLib explicitly.
+        screencast_wayland._ensure_gi()
         sess = object.__new__(screencast_wayland.PortalScreenCastSession)
         sess._session_handle = "/org/freedesktop/portal/desktop/session/1/abc"
         return sess

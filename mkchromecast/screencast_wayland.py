@@ -11,11 +11,38 @@ import os
 import shutil
 import subprocess
 
-import gi
+# gi / PyGObject is only needed for the actual portal handshake
+# (PortalScreenCastSession). It is imported lazily via _ensure_gi() so that
+# merely importing this module — which video.py does for every video cast to
+# reach is_wayland_session() / gstreamer_screencast_available() — does not
+# require PyGObject on non-Wayland-screencast paths (macOS, input-file, X11).
+Gio = None
+GLib = None
 
-gi.require_version("Gio", "2.0")
-gi.require_version("GLib", "2.0")
-from gi.repository import Gio, GLib  # noqa: E402
+
+def _ensure_gi() -> None:
+    """Imports gi and binds Gio/GLib as module globals; raises PortalError.
+
+    Called from PortalScreenCastSession before any Gio/GLib use. Raising
+    PortalError (rather than ImportError) lets the existing screencast error
+    handling print an actionable install message instead of crashing.
+    """
+    global Gio, GLib
+    if Gio is not None:
+        return
+    try:
+        import gi
+        gi.require_version("Gio", "2.0")
+        gi.require_version("GLib", "2.0")
+        from gi.repository import Gio as _Gio, GLib as _GLib
+    except (ImportError, ValueError) as exc:
+        raise PortalError(
+            "Wayland screencast needs PyGObject (the 'gi' module) with the "
+            "Gio and GLib typelibs. Install it (on Arch: python-gobject and "
+            f"the gobject-introspection runtime). Underlying error: {exc}")
+    Gio = _Gio
+    GLib = _GLib
+
 
 _PORTAL_BUS = "org.freedesktop.portal.Desktop"
 _PORTAL_PATH = "/org/freedesktop/portal/desktop"
@@ -103,6 +130,10 @@ class PortalScreenCastSession:
     """
 
     def __init__(self, timeout_seconds: int = 300) -> None:
+        # Bind Gio/GLib lazily — PyGObject is only required once we actually
+        # drive the portal handshake, not merely to import this module.
+        _ensure_gi()
+
         # Acquire the bus connection here, AFTER the fork.  This class is
         # instantiated inside the forked pipeline child; inheriting a parent's
         # GDBus connection across fork would be unsafe.
