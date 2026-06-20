@@ -201,8 +201,9 @@ Parser.add_argument(
     type=str,
     default=os.environ.get("DISPLAY", ":0"),
     help="""
-    Set the DISPLAY for screen captures.  Defaults to current environment
-    value of DISPLAY or ':0' if DISPLAY is unset.
+    Set the DISPLAY for X11 screen captures. Defaults to current environment
+    value of DISPLAY or ':0' if DISPLAY is unset. Ignored under Wayland, where
+    the monitor is chosen via the desktop portal picker.
     """,
 )
 

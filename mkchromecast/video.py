@@ -12,12 +12,45 @@ import subprocess
 import mkchromecast
 from mkchromecast import colors
 from mkchromecast import pipeline_builder
+from mkchromecast import screencast_wayland
 from mkchromecast import stream_infra
 from mkchromecast import utils
 from mkchromecast.constants import OpMode
 
+# Holds the live portal session for Wayland screencast so it is not garbage
+# collected before ffmpeg (spawned lazily by the Flask server) inherits its fd.
+_active_wayland_session = None
+
+
 def _flask_init():
+    global _active_wayland_session
     mkcc = mkchromecast.Mkchromecast()
+
+    wayland_capture = None
+    pass_fds = None
+    if (mkcc.operation == OpMode.SCREENCAST
+            and screencast_wayland.is_wayland_session()):
+        if not screencast_wayland.ffmpeg_has_pipewiregrab():
+            print(colors.error(
+                "Wayland screencast requires ffmpeg >= 7.1 (with the "
+                "'pipewiregrab' filter). Please upgrade ffmpeg."))
+            utils.terminate()
+
+        try:
+            _active_wayland_session = (
+                screencast_wayland.PortalScreenCastSession())
+            fd, node = _active_wayland_session.open()
+        except screencast_wayland.PortalError as exc:
+            print(colors.error(f"Wayland screencast failed: {exc}"))
+            print(colors.warning(
+                "Ensure xdg-desktop-portal (with a backend such as "
+                "xdg-desktop-portal-gnome, -kde, or -wlr) and PipeWire are "
+                "installed and running."))
+            utils.terminate()
+
+        os.set_inheritable(fd, True)
+        wayland_capture = (fd, node)
+        pass_fds = [fd]
 
     # TODO(xsdg): Passing args in one-by-one to facilitate refactoring
     # the Mkchromecast object so that it has argument groups instead of just a
@@ -35,6 +68,7 @@ def _flask_init():
         user_command=mkcc.command,
         vcodec=mkcc.vcodec,
         youtube_url=mkcc.youtube_url,
+        wayland_capture=wayland_capture,
     )
     builder = pipeline_builder.Video(encode_settings)
     if mkcc.debug is True:
@@ -44,7 +78,8 @@ def _flask_init():
     stream_infra.FlaskServer.init_video(
         chunk_size=mkcc.chunk_size,
         command=builder.command,
-        media_type=(mkcc.mtype or "video/mp4")
+        media_type=(mkcc.mtype or "video/mp4"),
+        pass_fds=pass_fds,
     )
 
 
