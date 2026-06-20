@@ -58,6 +58,7 @@ class FlaskServer:
 
     # Video arguments.
     _chunk_size: int
+    _pass_fds: Optional[list[int]] = None
 
     @staticmethod
     def _init_common(video_mode: bool) -> None:
@@ -102,12 +103,14 @@ class FlaskServer:
     @staticmethod
     def init_video(chunk_size: int,
                    command: Union[str, list[str]],
-                   media_type: str) -> None:
+                   media_type: str,
+                   pass_fds: Optional[list[int]] = None) -> None:
         FlaskServer._init_common(video_mode=True)
 
         FlaskServer._chunk_size = chunk_size
         FlaskServer._command = command
         FlaskServer._media_type = media_type
+        FlaskServer._pass_fds = pass_fds
 
     @staticmethod
     def run(host: str, port: int) -> None:
@@ -173,7 +176,8 @@ class FlaskServer:
     def _stream_video() -> flask.Response:
         FlaskServer._ensure_video_mode()
 
-        process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1)
+        process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1,
+                        pass_fds=FlaskServer._pass_fds or ())
         read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._chunk_size)
         return flask.Response(iter(read_chunk, b""), mimetype=FlaskServer._media_type)
 
