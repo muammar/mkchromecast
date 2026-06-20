@@ -341,6 +341,32 @@ class VideoBuilderTests(unittest.TestCase):
                                       seek="hh:mm:ss")
         self.assertEqual(exp_command, builder.command)
 
+    def testX11ScreencastCommand(self):
+        builder = self.create_builder(operation=OpMode.SCREENCAST,
+                                      screencast=True,
+                                      display=":0",
+                                      fps="25")
+        command = builder.command
+        self.assertIn("x11grab", command)
+        self.assertNotIn("lavfi", command)
+        self.assertFalse(any("pipewiregrab" in str(arg) for arg in command))
+        # Audio input is still present.
+        self.assertIn("Mkchromecast.monitor", command)
+
+    def testWaylandScreencastCommand(self):
+        builder = self.create_builder(operation=OpMode.SCREENCAST,
+                                      screencast=True,
+                                      fps="25",
+                                      wayland_capture=(7, 42))
+        command = builder.command
+        self.assertNotIn("x11grab", command)
+        self.assertIn("lavfi", command)
+        self.assertIn("pipewiregrab=fd=7:node=42", command)
+        # Audio input is unchanged.
+        self.assertIn("Mkchromecast.monitor", command)
+        # fps is carried through.
+        self.assertIn("25", command)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

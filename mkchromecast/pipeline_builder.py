@@ -221,6 +221,7 @@ class VideoSettings:
     user_command: Optional[str]  # TODO(xsdg): check type.
     vcodec: str
     youtube_url: Optional[str]
+    wayland_capture: Optional[tuple[int, int]] = None
 
 
 class Video:
@@ -255,10 +256,34 @@ class Video:
                         f"{self._settings.operation}")
 
     def _screencast_command(self) -> list[str]:
-        screen_size = resolution.resolution(
-            self._settings.resolution or "1080p",
-            self._settings.screencast
-        )
+        audio_input = [
+            "-ac", "2",
+            "-ar", "44100",
+            "-frame_size", "2048",
+            "-fragment_size", "2048",
+            "-f", "pulse",
+            "-ac", "2",
+            "-i", "Mkchromecast.monitor",
+        ]
+
+        if self._settings.wayland_capture is not None:
+            fd, node = self._settings.wayland_capture
+            video_input = [
+                "-f", "lavfi",
+                "-i", f"pipewiregrab=fd={fd}:node={node}",
+                "-r", self._settings.fps,
+            ]
+        else:
+            screen_size = resolution.resolution(
+                self._settings.resolution or "1080p",
+                self._settings.screencast
+            )
+            video_input = [
+                "-f", "x11grab",
+                "-r", self._settings.fps,
+                "-s", screen_size,
+                "-i", "{}+0,0".format(self._settings.display),
+            ]
 
         maybe_veryfast_cmd: list[str]
         if self._settings.vcodec != "h264_nvenc":
@@ -267,17 +292,8 @@ class Video:
             maybe_veryfast_cmd = []
 
         return ["ffmpeg",
-                "-ac", "2",
-                "-ar", "44100",
-                "-frame_size", "2048",
-                "-fragment_size", "2048",
-                "-f", "pulse",
-                "-ac", "2",
-                "-i", "Mkchromecast.monitor",
-                "-f", "x11grab",
-                "-r", self._settings.fps,
-                "-s", screen_size,
-                "-i", "{}+0,0".format(self._settings.display),
+                *audio_input,
+                *video_input,
                 "-vcodec", self._settings.vcodec,
                 *maybe_veryfast_cmd,
                 "-tune", "zerolatency",
