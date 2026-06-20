@@ -393,8 +393,15 @@ class VideoBuilderTests(unittest.TestCase):
         # Audio still captured from the pulse monitor sink.
         self.assertIn("pulsesrc", command)
         self.assertIn("device=Mkchromecast.monitor", command)
-        # fps carried into the video caps.
-        self.assertIn("video/x-raw,framerate=25/1", command)
+        # Chromecast-compatible video: 4:2:0 (I420), scaled to 1080p, fps, and
+        # High profile constrained on the encoder output.
+        self.assertIn("videoscale", command)
+        caps = next(a for a in command if a.startswith("video/x-raw"))
+        self.assertIn("format=I420", caps)
+        self.assertIn("width=1920", caps)
+        self.assertIn("height=1080", caps)
+        self.assertIn("framerate=25/1", caps)
+        self.assertIn("video/x-h264,profile=high", command)
 
 
 if __name__ == "__main__":

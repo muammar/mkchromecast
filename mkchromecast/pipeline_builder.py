@@ -312,14 +312,28 @@ class Video:
         fps = str(self._settings.fps)
         key_int_max = str(int(fps) * 2) if fps.isdigit() else "60"
 
+        # Chromecast needs H.264 High profile, 4:2:0 (yuv420p / I420), at a
+        # supported resolution. videoconvert otherwise negotiates 4:4:4 (which
+        # the device can't decode), and the raw monitor may be >1080p, so pin
+        # the chroma to I420, scale to the configured size (default 1080p), and
+        # constrain the encoder to High profile.
+        screen_size = resolution.resolution(
+            self._settings.resolution or "1080p",
+            self._settings.screencast
+        )
+        width, height = screen_size.split("x")
+
         return [
             "gst-launch-1.0", "-q",
             "pipewiresrc", f"fd={fd}", f"path={node}", "do-timestamp=true",
             "!", "videoconvert",
+            "!", "videoscale",
             "!", "videorate",
-            "!", f"video/x-raw,framerate={fps}/1",
+            "!", (f"video/x-raw,format=I420,width={width},height={height},"
+                  f"framerate={fps}/1"),
             "!", "x264enc", "tune=zerolatency", "speed-preset=veryfast",
-            f"key-int-max={key_int_max}",
+            "bitrate=8000", f"key-int-max={key_int_max}",
+            "!", "video/x-h264,profile=high",
             "!", "h264parse",
             "!", "queue",
             "!", "mp4mux", "name=mux", "fragment-duration=1000",
