@@ -22,6 +22,12 @@
     - You can attach devices to a running streaming audio session
       (experimental).
     -  Move from SoundFlower to BlackHole for macOS. Closes #289.
+    - `--screencast` now works under Wayland sessions. The desktop is captured
+      through `xdg-desktop-portal` + PipeWire and encoded with GStreamer
+      (H.264/AAC), instead of the X11-only `x11grab`. X11 sessions are
+      unchanged. The Wayland path requires GStreamer (`gst-launch-1.0` with the
+      `pipewiresrc`, `x264enc`, `h264parse`, `mp4mux`, `pulsesrc`, `avenc_aac`,
+      and `aacparse` elements).
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
