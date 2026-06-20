@@ -68,7 +68,7 @@ class PortalScreenCastSession:
     long as it exists; call close() to tear it down.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, timeout_seconds: int = 300) -> None:
         try:
             self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         except GLib.Error as exc:
@@ -80,6 +80,7 @@ class PortalScreenCastSession:
         self._loop = GLib.MainLoop()
         self._token_counter = 0
         self._session_handle = None
+        self._timeout_seconds = timeout_seconds
 
         # Per-call response state.
         self._response_code = None
@@ -113,6 +114,14 @@ class PortalScreenCastSession:
 
         self._response_code = None
         self._response_results = None
+        self._timed_out = False
+
+        def _on_timeout():
+            self._timed_out = True
+            self._loop.quit()
+            return GLib.SOURCE_REMOVE
+
+        timeout_id = GLib.timeout_add_seconds(self._timeout_seconds, _on_timeout)
         try:
             self._bus.call_sync(
                 _PORTAL_BUS, _PORTAL_PATH, _SCREENCAST_IFACE, method,
@@ -122,8 +131,13 @@ class PortalScreenCastSession:
         except GLib.Error as exc:
             raise PortalError(f"Portal call {method} failed: {exc}")
         finally:
+            if not self._timed_out:
+                GLib.source_remove(timeout_id)
             self._bus.signal_unsubscribe(subscription)
 
+        if self._timed_out:
+            raise PortalError(
+                f"Timed out waiting for portal response during {method}.")
         if self._response_code != 0:
             raise PortalError(
                 f"Screencast was cancelled or denied (response "
