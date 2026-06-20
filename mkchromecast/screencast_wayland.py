@@ -181,42 +181,50 @@ class PortalScreenCastSession:
                 f"{self._response_code}) during {method}.")
         return self._response_results
 
+    # NOTE on GVariant construction (the `*_args` builders below): the options
+    # value must be a **native dict** (with Variant values); the outer tuple
+    # format string builds the `a{sv}`. Passing a pre-built `GLib.Variant("a{sv}",
+    # …)` there makes PyGObject try to iterate the Variant as a dict and raise
+    # KeyError. These builders are extracted (rather than inlined closures) so
+    # they can be unit-tested without a live D-Bus session.
+
+    def _create_session_args(self, handle_token: str,
+                             session_token: str) -> "GLib.Variant":
+        options = {
+            "handle_token": GLib.Variant("s", handle_token),
+            "session_handle_token": GLib.Variant("s", session_token),
+        }
+        return GLib.Variant("(a{sv})", (options,))
+
+    def _select_sources_args(self, handle_token: str) -> "GLib.Variant":
+        options = {
+            "handle_token": GLib.Variant("s", handle_token),
+            "types": GLib.Variant("u", _SOURCE_TYPE_MONITOR),
+            "multiple": GLib.Variant("b", False),
+            "cursor_mode": GLib.Variant("u", _CURSOR_MODE_EMBEDDED),
+        }
+        return GLib.Variant("(oa{sv})", (self._session_handle, options))
+
+    def _start_args(self, handle_token: str) -> "GLib.Variant":
+        options = {
+            "handle_token": GLib.Variant("s", handle_token),
+        }
+        return GLib.Variant("(osa{sv})", (self._session_handle, "", options))
+
     def open(self) -> tuple[int, int]:
         """Runs the full handshake and returns (pipewire_fd, node_id)."""
         # 1. CreateSession.
         session_token = self._next_token("sess")
-
-        def create_session_args(handle_token):
-            options = GLib.Variant("a{sv}", {
-                "handle_token": GLib.Variant("s", handle_token),
-                "session_handle_token": GLib.Variant("s", session_token),
-            })
-            return GLib.Variant("(a{sv})", (options,))
-
-        results = self._call_with_request("CreateSession", create_session_args)
+        results = self._call_with_request(
+            "CreateSession",
+            lambda token: self._create_session_args(token, session_token))
         self._session_handle = results["session_handle"]
 
         # 2. SelectSources (monitor only, embedded cursor).
-        def select_sources_args(handle_token):
-            options = GLib.Variant("a{sv}", {
-                "handle_token": GLib.Variant("s", handle_token),
-                "types": GLib.Variant("u", _SOURCE_TYPE_MONITOR),
-                "multiple": GLib.Variant("b", False),
-                "cursor_mode": GLib.Variant("u", _CURSOR_MODE_EMBEDDED),
-            })
-            return GLib.Variant("(oa{sv})", (self._session_handle, options))
-
-        self._call_with_request("SelectSources", select_sources_args)
+        self._call_with_request("SelectSources", self._select_sources_args)
 
         # 3. Start (shows the picker; returns the streams).
-        def start_args(handle_token):
-            options = GLib.Variant("a{sv}", {
-                "handle_token": GLib.Variant("s", handle_token),
-            })
-            return GLib.Variant("(osa{sv})",
-                                (self._session_handle, "", options))
-
-        results = self._call_with_request("Start", start_args)
+        results = self._call_with_request("Start", self._start_args)
         streams = results.get("streams")
         if not streams:
             raise PortalError("Portal returned no screencast streams.")
@@ -227,8 +235,7 @@ class PortalScreenCastSession:
         return fd, node_id
 
     def _open_pipewire_remote(self) -> int:
-        options = GLib.Variant("a{sv}", {})
-        args = GLib.Variant("(oa{sv})", (self._session_handle, options))
+        args = GLib.Variant("(oa{sv})", (self._session_handle, {}))
         try:
             result, out_fd_list = self._bus.call_with_unix_fd_list_sync(
                 _PORTAL_BUS, _PORTAL_PATH, _SCREENCAST_IFACE,

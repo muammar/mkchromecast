@@ -64,5 +64,34 @@ class GstProbeTests(unittest.TestCase):
         self.assertTrue(missing)
 
 
+class PortalArgVariantTests(unittest.TestCase):
+    """The portal method arguments must build as valid GVariants.
+
+    Regression guard: building the options as a pre-wrapped a{sv} Variant (rather
+    than a native dict) raises KeyError inside PyGObject. These construct the
+    arg tuples directly, bypassing __init__ (which needs a live D-Bus session).
+    """
+
+    def _session(self):
+        sess = object.__new__(screencast_wayland.PortalScreenCastSession)
+        sess._session_handle = "/org/freedesktop/portal/desktop/session/1/abc"
+        return sess
+
+    def test_create_session_args_type(self):
+        sess = self._session()
+        variant = sess._create_session_args("req1", "sess1")
+        self.assertEqual("(a{sv})", variant.get_type_string())
+
+    def test_select_sources_args_type(self):
+        sess = self._session()
+        variant = sess._select_sources_args("req2")
+        self.assertEqual("(oa{sv})", variant.get_type_string())
+
+    def test_start_args_type(self):
+        sess = self._session()
+        variant = sess._start_args("req3")
+        self.assertEqual("(osa{sv})", variant.get_type_string())
+
+
 if __name__ == "__main__":
     unittest.main()
