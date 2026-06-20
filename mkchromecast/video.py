@@ -19,6 +19,9 @@ from mkchromecast.constants import OpMode
 
 # Holds the live portal session for Wayland screencast so it is not garbage
 # collected before ffmpeg (spawned lazily by the Flask server) inherits its fd.
+# In v1, PortalScreenCastSession.close() is intentionally never called
+# explicitly — cleanup happens when the forked streaming child process exits on
+# teardown (the kernel closes all fds and the portal session is dropped).
 _active_wayland_session = None
 
 
@@ -35,6 +38,7 @@ def _flask_init():
                 "Wayland screencast requires ffmpeg >= 7.1 (with the "
                 "'pipewiregrab' filter). Please upgrade ffmpeg."))
             utils.terminate()
+            return
 
         try:
             _active_wayland_session = (
@@ -47,6 +51,7 @@ def _flask_init():
                 "xdg-desktop-portal-gnome, -kde, or -wlr) and PipeWire are "
                 "installed and running."))
             utils.terminate()
+            return
 
         os.set_inheritable(fd, True)
         wayland_capture = (fd, node)
@@ -74,7 +79,6 @@ def _flask_init():
     if mkcc.debug is True:
         print(f":::ffmpeg::: pipeline_builder command: {builder.command}")
 
-    media_type = mkcc.mtype or "video/mp4"
     stream_infra.FlaskServer.init_video(
         chunk_size=mkcc.chunk_size,
         command=builder.command,

@@ -69,6 +69,9 @@ class PortalScreenCastSession:
     """
 
     def __init__(self, timeout_seconds: int = 300) -> None:
+        # Acquire the bus connection here, AFTER the fork.  This class is
+        # instantiated inside the forked pipeline child; inheriting a parent's
+        # GDBus connection across fork would be unsafe.
         try:
             self._bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         except GLib.Error as exc:
@@ -201,7 +204,10 @@ class PortalScreenCastSession:
             raise PortalError(f"OpenPipeWireRemote failed: {exc}")
 
         fd_index = result.unpack()[0]
-        return out_fd_list.get(fd_index)
+        fd = out_fd_list.get(fd_index)
+        if fd < 0:
+            raise PortalError("Portal returned an invalid PipeWire file descriptor.")
+        return fd
 
     def close(self) -> None:
         """Closes the portal session, tearing down the PipeWire stream."""
