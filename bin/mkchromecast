@@ -123,6 +123,11 @@ class CastProcess(object):
     def cast_video(self):
         """This method launches video casting"""
 
+        import mkchromecast.video
+        # Fail fast (in this main process) if a Wayland screencast can't run,
+        # before creating sinks or attempting to cast.
+        mkchromecast.video.wayland_screencast_preflight(self.mkcc)
+
         if self.mkcc.platform == 'Linux':
             print('Creating Pulseaudio Sink...')
             print(colors.warning('Open Pavucontrol and Select the '
@@ -130,7 +135,6 @@ class CastProcess(object):
             create_sink()
 
         print(colors.important('Starting Video Cast Process...'))
-        import mkchromecast.video
         mkchromecast.video.main()
         self.cc.initialize_cast()
         self.get_devices(self.mkcc.select_device)

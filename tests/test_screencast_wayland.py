@@ -25,21 +25,43 @@ class WaylandDetectionTests(unittest.TestCase):
             self.assertFalse(screencast_wayland.is_wayland_session())
 
 
-class FfmpegProbeTests(unittest.TestCase):
-    def test_probe_true_when_filter_listed(self):
-        completed = mock.Mock(stdout="... pipewiregrab     V->V ...\n")
-        with mock.patch("subprocess.run", return_value=completed) as run:
-            self.assertTrue(screencast_wayland.ffmpeg_has_pipewiregrab())
-        run.assert_called_once()
+class GstProbeTests(unittest.TestCase):
+    def test_available_when_binary_and_all_elements_present(self):
+        with mock.patch("shutil.which", return_value="/usr/bin/gst-launch-1.0"), \
+             mock.patch("subprocess.run",
+                        return_value=mock.Mock(returncode=0)):
+            available, missing = (
+                screencast_wayland.gstreamer_screencast_available())
+        self.assertTrue(available)
+        self.assertEqual([], missing)
 
-    def test_probe_false_when_filter_absent(self):
-        completed = mock.Mock(stdout="... scale     V->V ...\n")
-        with mock.patch("subprocess.run", return_value=completed):
-            self.assertFalse(screencast_wayland.ffmpeg_has_pipewiregrab())
+    def test_unavailable_when_gst_launch_missing(self):
+        with mock.patch("shutil.which", return_value=None):
+            available, missing = (
+                screencast_wayland.gstreamer_screencast_available())
+        self.assertFalse(available)
+        self.assertIn("gst-launch-1.0", missing)
 
-    def test_probe_false_when_ffmpeg_missing(self):
-        with mock.patch("subprocess.run", side_effect=FileNotFoundError()):
-            self.assertFalse(screencast_wayland.ffmpeg_has_pipewiregrab())
+    def test_unavailable_lists_missing_elements(self):
+        def fake_run(cmd, **kwargs):
+            # cmd is ["gst-inspect-1.0", <element>]; mp4mux is "missing".
+            element = cmd[1]
+            return mock.Mock(returncode=1 if element == "mp4mux" else 0)
+
+        with mock.patch("shutil.which", return_value="/usr/bin/gst-launch-1.0"), \
+             mock.patch("subprocess.run", side_effect=fake_run):
+            available, missing = (
+                screencast_wayland.gstreamer_screencast_available())
+        self.assertFalse(available)
+        self.assertEqual(["mp4mux"], missing)
+
+    def test_unavailable_when_gst_inspect_missing(self):
+        with mock.patch("shutil.which", return_value="/usr/bin/gst-launch-1.0"), \
+             mock.patch("subprocess.run", side_effect=FileNotFoundError()):
+            available, missing = (
+                screencast_wayland.gstreamer_screencast_available())
+        self.assertFalse(available)
+        self.assertTrue(missing)
 
 
 if __name__ == "__main__":

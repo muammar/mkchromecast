@@ -8,6 +8,7 @@ X11-focused.
 """
 
 import os
+import shutil
 import subprocess
 
 import gi
@@ -37,22 +38,55 @@ def is_wayland_session() -> bool:
     return bool(os.environ.get("WAYLAND_DISPLAY"))
 
 
-def ffmpeg_has_pipewiregrab() -> bool:
-    """Returns True if the local ffmpeg exposes the pipewiregrab filter.
+_GST_LAUNCH = "gst-launch-1.0"
+_GST_INSPECT = "gst-inspect-1.0"
 
-    The pipewiregrab lavfi source was added in ffmpeg 7.1; this is how we
-    detect a new-enough ffmpeg for the Wayland capture path.
+# Elements used by the Wayland screencast gst-launch pipeline. These come from
+# optional GStreamer plugin packages and are the ones likely to be missing if a
+# package is not installed; if they're present, the core/base elements are too.
+_REQUIRED_GST_ELEMENTS = (
+    "pipewiresrc",   # PipeWire GStreamer plugin
+    "videoconvert",  # gst-plugins-base
+    "x264enc",       # gst-plugins-ugly
+    "h264parse",     # gst-plugins-bad
+    "mp4mux",        # gst-plugins-good
+    "fdsink",        # gst core
+    "pulsesrc",      # gst-plugins-good
+    "audioconvert",  # gst-plugins-base
+    "avenc_aac",     # gst-libav
+    "aacparse",      # gst-plugins-good
+)
+
+
+def gstreamer_screencast_available() -> tuple[bool, list[str]]:
+    """Checks for gst-launch-1.0 and the elements the Wayland pipeline needs.
+
+    Returns (available, missing): `missing` lists the gst-launch binary and/or
+    any absent elements, so the caller can print an actionable message naming
+    exactly what to install.
     """
+    missing: list[str] = []
+    if shutil.which(_GST_LAUNCH) is None:
+        missing.append(_GST_LAUNCH)
+        return False, missing
+
+    for element in _REQUIRED_GST_ELEMENTS:
+        if not _gst_has_element(element):
+            missing.append(element)
+
+    return (not missing), missing
+
+
+def _gst_has_element(name: str) -> bool:
     try:
-        completed = subprocess.run(
-            ["ffmpeg", "-hide_banner", "-filters"],
+        result = subprocess.run(
+            [_GST_INSPECT, name],
             capture_output=True,
-            text=True,
             check=False,
         )
     except FileNotFoundError:
         return False
-    return "pipewiregrab" in (completed.stdout or "")
+    return result.returncode == 0
 
 
 class PortalScreenCastSession:

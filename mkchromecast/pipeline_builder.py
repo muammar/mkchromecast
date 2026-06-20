@@ -256,34 +256,17 @@ class Video:
                         f"{self._settings.operation}")
 
     def _screencast_command(self) -> list[str]:
-        audio_input = [
-            "-ac", "2",
-            "-ar", "44100",
-            "-frame_size", "2048",
-            "-fragment_size", "2048",
-            "-f", "pulse",
-            "-ac", "2",
-            "-i", "Mkchromecast.monitor",
-        ]
-
+        # Wayland can't be grabbed with x11grab; capture via the portal +
+        # PipeWire using a GStreamer pipeline instead. The X11 path is unchanged.
         if self._settings.wayland_capture is not None:
-            fd, node = self._settings.wayland_capture
-            video_input = [
-                "-f", "lavfi",
-                "-i", f"pipewiregrab=fd={fd}:node={node}",
-                "-r", self._settings.fps,
-            ]
-        else:
-            screen_size = resolution.resolution(
-                self._settings.resolution or "1080p",
-                self._settings.screencast
-            )
-            video_input = [
-                "-f", "x11grab",
-                "-r", self._settings.fps,
-                "-s", screen_size,
-                "-i", "{}+0,0".format(self._settings.display),
-            ]
+            return self._wayland_screencast_command()
+        return self._x11_screencast_command()
+
+    def _x11_screencast_command(self) -> list[str]:
+        screen_size = resolution.resolution(
+            self._settings.resolution or "1080p",
+            self._settings.screencast
+        )
 
         maybe_veryfast_cmd: list[str]
         if self._settings.vcodec != "h264_nvenc":
@@ -292,8 +275,17 @@ class Video:
             maybe_veryfast_cmd = []
 
         return ["ffmpeg",
-                *audio_input,
-                *video_input,
+                "-ac", "2",
+                "-ar", "44100",
+                "-frame_size", "2048",
+                "-fragment_size", "2048",
+                "-f", "pulse",
+                "-ac", "2",
+                "-i", "Mkchromecast.monitor",
+                "-f", "x11grab",
+                "-r", self._settings.fps,
+                "-s", screen_size,
+                "-i", "{}+0,0".format(self._settings.display),
                 "-vcodec", self._settings.vcodec,
                 *maybe_veryfast_cmd,
                 "-tune", "zerolatency",
@@ -307,6 +299,39 @@ class Video:
                 "-ar", "44100",
                 "-acodec", "libvorbis",
                 "pipe:1",
+        ]
+
+    def _wayland_screencast_command(self) -> list[str]:
+        """A gst-launch pipeline: portal/PipeWire video + pulse audio → mp4.
+
+        Reads the PipeWire stream (whose remote fd is inherited by this process
+        and named via `fd=`) and the PulseAudio monitor sink, encodes H.264/AAC,
+        and muxes a fragmented MP4 to stdout (fd 1) for the Flask server to relay.
+        """
+        fd, node = self._settings.wayland_capture
+        fps = str(self._settings.fps)
+        key_int_max = str(int(fps) * 2) if fps.isdigit() else "60"
+
+        return [
+            "gst-launch-1.0", "-q",
+            "pipewiresrc", f"fd={fd}", f"path={node}", "do-timestamp=true",
+            "!", "videoconvert",
+            "!", "videorate",
+            "!", f"video/x-raw,framerate={fps}/1",
+            "!", "x264enc", "tune=zerolatency", "speed-preset=veryfast",
+            f"key-int-max={key_int_max}",
+            "!", "h264parse",
+            "!", "queue",
+            "!", "mp4mux", "name=mux", "fragment-duration=1000",
+            "streamable=true",
+            "!", "fdsink", "fd=1",
+            "pulsesrc", "device=Mkchromecast.monitor",
+            "!", "audioconvert",
+            "!", "audioresample",
+            "!", "avenc_aac",
+            "!", "aacparse",
+            "!", "queue",
+            "!", "mux.",
         ]
 
     @staticmethod

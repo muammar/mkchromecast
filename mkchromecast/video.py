@@ -25,6 +25,32 @@ from mkchromecast.constants import OpMode
 _active_wayland_session = None
 
 
+def wayland_screencast_preflight(mkcc):
+    """Main-process precondition check for Wayland screencast.
+
+    Runs in the *main* process before any cast is attempted. If we're about to
+    do a Wayland screencast but GStreamer (or a required element) is missing,
+    print an actionable message and terminate cleanly here — rather than letting
+    the forked streaming child fail later while the main process casts to a dead
+    stream. The portal handshake itself must stay in the child (the PipeWire fd
+    is only valid there), so only this pure capability check pre-flights early.
+    """
+    if not (mkcc.operation == OpMode.SCREENCAST
+            and screencast_wayland.is_wayland_session()):
+        return
+
+    available, missing = screencast_wayland.gstreamer_screencast_available()
+    if not available:
+        print(colors.error(
+            "Wayland screencast needs GStreamer, but these are missing: "
+            + ", ".join(missing) + "."))
+        print(colors.warning(
+            "Install the GStreamer pieces (on Arch: gst-plugins-base, "
+            "gst-plugins-good, gst-plugins-bad, gst-plugins-ugly, gst-libav, "
+            "and the PipeWire GStreamer plugin)."))
+        utils.terminate()
+
+
 def _flask_init():
     global _active_wayland_session
     mkcc = mkchromecast.Mkchromecast()
@@ -33,13 +59,6 @@ def _flask_init():
     pass_fds = None
     if (mkcc.operation == OpMode.SCREENCAST
             and screencast_wayland.is_wayland_session()):
-        if not screencast_wayland.ffmpeg_has_pipewiregrab():
-            print(colors.error(
-                "Wayland screencast requires ffmpeg >= 7.1 (with the "
-                "'pipewiregrab' filter). Please upgrade ffmpeg."))
-            utils.terminate()
-            return
-
         try:
             _active_wayland_session = (
                 screencast_wayland.PortalScreenCastSession())
