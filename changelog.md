@@ -22,6 +22,11 @@
     - You can attach devices to a running streaming audio session
       (experimental).
     -  Move from SoundFlower to BlackHole for macOS. Closes #289.
+    - Fixed an intermittent crash at the start of a cast (`RequestFailed:
+      Failed to execute play.`). The cast handshake now waits for the device's
+      media session to become active instead of sleeping for a fixed 5 seconds
+      and unconditionally issuing `play()`, which failed when a slow cold start
+      had not established a session yet.
 
 * mkchromecast (0.3.8.1) **2017/12/24**
 
