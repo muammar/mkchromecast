@@ -326,8 +326,14 @@ class Casting:
             play_url, media_type, title=self.title, stream_type="LIVE",
         )
 
-        if media_controller.is_active:
-            media_controller.play()
+        # play_media(autoplay=True) starts playback once the device fetches the
+        # stream and establishes a media session. That handshake is async and,
+        # for a cold start (e.g. a Wayland screencast: portal grant + GStreamer
+        # / x264 init + buffering), can take well over the few seconds we used
+        # to sleep blindly. Wait for the session to actually become active
+        # instead. Issuing play() before a session exists raises RequestFailed
+        # and previously crashed the whole cast even though the stream was fine.
+        media_controller.block_until_active(timeout=30.0)
 
         print(" ")
         print(colors.important("Cast media controller status"))
@@ -335,8 +341,15 @@ class Casting:
         print(self.cast.status)
         print(" ")
 
-        time.sleep(5.0)
-        media_controller.play()
+        if media_controller.status.player_is_playing:
+            # autoplay already started playback; nothing more to do.
+            pass
+        elif media_controller.is_active:
+            media_controller.play()
+        else:
+            print(colors.warning(
+                "The cast device did not establish a media session in time. "
+                "If playback does not start on its own, please retry the cast."))
 
         if self.mkcc.hijack is True:
             self.r = Thread(target=self.hijack_cc)

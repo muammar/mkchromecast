@@ -58,6 +58,13 @@ class FlaskServer:
 
     # Video arguments.
     _chunk_size: int
+    _pass_fds: Optional[list[int]] = None
+    # Optional per-request command builder. When set (Wayland screencast), each
+    # /stream request calls it to get a fresh (command, pass_fds) pair — needed
+    # because the portal PipeWire fd is single-use, so every gst spawn needs its
+    # own fd. Returned fds are closed in this process after the child inherits
+    # them.
+    _command_factory: Optional[Callable[[], tuple[list[str], list[int]]]] = None
 
     @staticmethod
     def _init_common(video_mode: bool) -> None:
@@ -101,13 +108,21 @@ class FlaskServer:
 
     @staticmethod
     def init_video(chunk_size: int,
-                   command: Union[str, list[str]],
-                   media_type: str) -> None:
+                   media_type: str,
+                   command: Union[str, list[str], None] = None,
+                   pass_fds: Optional[list[int]] = None,
+                   command_factory: Optional[
+                       Callable[[], tuple[list[str], list[int]]]] = None) -> None:
+        if command is None and command_factory is None:
+            raise Exception(
+                "init_video needs either a command or a command_factory.")
         FlaskServer._init_common(video_mode=True)
 
         FlaskServer._chunk_size = chunk_size
         FlaskServer._command = command
         FlaskServer._media_type = media_type
+        FlaskServer._pass_fds = pass_fds
+        FlaskServer._command_factory = command_factory
 
     @staticmethod
     def run(host: str, port: int) -> None:
@@ -173,7 +188,17 @@ class FlaskServer:
     def _stream_video() -> flask.Response:
         FlaskServer._ensure_video_mode()
 
-        process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1)
+        if FlaskServer._command_factory is not None:
+            # Wayland screencast: mint a fresh PipeWire fd (and matching command)
+            # for this request, then close our copy once the child has inherited
+            # it so fds don't accumulate across reconnects.
+            command, pass_fds = FlaskServer._command_factory()
+            process = Popen(command, stdout=PIPE, bufsize=-1, pass_fds=pass_fds)
+            for fd in pass_fds:
+                os.close(fd)
+        else:
+            process = Popen(FlaskServer._command, stdout=PIPE, bufsize=-1,
+                            pass_fds=FlaskServer._pass_fds or ())
         read_chunk = partial(os.read, process.stdout.fileno(), FlaskServer._chunk_size)
         return flask.Response(iter(read_chunk, b""), mimetype=FlaskServer._media_type)
 

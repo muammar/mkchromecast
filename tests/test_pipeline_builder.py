@@ -341,6 +341,68 @@ class VideoBuilderTests(unittest.TestCase):
                                       seek="hh:mm:ss")
         self.assertEqual(exp_command, builder.command)
 
+    def testX11ScreencastCommand(self):
+        # The X11 path stays on ffmpeg/x11grab, byte-for-byte unchanged.
+        exp_command = [
+            "ffmpeg",
+            "-ac", "2",
+            "-ar", "44100",
+            "-frame_size", "2048",
+            "-fragment_size", "2048",
+            "-f", "pulse",
+            "-ac", "2",
+            "-i", "Mkchromecast.monitor",
+            "-f", "x11grab",
+            "-r", "25",
+            "-s", "1920x1080",
+            "-i", ":0+0,0",
+            "-vcodec", "libx264",
+            "-preset", "veryfast",
+            "-tune", "zerolatency",
+            "-maxrate", "10000k",
+            "-bufsize", "20000k",
+            "-pix_fmt", "yuv420p",
+            "-g", "60",
+            "-f", "mp4",
+            "-movflags", "frag_keyframe+empty_moov",
+            "-ar", "44100",
+            "-acodec", "libvorbis",
+            "pipe:1",
+        ]
+        builder = self.create_builder(operation=OpMode.SCREENCAST,
+                                      screencast=True,
+                                      display=":0",
+                                      fps="25")
+        self.assertEqual(exp_command, builder.command)
+
+    def testWaylandScreencastCommand(self):
+        # The Wayland path is a gst-launch pipeline, not ffmpeg.
+        builder = self.create_builder(operation=OpMode.SCREENCAST,
+                                      screencast=True,
+                                      fps="25",
+                                      wayland_capture=(7, 42))
+        command = builder.command
+        self.assertEqual("gst-launch-1.0", command[0])
+        self.assertNotIn("ffmpeg", command)
+        self.assertNotIn("x11grab", command)
+        self.assertIn("pipewiresrc", command)
+        self.assertIn("fd=7", command)
+        self.assertIn("path=42", command)
+        self.assertIn("mp4mux", command)
+        self.assertIn("fdsink", command)
+        # Audio still captured from the pulse monitor sink.
+        self.assertIn("pulsesrc", command)
+        self.assertIn("device=Mkchromecast.monitor", command)
+        # Chromecast-compatible video: 4:2:0 (I420), scaled to 1080p, fps, and
+        # High profile constrained on the encoder output.
+        self.assertIn("videoscale", command)
+        caps = next(a for a in command if a.startswith("video/x-raw"))
+        self.assertIn("format=I420", caps)
+        self.assertIn("width=1920", caps)
+        self.assertIn("height=1080", caps)
+        self.assertIn("framerate=25/1", caps)
+        self.assertIn("video/x-h264,profile=high", command)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

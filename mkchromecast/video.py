@@ -12,17 +12,51 @@ import subprocess
 import mkchromecast
 from mkchromecast import colors
 from mkchromecast import pipeline_builder
+from mkchromecast import screencast_wayland
 from mkchromecast import stream_infra
 from mkchromecast import utils
 from mkchromecast.constants import OpMode
 
-def _flask_init():
-    mkcc = mkchromecast.Mkchromecast()
+# Holds the live portal session for Wayland screencast so it stays alive (and
+# its node remains castable) for the whole run: the Flask server mints a fresh
+# PipeWire fd from it on every /stream request. PortalScreenCastSession.close()
+# is intentionally never called explicitly — cleanup happens when the forked
+# streaming child process exits on teardown (the kernel closes all fds and the
+# portal session is dropped).
+_active_wayland_session = None
 
+
+def wayland_screencast_preflight(mkcc):
+    """Main-process precondition check for Wayland screencast.
+
+    Runs in the *main* process before any cast is attempted. If we're about to
+    do a Wayland screencast but GStreamer (or a required element) is missing,
+    print an actionable message and terminate cleanly here — rather than letting
+    the forked streaming child fail later while the main process casts to a dead
+    stream. The portal handshake itself must stay in the child (the PipeWire fd
+    is only valid there), so only this pure capability check pre-flights early.
+    """
+    if not (mkcc.operation == OpMode.SCREENCAST
+            and screencast_wayland.is_wayland_session()):
+        return
+
+    available, missing = screencast_wayland.gstreamer_screencast_available()
+    if not available:
+        print(colors.error(
+            "Wayland screencast needs GStreamer, but these are missing: "
+            + ", ".join(missing) + "."))
+        print(colors.warning(
+            "Install the GStreamer pieces (on Arch: gst-plugins-base, "
+            "gst-plugins-good, gst-plugins-bad, gst-plugins-ugly, gst-libav, "
+            "and the PipeWire GStreamer plugin)."))
+        utils.terminate()
+
+
+def _build_video_settings(mkcc, wayland_capture):
     # TODO(xsdg): Passing args in one-by-one to facilitate refactoring
     # the Mkchromecast object so that it has argument groups instead of just a
     # giant set of uncoordinated and conflicting arguments.
-    encode_settings = pipeline_builder.VideoSettings(
+    return pipeline_builder.VideoSettings(
         display=mkcc.display,
         fps=mkcc.fps,
         input_file=mkcc.input_file,
@@ -35,16 +69,56 @@ def _flask_init():
         user_command=mkcc.command,
         vcodec=mkcc.vcodec,
         youtube_url=mkcc.youtube_url,
+        wayland_capture=wayland_capture,
     )
-    builder = pipeline_builder.Video(encode_settings)
+
+
+def _flask_init():
+    global _active_wayland_session
+    mkcc = mkchromecast.Mkchromecast()
+
+    if (mkcc.operation == OpMode.SCREENCAST
+            and screencast_wayland.is_wayland_session()):
+        try:
+            _active_wayland_session = (
+                screencast_wayland.PortalScreenCastSession())
+            node = _active_wayland_session.open()
+        except screencast_wayland.PortalError as exc:
+            print(colors.error(f"Wayland screencast failed: {exc}"))
+            print(colors.warning(
+                "Ensure xdg-desktop-portal (with a backend such as "
+                "xdg-desktop-portal-gnome, -kde, or -wlr) and PipeWire are "
+                "installed and running."))
+            utils.terminate()
+            return
+
+        def command_factory():
+            # A fresh PipeWire fd per /stream request: the portal fd is
+            # single-use, and the Chromecast may reconnect, so each gst spawn
+            # needs its own fd to attach to the shared monitor node.
+            fd = _active_wayland_session.open_pipewire_fd()
+            os.set_inheritable(fd, True)
+            command = pipeline_builder.Video(
+                _build_video_settings(mkcc, (fd, node))).command
+            if mkcc.debug is True:
+                print(f":::gst::: pipeline_builder command: {command}")
+            return command, [fd]
+
+        stream_infra.FlaskServer.init_video(
+            chunk_size=mkcc.chunk_size,
+            command_factory=command_factory,
+            media_type=(mkcc.mtype or "video/mp4"),
+        )
+        return
+
+    builder = pipeline_builder.Video(_build_video_settings(mkcc, None))
     if mkcc.debug is True:
         print(f":::ffmpeg::: pipeline_builder command: {builder.command}")
 
-    media_type = mkcc.mtype or "video/mp4"
     stream_infra.FlaskServer.init_video(
         chunk_size=mkcc.chunk_size,
         command=builder.command,
-        media_type=(mkcc.mtype or "video/mp4")
+        media_type=(mkcc.mtype or "video/mp4"),
     )
 
 
